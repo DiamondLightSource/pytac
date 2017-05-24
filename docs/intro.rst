@@ -1,7 +1,7 @@
-What can PYTAC do?
+What can Pytac do?
 ------------------
 
-PYTAC provides a layer on top of `EPICS`_
+Pytac provides a layer on top of `EPICS`_
 that wraps up groups of `PVs`_.
 
 
