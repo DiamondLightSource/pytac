@@ -34,3 +34,14 @@ def test_get_device_value():
 
     with pytest.raises(PvException):
         create_device(None, None)
+
+def test_is_enabled():
+    sp_pv = 'SR01A-PC-SQUAD-01:SETI'
+    device = create_device(None, sp_pv)
+    assert device.is_enabled() == True
+
+def test_set_enabled():
+    sp_pv = 'SR01A-PC-SQUAD-01:SETI'
+    device = create_device(None, sp_pv)
+    device.set_enabled(False)
+    assert device.is_enabled() == False
