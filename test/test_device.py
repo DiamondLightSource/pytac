@@ -4,44 +4,39 @@ import pytest
 import mock
 
 
+SP_PV = 'SR01A-PC-SQUAD-01:SETI'
+RB_PV = 'SR01A-PC-SQUAD-01:I'
+
 @pytest.fixture
-def create_device(readback, setpoint):
+def create_device(readback=RB_PV, setpoint=SP_PV):
     _rb = readback
     _sp = setpoint
     device = pytac.device.Device(rb_pv=_rb, sp_pv=_sp, cs=mock.MagicMock())
     return device
 
 
-def test_set_device_value():
-    rb_pv = 'SR01A-PC-SQUAD-01:I'
-    sp_pv = 'SR01A-PC-SQUAD-01:SETI'
+def test_set_device_value(create_device):
+    create_device.put_value(40)
+    create_device._cs.put.assert_called_with(SP_PV, 40)
 
-    device1 = create_device(rb_pv, sp_pv)
-    device1.put_value(40)
-    device1._cs.put.assert_called_with(sp_pv, 40)
 
-    device2 = create_device(rb_pv, None)
+def test_device_invalid_sp_raise_exception():
+    device2 = create_device(RB_PV, None)
     with pytest.raises(PvException):
         device2.put_value(40)
-
-
-def test_get_device_value():
-    sp_pv = 'SR01A-PC-SQUAD-01:SETI'
-
-    device = create_device(None, sp_pv)
-    with pytest.raises(PvException):
-        device.get_value('non_existent')
-
     with pytest.raises(PvException):
         create_device(None, None)
 
-def test_is_enabled():
-    sp_pv = 'SR01A-PC-SQUAD-01:SETI'
-    device = create_device(None, sp_pv)
-    assert device.is_enabled() == True
 
-def test_set_enabled():
-    sp_pv = 'SR01A-PC-SQUAD-01:SETI'
-    device = create_device(None, sp_pv)
-    device.set_enabled(False)
-    assert device.is_enabled() == False
+def test_get_device_value(create_device):
+    with pytest.raises(PvException):
+        create_device.get_value('non_existent')
+
+
+def test_is_enabled(create_device):
+    assert create_device.is_enabled() == True
+
+
+def test_set_enabled(create_device):
+    create_device.set_enabled(False)
+    assert create_device.is_enabled() == False
