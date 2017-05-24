@@ -23,7 +23,6 @@ class Element(object):
         self.families = set()
         self._uc = dict()
         self._devices = dict()
-        self._enabled = True
 
     def __repr__(self):
         """Auxiliary function to print out an element.
@@ -52,22 +51,6 @@ class Element(object):
         """
 
         return self._length
-
-    def is_enabled(self):
-        """Check whether an element is enabled or disabled.
-
-        Returns:
-            boolean: Represents whether an element is enabled or disabled.
-        """
-        return self._enabled
-
-    def set_enabled(self, enabled=True):
-        """Enable or disable an element.
-
-        Args:
-            enabled (boolean): Set whether an element is disabled or enabled.
-        """
-        self._enabled = enabled
 
     def add_device(self, field, device, uc):
         """Add device and unit conversion objects to a given field.
