@@ -1,15 +1,12 @@
 .. image:: https://travis-ci.org/simkimsia/UtilityBehaviors.png
    :target: https://travis-ci.org/simkimsia/UtilityBehaviors
-      :alt: Build Status
 .. image:: https://coveralls.io/repos/github/willrogers/pytac/badge.svg?branch=master
    :target: https://coveralls.io/github/willrogers/pytac?branch=master
-      :alt: Coverage Status
 .. image:: https://landscape.io/github/willrogers/pytac/master/landscape.svg?style=flat
    :target: https://landscape.io/github/willrogers/pytac/
-      :alt: Health
 .. image:: https://readthedocs.org/projects/pytac/badge/?version=latest
   :target: http://pytac.readthedocs.io/en/latest/?badge=latest
-     :alt: Documentation Status
+
 
 Python Toolkit for Accelerator Controls (Pytac) is a Python library intended to make it easy to work with particle accelerators.
 
