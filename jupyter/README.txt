@@ -4,5 +4,5 @@ To install jupyter:
   - pip install jupyter
 To run these files:
   - jupyter notebook
-    Copy/paster the given url into your browser to connect to the server
+    Copy/paste the given url into your browser to connect to the server
   - click on one of the examples
