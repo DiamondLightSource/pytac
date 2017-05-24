@@ -22,3 +22,6 @@ pytac/#*
 *.swp
 *.swo
 *~
+
+# documentation
+docs/_build
