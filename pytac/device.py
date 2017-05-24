@@ -29,18 +29,18 @@ class Device(object):
             raise PvException("Readback or setpoint pvs need to be given")
 
     def is_enabled(self):
-        """Check whether an element is enabled or disabled.
+        """Check whether an device is enabled or disabled.
 
         Returns:
-            boolean: Represents whether an element is enabled or disabled.
+            boolean: Represents whether an device is enabled or disabled.
         """
         return self._enabled
 
     def set_enabled(self, enabled=True):
-        """Enable or disable an element.
+        """Enable or disable an device.
 
         Args:
-            enabled (boolean): Set whether an element is disabled or enabled.
+            enabled (boolean): Set whether an device is disabled or enabled.
         """
         self._enabled = enabled
 
