@@ -16,6 +16,6 @@ To see a coverage report:
 
 To build documentation correctly:
 
-Change current directory to docs
+* `cd docs`
 * `sphinx-build -b html -E . _build/html`
-The documentation is build inside _build/html
+The documentation is built inside `_build/html`.
