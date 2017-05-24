@@ -1,0 +1,7 @@
+python-coveralls
+cothread
+pytest-cov
+pytest
+numpy
+scipy
+mock

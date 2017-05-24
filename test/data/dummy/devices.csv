@@ -1,0 +1,4 @@
+id,field,get_pv,set_pv
+2,b1,Q1:RB,Q1:SP
+4,b2,S1:RB,S1:SP
+

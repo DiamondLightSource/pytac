@@ -1,0 +1,24 @@
+# compiled python
+*.pyc
+
+# pytest
+.cache
+
+# virtualenv
+bin
+lib
+include
+share
+venv
+venv3
+pip-selfcheck.json
+
+# coverage
+.coverage
+htmlcov/
+
+# editors
+pytac/#*
+*.swp
+*.swo
+*~
