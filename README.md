@@ -2,6 +2,9 @@
 
 Python Toolkit for Accelerator Controls (Pytac) is a Python library intended to make it easy to work with particle accelerators.
 
+
+Documentation is available at [Readthedocs](http://pytac.readthedocs.io/en/latest/index.html).
+
 ## Testing
 
 It is simplest to work with a virtualenv.  Then:
