@@ -110,13 +110,35 @@ class Device(object):
 
 class PvEnabler(object):
     def __init__(self, pv, enabled_value, cs):
+        """A PvEnabler class to check whether a pv is enabled.
+
+        Args:
+            pv(string): The string representation of the pv.
+            enabled_value(string): A pre-defined value telling when the pv
+                is enabled.
+            cs: Control system object used to determine if a pv is enabled.
+        """
         self._pv = pv
         self._enabled_value = enabled_value
         self._cs = cs
 
     def __nonzero__(self):
+        """Used to override the 'if object' clause.
+
+        Support for Python 2.7.
+
+        Returns:
+            boolean: Determining whether a device is enabled or not.
+        """
         pv_value = self._cs.get(self._pv)
         return self._enabled_value == pv_value
 
     def __bool__(self):
+        """Used to override the 'if object' clause.
+
+        Support for Python 3.x.
+
+        Returns:
+            boolean: Determining whether a device is enabled or not.
+        """
         return self.__nonzero__()
