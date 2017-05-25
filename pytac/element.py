@@ -32,7 +32,7 @@ class Element(object):
         Returns:
             string: Set of families the element is part of.
         """
-        return str(self.families)
+        return str([self._name, self._type])
 
     def get_fields(self):
         """Get the fields defined on an element.
