@@ -40,3 +40,13 @@ def test_is_enabled(create_device):
 def test_set_enabled(create_device):
     create_device.set_enabled(False)
     assert create_device.is_enabled() == False
+
+
+def test_PvEnabler():
+    mock_cs = mock.MagicMock()
+    mock_cs.get.return_value = 40
+    pve = pytac.device.PvEnabler('enable-pv', 40, mock_cs)
+    assert pve
+
+    mock_cs.get.return_value = 50
+    assert not pve
