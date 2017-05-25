@@ -25,7 +25,7 @@ To see a coverage report::
 
 To build documentation correctly::
 
- >>> cd docs`
+ >>> cd docs
  >>> sphinx-build -b html -E . _build/html
 
 The documentation is built inside _build/html.
