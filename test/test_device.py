@@ -47,7 +47,6 @@ def test_PvEnabler():
     mock_cs.get.return_value = 40
     pve = pytac.device.PvEnabler('enable-pv', 40, mock_cs)
     assert bool(pve) == True
-    # mock_cs.get.assert_called_with(pve._pv)
 
     mock_cs.get.return_value = 50
     assert bool(pve) == False
