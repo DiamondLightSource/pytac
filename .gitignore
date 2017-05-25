@@ -25,3 +25,6 @@ pytac/#*
 
 # documentation
 docs/_build
+
+# jupyter
+.ipynb_checkpoints

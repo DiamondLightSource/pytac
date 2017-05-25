@@ -19,7 +19,7 @@ It is simplest to work with a virtualenv.  Then:
  >>> export PYTHONPATH=.
  >>> py.test test
 
-To see a coverage report:
+To see a coverage report::
 
  >>> py.test --cov=pytac test
 

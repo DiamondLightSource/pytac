@@ -23,17 +23,16 @@ class Element(object):
         self.families = set()
         self._uc = dict()
         self._devices = dict()
-        self._enabled = True
 
-    def __repr__(self):
+    def __str__(self):
         """Auxiliary function to print out an element.
 
-        Prints out the set of families an element is part of, as a string.
+        Return a representation of an element, as a string.
 
         Returns:
-            string: Set of families the element is part of.
+            string: A representation of an element.
         """
-        return str(self.families)
+        return 'Element: {0}, length: {1}, families: {2}'.format(self._name, self._length, self.families)
 
     def get_fields(self):
         """Get the fields defined on an element.
@@ -52,22 +51,6 @@ class Element(object):
         """
 
         return self._length
-
-    def is_enabled(self):
-        """Check whether an element is enabled or disabled.
-
-        Returns:
-            boolean: Represents whether an element is enabled or disabled.
-        """
-        return self._enabled
-
-    def set_enabled(self, enabled=True):
-        """Enable or disable an element.
-
-        Args:
-            enabled (boolean): Set whether an element is disabled or enabled.
-        """
-        self._enabled = enabled
 
     def add_device(self, field, device, uc):
         """Add device and unit conversion objects to a given field.

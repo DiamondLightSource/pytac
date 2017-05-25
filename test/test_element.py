@@ -88,11 +88,9 @@ def test_identity_conversion():
 def test_get_fields(test_element):
     assert set(test_element.get_fields()) == set(['y', 'x'])
 
-
-def test_is_enabled(test_element):
-    assert test_element.is_enabled() == True
-
-
-def test_set_enabled(test_element):
-    test_element.set_enabled(False)
-    assert test_element.is_enabled() == False
+def test_element_representation(test_element):
+    s = str(test_element)
+    assert test_element._name in s
+    assert str(test_element._length) in s
+    for f in test_element.families:
+        assert f in s

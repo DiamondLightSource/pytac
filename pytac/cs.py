@@ -31,29 +31,3 @@ class ControlSystem(object):
             value(Number): The value to be set.
         """
         raise NotImplementedError()
-
-
-class NullControlSystem(ControlSystem):
-    """ Dummy control system to set the value of a pv."""
-    def __init__(self):
-        pass
-
-    def get(self, pv):
-        """ Get the value of the given pv.
-
-        Args:
-            pv(string): The Pv to get the value of.
-
-        Returns:
-            Number: The numeric value of the pv.
-        """
-        pass
-
-    def put(self, pv, value):
-        """ Put the value of a given pv.
-
-        Args:
-            pv(string): The string to put the value for.
-            value(Number): The value to be set.
-        """
-        pass

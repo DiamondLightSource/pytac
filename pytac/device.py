@@ -8,7 +8,7 @@ class Device(object):
 
         Contains a control system, readback and setpoint pvs. A readback
         or setpoint pv is required when creating a device otherwise a
-        PvException is raised.
+        PvException is raised. The device is enabled by default.
 
         Args:
             cs (ControlSystem): Control system object used to get and set
@@ -20,12 +20,29 @@ class Device(object):
         self.rb_pv = rb_pv
         self.sp_pv = sp_pv
         self._cs = cs
+        self._enabled = True
         if rb_pv is not None:
             self.name = rb_pv.split(':')[0]
         elif sp_pv is not None:
             self.name = sp_pv.split(':')[0]
         else:
             raise PvException("Readback or setpoint pvs need to be given")
+
+    def is_enabled(self):
+        """Check whether an device is enabled or disabled.
+
+        Returns:
+            boolean: Represents whether an device is enabled or disabled.
+        """
+        return self._enabled
+
+    def set_enabled(self, enabled=True):
+        """Enable or disable an device.
+
+        Args:
+            enabled (boolean): Set whether an device is disabled or enabled.
+        """
+        self._enabled = enabled
 
     def put_value(self, value):
         """Set the value of a pv.
