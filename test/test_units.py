@@ -1,6 +1,6 @@
 import pytest
 from pytac.units import PolyUnitConv, PchipUnitConv
-import numpy as np
+import numpy
 
 
 def f1(value):
@@ -44,9 +44,9 @@ def test_ppconversion_to_physics_2_points():
 def test_pp_conversion_to_physics_3_points():
     pchip_uc = PchipUnitConv([1, 3, 5], [1, 3, 6])
     assert pchip_uc.eng_to_phys(1) == 1
-    assert np.round(pchip_uc.eng_to_phys(2), 4) == 1.8875
+    assert numpy.round(pchip_uc.eng_to_phys(2), 4) == 1.8875
     assert pchip_uc.eng_to_phys(3) == 3
-    assert np.round(pchip_uc.eng_to_phys(4), 4) == 4.3625
+    assert numpy.round(pchip_uc.eng_to_phys(4), 4) == 4.3625
     assert pchip_uc.eng_to_phys(5) == 6
 
 
