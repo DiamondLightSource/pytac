@@ -2,7 +2,6 @@ from pytac.exceptions import PvException
 import pytac
 
 
-
 class Device(object):
     def __init__(self, cs, rb_pv=None, sp_pv=None):
         """A device attached on an element.
