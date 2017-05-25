@@ -40,3 +40,11 @@ def test_is_enabled(create_device):
 def test_set_enabled(create_device):
     create_device.set_enabled(False)
     assert create_device.is_enabled() == False
+
+
+def test_pvEnabler():
+    mock_cs = mock.MagicMock()
+    mock_cs.get.return_value = 40
+    pve = device.PvEnabler('enable-pv', 40, mock_cs)
+    bool(pve)
+    pve._cs.get.assert_called_with(pve._pv)
