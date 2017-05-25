@@ -1,4 +1,4 @@
-import numpy as np
+import numpy
 from scipy.interpolate import PchipInterpolator
 from pytac.exceptions import UniqueSolutionException
 
@@ -37,7 +37,7 @@ class PolyUnitConv(UnitConv):
             coef(array_like): The polynomial's coefficients, in decreasing powers.
         """
         super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng)
-        self.p = np.poly1d(coef)
+        self.p = numpy.poly1d(coef)
 
     def _raw_eng_to_phys(self, eng_value):
         """Convert between engineering and physics units.
@@ -91,8 +91,8 @@ class PchipUnitConv(UnitConv):
         self.y = y
         self.pp = PchipInterpolator(x, y)
 
-        diff = np.diff(y)
-        if not ((np.all(diff > 0)) or (np.all((diff < 0)))):
+        diff = numpy.diff(y)
+        if not ((numpy.all(diff > 0)) or (numpy.all((diff < 0)))):
             raise ValueError("Given coefficients must be monotonically"
                              "decreasing.")
 
