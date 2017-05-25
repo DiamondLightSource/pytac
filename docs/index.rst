@@ -18,7 +18,7 @@ Pytac provides a Python library ``pytac`` that makes it easier to communicate wi
 
 The design is based around a ``Lattice`` object that contains a sequence of ``Element`` s.  Each element may have zero or more 'fields' (examples x, y, a1 or b2), associated with which are ``Device`` objects.  These devices contain the necessary information to request live data from the control system.
 
-Data may be requested in ``ENG`` or ``PHYS`` units and will be converted as appropriate.  Two types of unit conversion are available: Polynomial and Piecewise Cubic Hermite Interpolating Polynomial (Pchip).  Additional 
+Data may be requested in ``ENG`` or ``PHYS`` units and will be converted as appropriate.  Two types of unit conversion are available: Polynomial (often used for linear conversion) and Piecewise Cubic Hermite Interpolating Polynomial (Pchip; often used for magnet data where field may not be linear with current).  In the case that measurement data (used to set up the conversion objects) is not in the same units as the physical models, further functions may be given to these objects to complete the conversion correctly.
 
 Elements may be grouped into families (an element may be in more than one family) and requested from the lattice object in those families.
 
