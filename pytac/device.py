@@ -2,6 +2,7 @@ from pytac.exceptions import PvException
 import pytac
 
 
+
 class Device(object):
     def __init__(self, cs, rb_pv=None, sp_pv=None):
         """A device attached on an element.
@@ -106,3 +107,14 @@ class Device(object):
 
     def get_cs(self):
         return self._cs
+
+
+class PvEnabler(object):
+    def __init__(self, pv, enabled_value, cs):
+        self._pv = pv
+        self._enabled_value = enabled_value
+        self._cs = cs
+
+    def __nonzero__(self):
+        pv_value = self._cs.get(self._pv)
+        return self._enabled_value == pv_value
