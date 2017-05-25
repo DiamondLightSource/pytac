@@ -22,7 +22,7 @@ function load_mml(ringmode)
     fprintf(f_elements, 'id,name,type,length\n');
     devices_file = fullfile(dir, '..', 'data', ringmode, 'devices.csv');
     f_devices = fopen(devices_file, 'w');
-    fprintf(f_devices, 'id,field,get_pv,set_pv\n');
+    fprintf(f_devices, 'id,field,get_pv,set_pv,enable_pv,enable_value\n');
     families_file = fullfile(dir, '..', 'data', ringmode, 'families.csv');
     f_families = fopen(families_file, 'w');
     fprintf(f_families, 'id,family\n');
@@ -78,7 +78,7 @@ function load_mml(ringmode)
     new_index = new_index + 1;
     old_index = old_index + 1;
     insertelement(new_index, dcct, 0, ringmode);
-    s = pv_struct('SR-DI-DCCT-01:SIGNAL', 'I', 'get');
+    s = pv_struct('I', 'SR-DI-DCCT-01:SIGNAL', '', '', '');
     insertpvs(new_index, {s});
 
     renamed_indexes(old_index) = new_index;
@@ -108,7 +108,7 @@ function load_mml(ringmode)
         end
         for i = 1:size(pvs, 2)
             %fprintf('%s: %d\n', deblank(pvs{i}.pv), size(deblank(pvs{i}.pv), 2));
-            fprintf(f_devices, '%d,%s,%s,%s\n', index, pvs{i}.field, deblank(pvs{i}.get_pv), deblank(pvs{i}.set_pv));
+            fprintf(f_devices, '%d,%s,%s,%s,%s,%s\n', index, pvs{i}.field, deblank(pvs{i}.get_pv), deblank(pvs{i}.set_pv), deblank(pvs{i}.enable_pv), pvs{i}.enable_value);
         end
     end
 
@@ -153,19 +153,20 @@ function load_mml(ringmode)
 
             get_pv = char(ao.(family).Monitor.ChannelNames(index, :));
             set_pv = char(ao.(family).Setpoint.ChannelNames(index, :));
-            pvs = pv_struct(field, get_pv, set_pv);
+            pvs = pv_struct(field, get_pv, set_pv, '', '');
             pvs = {pvs};
         elseif strcmp(type, 'BPM')
             index = used_elements(type);
+            enable_pv = strcat(BPMS{index}, ':CF:ENABLED_S')
             get_x_pv = strcat(BPMS{index}, ':SA:X');
-            x_pv = pv_struct('x', get_x_pv, '');
+            x_pv = pv_struct('x', get_x_pv, '', enable_pv, 'BPM Enabled');
             get_y_pv = strcat(BPMS{index}, ':SA:Y');
-            y_pv = pv_struct('y', get_y_pv, '');
+            y_pv = pv_struct('y', get_y_pv, '', enable_pv, 'BPM Enabled');
             pvs = {x_pv, y_pv};
         elseif strcmp(type, 'RF')
             gfpv = ao.(type).Monitor.ChannelNames;
             sfpv = ao.(type).Setpoint.ChannelNames;
-            f_pvs = pv_struct('f', gfpv, sfpv);
+            f_pvs = pv_struct('f', gfpv, sfpv, '', '');
             % voltage?
             pvs = {f_pvs};
         else
@@ -180,14 +181,14 @@ function load_mml(ringmode)
             for i = 1:length(elms.AT.ATIndex)
                 get_pv = elms.Monitor.ChannelNames(i,:);
                 set_pv = elms.Setpoint.ChannelNames(i,:);
-                pvs = pv_struct(field, set_pv, get_pv);
+                pvs = pv_struct(field, set_pv, get_pv, '', '');
                 insertpvs(renamed_indexes(elms.AT.ATIndex(i)), {pvs});
             end
         end
     end
 
-    function s = pv_struct(field, get_pv, set_pv)
-        s = struct('field', field, 'get_pv', get_pv, 'set_pv', set_pv);
+    function s = pv_struct(field, get_pv, set_pv, enable_pv, enable_value)
+        s = struct('field', field, 'get_pv', get_pv, 'set_pv', set_pv, 'enable_pv', enable_pv, 'enable_value', enable_value);
     end
 
     function insertelement(i, elm, s, ringmode)
