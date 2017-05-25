@@ -117,3 +117,6 @@ class PvEnabler(object):
     def __nonzero__(self):
         pv_value = self._cs.get(self._pv)
         return self._enabled_value == pv_value
+
+    def __bool__(self):
+        return self.__nonzero__()
