@@ -21,9 +21,3 @@ def test_InvalidControlSystem_throws_NotImplementedError():
         ics.get('dummy')
     with pytest.raises(NotImplementedError):
         ics.put('dummy', 1)
-
-
-def test_NullControlSystem_throws_no_errors():
-    ncs = cs.NullControlSystem()
-    ncs.get('dummy')
-    ncs.put('dummy', 1)
