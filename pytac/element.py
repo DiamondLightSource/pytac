@@ -24,15 +24,15 @@ class Element(object):
         self._uc = dict()
         self._devices = dict()
 
-    def __repr__(self):
+    def __str__(self):
         """Auxiliary function to print out an element.
 
-        Prints out the set of families an element is part of, as a string.
+        Return a representation of an element, as a string.
 
         Returns:
-            string: Set of families the element is part of.
+            string: A representation of an element.
         """
-        return str([self._name, self._type])
+        return 'Element: {0}, length: {1}, families: {2}'.format(self._name, self._length, self.families)
 
     def get_fields(self):
         """Get the fields defined on an element.
