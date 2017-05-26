@@ -19,6 +19,13 @@ def get_mult_rigidity(energy):
 
 
 def load_unitconv(directory, mode, lattice):
+    """Load the unit conversion objects from a file.
+
+     Args:
+        directory(string): The directory where the data is stored.
+        mode(string): The name of the mode that is used.
+        lattice(Lattice): The lattice object that will be used.
+    """
     data = collections.defaultdict(list)
     uc = {}
     with open(os.path.join(directory, mode, 'uc_poly_data.csv')) as poly:
@@ -52,15 +59,17 @@ def load_unitconv(directory, mode, lattice):
 
 
 def load(mode, control_system, directory=None):
-    '''
-    Load a lattice object from a directory.
+    """Load the elements of a lattice from a directory.
 
-    Parameters:
-      mode: the mode to be loaded
-      control_system: control system to be used
-      directory: directory where to load the files from. If no directory is given
-          that the data directory at the root of the repository is used.
-    '''
+    Args:
+        mode(string): The name of the mode to be loaded.
+        control_system(ControlSystem): The control system to be used.
+        directory(string): Directory where to load the files from. If no directory is given
+            that the data directory at the root of the repository is used.
+
+    Returns:
+        Lattice: The lattice containing all elements.
+    """
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data')
     lat = lattice.Lattice(mode, control_system, 3000)
