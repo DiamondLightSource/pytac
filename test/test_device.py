@@ -15,9 +15,7 @@ def create_device(readback=RB_PV, setpoint=SP_PV, _enable_pv=ENABLE_PV, _enabled
     _sp = setpoint
     mock_cs = mock.MagicMock()
     mock_cs.get.return_value = 'BPM Enabled'
-    print _enable_pv, _enabled_value, 'here'
     if _enable_pv and _enabled_value:
-        print _enable_pv, _enabled_value, 'heretoo'
         pve = pytac.device.PvEnabler(_enable_pv, _enabled_value, mock_cs)
         device = pytac.device.Device(cs=mock.MagicMock(), enabled=pve, rb_pv=_rb, sp_pv=_sp)
     else:
@@ -53,7 +51,6 @@ def test_is_enabled(create_device):
 
 def test_is_disabled():
     device = create_device(_enabled_value='INVALID VALUE')
-    print device._enabled
     assert not device.is_enabled()
 
 
