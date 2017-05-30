@@ -3,7 +3,7 @@ import pytac
 
 
 class Device(object):
-    def __init__(self, cs, rb_pv=None, sp_pv=None):
+    def __init__(self, cs, enabled=True, rb_pv=None, sp_pv=None):
         """A device attached on an element.
 
         Contains a control system, readback and setpoint pvs. A readback
@@ -13,6 +13,8 @@ class Device(object):
         Args:
             cs (ControlSystem): Control system object used to get and set
                 the value of a pv.
+            enabled (bool-like): Whether the device is enabled.  May be
+                a PvEnabler object.
             rb_pv (string): A readback pv. This value cannot be changed.
             sp_pv (string): A setpoint pv. This value can be read and also
                 changed.
@@ -20,7 +22,7 @@ class Device(object):
         self.rb_pv = rb_pv
         self.sp_pv = sp_pv
         self._cs = cs
-        self._enabled = True
+        self._enabled = enabled
         if rb_pv is not None:
             self.name = rb_pv.split(':')[0]
         elif sp_pv is not None:
@@ -34,15 +36,12 @@ class Device(object):
         Returns:
             boolean: Represents whether an device is enabled or disabled.
         """
+        if self._enabled:
+            print 'works as expected'
+        else:
+            print self._enabled
+            print 'doesnt work as expected'
         return self._enabled
-
-    def set_enabled(self, enabled=True):
-        """Enable or disable an device.
-
-        Args:
-            enabled (boolean): Set whether an device is disabled or enabled.
-        """
-        self._enabled = enabled
 
     def put_value(self, value):
         """Set the value of a pv.
@@ -110,7 +109,9 @@ class Device(object):
 
 class PvEnabler(object):
     def __init__(self, pv, enabled_value, cs):
-        """A PvEnabler class to check whether a pv is enabled.
+        """A PvEnabler class to check whether a device is enabled.
+
+        This object doesn't allow disabling the device.
 
         Args:
             pv(string): The string representation of the pv.
