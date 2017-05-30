@@ -15,7 +15,6 @@ def create_device(readback=RB_PV, setpoint=SP_PV, _enable_pv=ENABLE_PV, _enabled
     _sp = setpoint
     mock_cs = mock.MagicMock()
     mock_cs.get.return_value = '1.0'
-    print _enable_pv, _enabled_value
     if _enable_pv and _enabled_value:
         pve = pytac.device.PvEnabler(_enable_pv, _enabled_value, mock_cs)
         device = pytac.device.Device(cs=mock.MagicMock(), enabled=pve, rb_pv=_rb, sp_pv=_sp)
