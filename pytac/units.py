@@ -19,8 +19,9 @@ class UnitConv(object):
     def __init__(self, post_eng_to_phys=unit_function, pre_phys_to_eng=unit_function):
         """Class to convert between physics and engineering units.
 
-        The two arguments to this function represent functions that
-        are applied to the result of the initial conversion.
+        The two arguments to this function represent functions that are
+        applied to the result of the initial conversion. One happens after
+        the conversion, the other happens before the conversion back.
 
         Args:
             post_eng_to_phys(function): Function to be applied post the initial
