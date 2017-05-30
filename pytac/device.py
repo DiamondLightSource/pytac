@@ -36,11 +36,6 @@ class Device(object):
         Returns:
             boolean: Represents whether an device is enabled or disabled.
         """
-        if self._enabled:
-            print 'works as expected'
-        else:
-            print self._enabled
-            print 'doesnt work as expected'
         return self._enabled
 
     def put_value(self, value):
