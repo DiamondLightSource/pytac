@@ -30,4 +30,4 @@ To build documentation correctly::
  >>> cd docs
  >>> sphinx-build -b html -E . _build/html
 
-The documentation is built inside _build/html.
+The documentation is built inside ``_build/html``.
