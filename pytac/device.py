@@ -115,7 +115,7 @@ class PvEnabler(object):
             cs: Control system object used to determine if a pv is enabled.
         """
         self._pv = pv
-        self._enabled_value = enabled_value
+        self._enabled_value = str(int(float(enabled_value)))
         self._cs = cs
 
     def __nonzero__(self):
@@ -127,7 +127,7 @@ class PvEnabler(object):
             boolean: Determining whether a device is enabled or not.
         """
         pv_value = self._cs.get(self._pv)
-        return self._enabled_value == pv_value
+        return self._enabled_value == str(int(float(pv_value)))
 
     def __bool__(self):
         """Used to override the 'if object' clause.
