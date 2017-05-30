@@ -1,4 +1,4 @@
-''' Template module to represent existant exceptions. '''
+""" Module to represent existent exceptions in Pytac. """
 
 class PvException(Exception):
     pass
