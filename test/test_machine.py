@@ -89,6 +89,7 @@ def test_quad_unitconv(lattice):
         numpy.testing.assert_allclose(uc.eng_to_phys(70), -6.918132432432433)
         numpy.testing.assert_allclose(uc.phys_to_eng(-6.918132432432433), 70)
 
+
 def test_quad_unitconv_raise_exception(lattice):
     LAT_ENERGY = 3000
 
@@ -96,6 +97,7 @@ def test_quad_unitconv_raise_exception(lattice):
     uc = pytac.units.PchipUnitConv([50.0, 100.0, 180.0], [-4.95, -9.85, -17.56])
     with pytest.raises(UniqueSolutionException):
         numpy.testing.assert_allclose(uc.phys_to_eng(-0.7), 70.8834284954)
+
 
 def test_quad_unitconv_known_failing_test(lattice):
     LAT_ENERGY = 3000
