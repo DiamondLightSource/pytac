@@ -1,4 +1,3 @@
-id,field,get_pv,set_pv
-2,b1,Q1:RB,Q1:SP
-4,b2,S1:RB,S1:SP
-
+id,field,get_pv,set_pv,enable_pv,enable_value
+2,b1,Q1:RB,Q1:SP,SR01C-DI-EBPM-01:CF:ENABLED_S,BPM Enabled
+4,b2,S1:RB,S1:SP,SR01C-DI-EBPM-01:CF:ENABLED_S,BPM Enabled

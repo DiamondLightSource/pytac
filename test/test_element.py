@@ -12,12 +12,13 @@ def test_element(length=0.0, uc=PolyUnitConv([1, 0])):
 
     mock_cs = mock.MagicMock()
     mock_cs.get.return_value = 40.0
+    mock_pve = mock.MagicMock()
 
     element = pytac.element.Element('dummy', 1.0, 'Quad')
     rb_pv = 'SR22C-DI-EBPM-04:SA:X'
     sp_pv = 'SR22C-DI-EBPM-04:SA:Y'
-    device1 = pytac.device.Device(mock_cs, rb_pv, sp_pv)
-    device2 = pytac.device.Device(mock_cs, sp_pv, rb_pv)
+    device1 = pytac.device.Device(mock_cs, mock_pve, rb_pv, sp_pv)
+    device2 = pytac.device.Device(mock_cs, mock_pve, sp_pv, rb_pv)
 
     element.add_device('x', device1, uc)
     element.add_device('y', device2, uc)

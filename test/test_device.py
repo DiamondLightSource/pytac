@@ -6,12 +6,17 @@ import mock
 
 SP_PV = 'SR01A-PC-SQUAD-01:SETI'
 RB_PV = 'SR01A-PC-SQUAD-01:I'
+ENABLED_VALUE = 'BPM Enabled'
 
 @pytest.fixture
-def create_device(readback=RB_PV, setpoint=SP_PV):
+def create_device(readback=RB_PV, setpoint=SP_PV, _enabled_value=ENABLED_VALUE):
     _rb = readback
     _sp = setpoint
-    device = pytac.device.Device(rb_pv=_rb, sp_pv=_sp, cs=mock.MagicMock())
+    enable_pv = 'SR01C-DI-EBPM-01:CF:ENABLED_S'
+    mock_cs = mock.MagicMock()
+    mock_cs.get.return_value = 'BPM Enabled'
+    pve = pytac.device.PvEnabler(enable_pv, _enabled_value, mock_cs)
+    device = pytac.device.Device(cs=mock.MagicMock(), enabled=pve, rb_pv=_rb, sp_pv=_sp)
     return device
 
 
@@ -34,12 +39,12 @@ def test_get_device_value(create_device):
 
 
 def test_is_enabled(create_device):
-    assert create_device.is_enabled() == True
+    assert create_device.is_enabled()
 
 
-def test_set_enabled(create_device):
-    create_device.set_enabled(False)
-    assert create_device.is_enabled() == False
+def test_is_disabled():
+    device = create_device(_enabled_value='INVALID VALUE')
+    assert not device.is_enabled()
 
 
 def test_PvEnabler():
