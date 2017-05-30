@@ -4,29 +4,81 @@ from pytac.exceptions import UniqueSolutionException
 
 
 def unit_function(value):
+    """Default value for the pre and post functions used in unit conversion.
+
+    Args:
+        value(Number): The value to be converted.
+
+    Returns:
+        value(Number): The result of the conversion.
+    """
     return value
 
 
 class UnitConv(object):
     def __init__(self, post_eng_to_phys=unit_function, pre_phys_to_eng=unit_function):
+        """Class to convert between physics and engineering units.
+
+        The two arguments to this function represent functions that are
+        applied to the result of the initial conversion. One happens after
+        the conversion, the other happens before the conversion back.
+
+        Args:
+            post_eng_to_phys(function): Function to be applied post the initial
+                conversion.
+            pre_phys_to_eng(function): Function to be applied preceding the initial
+                conversion.
+        """
         self._post_eng_to_phys = post_eng_to_phys
         self._pre_phys_to_eng = pre_phys_to_eng
 
     def _raw_eng_to_phys(self, value):
+        """Function to be implemented by child classes.
+
+        Args:
+            value(Number): Value to be converted from engineering to physics untits.
+        """
         raise NotImplementedError()
 
     def eng_to_phys(self, value):
+        """Function that does the unit conversion.
+
+        Conversion from engineering to physics units. An additional function may
+        be casted on the initial conversion.
+
+        Args:
+            value(Number): Value to be converted from engineering to physics units.
+
+        Returns:
+            result(Number): The result value.
+        """
         x = self._raw_eng_to_phys(value)
-        y = self._post_eng_to_phys(x)
-        return y
+        result = self._post_eng_to_phys(x)
+        return result
 
     def _raw_phys_to_eng(self, value):
+        """Function to be implemented by child classes.
+
+        Args:
+            value(Number): Value to be converted from physics to engineering units.
+        """
         raise NotImplementedError()
 
     def phys_to_eng(self, value):
+        """Function that does the unit conversion.
+
+        Conversion from physics to engineering units. An additional function may
+        be casted on the initial conversion.
+
+        Args:
+            value(Number): Value to be converted from physics to engineering units.
+
+        Returns:
+            result(Number): The result value.
+        """
         x = self._pre_phys_to_eng(value)
-        y = self._raw_phys_to_eng(x)
-        return y
+        result = self._raw_phys_to_eng(x)
+        return result
 
 
 class PolyUnitConv(UnitConv):

@@ -59,10 +59,9 @@ def load_unitconv(directory, mode, lattice):
 
 
 def load(mode, control_system, directory=None):
-    """
-    Load the elements of a lattice from a directory.
+    """Load the elements of a lattice from a directory.
 
-    Parameters:
+    Args:
         mode(string): The name of the mode to be loaded.
         control_system(ControlSystem): The control system to be used.
         directory(string): Directory where to load the files from. If no directory is given
