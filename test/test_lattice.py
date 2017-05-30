@@ -17,8 +17,8 @@ def simple_element(identity=1):
     element = pytac.element.Element(identity, 0, 'BPM')
     rb_pv = 'readback_pv'
     sp_pv = 'setpoint_pv'
-    device1 = pytac.device.Device(mock.MagicMock(), mock.MagicMock(), sp_pv, rb_pv)
-    device2 = pytac.device.Device(mock.MagicMock(), mock.MagicMock(), sp_pv, rb_pv)
+    device1 = pytac.device.Device(mock.MagicMock(), True, sp_pv, rb_pv)
+    device2 = pytac.device.Device(mock.MagicMock(), True, sp_pv, rb_pv)
     element.add_to_family('family')
 
     element.add_device('x', device1, uc)
