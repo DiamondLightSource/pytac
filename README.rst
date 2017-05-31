@@ -29,3 +29,16 @@ To build documentation correctly::
  $ sphinx-build -b html -E . _build/html
 
 The documentation is built inside _build/html.
+
+
+To upload files to Pypi. Create a source distribution::
+
+ $ python setup.py sdist
+
+Build a universal wheel::
+
+ $ python setup.py bdist_wheel
+
+Then upload it using twine::
+
+ $ twine upload dist/*
