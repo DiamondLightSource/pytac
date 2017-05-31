@@ -38,7 +38,8 @@ To build documentation correctly::
 
 The documentation is built inside _build/html.
 
-
+Uploading to Pypi
+=================
 To upload files to Pypi. Create a source distribution::
 
  $ python setup.py sdist
