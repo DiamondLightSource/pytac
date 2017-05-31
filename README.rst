@@ -15,17 +15,17 @@ Testing
 
 It is simplest to work with a virtualenv.  Then::
 
- >>> pip install -r requirements/local.txt
- >>> export PYTHONPATH=.
- >>> py.test test
+ $ pip install -r requirements/local.txt
+ $ export PYTHONPATH=.
+ $ py.test test
 
 To see a coverage report::
 
- >>> py.test --cov=pytac test
+ $ py.test --cov=pytac test
 
 To build documentation correctly::
 
- >>> cd docs
- >>> sphinx-build -b html -E . _build/html
+ $ cd docs
+ $ sphinx-build -b html -E . _build/html
 
 The documentation is built inside _build/html.
