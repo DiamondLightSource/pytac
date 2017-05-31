@@ -21,7 +21,7 @@ def get_mult_rigidity(energy):
 def load_unitconv(directory, mode, lattice):
     """Load the unit conversion objects from a file.
 
-     Args:
+    Args:
         directory(string): The directory where the data is stored.
         mode(string): The name of the mode that is used.
         lattice(Lattice): The lattice object that will be used.
@@ -84,8 +84,15 @@ def load(mode, control_system, directory=None):
     with open(os.path.join(directory, mode, 'devices.csv')) as devices:
         csv_reader = csv.DictReader(devices)
         for item in csv_reader:
-            d = device.Device(control_system, item['get_pv'], item['set_pv'])
-            lat[int(item['id']) - 1].add_device(item['field'], d, None)
+            enable_pv = item['enable_pv']
+            enable_value = item['enable_value']
+            get_pv = item['get_pv']
+            set_pv = item['set_pv']
+            pve = True
+            if enable_pv and enable_value:
+                pve = device.PvEnabler(enable_pv, enable_value, control_system)
+            d = device.Device(control_system, pve, get_pv, set_pv)
+            lat[int(item['id']) - 1].add_device(item['field'], d, control_system)
 
     with open(os.path.join(directory, mode, 'families.csv')) as families:
         csv_reader = csv.DictReader(families)
