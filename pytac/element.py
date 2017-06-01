@@ -1,3 +1,5 @@
+""" Representation of an element which contains all the data about a particular equipment."""
+
 from pytac.exceptions import PvException
 import pytac
 

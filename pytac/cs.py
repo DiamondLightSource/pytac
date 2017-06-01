@@ -1,6 +1,4 @@
-"""
-Template module to define control systems.
-"""
+""" Template module to define control systems."""
 
 
 class ControlSystem(object):

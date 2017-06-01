@@ -1,3 +1,5 @@
+""" A device object used to refer to a particular electronics attached to an element."""
+
 from pytac.exceptions import PvException
 import pytac
 
