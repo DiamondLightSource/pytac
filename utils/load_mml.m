@@ -157,11 +157,11 @@ function load_mml(ringmode)
             pvs = {pvs};
         elseif strcmp(type, 'BPM')
             index = used_elements(type);
-            enable_pv = strcat(BPMS{index}, ':CF:ENABLED_S')
+            enable_pv = strcat(BPMS{index}, ':CF:ENABLED_S');
             get_x_pv = strcat(BPMS{index}, ':SA:X');
-            x_pv = pv_struct('x', get_x_pv, '', enable_pv, 'BPM Enabled');
+            x_pv = pv_struct('x', get_x_pv, '', enable_pv, '1');
             get_y_pv = strcat(BPMS{index}, ':SA:Y');
-            y_pv = pv_struct('y', get_y_pv, '', enable_pv, 'BPM Enabled');
+            y_pv = pv_struct('y', get_y_pv, '', enable_pv, '1');
             pvs = {x_pv, y_pv};
         elseif strcmp(type, 'RF')
             gfpv = ao.(type).Monitor.ChannelNames;
