@@ -1,9 +1,9 @@
-""" Module to load the elements of the machine from a csv file."""
+""" Module to load the elements of the machine from multiple csv files stored in the same directory."""
 
 import os
 import csv
 from pytac import lattice, element, device, units, utils
-import collections
+import collection
 
 
 def get_div_rigidity(energy):
