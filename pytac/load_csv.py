@@ -3,7 +3,7 @@
 import os
 import csv
 from pytac import lattice, element, device, units, utils
-import collection
+import collections
 
 
 def get_div_rigidity(energy):
