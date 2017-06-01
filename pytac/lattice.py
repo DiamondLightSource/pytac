@@ -1,3 +1,5 @@
+""" Representation of a lattice object which contains all the elements of the machine."""
+
 from pytac.exceptions import PvException
 from pytac.exceptions import ElementNotFoundException
 

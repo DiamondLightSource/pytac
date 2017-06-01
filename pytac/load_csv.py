@@ -1,3 +1,5 @@
+""" Class to load the elements of the machine from a csv file."""
+
 import os
 import csv
 from pytac import lattice, element, device, units, utils

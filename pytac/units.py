@@ -1,3 +1,5 @@
+""" An unit conversion object used to convert between physics and engineering units."""
+
 import numpy
 from scipy.interpolate import PchipInterpolator
 from pytac.exceptions import UniqueSolutionException
