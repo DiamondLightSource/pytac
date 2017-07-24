@@ -172,7 +172,7 @@ class Element(object):
         try:
             return self._devices[field].get_pv_name(handle)
         except KeyError:
-            raise PvException('Element has no device for field {}'.format(field))
+            raise PvException('{} has no device for field {}'.format(self, field))
 
     def get_cs(self, field):
         return self._devices[field].get_cs()
