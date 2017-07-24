@@ -139,6 +139,8 @@ function load_mml(ringmode)
                 field = 'b1';
             elseif strcmp(type, 'SEXT')
                 field = 'b2';
+            elseif strcmp(type, 'VSTR')
+                field = 'a0';
             else
                 field = 'b0';
             end
