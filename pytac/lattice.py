@@ -161,7 +161,7 @@ class Lattice(object):
                               "to the number of elements in the lattice")
         self._cs.put(pv_names, values)
 
-    def get_s(self, given_element):
+    def get_s(self, element):
         """Find the position of a given element in the lattice.
 
         Note that the given element must exist in the lattice.
@@ -177,12 +177,12 @@ class Lattice(object):
             doesn't exist inside the lattice.
         """
         s_pos = 0
-        for element in self._lattice:
-            if element is not given_element:
-                s_pos += element.get_length()
+        for el in self._lattice:
+            if el is not element:
+                s_pos += el.get_length()
             else:
                 return s_pos
-        raise ElementNotFoundException('Given element does not exist in the lattice')
+        raise ElementNotFoundException('Element {} does not exist in the lattice'.format(element))
 
     def get_family_s(self, family):
         """Get the positions for a set of elements from the same family.
