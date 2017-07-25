@@ -7,6 +7,10 @@ import mock
 import pytac
 
 
+RB_PV = 'rb_pv'
+SP_PV = 'sp_pv'
+
+
 @pytest.fixture
 def test_element(length=0.0, uc=PolyUnitConv([1, 0])):
 
@@ -14,10 +18,8 @@ def test_element(length=0.0, uc=PolyUnitConv([1, 0])):
     mock_cs.get.return_value = 40.0
 
     element = pytac.element.Element('dummy', 1.0, 'Quad')
-    rb_pv = 'SR22C-DI-EBPM-04:SA:X'
-    sp_pv = 'SR22C-DI-EBPM-04:SA:Y'
-    device1 = pytac.device.Device(mock_cs, True, rb_pv, sp_pv)
-    device2 = pytac.device.Device(mock_cs, True, sp_pv, rb_pv)
+    device1 = pytac.device.Device(mock_cs, True, RB_PV, SP_PV)
+    device2 = pytac.device.Device(mock_cs, True, SP_PV, RB_PV)
 
     element.add_device('x', device1, uc)
     element.add_device('y', device2, uc)
@@ -58,10 +60,10 @@ def test_get_pv_name(pv_type, test_element):
 
 def test_set_value(test_element):
     test_element.set_value('x', 40.3)
-    test_element.get_device('x')._cs.put.assert_called_with('SR22C-DI-EBPM-04:SA:Y', 40.3)
+    test_element.get_device('x')._cs.put.assert_called_with(SP_PV, 40.3)
 
     test_element.set_value('x', 40.3, unit=pytac.PHYS)
-    test_element.get_device('x')._cs.put.assert_called_with('SR22C-DI-EBPM-04:SA:Y', 40.3)
+    test_element.get_device('x')._cs.put.assert_called_with(SP_PV, 40.3)
 
     with pytest.raises(PvException):
         test_element.set_value('non_existent', 40.0)
