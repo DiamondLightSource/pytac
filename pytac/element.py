@@ -124,7 +124,7 @@ class Element(object):
         else:
             value = self._model.get_value(field)
             if unit == pytac.ENG:
-                value = self._uc[field].eng_to_phys(value)
+                value = self._uc[field].phys_to_eng(value)
             return value
 
     def set_value(self, field, value, unit=pytac.ENG, sim=False):
