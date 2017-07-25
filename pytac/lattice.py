@@ -3,7 +3,9 @@
 from pytac.exceptions import PvException
 from pytac.exceptions import ElementNotFoundException
 
+
 class Lattice(object):
+
     def __init__(self, name, control_system, energy):
         """Representation of a lattice.
 
@@ -21,6 +23,10 @@ class Lattice(object):
         self._lattice = []
         self._cs = control_system
         self._energy = energy
+        self._model = None
+
+    def set_model(self, model):
+        self._model = model
 
     def get_energy(self):
         """Function to get the total energy of the lattice.
@@ -142,7 +148,7 @@ class Lattice(object):
         """Set the pv value of a given family of pvs.
 
         The pvs are determined by family and device. Note that only setpoint
-        pvs ca be modified.
+        pvs can be modified.
 
         Args:
             family(string): A specific family to set the value of.
