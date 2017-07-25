@@ -91,7 +91,7 @@ class Element(object):
         """
         self.families.add(family)
 
-    def get_pv_value(self, field, handle, unit=pytac.ENG, sim=False):
+    def get_value(self, field, handle, unit=pytac.ENG, sim=False):
         """Get the value of a pv.
 
         Returns the value of a pv on the element. This value is uniquely
@@ -127,7 +127,7 @@ class Element(object):
                 value = self._uc[field].eng_to_phys(value)
             return value
 
-    def put_pv_value(self, field, value, unit=pytac.ENG, sim=False):
+    def put_value(self, field, value, unit=pytac.ENG, sim=False):
         """Set the pv value on a uniquely identified device.
 
         This value can be set on the machine or the simulation.
