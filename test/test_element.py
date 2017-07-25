@@ -7,20 +7,36 @@ import mock
 import pytac
 
 
-@pytest.fixture
-def test_element(length=0.0, uc=PolyUnitConv([1, 0])):
+RB_PV = 'rb_pv'
+SP_PV = 'sp_pv'
 
+DUMMY_VALUE_1 = 40.0
+DUMMY_VALUE_2 = 4.7
+DUMMY_VALUE_3 = -6
+
+
+def mock_uc():
+    uc = mock.MagicMock()
+    uc.phys_to_eng.return_value = DUMMY_VALUE_2
+    uc.eng_to_phys.return_value = DUMMY_VALUE_3
+    return uc
+
+
+@pytest.fixture
+def test_element(length=0.0, uc=mock_uc()):
     mock_cs = mock.MagicMock()
-    mock_cs.get.return_value = 40.0
+    mock_cs.get.return_value = DUMMY_VALUE_1
 
     element = pytac.element.Element('dummy', 1.0, 'Quad')
-    rb_pv = 'SR22C-DI-EBPM-04:SA:X'
-    sp_pv = 'SR22C-DI-EBPM-04:SA:Y'
-    device1 = pytac.device.Device(mock_cs, True, rb_pv, sp_pv)
-    device2 = pytac.device.Device(mock_cs, True, sp_pv, rb_pv)
+    device1 = pytac.device.Device(mock_cs, True, RB_PV, SP_PV)
+    device2 = pytac.device.Device(mock_cs, True, SP_PV, RB_PV)
 
     element.add_device('x', device1, uc)
     element.add_device('y', device2, uc)
+
+    mock_model = mock.MagicMock()
+    mock_model.get_value.return_value = DUMMY_VALUE_2
+    element.set_model(mock_model)
 
     return element
 
@@ -38,14 +54,23 @@ def test_add_element_to_family():
     assert 'fam' in e.families
 
 
-@pytest.mark.parametrize('pv_type', ['readback', 'setpoint'])
-def test_get_pv_value(pv_type, test_element):
-    # Tests to get/set pv names and/or values
-    # The default unit conversion is identity
-    assert test_element.get_pv_value('x', pv_type, unit=pytac.PHYS) == 40.0
-    assert test_element.get_pv_value('x', pv_type, unit=pytac.ENG) == 40.0
-    assert test_element.get_pv_value('y', pv_type, unit=pytac.PHYS) == 40.0
-    assert test_element.get_pv_value('y', pv_type, unit=pytac.ENG) == 40.0
+def test_get_value_uses_cs_if_sim_False(test_element):
+    test_element.get_value('x', handle=pytac.SP, sim=False)
+    test_element.get_device('x')._cs.get.assert_called_with(SP_PV)
+    test_element.get_value('x', handle=pytac.RB, sim=False)
+    test_element.get_device('x')._cs.get.assert_called_with(RB_PV)
+
+
+def test_get_value_uses_uc_if_necessary_for_cs_call(test_element):
+    test_element.get_value('x', handle=pytac.SP, unit=pytac.PHYS, sim=False)
+    test_element._uc['x'].eng_to_phys.assert_called_with(DUMMY_VALUE_1)
+    test_element.get_device('x')._cs.get.assert_called_with(SP_PV)
+
+
+def test_get_value_uses_uc_if_necessary_for_sim_call(test_element):
+    test_element.get_value('x', handle=pytac.SP, unit=pytac.ENG, sim=True)
+    test_element._uc['x'].phys_to_eng.assert_called_with(DUMMY_VALUE_2)
+    test_element._model.get_value.assert_called_with('x')
 
 
 @pytest.mark.parametrize('pv_type', ['readback', 'setpoint'])
@@ -56,22 +81,22 @@ def test_get_pv_name(pv_type, test_element):
     assert isinstance(test_element.get_pv_name('y', pv_type), str)
 
 
-def test_put_pv_value(test_element):
-    test_element.put_pv_value('x', 40.3)
-    test_element.get_device('x')._cs.put.assert_called_with('SR22C-DI-EBPM-04:SA:Y', 40.3)
+def test_set_value(test_element):
+    test_element.set_value('x', DUMMY_VALUE_2)
+    test_element.get_device('x')._cs.put.assert_called_with(SP_PV, DUMMY_VALUE_2)
 
-    test_element.put_pv_value('x', 40.3, unit=pytac.PHYS)
-    test_element.get_device('x')._cs.put.assert_called_with('SR22C-DI-EBPM-04:SA:Y', 40.3)
+    test_element.set_value('x', DUMMY_VALUE_2, unit=pytac.PHYS)
+    test_element.get_device('x')._cs.put.assert_called_with(SP_PV, DUMMY_VALUE_2)
 
     with pytest.raises(PvException):
-        test_element.put_pv_value('non_existent', 40.0)
+        test_element.set_value('non_existent', 40.0)
 
 
 def test_get_pv_exceptions(test_element):
     with pytest.raises(PvException):
-        test_element.get_pv_value('setpoint', 'unknown_field')
+        test_element.get_value('setpoint', 'unknown_field')
     with pytest.raises(PvException):
-        test_element.get_pv_value('unknown_handle', 'y')
+        test_element.get_value('unknown_handle', 'y')
     with pytest.raises(PvException):
         test_element.get_pv_name('unknown_handle')
 
@@ -79,9 +104,9 @@ def test_get_pv_exceptions(test_element):
 def test_identity_conversion():
     uc_id = PolyUnitConv([1, 0])
     element = test_element(uc=uc_id)
-    value_physics = element.get_pv_value('x', 'setpoint', pytac.PHYS)
-    value_machine = element.get_pv_value('x', 'setpoint', pytac.ENG)
-    assert value_machine == 40.0
+    value_physics = element.get_value('x', 'setpoint', pytac.PHYS)
+    value_machine = element.get_value('x', 'setpoint', pytac.ENG)
+    assert value_machine == DUMMY_VALUE_1
     assert value_physics == 40.0
 
 

@@ -5,6 +5,7 @@ import pytac
 
 
 class Element(object):
+
     def __init__(self, name, length, element_type):
         """An element of the ring.
 
@@ -25,6 +26,7 @@ class Element(object):
         self.families = set()
         self._uc = dict()
         self._devices = dict()
+        self._model = None
 
     def __str__(self):
         """Auxiliary function to print out an element.
@@ -35,6 +37,9 @@ class Element(object):
             string: A representation of an element.
         """
         return 'Element: {0}, length: {1}, families: {2}'.format(self._name, self._length, self.families)
+
+    def set_model(self, model):
+        self._model = model
 
     def get_fields(self):
         """Get the fields defined on an element.
@@ -86,7 +91,7 @@ class Element(object):
         """
         self.families.add(family)
 
-    def get_pv_value(self, field, handle, unit=pytac.ENG, sim=False):
+    def get_value(self, field, handle, unit=pytac.ENG, sim=False):
         """Get the value of a pv.
 
         Returns the value of a pv on the element. This value is uniquely
@@ -117,12 +122,12 @@ class Element(object):
             else:
                 raise PvException("No device associated with field {0}".format(field))
         else:
-            value = self._physics.get_value(field, handle, unit)
+            value = self._model.get_value(field)
             if unit == pytac.ENG:
-                value = self._uc[field].eng_to_phys(value)
+                value = self._uc[field].phys_to_eng(value)
             return value
 
-    def put_pv_value(self, field, value, unit=pytac.ENG, sim=False):
+    def set_value(self, field, value, unit=pytac.ENG, sim=False):
         """Set the pv value on a uniquely identified device.
 
         This value can be set on the machine or the simulation.
@@ -150,7 +155,7 @@ class Element(object):
         else:
             if unit == pytac.ENG:
                 value = self._uc[field].eng_to_phys(value)
-            self._physics.put_value(field, value)
+            self._model.set_value(field, value)
 
     def get_pv_name(self, field, handle='*'):
         """ Get a pv name on a device.
@@ -172,7 +177,7 @@ class Element(object):
         try:
             return self._devices[field].get_pv_name(handle)
         except KeyError:
-            raise PvException('Element has no device for field {}'.format(field))
+            raise PvException('{} has no device for field {}'.format(self, field))
 
     def get_cs(self, field):
         return self._devices[field].get_cs()

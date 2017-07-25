@@ -63,8 +63,12 @@ def test_load_quad_family(lattice):
 def test_load_correctors(lattice):
     hcm = lattice.get_elements('HSTR')
     vcm = lattice.get_elements('VSTR')
-    assert len(hcm) == 173
-    assert len(vcm) == 173
+    # these are the same elements with both devices on each
+    assert hcm == vcm
+    for element in hcm:
+        # each one has both a0 (VSTR) and b0 (HSTR) as fields
+        assert set(('a0', 'b0')).issubset(element.get_fields())
+
 
 @pytest.mark.parametrize('field', ('x', 'y'))
 def test_bpm_unitconv(lattice, field):

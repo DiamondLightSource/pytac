@@ -3,7 +3,9 @@
 from pytac.exceptions import PvException
 from pytac.exceptions import ElementNotFoundException
 
+
 class Lattice(object):
+
     def __init__(self, name, control_system, energy):
         """Representation of a lattice.
 
@@ -21,6 +23,10 @@ class Lattice(object):
         self._lattice = []
         self._cs = control_system
         self._energy = energy
+        self._model = None
+
+    def set_model(self, model):
+        self._model = model
 
     def get_energy(self):
         """Function to get the total energy of the lattice.
@@ -142,7 +148,7 @@ class Lattice(object):
         """Set the pv value of a given family of pvs.
 
         The pvs are determined by family and device. Note that only setpoint
-        pvs ca be modified.
+        pvs can be modified.
 
         Args:
             family(string): A specific family to set the value of.
@@ -161,7 +167,7 @@ class Lattice(object):
                               "to the number of elements in the lattice")
         self._cs.put(pv_names, values)
 
-    def get_s(self, given_element):
+    def get_s(self, element):
         """Find the position of a given element in the lattice.
 
         Note that the given element must exist in the lattice.
@@ -177,12 +183,12 @@ class Lattice(object):
             doesn't exist inside the lattice.
         """
         s_pos = 0
-        for element in self._lattice:
-            if element is not given_element:
-                s_pos += element.get_length()
+        for el in self._lattice:
+            if el is not element:
+                s_pos += el.get_length()
             else:
                 return s_pos
-        raise ElementNotFoundException('Given element does not exist in the lattice')
+        raise ElementNotFoundException('Element {} does not exist in the lattice'.format(element))
 
     def get_family_s(self, family):
         """Get the positions for a set of elements from the same family.
