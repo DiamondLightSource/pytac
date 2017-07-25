@@ -10,12 +10,22 @@ import pytac
 RB_PV = 'rb_pv'
 SP_PV = 'sp_pv'
 
+DUMMY_VALUE_1 = 40.0
+DUMMY_VALUE_2 = 4.7
+DUMMY_VALUE_3 = -6
+
+
+def mock_uc():
+    uc = mock.MagicMock()
+    uc.phys_to_eng.return_value = DUMMY_VALUE_2
+    uc.eng_to_phys.return_value = DUMMY_VALUE_3
+    return uc
+
 
 @pytest.fixture
-def test_element(length=0.0, uc=PolyUnitConv([1, 0])):
-
+def test_element(length=0.0, uc=mock_uc()):
     mock_cs = mock.MagicMock()
-    mock_cs.get.return_value = 40.0
+    mock_cs.get.return_value = DUMMY_VALUE_1
 
     element = pytac.element.Element('dummy', 1.0, 'Quad')
     device1 = pytac.device.Device(mock_cs, True, RB_PV, SP_PV)
@@ -40,14 +50,17 @@ def test_add_element_to_family():
     assert 'fam' in e.families
 
 
-@pytest.mark.parametrize('pv_type', ['readback', 'setpoint'])
-def test_get_value(pv_type, test_element):
-    # Tests to get/set pv names and/or values
-    # The default unit conversion is identity
-    assert test_element.get_value('x', pv_type, unit=pytac.PHYS) == 40.0
-    assert test_element.get_value('x', pv_type, unit=pytac.ENG) == 40.0
-    assert test_element.get_value('y', pv_type, unit=pytac.PHYS) == 40.0
-    assert test_element.get_value('y', pv_type, unit=pytac.ENG) == 40.0
+def test_get_value_uses_cs_if_sim_False(test_element):
+    test_element.get_value('x', handle=pytac.SP, sim=False)
+    test_element.get_device('x')._cs.get.assert_called_with(SP_PV)
+    test_element.get_value('x', handle=pytac.RB, sim=False)
+    test_element.get_device('x')._cs.get.assert_called_with(RB_PV)
+
+
+def test_get_value_uses_uc_if_necessary(test_element):
+    test_element.get_value('x', handle=pytac.SP, unit=pytac.PHYS, sim=False)
+    test_element._uc['x'].eng_to_phys.assert_called_with(DUMMY_VALUE_1)
+    test_element.get_device('x')._cs.get.assert_called_with(SP_PV)
 
 
 @pytest.mark.parametrize('pv_type', ['readback', 'setpoint'])
@@ -59,11 +72,11 @@ def test_get_pv_name(pv_type, test_element):
 
 
 def test_set_value(test_element):
-    test_element.set_value('x', 40.3)
-    test_element.get_device('x')._cs.put.assert_called_with(SP_PV, 40.3)
+    test_element.set_value('x', DUMMY_VALUE_2)
+    test_element.get_device('x')._cs.put.assert_called_with(SP_PV, DUMMY_VALUE_2)
 
-    test_element.set_value('x', 40.3, unit=pytac.PHYS)
-    test_element.get_device('x')._cs.put.assert_called_with(SP_PV, 40.3)
+    test_element.set_value('x', DUMMY_VALUE_2, unit=pytac.PHYS)
+    test_element.get_device('x')._cs.put.assert_called_with(SP_PV, DUMMY_VALUE_2)
 
     with pytest.raises(PvException):
         test_element.set_value('non_existent', 40.0)
@@ -83,7 +96,7 @@ def test_identity_conversion():
     element = test_element(uc=uc_id)
     value_physics = element.get_value('x', 'setpoint', pytac.PHYS)
     value_machine = element.get_value('x', 'setpoint', pytac.ENG)
-    assert value_machine == 40.0
+    assert value_machine == DUMMY_VALUE_1
     assert value_physics == 40.0
 
 
