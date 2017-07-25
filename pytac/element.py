@@ -127,7 +127,7 @@ class Element(object):
                 value = self._uc[field].eng_to_phys(value)
             return value
 
-    def put_value(self, field, value, unit=pytac.ENG, sim=False):
+    def set_value(self, field, value, unit=pytac.ENG, sim=False):
         """Set the pv value on a uniquely identified device.
 
         This value can be set on the machine or the simulation.
@@ -155,7 +155,7 @@ class Element(object):
         else:
             if unit == pytac.ENG:
                 value = self._uc[field].eng_to_phys(value)
-            self._model.put_value(field, value)
+            self._model.set_value(field, value)
 
     def get_pv_name(self, field, handle='*'):
         """ Get a pv name on a device.

@@ -56,15 +56,15 @@ def test_get_pv_name(pv_type, test_element):
     assert isinstance(test_element.get_pv_name('y', pv_type), str)
 
 
-def test_put_value(test_element):
-    test_element.put_value('x', 40.3)
+def test_set_value(test_element):
+    test_element.set_value('x', 40.3)
     test_element.get_device('x')._cs.put.assert_called_with('SR22C-DI-EBPM-04:SA:Y', 40.3)
 
-    test_element.put_value('x', 40.3, unit=pytac.PHYS)
+    test_element.set_value('x', 40.3, unit=pytac.PHYS)
     test_element.get_device('x')._cs.put.assert_called_with('SR22C-DI-EBPM-04:SA:Y', 40.3)
 
     with pytest.raises(PvException):
-        test_element.put_value('non_existent', 40.0)
+        test_element.set_value('non_existent', 40.0)
 
 
 def test_get_pv_exceptions(test_element):
