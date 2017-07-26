@@ -141,7 +141,7 @@ function load_mml(ringmode)
                 field = 'b2';
             elseif strcmp(type, 'VSTR')
                 field = 'a0';
-            else
+            elseif strcmp(type, 'HSTR') || strcmp(type, 'BEND')
                 field = 'b0';
             end
             % MML is inconsistent about whether the family for the bends
