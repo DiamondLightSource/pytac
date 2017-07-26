@@ -34,7 +34,7 @@ def test_get_family_pvs(lattice):
 def test_load_bpms(lattice):
     bpms = lattice.get_elements('BPM')
     for bpm in bpms:
-        assert set(bpm._devices.keys()) == set(('x', 'y'))
+        assert set(bpm.get_fields()) == set(('x', 'y'))
     assert len(bpms) == 173
 
 
@@ -47,7 +47,7 @@ def test_load_quadrupoles(lattice):
     quads = lattice.get_elements('QUAD')
     assert len(quads) == 248
     for quad in quads:
-        assert set(quad._devices.keys()) == set(('b1',))
+        assert set(quad.get_fields()) == set(('b1',))
         device = quad.get_device('b1')
         assert re.match('SR.*Q.*:I', device.rb_pv)
         assert re.match('SR.*Q.*:SETI', device.sp_pv)
