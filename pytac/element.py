@@ -91,12 +91,12 @@ class Element(object):
         """
         self.families.add(family)
 
-    def get_value(self, field, handle, unit=pytac.ENG, sim=False):
-        """Get the value of a pv.
+    def get_value(self, field, handle, unit=pytac.ENG, model=pytac.LIVE):
+        """Get the value for a field.
 
-        Returns the value of a pv on the element. This value is uniquely
+        Returns the value for a field on the element. This value is uniquely
         identified by a field and a handle. The returned value is either
-        in engineering or physics units. The sim flag returns either real
+        in engineering or physics units. The model flag returns either real
         or simulated values.
 
         Args:
@@ -104,16 +104,16 @@ class Element(object):
             handle (string): Can take as value either 'setpoint' or 'readback'.
             unit (string): Specify either engineering or physics units to be
                 returned.
-            sim (boolean): Set whether real or simulated values to be returned.
+            model (string): Set whether real or simulated values to be returned.
 
         Returns:
-            Number: A number that corresponds to the pv value of the identified
-            device.
+            Number: A number that corresponds to the value of the identified
+            field.
 
         Raises:
             PvException: When there is no associated device on the given field.
         """
-        if not sim:
+        if model == pytac.LIVE:
             if field in self._devices:
                 value = self._devices[field].get_value(handle)
                 if unit == pytac.PHYS:
@@ -127,8 +127,8 @@ class Element(object):
                 value = self._uc[field].phys_to_eng(value)
             return value
 
-    def set_value(self, field, value, unit=pytac.ENG, sim=False):
-        """Set the pv value on a uniquely identified device.
+    def set_value(self, field, value, unit=pytac.ENG, model=pytac.LIVE):
+        """Set the value on a uniquely identified device.
 
         This value can be set on the machine or the simulation.
         A field is required to identify a device. Returned value
@@ -138,13 +138,13 @@ class Element(object):
             field (string): The key used to identify a device.
             value (float): The value set on the device.
             unit (string): Can be engineering or physics units.
-            sim (boolean): To set whether the simulation is on or off.
+            model (string): The type of model: simulation or live
 
         Raises:
             PvException: An exception occured accessing a field with
             no associated device.
         """
-        if not sim:
+        if model == pytac.LIVE:
             if field in self._devices:
                 if unit == pytac.PHYS:
                     value = self._uc[field].phys_to_eng(value)

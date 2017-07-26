@@ -54,21 +54,21 @@ def test_add_element_to_family():
     assert 'fam' in e.families
 
 
-def test_get_value_uses_cs_if_sim_False(test_element):
-    test_element.get_value('x', handle=pytac.SP, sim=False)
+def test_get_value_uses_cs_if_model_live(test_element):
+    test_element.get_value('x', handle=pytac.SP, model=pytac.LIVE)
     test_element.get_device('x')._cs.get.assert_called_with(SP_PV)
-    test_element.get_value('x', handle=pytac.RB, sim=False)
+    test_element.get_value('x', handle=pytac.RB, model=pytac.LIVE)
     test_element.get_device('x')._cs.get.assert_called_with(RB_PV)
 
 
 def test_get_value_uses_uc_if_necessary_for_cs_call(test_element):
-    test_element.get_value('x', handle=pytac.SP, unit=pytac.PHYS, sim=False)
+    test_element.get_value('x', handle=pytac.SP, unit=pytac.PHYS, model=pytac.LIVE)
     test_element._uc['x'].eng_to_phys.assert_called_with(DUMMY_VALUE_1)
     test_element.get_device('x')._cs.get.assert_called_with(SP_PV)
 
 
-def test_get_value_uses_uc_if_necessary_for_sim_call(test_element):
-    test_element.get_value('x', handle=pytac.SP, unit=pytac.ENG, sim=True)
+def test_get_value_uses_uc_if_necessary_for_model_call(test_element):
+    test_element.get_value('x', handle=pytac.SP, unit=pytac.ENG, model=pytac.SIM)
     test_element._uc['x'].phys_to_eng.assert_called_with(DUMMY_VALUE_2)
     test_element._model.get_value.assert_called_with('x')
 
