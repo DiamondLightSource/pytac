@@ -75,6 +75,11 @@ def test_load_correctors(lattice):
         assert set(('a0', 'b0')).issubset(element.get_fields())
 
 
+def test_load_squads(lattice):
+    sq = lattice.get_elements('SQUAD')
+    assert len(sq) == 98
+
+
 @pytest.mark.parametrize('field', ('x', 'y'))
 def test_bpm_unitconv(lattice, field):
     bpm = lattice.get_elements('BPM')[0]
