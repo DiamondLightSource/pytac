@@ -50,7 +50,7 @@ function load_mml(ringmode)
         s = s + elm.Length;
         if not(strcmp(elm.FamName, 'HSTR') || strcmp(elm.FamName, 'VSTR'))
             new_index = new_index + 1;
-            insertelement(new_index, elm, s, ringmode);
+            insertelement(new_index, old_index, elm, s, ringmode);
         else
             fprintf(f_families, '%i,%s\n', new_index, elm.FamName);
         end
@@ -77,7 +77,7 @@ function load_mml(ringmode)
     dcct = struct ('FamName', 'DCCT', 'Length', 0);
     new_index = new_index + 1;
     old_index = old_index + 1;
-    insertelement(new_index, dcct, 0, ringmode);
+    insertelement(new_index, old_index, dcct, 0, ringmode);
     s = pv_struct('I', 'SR-DI-DCCT-01:SIGNAL', '', '', '');
     insertpvs(new_index, {s});
 
@@ -193,7 +193,7 @@ function load_mml(ringmode)
         s = struct('field', field, 'get_pv', get_pv, 'set_pv', set_pv, 'enable_pv', enable_pv, 'enable_value', enable_value);
     end
 
-    function insertelement(i, elm, s, ringmode)
+    function insertelement(i, old_i, elm, s, ringmode)
         k1 = 0;
         k2 = 0;
         type = gettype(elm);
@@ -201,11 +201,14 @@ function load_mml(ringmode)
         cell = sprintf('%d', getcell(s, ringmode));
 
         % Elements with additional PVs require an extra group added.
-        extra_groups = {'SQUAD', 'BBVMXS', 'BBVMXL'};
+        % The ATIndex array lists the original indexes, so we need
+        % old_index to correctly check if this element was a member
+        % of the group.
+        extra_groups = {'SQUAD'};
         for j = 1:length(extra_groups)
             group = extra_groups{j};
             elms = getfamilydata(group);
-            if ~isempty(elms) && ismember(i, elms.AT.ATIndex)
+            if ~isempty(elms) && ismember(old_i, elms.AT.ATIndex)
                 fprintf(f_families, '%i,%s\n', i, group);
             end
         end
