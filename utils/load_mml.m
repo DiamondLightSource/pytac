@@ -22,7 +22,7 @@ function load_mml(ringmode)
     fprintf(f_elements, 'id,name,type,length,cell\n');
     devices_file = fullfile(dir, '..', 'data', ringmode, 'devices.csv');
     f_devices = fopen(devices_file, 'w');
-    fprintf(f_devices, 'id,field,get_pv,set_pv,enable_pv,enable_value\n');
+    fprintf(f_devices, 'id,name,field,get_pv,set_pv,enable_pv,enable_value\n');
     families_file = fullfile(dir, '..', 'data', ringmode, 'families.csv');
     f_families = fopen(families_file, 'w');
     fprintf(f_families, 'id,family\n');
@@ -106,9 +106,13 @@ function load_mml(ringmode)
         if size(pvs) == 0
             return;
         end
+        parts = strsplit(pvs{1}.get_pv,':');
+        prefix = parts{1};
         for i = 1:size(pvs, 2)
-            %fprintf('%s: %d\n', deblank(pvs{i}.pv), size(deblank(pvs{i}.pv), 2));
-            fprintf(f_devices, '%d,%s,%s,%s,%s,%s\n', index, pvs{i}.field, deblank(pvs{i}.get_pv), deblank(pvs{i}.set_pv), deblank(pvs{i}.enable_pv), pvs{i}.enable_value);
+            get_suffix = pvs{i}.get_pv(length(prefix) + 1:end);
+            set_suffix = pvs{i}.set_pv(length(prefix) + 1:end);
+            enable_suffix = pvs{i}.enable_pv(length(prefix) + 1:end);
+            fprintf(f_devices, '%d,%s,%s,%s,%s,%s,%s\n', index, prefix, pvs{i}.field, deblank(get_suffix), deblank(set_suffix), enable_suffix, pvs{i}.enable_value);
         end
     end
 
