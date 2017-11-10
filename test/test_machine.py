@@ -126,6 +126,15 @@ def test_load_squads(ring_mode, n_squads):
 
 
 @pytest.mark.parametrize('ring_mode', ('VMX', 'DIAD'))
+def test_cell(ring_mode):
+    lattice = get_lattice(ring_mode)
+    # there are squads in every cell
+    sq = lattice.get_elements('SQUAD')
+    assert sq[0].cell == 1
+    assert sq[-1].cell == 24
+
+
+@pytest.mark.parametrize('ring_mode', ('VMX', 'DIAD'))
 @pytest.mark.parametrize('field', ('x', 'y'))
 def test_bpm_unitconv(ring_mode, field):
     lattice = get_lattice(ring_mode)

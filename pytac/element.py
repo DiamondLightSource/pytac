@@ -6,7 +6,7 @@ import pytac
 
 class Element(object):
 
-    def __init__(self, name, length, element_type):
+    def __init__(self, name, length, element_type, cell=None):
         """An element of the ring.
 
         Represents an element of the lattice. Contains a family set
@@ -23,6 +23,7 @@ class Element(object):
         self.name = name
         self.type_ = element_type
         self.length = length
+        self.cell = cell
         self.families = set()
         self._uc = dict()
         self._devices = dict()

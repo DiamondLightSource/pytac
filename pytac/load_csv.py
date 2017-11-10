@@ -78,8 +78,9 @@ def load(mode, control_system, directory=None):
     with open(os.path.join(directory, mode, 'elements.csv')) as elements:
         csv_reader = csv.DictReader(elements)
         for item in csv_reader:
+            cell = int(item['cell']) if item['cell'] else None
             e = element.Element(item['name'], float(item['length']),
-                                item['type'])
+                                item['type'], cell)
             e.add_to_family(item['type'])
             lat.add_element(e)
 
