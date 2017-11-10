@@ -19,7 +19,7 @@ function load_mml(ringmode)
     cd(dir);
     elements_file = fullfile(dir, '..', 'data', ringmode, 'elements.csv');
     f_elements = fopen(elements_file, 'wt', 'n', 'utf-8');
-    fprintf(f_elements, 'id,name,type,length\n');
+    fprintf(f_elements, 'id,name,type,length,cell\n');
     devices_file = fullfile(dir, '..', 'data', ringmode, 'devices.csv');
     f_devices = fopen(devices_file, 'w');
     fprintf(f_devices, 'id,field,get_pv,set_pv,enable_pv,enable_value\n');
@@ -46,22 +46,22 @@ function load_mml(ringmode)
     new_index = 0;
 
     for old_index = 1:length(THERING)
-        elm = THERING{old_index};
-        s = s + elm.Length;
-        if not(strcmp(elm.FamName, 'HSTR') || strcmp(elm.FamName, 'VSTR'))
+        at_elm = THERING{old_index};
+        s = s + at_elm.Length;
+        if not(strcmp(at_elm.FamName, 'HSTR') || strcmp(at_elm.FamName, 'VSTR'))
             new_index = new_index + 1;
-            insertelement(new_index, old_index, elm, s, ringmode);
+            insertelement(new_index, old_index, at_elm, s, ringmode);
         else
-            fprintf(f_families, '%i,%s\n', new_index, elm.FamName);
+            fprintf(f_families, '%i,%s\n', new_index, at_elm.FamName);
         end
 
-        type = gettype(elm);
+        type = gettype(at_elm);
         if used_elements.isKey(type)
             used_elements(type) = used_elements(type) + 1;
         else
             used_elements(type) = 1;
         end
-        pvs = getpvs(ao, elm);
+        pvs = getpvs(ao, at_elm);
         insertpvs(new_index, pvs);
 
         renamed_indexes(old_index) = new_index;
@@ -193,12 +193,10 @@ function load_mml(ringmode)
         s = struct('field', field, 'get_pv', get_pv, 'set_pv', set_pv, 'enable_pv', enable_pv, 'enable_value', enable_value);
     end
 
-    function insertelement(i, old_i, elm, s, ringmode)
-        k1 = 0;
-        k2 = 0;
-        type = gettype(elm);
-        fprintf(f_families, '%i,%s\n', i, elm.FamName);
-        cell = sprintf('%d', getcell(s, ringmode));
+    function insertelement(i, old_i, at_elm, s, ringmode)
+        type = gettype(at_elm);
+        fprintf(f_families, '%i,%s\n', i, at_elm.FamName);
+        cell = getcell(old_i, at_elm.FamName);
 
         % Elements with additional PVs require an extra group added.
         % The ATIndex array lists the original indexes, so we need
@@ -213,37 +211,16 @@ function load_mml(ringmode)
             end
         end
 
-        if strcmp(type, 'QUAD')
-            k1 = elm.K;
-            k2 = 0;
-        elseif strcmp(type, 'SEXT')
-            k2 = elm.PolynomB(3);
-            k1 = 0;
-        elseif strcmp(type, 'BEND') && any(elm.PolynomB)
-            k1 = elm.K;
-        end
-        fprintf(f_elements, '%d,%d,%s,%f\n', i, i, type, elm.Length);
+        fprintf(f_elements, '%d,%d,%s,%f,%d\n', i, i, type, at_elm.Length, cell);
     end
 
-    function cell = getcell(position, ringmode)
-        % Hard-coded values here - I can't see a better way to do this.
-        oldcircumference = 561.6;
-        newcircumference = 561.571;
-        cell2diff = oldcircumference - newcircumference;
-        boundaries = linspace(0, 561.6, 25);
-        if is_ddba(ringmode)
-            boundaries(3:end) = boundaries(3:end) - cell2diff;
+    function cell = getcell(old_i, family)
+        cell = '';
+        familydata = getfamilydata(family);
+        if ~isempty(familydata) && isfield(familydata, 'AT')
+            family_index = familydata.AT.ATIndex == old_i;
+            cell = floor(familydata.DeviceList(family_index, 1));
         end
-        for c = 1:length(boundaries)
-            if position < boundaries(c)
-                cell = c - 1;
-                break
-            end
-        end
-    end
-
-    function is_ddba = is_ddba(ringmode)
-        is_ddba = strcmp(ringmode, 'VMX') || strcmp(ringmode , 'VMXSP');
     end
 
 end
