@@ -21,7 +21,7 @@ class Element(object):
 
         """
         self.name = name
-        self._type = element_type
+        self.type_ = element_type
         self.length = length
         self.families = set()
         self._uc = dict()
