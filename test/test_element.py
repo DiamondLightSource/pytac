@@ -45,7 +45,7 @@ def test_create_element():
     e = pytac.element.Element('bpm1', 6.0, 'bpm')
     e.add_to_family('BPM')
     assert 'BPM' in e.families
-    assert e.get_length() == 6.0
+    assert e.length == 6.0
 
 
 def test_add_element_to_family():
@@ -116,6 +116,6 @@ def test_get_fields(test_element):
 def test_element_representation(test_element):
     s = str(test_element)
     assert test_element._name in s
-    assert str(test_element._length) in s
+    assert str(test_element.length) in s
     for f in test_element.families:
         assert f in s

@@ -22,7 +22,7 @@ class Element(object):
         """
         self._name = name
         self._type = element_type
-        self._length = length
+        self.length = length
         self.families = set()
         self._uc = dict()
         self._devices = dict()
@@ -36,7 +36,7 @@ class Element(object):
         Returns:
             string: A representation of an element.
         """
-        return 'Element: {0}, length: {1}, families: {2}'.format(self._name, self._length, self.families)
+        return 'Element: {0}, length: {1}, families: {2}'.format(self._name, self.length, self.families)
 
     def set_model(self, model):
         self._model = model
@@ -48,16 +48,6 @@ class Element(object):
             list: A sequence of all the fields defined on an element.
         """
         return self._devices.keys()
-
-    def get_length(self):
-        """Gets the length of an element.
-
-        Returns:
-            float: A floating point number that represents the length
-            of the element.
-        """
-
-        return self._length
 
     def add_device(self, field, device, uc):
         """Add device and unit conversion objects to a given field.

@@ -69,7 +69,7 @@ class Lattice(object):
         """
         total_length = 0
         for e in self._lattice:
-            total_length += e.get_length()
+            total_length += e.length
         return total_length
 
     def add_element(self, element):
@@ -185,7 +185,7 @@ class Lattice(object):
         s_pos = 0
         for el in self._lattice:
             if el is not element:
-                s_pos += el.get_length()
+                s_pos += el.length
             else:
                 return s_pos
         raise ElementNotFoundException('Element {} does not exist in the lattice'.format(element))
