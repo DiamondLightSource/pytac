@@ -80,25 +80,32 @@ class Lattice(object):
         """
         self._lattice.append(element)
 
-    def get_elements(self, family=None):
+    def get_elements(self, family=None, cell=None):
         """Get the elements of a family from the lattice.
 
-        If no family is specified it returns the whole lattice.
+        If no family is specified it returns all elements.
+
+        Elements are returned in the order they exist in the ring.
 
         Args:
-            family (string): A specific family to return the elements of.
+            family (string): Restrict elements to those in this family
+            cell (int): Restrict elements to those in the specified cell
 
         Returns:
             list(Element): A list that contains all elements of the specified family.
         """
+        elements = []
         if family is None:
-            return self._lattice
+            elements = self._lattice
 
-        matched_lattice = list()
         for element in self._lattice:
             if family in element.families:
-                matched_lattice.append(element)
-        return matched_lattice
+                elements.append(element)
+
+        if cell is not None:
+            elements = [e for e in elements if e.cell == cell]
+
+        return elements
 
     def get_all_families(self):
         """Get all available families of the lattice.
