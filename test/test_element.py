@@ -7,8 +7,11 @@ import mock
 import pytac
 
 
-RB_PV = 'rb_pv'
-SP_PV = 'sp_pv'
+PREFIX = 'prefix'
+RB_SUFF = ':rb'
+RB_PV = PREFIX + RB_SUFF
+SP_SUFF = ':sp'
+SP_PV = PREFIX + SP_SUFF
 
 DUMMY_VALUE_1 = 40.0
 DUMMY_VALUE_2 = 4.7
@@ -28,8 +31,8 @@ def test_element(length=0.0, uc=mock_uc()):
     mock_cs.get.return_value = DUMMY_VALUE_1
 
     element = pytac.element.Element('dummy', 1.0, 'Quad')
-    device1 = pytac.device.Device(mock_cs, True, RB_PV, SP_PV)
-    device2 = pytac.device.Device(mock_cs, True, SP_PV, RB_PV)
+    device1 = pytac.device.Device(PREFIX, mock_cs, True, RB_SUFF, SP_SUFF)
+    device2 = pytac.device.Device(PREFIX, mock_cs, True, SP_SUFF, RB_SUFF)
 
     element.add_device('x', device1, uc)
     element.add_device('y', device2, uc)

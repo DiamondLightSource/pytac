@@ -87,6 +87,7 @@ def load(mode, control_system, directory=None):
     with open(os.path.join(directory, mode, 'devices.csv')) as devices:
         csv_reader = csv.DictReader(devices)
         for item in csv_reader:
+            name = item['name']
             enable_pv = item['enable_pv']
             enable_value = item['enable_value']
             get_pv = item['get_pv']
@@ -94,7 +95,7 @@ def load(mode, control_system, directory=None):
             pve = True
             if enable_pv and enable_value:
                 pve = device.PvEnabler(enable_pv, enable_value, control_system)
-            d = device.Device(control_system, pve, get_pv, set_pv)
+            d = device.Device(name, control_system, pve, get_pv, set_pv)
             lat[int(item['id']) - 1].add_device(item['field'], d, control_system)
 
     with open(os.path.join(directory, mode, 'families.csv')) as families:

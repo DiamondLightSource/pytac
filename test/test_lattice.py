@@ -6,7 +6,7 @@ import mock
 from pytac.units import PolyUnitConv
 from pytac.exceptions import ElementNotFoundException, PvException
 
-DUMMY_NAME = 'dummy'
+from constants import PREFIX, RB_SUFFIX, SP_SUFFIX, RB_PV, SP_PV, LATTICE
 
 
 @pytest.fixture
@@ -15,10 +15,11 @@ def simple_element(identity=1):
 
     # Create devices and attach them to the element
     element = pytac.element.Element(identity, 0, 'BPM')
-    rb_pv = 'readback_pv'
-    sp_pv = 'setpoint_pv'
-    device1 = pytac.device.Device(mock.MagicMock(), True, sp_pv, rb_pv)
-    device2 = pytac.device.Device(mock.MagicMock(), True, sp_pv, rb_pv)
+    prefix = 'prefix'
+    rb_suff = ':rb'
+    sp_suff = ':sp'
+    device1 = pytac.device.Device(prefix, mock.MagicMock(), True, sp_suff, rb_suff)
+    device2 = pytac.device.Device(prefix, mock.MagicMock(), True, sp_suff, rb_suff)
     element.add_to_family('family')
 
     element.add_device('x', device1, uc)
@@ -29,19 +30,19 @@ def simple_element(identity=1):
 
 @pytest.fixture
 def simple_element_and_lattice(simple_element):
-    l = pytac.lattice.Lattice(DUMMY_NAME, mock.MagicMock(), 1)
+    l = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)
     l.add_element(simple_element)
     return simple_element, l
 
 
 def test_create_lattice():
-    l = pytac.lattice.Lattice(DUMMY_NAME, mock.MagicMock(), 1)
+    l = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)
     assert(len(l)) == 0
-    assert l.name == DUMMY_NAME
+    assert l.name == LATTICE
 
 
 def test_non_negative_lattice():
-    l = pytac.lattice.Lattice(DUMMY_NAME, mock.MagicMock(), 1)
+    l = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)
     assert(len(l)) >= 0
 
 
@@ -70,13 +71,13 @@ def test_get_all_families(simple_element_and_lattice):
 def test_get_family_values(simple_element_and_lattice):
     element, lattice = simple_element_and_lattice
     lattice.get_family_values('family', 'x')
-    lattice._cs.get.assert_called_with(['readback_pv'])
+    lattice._cs.get.assert_called_with([RB_PV])
 
 
 def test_set_family_values(simple_element_and_lattice):
     element, lattice = simple_element_and_lattice
     lattice.set_family_values('family', 'x', [1])
-    lattice._cs.put.assert_called_with(['readback_pv'], [1])
+    lattice._cs.put.assert_called_with([RB_PV], [1])
 
 
 def test_set_family_values_raise_exception(simple_element_and_lattice):
@@ -98,7 +99,7 @@ def test_s_position(simple_element_and_lattice):
     assert lattice.get_s(element3) == 1.0
 
 def test_get_s_throws_exception_if_element_not_in_lattice():
-    l = pytac.lattice.Lattice(DUMMY_NAME, mock.MagicMock(), 1)
+    l = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)
     element = pytac.element.Element(1, 1.0, 'Quad')
     with pytest.raises(ElementNotFoundException):
         l.get_s(element)
@@ -123,5 +124,5 @@ def test_get_family_s(simple_element_and_lattice):
     assert lattice.get_family_s('family') == [0, 0, 1.0, 2.5]
 
 def test_lattice_initial_energy():
-    lattice = pytac.lattice.Lattice(DUMMY_NAME, mock.MagicMock(), 1)
+    lattice = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)
     assert lattice.get_energy() == 1

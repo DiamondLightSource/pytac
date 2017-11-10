@@ -1,0 +1,7 @@
+PREFIX = 'prefix'
+RB_SUFFIX = ':rb'
+SP_SUFFIX = ':sp'
+RB_PV = PREFIX + RB_SUFFIX
+SP_PV = PREFIX + SP_SUFFIX
+
+LATTICE = 'lattice'

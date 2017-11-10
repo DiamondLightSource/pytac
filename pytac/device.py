@@ -5,7 +5,7 @@ import pytac
 
 
 class Device(object):
-    def __init__(self, cs, enabled=True, rb_pv=None, sp_pv=None):
+    def __init__(self, name, cs, enabled=True, rb_suffix=None, sp_suffix=None):
         """A device attached on an element.
 
         Contains a control system, readback and setpoint pvs. A readback
@@ -13,24 +13,21 @@ class Device(object):
         PvException is raised. The device is enabled by default.
 
         Args:
+            name: prefix of EPICS PVs for this device
             cs (ControlSystem): Control system object used to get and set
                 the value of a pv.
             enabled (bool-like): Whether the device is enabled.  May be
                 a PvEnabler object.
-            rb_pv (string): A readback pv. This value cannot be changed.
-            sp_pv (string): A setpoint pv. This value can be read and also
-                changed.
+            rb_suffix (string): suffix of EPICS readback pv
+            sp_suffix (string): suffix of EPICS setpoint pv
         """
-        self.rb_pv = rb_pv
-        self.sp_pv = sp_pv
+        self.name = name
         self._cs = cs
-        self._enabled = enabled
-        if rb_pv is not None:
-            self.name = rb_pv.split(':')[0]
-        elif sp_pv is not None:
-            self.name = sp_pv.split(':')[0]
-        else:
-            raise PvException("Readback or setpoint pvs need to be given")
+        if rb_suffix is not None:
+            self.rb_pv = name + rb_suffix
+        if sp_suffix is not None:
+            self.sp_pv = name + sp_suffix
+        self._enabled = True
 
     def is_enabled(self):
         """Check whether an device is enabled or disabled.
@@ -51,11 +48,9 @@ class Device(object):
         Raises:
             PvException: An exception occured when no setpoint pv exists.
         """
-        # Not sure if this method will need a handle flag to set
-        # an initial value for readback pvs. Suppose not:
-        if self.sp_pv is not None:
+        try:
             self._cs.put(self.sp_pv, value)
-        else:
+        except AttributeError:
             raise PvException("""This device {0} has no setpoint pv."""
                               .format(self.name))
 
