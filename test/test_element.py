@@ -115,7 +115,7 @@ def test_get_fields(test_element):
 
 def test_element_representation(test_element):
     s = str(test_element)
-    assert test_element._name in s
+    assert test_element.name in s
     assert str(test_element.length) in s
     for f in test_element.families:
         assert f in s

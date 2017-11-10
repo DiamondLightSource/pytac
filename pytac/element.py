@@ -20,7 +20,7 @@ class Element(object):
             element_type (string): Type of the element.
 
         """
-        self._name = name
+        self.name = name
         self._type = element_type
         self.length = length
         self.families = set()
@@ -36,7 +36,7 @@ class Element(object):
         Returns:
             string: A representation of an element.
         """
-        return 'Element: {0}, length: {1}, families: {2}'.format(self._name, self.length, self.families)
+        return 'Element: {0}, length: {1}, families: {2}'.format(self.name, self.length, self.families)
 
     def set_model(self, model):
         self._model = model
