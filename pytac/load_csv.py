@@ -60,18 +60,24 @@ def load_unitconv(directory, mode, lattice):
             element._uc[item['field']] = uc[int(item['uc_id'])]
 
 
-def load(mode, control_system, directory=None):
+def load(mode, control_system=None, directory=None):
     """Load the elements of a lattice from a directory.
 
     Args:
         mode(string): The name of the mode to be loaded.
-        control_system(ControlSystem): The control system to be used.
+        control_system(ControlSystem): The control system to be used. If none is provided
+            an EpicsControlSystem will be created.
         directory(string): Directory where to load the files from. If no directory is given
-            that the data directory at the root of the repository is used.
+            the data directory at the root of the repository is used.
 
     Returns:
         Lattice: The lattice containing all elements.
     """
+    if control_system is None:
+        # Don't import epics unless we need it to avoid unnecessary
+        # installation of cothread
+        from pytac import epics
+        control_system = epics.EpicsControlSystem()
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data')
     lat = lattice.Lattice(mode, control_system, 3000)

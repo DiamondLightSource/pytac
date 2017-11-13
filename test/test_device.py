@@ -6,10 +6,6 @@ import mock
 from constants import PREFIX, RB_SUFFIX, SP_SUFFIX, RB_PV, SP_PV
 
 
-ENABLE_PV = 'SR01C-DI-EBPM-01:CF:ENABLED_S'
-ENABLED_VALUE = '1.0'
-
-
 def create_device(prefix=PREFIX, rb_suff=RB_SUFFIX, sp_suff=SP_SUFFIX, enabled=True):
     mock_cs = mock.MagicMock()
     mock_cs.get.return_value = '1.0'
