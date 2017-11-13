@@ -41,6 +41,18 @@ def test_create_lattice():
     assert l.name == LATTICE
 
 
+def test_get_devices(simple_element_and_lattice):
+    _, lattice = simple_element_and_lattice
+    devices = lattice.get_devices('family', 'x')
+    assert len(devices) == 1
+    assert devices[0].name == PREFIX
+
+
+def test_get_device_names(simple_element_and_lattice):
+    _, lattice = simple_element_and_lattice
+    assert lattice.get_device_names('family', 'x') == [PREFIX]
+
+
 def test_lattice_with_n_elements(simple_element_and_lattice):
     elem, lattice = simple_element_and_lattice
 
