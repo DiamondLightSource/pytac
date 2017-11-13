@@ -48,6 +48,18 @@ def test_get_devices(simple_element_and_lattice):
     assert devices[0].name == PREFIX
 
 
+def test_get_devices_returns_empty_list_if_family_not_matched(simple_element_and_lattice):
+    _, lattice = simple_element_and_lattice
+    devices = lattice.get_devices('not-a-family', 'x')
+    assert devices == []
+
+
+def test_get_devices_returns_empty_list_if_field_not_matched(simple_element_and_lattice):
+    _, lattice = simple_element_and_lattice
+    devices = lattice.get_devices('family', 'not-a-field')
+    assert devices == []
+
+
 def test_get_device_names(simple_element_and_lattice):
     _, lattice = simple_element_and_lattice
     assert lattice.get_device_names('family', 'x') == [PREFIX]
