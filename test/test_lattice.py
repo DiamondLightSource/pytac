@@ -15,11 +15,8 @@ def simple_element(identity=1):
 
     # Create devices and attach them to the element
     element = pytac.element.Element(identity, 0, 'BPM', cell=1)
-    prefix = 'prefix'
-    rb_suff = ':rb'
-    sp_suff = ':sp'
-    device1 = pytac.device.Device(prefix, mock.MagicMock(), True, sp_suff, rb_suff)
-    device2 = pytac.device.Device(prefix, mock.MagicMock(), True, sp_suff, rb_suff)
+    device1 = pytac.device.Device(PREFIX, mock.MagicMock(), True, RB_SUFFIX, SP_SUFFIX)
+    device2 = pytac.device.Device(PREFIX, mock.MagicMock(), True, RB_SUFFIX, SP_SUFFIX)
     element.add_to_family('family')
 
     element.add_device('x', device1, uc)
@@ -93,22 +90,22 @@ def test_get_all_families(simple_element_and_lattice):
     assert len(families) > 0
 
 
-def test_get_family_values(simple_element_and_lattice):
+def test_get_pv_values(simple_element_and_lattice):
     element, lattice = simple_element_and_lattice
-    lattice.get_family_values('family', 'x')
+    lattice.get_pv_values('family', 'x', pytac.RB)
     lattice._cs.get.assert_called_with([RB_PV])
 
 
-def test_set_family_values(simple_element_and_lattice):
+def test_set_pv_values(simple_element_and_lattice):
     element, lattice = simple_element_and_lattice
-    lattice.set_family_values('family', 'x', [1])
-    lattice._cs.put.assert_called_with([RB_PV], [1])
+    lattice.set_pv_values('family', 'x', [1])
+    lattice._cs.put.assert_called_with([SP_PV], [1])
 
 
-def test_set_family_values_raise_exception(simple_element_and_lattice):
+def test_set_pv_values_raise_exception(simple_element_and_lattice):
     element, lattice = simple_element_and_lattice
     with pytest.raises(PvException):
-        lattice.set_family_values('family','x', [1, 2])
+        lattice.set_pv_values('family','x', [1, 2])
 
 
 def test_s_position(simple_element_and_lattice):

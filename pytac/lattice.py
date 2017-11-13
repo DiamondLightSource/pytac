@@ -120,7 +120,7 @@ class Lattice(object):
 
         return families
 
-    def get_family_pvs(self, family, field, handle):
+    def get_pv_names(self, family, field, handle):
         """Get all pv names for a specific family, field and handle.
 
         Args:
@@ -137,7 +137,7 @@ class Lattice(object):
             pv_names.append(element.get_pv_name(field, handle))
         return pv_names
 
-    def get_family_values(self, family, field, handle='setpoint'):
+    def get_pv_values(self, family, field, handle):
         """Get all pv values for a set of pvs.
 
         Args:
@@ -148,10 +148,10 @@ class Lattice(object):
         Returns:
             list(float): A list of readback or setpoint pv values from the device.
         """
-        pv_names = self.get_family_pvs(family, field, handle)
+        pv_names = self.get_pv_names(family, field, handle)
         return self._cs.get(pv_names)
 
-    def set_family_values(self, family, field, values):
+    def set_pv_values(self, family, field, values):
         """Set the pv value of a given family of pvs.
 
         The pvs are determined by family and device. Note that only setpoint
@@ -167,8 +167,7 @@ class Lattice(object):
             doesn't match the number of found pvs.
 
         """
-        # Get the number of elements in the family
-        pv_names = self.get_family_pvs(family, field, 'setpoint')
+        pv_names = self.get_pv_names(family, field, 'setpoint')
         if len(pv_names) != len(values):
             raise PvException("Number of elements in given array must be equal"
                               "to the number of elements in the lattice")

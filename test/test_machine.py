@@ -42,9 +42,9 @@ def test_load_lattice(ring_mode, n_elements, length):
         ('VMX', 173),
         ('DIAD', 173)
     ])
-def test_get_family_pvs(ring_mode, n_bpms):
+def test_get_pv_names(ring_mode, n_bpms):
     lattice = get_lattice(ring_mode)
-    bpm_x_pvs = lattice.get_family_pvs('BPM', 'x', handle='readback')
+    bpm_x_pvs = lattice.get_pv_names('BPM', 'x', handle='readback')
     assert len(bpm_x_pvs) == n_bpms
     for pv in bpm_x_pvs:
         assert re.match('SR.*BPM.*X', pv)
