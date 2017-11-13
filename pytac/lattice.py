@@ -208,7 +208,7 @@ class Lattice(object):
             for each element.
         """
         elements = self.get_elements(family)
-        s_positions = list()
+        s_positions = []
         for element in elements:
             s_positions.append(self.get_s(element))
         return s_positions
