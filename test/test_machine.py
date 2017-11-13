@@ -121,8 +121,13 @@ def test_load_correctors(ring_mode, n_correctors):
     ])
 def test_load_squads(ring_mode, n_squads):
     lattice = get_lattice(ring_mode)
-    sq = lattice.get_elements('SQUAD')
-    assert len(sq) == n_squads
+    squads = lattice.get_elements('SQUAD')
+    assert len(squads) == n_squads
+    for squad in squads:
+        assert 'a1' in squad.get_fields()
+        device = squad.get_device('a1')
+        assert re.match('SR.*SQ.*:I', device.rb_pv)
+        assert re.match('SR.*SQ.*:SETI', device.sp_pv)
 
 
 @pytest.mark.parametrize('ring_mode', ('VMX', 'DIAD'))

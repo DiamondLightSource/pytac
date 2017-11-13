@@ -42,15 +42,13 @@ function load_mml(ringmode)
     used_elements = containers.Map();
     renamed_indexes = containers.Map('KeyType', 'int32', 'ValueType', 'int32');
 
-    s = 0;
     new_index = 0;
 
     for old_index = 1:length(THERING)
         at_elm = THERING{old_index};
-        s = s + at_elm.Length;
         if not(strcmp(at_elm.FamName, 'HSTR') || strcmp(at_elm.FamName, 'VSTR'))
             new_index = new_index + 1;
-            insertelement(new_index, old_index, at_elm, s, ringmode);
+            insertelement(new_index, old_index, at_elm);
         else
             fprintf(f_families, '%i,%s\n', new_index, at_elm.FamName);
         end
@@ -77,7 +75,7 @@ function load_mml(ringmode)
     dcct = struct ('FamName', 'DCCT', 'Length', 0);
     new_index = new_index + 1;
     old_index = old_index + 1;
-    insertelement(new_index, old_index, dcct, 0, ringmode);
+    insertelement(new_index, old_index, dcct);
     s = pv_struct('I', 'SR-DI-DCCT-01:SIGNAL', '', '', '');
     insertpvs(new_index, {s});
 
@@ -187,7 +185,7 @@ function load_mml(ringmode)
             for i = 1:length(elms.AT.ATIndex)
                 get_pv = elms.Monitor.ChannelNames(i,:);
                 set_pv = elms.Setpoint.ChannelNames(i,:);
-                pvs = pv_struct(field, set_pv, get_pv, '', '');
+                pvs = pv_struct(field, get_pv, set_pv, '', '');
                 insertpvs(renamed_indexes(elms.AT.ATIndex(i)), {pvs});
             end
         end
@@ -197,7 +195,7 @@ function load_mml(ringmode)
         s = struct('field', field, 'get_pv', get_pv, 'set_pv', set_pv, 'enable_pv', enable_pv, 'enable_value', enable_value);
     end
 
-    function insertelement(i, old_i, at_elm, s, ringmode)
+    function insertelement(i, old_i, at_elm)
         type = gettype(at_elm);
         fprintf(f_families, '%i,%s\n', i, at_elm.FamName);
         cell = getcell(old_i, at_elm.FamName);
