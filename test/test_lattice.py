@@ -14,7 +14,7 @@ def simple_element(identity=1):
     uc = PolyUnitConv([0, 1])
 
     # Create devices and attach them to the element
-    element = pytac.element.Element(identity, 0, 'BPM')
+    element = pytac.element.Element(identity, 0, 'BPM', cell=1)
     prefix = 'prefix'
     rb_suff = ':rb'
     sp_suff = ':sp'
@@ -79,6 +79,12 @@ def test_lattice_get_element_with_family(simple_element_and_lattice):
     element.add_to_family('fam')
     assert lattice.get_elements('fam') == [element]
     assert lattice.get_elements('nofam') == []
+
+
+def test_lattice_get_elements_by_cell(simple_element_and_lattice):
+    element, lattice = simple_element_and_lattice
+    assert lattice.get_elements(cell=1) == [element]
+    assert lattice.get_elements(cell=2) == []
 
 
 def test_get_all_families(simple_element_and_lattice):
