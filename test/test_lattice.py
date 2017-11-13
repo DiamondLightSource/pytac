@@ -41,11 +41,6 @@ def test_create_lattice():
     assert l.name == LATTICE
 
 
-def test_non_negative_lattice():
-    l = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)
-    assert(len(l)) >= 0
-
-
 def test_lattice_with_n_elements(simple_element_and_lattice):
     elem, lattice = simple_element_and_lattice
 
