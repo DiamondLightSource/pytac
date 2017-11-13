@@ -185,7 +185,7 @@ function load_mml(ringmode)
             for i = 1:length(elms.AT.ATIndex)
                 get_pv = elms.Monitor.ChannelNames(i,:);
                 set_pv = elms.Setpoint.ChannelNames(i,:);
-                pvs = pv_struct(field, set_pv, get_pv, '', '');
+                pvs = pv_struct(field, get_pv, set_pv, '', '');
                 insertpvs(renamed_indexes(elms.AT.ATIndex(i)), {pvs});
             end
         end
