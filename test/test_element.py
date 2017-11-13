@@ -57,6 +57,11 @@ def test_add_element_to_family():
     assert 'fam' in e.families
 
 
+def test_get_device_raises_KeyError_if_device_not_present(test_element):
+    with pytest.raises(KeyError):
+        test_element.get_device('not-a-device')
+
+
 def test_get_value_uses_cs_if_model_live(test_element):
     test_element.get_value('x', handle=pytac.SP, model=pytac.LIVE)
     test_element.get_device('x')._cs.get.assert_called_with(SP_PV)

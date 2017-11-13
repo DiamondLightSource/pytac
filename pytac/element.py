@@ -71,6 +71,9 @@ class Element(object):
 
         Returns:
             Device: The device on the given field.
+
+        Raises:
+            KeyError if no such device exists
         """
         return self._devices[field]
 

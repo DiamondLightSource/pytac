@@ -14,7 +14,7 @@ def simple_element(identity=1):
     uc = PolyUnitConv([0, 1])
 
     # Create devices and attach them to the element
-    element = pytac.element.Element(identity, 0, 'BPM')
+    element = pytac.element.Element(identity, 0, 'BPM', cell=1)
     prefix = 'prefix'
     rb_suff = ':rb'
     sp_suff = ':sp'
@@ -41,9 +41,28 @@ def test_create_lattice():
     assert l.name == LATTICE
 
 
-def test_non_negative_lattice():
-    l = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)
-    assert(len(l)) >= 0
+def test_get_devices(simple_element_and_lattice):
+    _, lattice = simple_element_and_lattice
+    devices = lattice.get_devices('family', 'x')
+    assert len(devices) == 1
+    assert devices[0].name == PREFIX
+
+
+def test_get_devices_returns_empty_list_if_family_not_matched(simple_element_and_lattice):
+    _, lattice = simple_element_and_lattice
+    devices = lattice.get_devices('not-a-family', 'x')
+    assert devices == []
+
+
+def test_get_devices_returns_empty_list_if_field_not_matched(simple_element_and_lattice):
+    _, lattice = simple_element_and_lattice
+    devices = lattice.get_devices('family', 'not-a-field')
+    assert devices == []
+
+
+def test_get_device_names(simple_element_and_lattice):
+    _, lattice = simple_element_and_lattice
+    assert lattice.get_device_names('family', 'x') == [PREFIX]
 
 
 def test_lattice_with_n_elements(simple_element_and_lattice):
@@ -60,6 +79,12 @@ def test_lattice_get_element_with_family(simple_element_and_lattice):
     element.add_to_family('fam')
     assert lattice.get_elements('fam') == [element]
     assert lattice.get_elements('nofam') == []
+
+
+def test_lattice_get_elements_by_cell(simple_element_and_lattice):
+    element, lattice = simple_element_and_lattice
+    assert lattice.get_elements(cell=1) == [element]
+    assert lattice.get_elements(cell=2) == []
 
 
 def test_get_all_families(simple_element_and_lattice):

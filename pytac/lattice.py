@@ -208,7 +208,46 @@ class Lattice(object):
             for each element.
         """
         elements = self.get_elements(family)
-        s_positions = list()
+        s_positions = []
         for element in elements:
             s_positions.append(self.get_s(element))
         return s_positions
+
+    def get_devices(self, family, field):
+        """Get devices attached to a specific field for elements in the specfied family.
+
+        Typically all elements of a family will have devices associated with
+        the same fields - for example, BPMs each have device for fields 'x' and 'y'.
+
+        Args:
+            family: family of elements
+            field: field specifying the devices
+
+        Returns:
+            list(devices): devices for specified family and field
+        """
+        elements = self.get_elements(family)
+        devices = []
+        for element in elements:
+            try:
+                devices.append(element.get_device(field))
+            except KeyError:
+                pass
+
+        return devices
+
+    def get_device_names(self, family, field):
+        """Get the names for devices attached to a specific field for elements in the specfied family.
+
+        Typically all elements of a family will have devices associated with
+        the same fields - for example, BPMs each have device for fields 'x' and 'y'.
+
+        Args:
+            family: family of elements
+            field: field specifying the devices
+
+        Returns:
+            list(devices): devices for specified family and field
+        """
+        devices = self.get_devices(family, field)
+        return [device.name for device in devices]
