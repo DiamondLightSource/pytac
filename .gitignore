@@ -13,6 +13,10 @@ venv
 venv3
 pip-selfcheck.json
 
+# build artifacts
+dist
+*.egg-info/
+
 # coverage
 .coverage
 htmlcov/

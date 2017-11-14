@@ -1,7 +1,7 @@
 Python Toolkit for Accelerator Controls
 =======================================
 
-Python Toolkit for Accelerator Controls (Pytac) is a Python library intended to make it easy to work with particle accelerators.
+Python Toolkit for Accelerator Controls (Pytac) is a Python library for working with elements of particle accelerators.
 
 It is a framework that allows working with control system components at a high level, providing a set of APIs used for writing further scripts and interactive controls.
 
@@ -22,7 +22,7 @@ Data may be requested in ``ENG`` or ``PHYS`` units and will be converted as appr
 
 Elements may be grouped into families (an element may be in more than one family) and requested from the lattice object in those families.
 
-Machines are defined using a set of ``.csv`` files, located by default in the ``data`` directory.
+Machines are defined using a set of ``.csv`` files, located by default in the ``pytac/data`` directory.
 
 
 Contents:
