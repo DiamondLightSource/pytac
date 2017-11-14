@@ -1,18 +1,25 @@
-""" Representation of an element which contains all the data about a particular equipment."""
+"""Module containing the element class."""
 
 from pytac.exceptions import PvException
 import pytac
 
 
 class Element(object):
+    """Class representing one physical element in an accelerator lattice.
 
+    An element has zero or more devices (e.g. quadrupole magnet) associated
+    with a field ('b1' for a quadrupole).
+
+    Attributes:
+        name (str): name identifying the element
+        type_ (str): type of the element
+        length (number): length of the element in metres
+        cell (int): the element's cell within the lattice
+        families (set): the families this element is a member of
+
+    """
     def __init__(self, name, length, element_type, cell=None):
         """An element of the ring.
-
-        Represents an element of the lattice. Contains a family set
-        that should contain the families the element is part of. There
-        exist unit conversion and devices dictionaries that need to be
-        updated accordingly. The element is enabled by default.
 
         Args:
             name (int): Unique identifier for the element in the ring.

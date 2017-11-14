@@ -10,12 +10,16 @@ import pytac
 
 
 class Device(object):
-    def __init__(self, name, cs, enabled=True, rb_suffix=None, sp_suffix=None):
-        """A device attached to an element.
+    """A device attached to an element.
 
-        Contains a control system, readback and setpoint pvs. A readback
-        or setpoint pv is required when creating a device otherwise a
-        PvException is raised. The device is enabled by default.
+    Contains a control system, readback and setpoint pvs. A readback
+    or setpoint pv is required when creating a device otherwise a
+    PvException is raised. The device is enabled by default.
+
+    """
+
+    def __init__(self, name, cs, enabled=True, rb_suffix=None, sp_suffix=None):
+        """Device constructor.
 
         Args:
             name: prefix of EPICS PVs for this device
