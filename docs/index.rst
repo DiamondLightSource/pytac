@@ -31,6 +31,7 @@ Contents:
 .. toctree::
    :maxdepth: 4
 
+   self
    examples
    pytac
 

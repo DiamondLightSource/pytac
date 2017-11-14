@@ -1,5 +1,5 @@
-pytac package
-=============
+API documentation
+=================
 
 .. automodule:: pytac
     :members:
