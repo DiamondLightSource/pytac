@@ -1,11 +1,8 @@
-""" Template module to define control systems."""
+"""Class representing an abstract control system."""
 
 
 class ControlSystem(object):
-    """ Define a control system to be used with a device.
-
-    It uses channel access to comunicate over the network with
-    the hardware.
+    """ Abstract base class representing a control system.
     """
     def __init__(self):
         raise NotImplementedError()
@@ -14,7 +11,7 @@ class ControlSystem(object):
         """ Get the value of the given pv.
 
         Args:
-            pv(string): The Pv to get the value of.
+            pv(string): The pv to get the value of.
 
         Returns:
             Number: The numeric value of the pv.
@@ -25,7 +22,7 @@ class ControlSystem(object):
         """ Put the value of a given pv.
 
         Args:
-            pv(string): The string to put the value for.
+            pv(string): The pv to put the value for.
             value(Number): The value to be set.
         """
         raise NotImplementedError()

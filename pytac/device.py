@@ -1,4 +1,9 @@
-""" A device object used to refer to a particular electronics attached to an element."""
+"""The device class used to represent a particular function of an accelerator element.
+
+A physical element in an accelerator may have multiple devices: an example at DLS
+is a sextupole magnet that contains also horizontal and vertical corrector magnets
+and a skew quadrupole.
+"""
 
 from pytac.exceptions import PvException
 import pytac
@@ -6,7 +11,7 @@ import pytac
 
 class Device(object):
     def __init__(self, name, cs, enabled=True, rb_suffix=None, sp_suffix=None):
-        """A device attached on an element.
+        """A device attached to an element.
 
         Contains a control system, readback and setpoint pvs. A readback
         or setpoint pv is required when creating a device otherwise a
@@ -30,17 +35,15 @@ class Device(object):
         self._enabled = True
 
     def is_enabled(self):
-        """Check whether an device is enabled or disabled.
+        """Whether the device is enabled.
 
         Returns:
-            boolean: Represents whether an device is enabled or disabled.
+            boolean: whether the device is enabled
         """
         return self._enabled
 
     def put_value(self, value):
-        """Set the value of a pv.
-
-        If not setpoint pv exists a PvException is raised.
+        """Set the device value.
 
         Args:
             value(Number): The value to set on the pv.
@@ -64,7 +67,7 @@ class Device(object):
                 pv.
 
         Returns:
-            Number: The value off the pv.
+            Number: The value of the pv.
 
         Raises:
             PvException: In case the requested pv doesn't exist.
@@ -77,10 +80,8 @@ class Device(object):
         raise PvException("""This device {0} has no {1} pv."""
                           .format(self.name, handle))
 
-    def get_pv_name(self, handle='*'):
+    def get_pv_name(self, handle):
         """Get a pv name on a specified handle.
-
-        If no handle is specified, then both pvs are returned.
 
         Args:
             handle(string): The readback or setpoint handle to be returned.
@@ -103,13 +104,14 @@ class PvEnabler(object):
     def __init__(self, pv, enabled_value, cs):
         """A PvEnabler class to check whether a device is enabled.
 
-        This object doesn't allow disabling the device.
+        The class will behave like True if the pv value equals enabled_value,
+        and False otherwise.
 
         Args:
-            pv(string): The string representation of the pv.
-            enabled_value(string): A pre-defined value telling when the pv
-                is enabled.
-            cs: Control system object used to determine if a pv is enabled.
+            pv(string): pv name
+            enabled_value(string): value for pv for which the device should
+                be considered enabled
+            cs: Control system object
         """
         self._pv = pv
         self._enabled_value = str(int(float(enabled_value)))
@@ -121,7 +123,7 @@ class PvEnabler(object):
         Support for Python 2.7.
 
         Returns:
-            boolean: Determining whether a device is enabled or not.
+            boolean: True if the device should be considered enabled
         """
         pv_value = self._cs.get(self._pv)
         return self._enabled_value == str(int(float(pv_value)))
@@ -132,6 +134,6 @@ class PvEnabler(object):
         Support for Python 3.x.
 
         Returns:
-            boolean: Determining whether a device is enabled or not.
+            boolean: True if the device should be considered enabled
         """
         return self.__nonzero__()

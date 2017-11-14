@@ -1,3 +1,5 @@
+"""Pytac: Python Toolkit for Accelerator Controls."""
+
 # PV types
 SP = 'setpoint'
 RB = 'readback'
