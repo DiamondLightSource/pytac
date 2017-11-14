@@ -9,7 +9,7 @@ Initialisation
      >>> import pytac.load_csv
      >>> lattice = pytac.load_csv.load('VMX')
 
-The ``lattice`` object used for interacting with elements of the accelerator.
+The ``lattice`` object is used for interacting with elements of the accelerator.
 
 Print BPM pvs along with s position
 -----------------------------------

@@ -1,8 +1,10 @@
 pytac package
 =============
 
-Submodules
-----------
+.. automodule:: pytac
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 pytac.cs module
 ---------------
@@ -64,15 +66,6 @@ pytac.units module
 ------------------
 
 .. automodule:: pytac.units
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: pytac
     :members:
     :undoc-members:
     :show-inheritance:
