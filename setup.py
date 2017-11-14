@@ -67,6 +67,7 @@ setup(
     # simple. Or you can use find_packages().
     # packages=find_packages['pytac', 'test']),
     packages=['pytac'],
+    include_package_data=True,
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
