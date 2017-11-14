@@ -5,3 +5,4 @@ pytest
 numpy
 scipy
 mock
+sphinx_rtd_theme
