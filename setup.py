@@ -22,7 +22,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.3',
+    version='0.1',
 
     description='Python Toolkit for Accelerator Controls (Pytac) is a Python library intended to make it easy to work with particle accelerators.',
     long_description=long_description,
@@ -60,17 +60,12 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
 
-    # What does your project relate to?
-    keywords='accelerator physics development',
+    keywords='accelerator physics',
 
-    # You can just specify the packages manually here if your project is
-    # simple. Or you can use find_packages().
-    # packages=find_packages['pytac', 'test']),
     packages=['pytac'],
-
-    # Alternatively, if you want to distribute just a my_module.py, uncomment
-    # this:
-    #   py_modules=["my_module"],
+    # We need to use files from inside the package, so don't zip
+    include_package_data=True,
+    zip_safe=False,
 
     # List run-time dependencies here.  These will be installed by pip when
     # your project is installed. For an analysis of "install_requires" vs pip's

@@ -79,7 +79,7 @@ def load(mode, control_system=None, directory=None):
         from pytac import epics
         control_system = epics.EpicsControlSystem()
     if directory is None:
-        directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data')
+        directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
     lat = lattice.Lattice(mode, control_system, 3000)
     with open(os.path.join(directory, mode, 'elements.csv')) as elements:
         csv_reader = csv.DictReader(elements)

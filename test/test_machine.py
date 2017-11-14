@@ -17,8 +17,7 @@ EPS = 1e-8
 def get_lattice(ring_mode):
     """ Load the entire lattice from the data directory. """
     basepath = os.getcwd()
-    filename = os.path.join(basepath, 'data/')
-    lattice = pytac.load_csv.load(ring_mode, mock.MagicMock(), filename)
+    lattice = pytac.load_csv.load(ring_mode, mock.MagicMock())
     return lattice
 
 
