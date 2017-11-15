@@ -1,4 +1,6 @@
 """Module to load the elements of the machine from multiple csv files stored in the same directory."""
+from __future__ import print_function
+import sys
 import os
 import csv
 from pytac import lattice, element, device, units, utils
@@ -72,13 +74,20 @@ def load(mode, control_system=None, directory=None):
     Returns:
         Lattice: The lattice containing all elements.
     """
-    if control_system is None:
-        # Don't import epics unless we need it to avoid unnecessary
-        # installation of cothread
-        from pytac import epics
-        control_system = epics.EpicsControlSystem()
+    try:
+        if control_system is None:
+            # Don't import epics unless we need it to avoid unnecessary
+            # installation of cothread
+            from pytac import epics
+            control_system = epics.EpicsControlSystem()
+    except ImportError:
+        print(('To load a lattice using the default control system,'
+                ' please install cothread.'),
+              file=sys.stderr)
+        return None
     if directory is None:
-        directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+        directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                 'data')
     lat = lattice.Lattice(mode, control_system, 3000)
     with open(os.path.join(directory, mode, 'elements.csv')) as elements:
         csv_reader = csv.DictReader(elements)
