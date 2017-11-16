@@ -31,10 +31,8 @@ class Device(object):
         """
         self.name = name
         self._cs = cs
-        if rb_suffix is not None:
-            self.rb_pv = name + rb_suffix
-        if sp_suffix is not None:
-            self.sp_pv = name + sp_suffix
+        self.rb_pv = name + rb_suffix if rb_suffix is not None else None
+        self.sp_pv = name + sp_suffix if sp_suffix is not None else None
         self._enabled = True
 
     def is_enabled(self):
@@ -54,11 +52,10 @@ class Device(object):
         Raises:
             PvException: An exception occured when no setpoint pv exists.
         """
-        try:
-            self._cs.put(self.sp_pv, value)
-        except AttributeError:
+        if self.sp_pv is None:
             raise PvException("""This device {0} has no setpoint pv."""
                               .format(self.name))
+        self._cs.put(self.sp_pv, value)
 
     def get_value(self, handle):
         """Read the value of a readback or setpoint pv.

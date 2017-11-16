@@ -106,8 +106,8 @@ def load(mode, control_system=None, directory=None):
             name = item['name']
             enable_pv = item['enable_pv']
             enable_value = item['enable_value']
-            get_pv = item['get_pv']
-            set_pv = item['set_pv']
+            get_pv = item['get_pv'] if item['get_pv'] else None
+            set_pv = item['set_pv'] if item['set_pv'] else None
             pve = True
             if enable_pv and enable_value:
                 pve = device.PvEnabler(enable_pv, enable_value, control_system)
