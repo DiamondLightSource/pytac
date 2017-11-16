@@ -92,12 +92,13 @@ class Device(object):
         Returns:
             str: A readback or setpoint pv.
         """
-        if handle == '*':
-            return [self.rb_pv, self.sp_pv]
-        elif handle == pytac.RB:
+        if handle == pytac.RB and self.rb_pv:
             return self.rb_pv
-        elif handle == pytac.SP:
+        elif handle == pytac.SP and self.sp_pv:
             return self.sp_pv
+
+        raise PvException("""This device {0} has no {1} pv."""
+                          .format(self.name, handle))
 
     def get_cs(self):
         return self._cs

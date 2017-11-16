@@ -166,15 +166,14 @@ class Element(object):
                 value = self._uc[field].eng_to_phys(value)
             self._model.set_value(field, value)
 
-    def get_pv_name(self, field, handle='*'):
+    def get_pv_name(self, field, handle):
         """ Get a pv name on a device.
 
         Can return the readback and setpoint pvs if no handle is specified.
 
         Args:
             field (string): Uniquely identifies a device.
-            handle(string): Can be 'readback' or 'setpoint' to return each pv.
-                If neither is specified then both pvs are returned.
+            handle(string): pytac.RB or pytac.SP
 
         Returns:
             string: A readback or setpoint pv associated with the identified device.
