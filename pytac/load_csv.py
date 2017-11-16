@@ -25,8 +25,8 @@ def load_unitconv(directory, mode, lattice):
     """Load the unit conversion objects from a file.
 
     Args:
-        directory(string): The directory where the data is stored.
-        mode(string): The name of the mode that is used.
+        directory (str): The directory where the data is stored.
+        mode (str): The name of the mode that is used.
         lattice(Lattice): The lattice object that will be used.
     """
     data = collections.defaultdict(list)

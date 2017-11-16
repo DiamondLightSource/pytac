@@ -24,7 +24,7 @@ class Element(object):
         Args:
             name (int): Unique identifier for the element in the ring.
             length (float): The length of the element.
-            element_type (string): Type of the element.
+            element_type (str): Type of the element.
             s (float): Position of the start of the element in the ring
             cell (int): lattice cell this element is wihin
 
@@ -45,7 +45,7 @@ class Element(object):
         Return a representation of an element, as a string.
 
         Returns:
-            string: A representation of an element.
+            str: A representation of an element.
         """
         repn = '<Element {0}, length {1} m, families {2}>'
         return repn.format(self.name,
@@ -69,7 +69,7 @@ class Element(object):
         """Add device and unit conversion objects to a given field.
 
         Args:
-            field (string): The key to store the unit conversion and device
+            field (str): The key to store the unit conversion and device
                 objects.
             device (Device): Represents a device stored on an element.
             uc (UnitConv): Represents a unit conversion object used for this
@@ -82,7 +82,7 @@ class Element(object):
         """Get the device for the given field.
 
         Args:
-            field (string): The lookup key to find the device on an element.
+            field (str): The lookup key to find the device on an element.
 
         Returns:
             Device: The device on the given field.
@@ -96,7 +96,7 @@ class Element(object):
         """Add the element to the specified family.
 
         Args:
-            family (string): Represents the name of the family
+            family (str): Represents the name of the family
         """
         self.families.add(family)
 
@@ -109,11 +109,11 @@ class Element(object):
         or simulated values.
 
         Args:
-            field (string): Choose which device to use.
-            handle (string): Can take as value either 'setpoint' or 'readback'.
-            unit (string): Specify either engineering or physics units to be
+            field (str): Choose which device to use.
+            handle (str): Can take as value either 'setpoint' or 'readback'.
+            unit (str): Specify either engineering or physics units to be
                 returned.
-            model (string): Set whether real or simulated values to be returned.
+            model (str): Set whether real or simulated values to be returned.
 
         Returns:
             Number: A number that corresponds to the value of the identified
@@ -144,10 +144,10 @@ class Element(object):
         can be engineering or physics.
 
         Args:
-            field (string): The key used to identify a device.
+            field (str): The key used to identify a device.
             value (float): The value set on the device.
-            unit (string): Can be engineering or physics units.
-            model (string): The type of model: simulation or live
+            unit (str): Can be engineering or physics units.
+            model (str): The type of model: simulation or live
 
         Raises:
             PvException: An exception occured accessing a field with
@@ -172,11 +172,11 @@ class Element(object):
         Can return the readback and setpoint pvs if no handle is specified.
 
         Args:
-            field (string): Uniquely identifies a device.
-            handle(string): pytac.RB or pytac.SP
+            field (str): Uniquely identifies a device.
+            handle (str): pytac.RB or pytac.SP
 
         Returns:
-            string: A readback or setpoint pv associated with the identified device.
+            str: A readback or setpoint pv associated with the identified device.
 
         Raises:
             PvException: An exception occured accessing a field with
