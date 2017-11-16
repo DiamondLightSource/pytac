@@ -20,6 +20,12 @@ def test_elements_loaded(lattice):
     assert lattice.get_length() == 2.6
 
 
+def test_element_details_loaded(lattice):
+    quad = lattice.get_elements('quad')[0]
+    assert quad.cell == 1
+    assert quad.s == 1.0
+
+
 def test_devices_loaded(lattice):
     quads = lattice.get_elements('quad')
     assert len(quads) == 1
