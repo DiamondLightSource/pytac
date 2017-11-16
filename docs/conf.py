@@ -37,6 +37,9 @@ extensions = [
     'sphinx.ext.viewcode',
 ]
 
+# Include both class and __init__() docstrings.
+autoclass_content = 'both'
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
