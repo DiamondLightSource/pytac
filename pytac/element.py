@@ -47,7 +47,12 @@ class Element(object):
         Returns:
             string: A representation of an element.
         """
-        return 'Element: {0}, length: {1}, families: {2}'.format(self.name, self.length, self.families)
+        repn = '<Element {0}, length {1} m, families {2}>'
+        return repn.format(self.name,
+                           self.length,
+                           ', '.join(f for f in self.families))
+
+    __repr__ = __str__
 
     def set_model(self, model):
         self._model = model
