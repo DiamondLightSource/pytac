@@ -25,8 +25,8 @@ def load_unitconv(directory, mode, lattice):
     """Load the unit conversion objects from a file.
 
     Args:
-        directory(string): The directory where the data is stored.
-        mode(string): The name of the mode that is used.
+        directory (str): The directory where the data is stored.
+        mode (str): The name of the mode that is used.
         lattice(Lattice): The lattice object that will be used.
     """
     data = collections.defaultdict(list)
@@ -65,10 +65,10 @@ def load(mode, control_system=None, directory=None):
     """Load the elements of a lattice from a directory.
 
     Args:
-        mode(string): The name of the mode to be loaded.
-        control_system(ControlSystem): The control system to be used. If none is provided
+        mode (str): The name of the mode to be loaded.
+        control_system (ControlSystem): The control system to be used. If none is provided
             an EpicsControlSystem will be created.
-        directory(string): Directory where to load the files from. If no directory is given
+        directory (str): Directory where to load the files from. If no directory is given
             the data directory at the root of the repository is used.
 
     Returns:
@@ -89,14 +89,16 @@ def load(mode, control_system=None, directory=None):
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
     lat = lattice.Lattice(mode, control_system, 3000)
+    s = 0
     with open(os.path.join(directory, mode, 'elements.csv')) as elements:
         csv_reader = csv.DictReader(elements)
         for item in csv_reader:
+            length = float(item['length'])
             cell = int(item['cell']) if item['cell'] else None
-            e = element.Element(item['name'], float(item['length']),
-                                item['type'], cell)
+            e = element.Element(item['name'], length, item['type'], s, cell)
             e.add_to_family(item['type'])
             lat.add_element(e)
+            s += length
 
     with open(os.path.join(directory, mode, 'devices.csv')) as devices:
         csv_reader = csv.DictReader(devices)
@@ -104,8 +106,8 @@ def load(mode, control_system=None, directory=None):
             name = item['name']
             enable_pv = item['enable_pv']
             enable_value = item['enable_value']
-            get_pv = item['get_pv']
-            set_pv = item['set_pv']
+            get_pv = item['get_pv'] if item['get_pv'] else None
+            set_pv = item['set_pv'] if item['set_pv'] else None
             pve = True
             if enable_pv and enable_value:
                 pve = device.PvEnabler(enable_pv, enable_value, control_system)

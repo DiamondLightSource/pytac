@@ -14,22 +14,25 @@ class Element(object):
         name (str): name identifying the element
         type_ (str): type of the element
         length (number): length of the element in metres
+        s (float): the element's start position within the lattice in metres
         cell (int): the element's cell within the lattice
         families (set): the families this element is a member of
 
     """
-    def __init__(self, name, length, element_type, cell=None):
-        """An element of the ring.
-
+    def __init__(self, name, length, element_type, s=None, cell=None):
+        """
         Args:
             name (int): Unique identifier for the element in the ring.
             length (float): The length of the element.
-            element_type (string): Type of the element.
+            element_type (str): Type of the element.
+            s (float): Position of the start of the element in the ring
+            cell (int): lattice cell this element is wihin
 
         """
         self.name = name
         self.type_ = element_type
         self.length = length
+        self.s = s
         self.cell = cell
         self.families = set()
         self._uc = dict()
@@ -42,9 +45,14 @@ class Element(object):
         Return a representation of an element, as a string.
 
         Returns:
-            string: A representation of an element.
+            str: A representation of an element.
         """
-        return 'Element: {0}, length: {1}, families: {2}'.format(self.name, self.length, self.families)
+        repn = '<Element {0}, length {1} m, families {2}>'
+        return repn.format(self.name,
+                           self.length,
+                           ', '.join(f for f in self.families))
+
+    __repr__ = __str__
 
     def set_model(self, model):
         self._model = model
@@ -61,10 +69,10 @@ class Element(object):
         """Add device and unit conversion objects to a given field.
 
         Args:
-            field (string): The key to store the unit conversion and device
+            field (str): The key to store the unit conversion and device
                 objects.
             device (Device): Represents a device stored on an element.
-            uc (PolyUnitConv/PchipUnitConv): Represents a unit conversion object stored for a
+            uc (UnitConv): Represents a unit conversion object used for this
                 device.
         """
         self._devices[field] = device
@@ -74,7 +82,7 @@ class Element(object):
         """Get the device for the given field.
 
         Args:
-            field (string): The lookup key to find the device on an element.
+            field (str): The lookup key to find the device on an element.
 
         Returns:
             Device: The device on the given field.
@@ -88,7 +96,7 @@ class Element(object):
         """Add the element to the specified family.
 
         Args:
-            family (string): Represents the name of the family
+            family (str): Represents the name of the family
         """
         self.families.add(family)
 
@@ -101,11 +109,11 @@ class Element(object):
         or simulated values.
 
         Args:
-            field (string): Choose which device to use.
-            handle (string): Can take as value either 'setpoint' or 'readback'.
-            unit (string): Specify either engineering or physics units to be
+            field (str): Choose which device to use.
+            handle (str): Can take as value either 'setpoint' or 'readback'.
+            unit (str): Specify either engineering or physics units to be
                 returned.
-            model (string): Set whether real or simulated values to be returned.
+            model (str): Set whether real or simulated values to be returned.
 
         Returns:
             Number: A number that corresponds to the value of the identified
@@ -136,10 +144,10 @@ class Element(object):
         can be engineering or physics.
 
         Args:
-            field (string): The key used to identify a device.
+            field (str): The key used to identify a device.
             value (float): The value set on the device.
-            unit (string): Can be engineering or physics units.
-            model (string): The type of model: simulation or live
+            unit (str): Can be engineering or physics units.
+            model (str): The type of model: simulation or live
 
         Raises:
             PvException: An exception occured accessing a field with
@@ -158,18 +166,17 @@ class Element(object):
                 value = self._uc[field].eng_to_phys(value)
             self._model.set_value(field, value)
 
-    def get_pv_name(self, field, handle='*'):
+    def get_pv_name(self, field, handle):
         """ Get a pv name on a device.
 
         Can return the readback and setpoint pvs if no handle is specified.
 
         Args:
-            field (string): Uniquely identifies a device.
-            handle(string): Can be 'readback' or 'setpoint' to return each pv.
-                If neither is specified then both pvs are returned.
+            field (str): Uniquely identifies a device.
+            handle (str): pytac.RB or pytac.SP
 
         Returns:
-            string: A readback or setpoint pv associated with the identified device.
+            str: A readback or setpoint pv associated with the identified device.
 
         Raises:
             PvException: An exception occured accessing a field with

@@ -8,7 +8,7 @@ import os
 import re
 import mock
 import numpy
-from pytac.exceptions import UniqueSolutionException
+from pytac.exceptions import PvException, UniqueSolutionException
 
 
 EPS = 1e-8
@@ -58,6 +58,9 @@ def test_load_bpms(ring_mode, n_bpms):
     bpms = lattice.get_elements('BPM')
     for bpm in bpms:
         assert set(bpm.get_fields()) == set(('x', 'y'))
+        assert re.match('SR.*BPM.*X', bpm.get_pv_name('x', pytac.RB))
+        with pytest.raises(PvException):
+            bpm.get_pv_name('x', pytac.SP)
     assert len(bpms) == n_bpms
 
 

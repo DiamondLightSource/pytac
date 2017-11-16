@@ -19,23 +19,20 @@ class Device(object):
     """
 
     def __init__(self, name, cs, enabled=True, rb_suffix=None, sp_suffix=None):
-        """Device constructor.
-
+        """
         Args:
             name: prefix of EPICS PVs for this device
             cs (ControlSystem): Control system object used to get and set
                 the value of a pv.
             enabled (bool-like): Whether the device is enabled.  May be
                 a PvEnabler object.
-            rb_suffix (string): suffix of EPICS readback pv
-            sp_suffix (string): suffix of EPICS setpoint pv
+            rb_suffix (str): suffix of EPICS readback pv
+            sp_suffix (str): suffix of EPICS setpoint pv
         """
         self.name = name
         self._cs = cs
-        if rb_suffix is not None:
-            self.rb_pv = name + rb_suffix
-        if sp_suffix is not None:
-            self.sp_pv = name + sp_suffix
+        self.rb_pv = name + rb_suffix if rb_suffix is not None else None
+        self.sp_pv = name + sp_suffix if sp_suffix is not None else None
         self._enabled = True
 
     def is_enabled(self):
@@ -50,16 +47,15 @@ class Device(object):
         """Set the device value.
 
         Args:
-            value(Number): The value to set on the pv.
+            value (float): The value to set on the pv.
 
         Raises:
             PvException: An exception occured when no setpoint pv exists.
         """
-        try:
-            self._cs.put(self.sp_pv, value)
-        except AttributeError:
+        if self.sp_pv is None:
             raise PvException("""This device {0} has no setpoint pv."""
                               .format(self.name))
+        self._cs.put(self.sp_pv, value)
 
     def get_value(self, handle):
         """Read the value of a readback or setpoint pv.
@@ -67,11 +63,11 @@ class Device(object):
         If neither readback or setpoint pvs exist then a PvException is raised.
 
         Args:
-            handle(string): Handle used to get the value off a readback or setpoint
+            handle (str): Handle used to get the value off a readback or setpoint
                 pv.
 
         Returns:
-            Number: The value of the pv.
+            float: The value of the pv.
 
         Raises:
             PvException: In case the requested pv doesn't exist.
@@ -88,17 +84,18 @@ class Device(object):
         """Get a pv name on a specified handle.
 
         Args:
-            handle(string): The readback or setpoint handle to be returned.
+            handle (str): The readback or setpoint handle to be returned.
 
         Returns:
-            string: A readback or setpoint pv.
+            str: A readback or setpoint pv.
         """
-        if handle == '*':
-            return [self.rb_pv, self.sp_pv]
-        elif handle == pytac.RB:
+        if handle == pytac.RB and self.rb_pv:
             return self.rb_pv
-        elif handle == pytac.SP:
+        elif handle == pytac.SP and self.sp_pv:
             return self.sp_pv
+
+        raise PvException("""This device {0} has no {1} pv."""
+                          .format(self.name, handle))
 
     def get_cs(self):
         return self._cs
@@ -112,8 +109,8 @@ class PvEnabler(object):
         and False otherwise.
 
         Args:
-            pv(string): pv name
-            enabled_value(string): value for pv for which the device should
+            pv (str): pv name
+            enabled_value (str): value for pv for which the device should
                 be considered enabled
             cs: Control system object
         """
@@ -127,7 +124,7 @@ class PvEnabler(object):
         Support for Python 2.7.
 
         Returns:
-            boolean: True if the device should be considered enabled
+            bool: True if the device should be considered enabled
         """
         pv_value = self._cs.get(self._pv)
         return self._enabled_value == str(int(float(pv_value)))
@@ -138,6 +135,6 @@ class PvEnabler(object):
         Support for Python 3.x.
 
         Returns:
-            boolean: True if the device should be considered enabled
+            bool: True if the device should be considered enabled
         """
         return self.__nonzero__()
