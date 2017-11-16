@@ -89,14 +89,16 @@ def load(mode, control_system=None, directory=None):
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
     lat = lattice.Lattice(mode, control_system, 3000)
+    s = 0
     with open(os.path.join(directory, mode, 'elements.csv')) as elements:
         csv_reader = csv.DictReader(elements)
         for item in csv_reader:
+            length = float(item['length'])
             cell = int(item['cell']) if item['cell'] else None
-            e = element.Element(item['name'], float(item['length']),
-                                item['type'], cell)
+            e = element.Element(item['name'], length, item['type'], s, cell)
             e.add_to_family(item['type'])
             lat.add_element(e)
+            s += length
 
     with open(os.path.join(directory, mode, 'devices.csv')) as devices:
         csv_reader = csv.DictReader(devices)
