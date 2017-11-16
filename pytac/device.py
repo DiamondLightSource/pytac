@@ -19,16 +19,15 @@ class Device(object):
     """
 
     def __init__(self, name, cs, enabled=True, rb_suffix=None, sp_suffix=None):
-        """Device constructor.
-
+        """
         Args:
             name: prefix of EPICS PVs for this device
             cs (ControlSystem): Control system object used to get and set
                 the value of a pv.
             enabled (bool-like): Whether the device is enabled.  May be
                 a PvEnabler object.
-            rb_suffix (string): suffix of EPICS readback pv
-            sp_suffix (string): suffix of EPICS setpoint pv
+            rb_suffix (str): suffix of EPICS readback pv
+            sp_suffix (str): suffix of EPICS setpoint pv
         """
         self.name = name
         self._cs = cs
@@ -50,7 +49,7 @@ class Device(object):
         """Set the device value.
 
         Args:
-            value(Number): The value to set on the pv.
+            value (float): The value to set on the pv.
 
         Raises:
             PvException: An exception occured when no setpoint pv exists.
@@ -67,11 +66,11 @@ class Device(object):
         If neither readback or setpoint pvs exist then a PvException is raised.
 
         Args:
-            handle(string): Handle used to get the value off a readback or setpoint
+            handle (str): Handle used to get the value off a readback or setpoint
                 pv.
 
         Returns:
-            Number: The value of the pv.
+            float: The value of the pv.
 
         Raises:
             PvException: In case the requested pv doesn't exist.
@@ -88,10 +87,10 @@ class Device(object):
         """Get a pv name on a specified handle.
 
         Args:
-            handle(string): The readback or setpoint handle to be returned.
+            handle (str): The readback or setpoint handle to be returned.
 
         Returns:
-            string: A readback or setpoint pv.
+            str: A readback or setpoint pv.
         """
         if handle == '*':
             return [self.rb_pv, self.sp_pv]
@@ -112,8 +111,8 @@ class PvEnabler(object):
         and False otherwise.
 
         Args:
-            pv(string): pv name
-            enabled_value(string): value for pv for which the device should
+            pv (str): pv name
+            enabled_value (str): value for pv for which the device should
                 be considered enabled
             cs: Control system object
         """
@@ -127,7 +126,7 @@ class PvEnabler(object):
         Support for Python 2.7.
 
         Returns:
-            boolean: True if the device should be considered enabled
+            bool: True if the device should be considered enabled
         """
         pv_value = self._cs.get(self._pv)
         return self._enabled_value == str(int(float(pv_value)))
@@ -138,6 +137,6 @@ class PvEnabler(object):
         Support for Python 3.x.
 
         Returns:
-            boolean: True if the device should be considered enabled
+            bool: True if the device should be considered enabled
         """
         return self.__nonzero__()

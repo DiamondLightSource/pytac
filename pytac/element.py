@@ -72,7 +72,7 @@ class Element(object):
             field (string): The key to store the unit conversion and device
                 objects.
             device (Device): Represents a device stored on an element.
-            uc (PolyUnitConv/PchipUnitConv): Represents a unit conversion object stored for a
+            uc (UnitConv): Represents a unit conversion object used for this
                 device.
         """
         self._devices[field] = device

@@ -65,10 +65,10 @@ def load(mode, control_system=None, directory=None):
     """Load the elements of a lattice from a directory.
 
     Args:
-        mode(string): The name of the mode to be loaded.
-        control_system(ControlSystem): The control system to be used. If none is provided
+        mode (str): The name of the mode to be loaded.
+        control_system (ControlSystem): The control system to be used. If none is provided
             an EpicsControlSystem will be created.
-        directory(string): Directory where to load the files from. If no directory is given
+        directory (str): Directory where to load the files from. If no directory is given
             the data directory at the root of the repository is used.
 
     Returns:

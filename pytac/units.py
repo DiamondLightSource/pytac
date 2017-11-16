@@ -9,26 +9,28 @@ def unit_function(value):
     """Default value for the pre and post functions used in unit conversion.
 
     Args:
-        value(Number): The value to be converted.
+        value (float): The value to be converted.
 
     Returns:
-        value(Number): The result of the conversion.
+        value (float): The result of the conversion.
     """
     return value
 
 
 class UnitConv(object):
+    """Class to convert between physics and engineering units.
+
+    The two arguments to this function represent functions that are
+    applied to the result of the initial conversion. One happens after
+    the conversion, the other happens before the conversion back.
+    """
+
     def __init__(self, post_eng_to_phys=unit_function, pre_phys_to_eng=unit_function):
-        """Class to convert between physics and engineering units.
-
-        The two arguments to this function represent functions that are
-        applied to the result of the initial conversion. One happens after
-        the conversion, the other happens before the conversion back.
-
+        """
         Args:
-            post_eng_to_phys(function): Function to be applied post the initial
+            post_eng_to_phys (function): Function to be applied after the initial
                 conversion.
-            pre_phys_to_eng(function): Function to be applied preceding the initial
+            pre_phys_to_eng (function): Function to be applied before the initial
                 conversion.
         """
         self._post_eng_to_phys = post_eng_to_phys
@@ -38,7 +40,8 @@ class UnitConv(object):
         """Function to be implemented by child classes.
 
         Args:
-            value(Number): Value to be converted from engineering to physics untits.
+            value (float): Value to be converted from engineering to physics
+                units.
         """
         raise NotImplementedError()
 
@@ -49,10 +52,10 @@ class UnitConv(object):
         be casted on the initial conversion.
 
         Args:
-            value(Number): Value to be converted from engineering to physics units.
+            value (float): Value to be converted from engineering to physics units.
 
         Returns:
-            result(Number): The result value.
+            result (float): The result value.
         """
         x = self._raw_eng_to_phys(value)
         result = self._post_eng_to_phys(x)
@@ -62,7 +65,7 @@ class UnitConv(object):
         """Function to be implemented by child classes.
 
         Args:
-            value(Number): Value to be converted from physics to engineering units.
+            value (float): Value to be converted from physics to engineering units.
         """
         raise NotImplementedError()
 
@@ -73,10 +76,10 @@ class UnitConv(object):
         be casted on the initial conversion.
 
         Args:
-            value(Number): Value to be converted from physics to engineering units.
+            value (float): Value to be converted from physics to engineering units.
 
         Returns:
-            result(Number): The result value.
+            result (float): The result value.
         """
         x = self._pre_phys_to_eng(value)
         result = self._raw_phys_to_eng(x)
@@ -88,7 +91,7 @@ class PolyUnitConv(UnitConv):
         """Linear interpolation for converting between physics and engineering units.
 
         Args:
-            coef(array_like): The polynomial's coefficients, in decreasing powers.
+            coef (array_like): The polynomial's coefficients, in decreasing powers.
         """
         super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng)
         self.p = numpy.poly1d(coef)
@@ -97,7 +100,7 @@ class PolyUnitConv(UnitConv):
         """Convert between engineering and physics units.
 
         Args:
-            eng_value(float): The engineering value to be converted to the engineering unit.
+            eng_value (float): The engineering value to be converted to the engineering unit.
 
         Returns:
             float: The physics value determined using the engineering value.
