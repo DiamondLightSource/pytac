@@ -15,17 +15,20 @@ class Element(object):
         type_ (str): type of the element
         length (number): length of the element in metres
         s (float): the element's start position within the lattice in metres
+        index (int): the element's index within the ring, starting at 1
         cell (int): the element's cell within the lattice
         families (set): the families this element is a member of
 
     """
-    def __init__(self, name, length, element_type, s=None, cell=None):
+    def __init__(self, name, length, element_type,
+                 s=None, index=None, cell=None):
         """
         Args:
             name (int): Unique identifier for the element in the ring.
             length (float): The length of the element.
             element_type (str): Type of the element.
             s (float): Position of the start of the element in the ring
+            index (float): Index of the element in the ring, starting at 1
             cell (int): lattice cell this element is wihin
 
         """
@@ -33,6 +36,7 @@ class Element(object):
         self.type_ = element_type
         self.length = length
         self.s = s
+        self.index = index
         self.cell = cell
         self.families = set()
         self._uc = dict()

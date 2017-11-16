@@ -24,6 +24,7 @@ def test_element_details_loaded(lattice):
     quad = lattice.get_elements('quad')[0]
     assert quad.cell == 1
     assert quad.s == 1.0
+    assert quad.index == 2
 
 
 def test_devices_loaded(lattice):
