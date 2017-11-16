@@ -17,13 +17,13 @@ function load_mml(ringmode)
     % load directly into the ap SQL database
     dir = fileparts(mfilename('fullpath'));
     cd(dir);
-    elements_file = fullfile(dir, '..', 'data', ringmode, 'elements.csv');
+    elements_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'elements.csv');
     f_elements = fopen(elements_file, 'wt', 'n', 'utf-8');
     fprintf(f_elements, 'id,name,type,length,cell\n');
-    devices_file = fullfile(dir, '..', 'data', ringmode, 'devices.csv');
+    devices_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'devices.csv');
     f_devices = fopen(devices_file, 'w');
     fprintf(f_devices, 'id,name,field,get_pv,set_pv,enable_pv,enable_value\n');
-    families_file = fullfile(dir, '..', 'data', ringmode, 'families.csv');
+    families_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'families.csv');
     f_families = fopen(families_file, 'w');
     fprintf(f_families, 'id,family\n');
 
