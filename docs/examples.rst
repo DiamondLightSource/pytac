@@ -32,7 +32,7 @@ Print BPM pvs along with s position
 - Print the device names and s position of each BPM::
 
     >>> for bpm in bpms:
-    >>>    print('BPM {} at position {}'.format(bpm.get_device('x').name, lattice.get_s(bpm)))
+    >>>    print('BPM {} at position {}'.format(bpm.get_device('x').name, bpm.s))
     BPM SR01C-DI-EBPM-01 at position 4.38
     BPM SR01C-DI-EBPM-02 at position 8.8065
     BPM SR01C-DI-EBPM-03 at position 11.374
