@@ -217,6 +217,10 @@ function load_mml(ringmode)
     end
 
     function cell = getcell(old_i, family)
+        % Special case - the MML family is either BPMx or BPMy
+        if strcmp(family, 'BPM')
+            family = 'BPMx';
+        end
         cell = '';
         familydata = getfamilydata(family);
         if ~isempty(familydata) && isfield(familydata, 'AT')
