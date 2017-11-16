@@ -83,8 +83,6 @@ def test_get_value_uses_uc_if_necessary_for_model_call(test_element):
 
 @pytest.mark.parametrize('pv_type', ['readback', 'setpoint'])
 def test_get_pv_name(pv_type, test_element):
-    assert isinstance(test_element.get_pv_name('x'), list)
-    assert isinstance(test_element.get_pv_name('y'), list)
     assert isinstance(test_element.get_pv_name('x', pv_type), str)
     assert isinstance(test_element.get_pv_name('y', pv_type), str)
 
@@ -105,8 +103,6 @@ def test_get_pv_exceptions(test_element):
         test_element.get_value('setpoint', 'unknown_field')
     with pytest.raises(PvException):
         test_element.get_value('unknown_handle', 'y')
-    with pytest.raises(PvException):
-        test_element.get_pv_name('unknown_handle')
 
 
 def test_identity_conversion():
@@ -120,6 +116,7 @@ def test_identity_conversion():
 
 def test_get_fields(test_element):
     assert set(test_element.get_fields()) == set(['y', 'x'])
+
 
 def test_element_representation(test_element):
     s = str(test_element)
