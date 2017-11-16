@@ -2,9 +2,9 @@
 function load_unitconv(ringmode, renamedIndexes)
 dir = fileparts(mfilename('fullpath'));
 cd(dir);
-units_file = fullfile(dir, '..', 'data', ringmode, 'unitconv.csv');
-poly_file = fullfile(dir, '..', 'data', ringmode, 'uc_poly_data.csv');
-pchip_file = fullfile(dir, '..', 'data', ringmode, 'uc_pchip_data.csv');
+units_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'unitconv.csv');
+poly_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'uc_poly_data.csv');
+pchip_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'uc_pchip_data.csv');
 
 fprintf('Loading unit conversions...\n');
 

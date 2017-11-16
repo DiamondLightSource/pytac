@@ -62,6 +62,8 @@ def test_load_bpms(ring_mode, n_bpms):
         with pytest.raises(PvException):
             bpm.get_pv_name('x', pytac.SP)
     assert len(bpms) == n_bpms
+    assert bpms[0].cell == 1
+    assert bpms[-1].cell == 24
 
 
 @pytest.mark.parametrize('ring_mode,n_drifts', [
