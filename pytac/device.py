@@ -33,7 +33,7 @@ class Device(object):
         self._cs = cs
         self.rb_pv = name + rb_suffix if rb_suffix is not None else None
         self.sp_pv = name + sp_suffix if sp_suffix is not None else None
-        self._enabled = True
+        self._enabled = enabled
 
     def is_enabled(self):
         """Whether the device is enabled.

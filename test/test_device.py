@@ -31,19 +31,14 @@ def test_get_device_value():
         device.get_value('non_existent')
 
 
-def test_is_enabled_empty_string():
-    device = create_device(enabled=False)
-    assert device.is_enabled()
-
-
 def test_device_is_enabled_by_default():
     device = create_device()
     assert device.is_enabled()
 
 
-def test_is_disabled_if_False_enabler():
+def test_device_is_disabled_if_False_enabler():
     device = create_device(enabled=False)
-    assert device.is_enabled()
+    assert not device.is_enabled()
 
 
 def test_PvEnabler():
