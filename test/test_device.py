@@ -41,6 +41,11 @@ def test_device_is_disabled_if_False_enabler():
     assert not device.is_enabled()
 
 
+def test_device_is_enabled_returns_bool_value():
+    device = create_device(enabled=mock.MagicMock())
+    assert device.is_enabled() is True
+
+
 def test_PvEnabler():
     mock_cs = mock.MagicMock()
     mock_cs.get.return_value = '40'

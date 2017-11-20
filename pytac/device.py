@@ -41,7 +41,7 @@ class Device(object):
         Returns:
             boolean: whether the device is enabled
         """
-        return self._enabled
+        return bool(self._enabled)
 
     def put_value(self, value):
         """Set the device value.
