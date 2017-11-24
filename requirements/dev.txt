@@ -1,4 +1,6 @@
 python-coveralls
 cothread
 pytest-cov
-mock==2.0
+pytest
+mock
+sphinx_rtd_theme
