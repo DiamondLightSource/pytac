@@ -21,9 +21,9 @@ Documentation is available at Readthedocs_.
 Testing
 =======
 
-It is simplest to work with a virtualenv.  Then::
+It is simplest to work with pipenv.  Then::
 
- $ pip install -r requirements/local.txt
+ $ pipenv install --dev
  $ python -m pytest
 
 To see a coverage report, check pep8 and pyflakes::
