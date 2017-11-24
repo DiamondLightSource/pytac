@@ -9,15 +9,19 @@ import collections
 
 def get_div_rigidity(energy):
     rigidity = utils.rigidity(energy)
+
     def div_rigidity(input):
         return input / rigidity
+
     return div_rigidity
 
 
 def get_mult_rigidity(energy):
     rigidity = utils.rigidity(energy)
+
     def mult_rigidity(input):
         return input * rigidity
+
     return mult_rigidity
 
 

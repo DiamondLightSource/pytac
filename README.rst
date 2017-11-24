@@ -24,11 +24,11 @@ Testing
 It is simplest to work with a virtualenv.  Then::
 
  $ pip install -r requirements/local.txt
- $ python -m pytest test
+ $ python -m pytest
 
-To see a coverage report::
+To see a coverage report, check pep8 and pyflakes::
 
- $ python -m pytest --cov=pytac test
+ $ python -m pytest --cov=pytac --pep8 --flakes
 
 To build the documentation::
 

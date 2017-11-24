@@ -12,7 +12,7 @@ install:
 
 script:
   - export PYTHONPATH=.
-  - py.test --cov=pytac --pep8
+  - py.test --cov=pytac --pep8 --flakes
 
 after_success:
   - coveralls
