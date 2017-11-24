@@ -14,11 +14,11 @@ mock = "*"
 pytest-flakes = "*"
 "pytest-pep8" = "*"
 bpython = "*"
+sphinx = "*"
+sphinx-rtd-theme = "*"
 
 
 [packages]
 
 numpy = "*"
 scipy = "*"
-sphinx = "*"
-sphinx-rtd-theme = "*"
