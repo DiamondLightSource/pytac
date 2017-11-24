@@ -3,7 +3,7 @@ import pytac.device
 import pytest
 import mock
 
-from constants import PREFIX, RB_SUFFIX, SP_SUFFIX, RB_PV, SP_PV
+from constants import PREFIX, RB_SUFFIX, SP_SUFFIX
 
 
 def create_device(prefix=PREFIX, rb_suff=RB_SUFFIX, sp_suff=SP_SUFFIX, enabled=True):

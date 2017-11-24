@@ -4,7 +4,6 @@
 """
 import pytac
 import pytest
-import os
 import re
 import mock
 import numpy
@@ -16,7 +15,6 @@ EPS = 1e-8
 
 def get_lattice(ring_mode):
     """ Load the entire lattice from the data directory. """
-    basepath = os.getcwd()
     lattice = pytac.load_csv.load(ring_mode, mock.MagicMock())
     return lattice
 
@@ -165,20 +163,14 @@ def test_quad_unitconv():
 
 
 def test_quad_unitconv_raise_exception():
-    lattice = get_lattice('VMX')
-    LAT_ENERGY = 3000
-
-    element = pytac.element.Element('raise_exception', 10, 'q1d')
     uc = pytac.units.PchipUnitConv([50.0, 100.0, 180.0], [-4.95, -9.85, -17.56])
     with pytest.raises(UniqueSolutionException):
         numpy.testing.assert_allclose(uc.phys_to_eng(-0.7), 70.8834284954)
 
 
 def test_quad_unitconv_known_failing_test():
-    lattice = get_lattice('VMX')
     LAT_ENERGY = 3000
 
-    element = pytac.element.Element('failing_element', 10, 'q1d')
     uc = pytac.units.PchipUnitConv([50.0, 100.0, 180.0], [-4.95, -9.85, -17.56])
     uc._post_eng_to_phys = pytac.load_csv.get_div_rigidity(LAT_ENERGY)
     uc._pre_phys_to_eng = pytac.load_csv.get_mult_rigidity(LAT_ENERGY)
