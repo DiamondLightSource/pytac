@@ -1,4 +1,0 @@
-python-coveralls
-cothread
-pytest-cov
-mock==2.0

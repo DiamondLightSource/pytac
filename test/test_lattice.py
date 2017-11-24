@@ -105,7 +105,7 @@ def test_set_pv_values(simple_element_and_lattice):
 def test_set_pv_values_raise_exception(simple_element_and_lattice):
     element, lattice = simple_element_and_lattice
     with pytest.raises(PvException):
-        lattice.set_pv_values('family','x', [1, 2])
+        lattice.set_pv_values('family', 'x', [1, 2])
 
 
 def test_s_position(simple_element_and_lattice):
@@ -120,11 +120,13 @@ def test_s_position(simple_element_and_lattice):
     lattice.add_element(element3)
     assert lattice.get_s(element3) == 1.0
 
+
 def test_get_s_throws_exception_if_element_not_in_lattice():
     l = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)
     element = pytac.element.Element(1, 1.0, 'Quad')
     with pytest.raises(ElementNotFoundException):
         l.get_s(element)
+
 
 def test_get_family_s(simple_element_and_lattice):
     element1, lattice = simple_element_and_lattice
@@ -144,6 +146,7 @@ def test_get_family_s(simple_element_and_lattice):
     element4.add_to_family('family')
     lattice.add_element(element4)
     assert lattice.get_family_s('family') == [0, 0, 1.0, 2.5]
+
 
 def test_lattice_initial_energy():
     lattice = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)

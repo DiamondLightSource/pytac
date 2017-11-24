@@ -1,4 +1,0 @@
-pytest
-numpy
-scipy
-pytest-pep8
