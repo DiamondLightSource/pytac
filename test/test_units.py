@@ -6,6 +6,7 @@ import numpy
 def f1(value):
     return value * 2
 
+
 def f2(value):
     return value / 2
 
@@ -55,6 +56,7 @@ def test_pp_conversion_to_machine_2_points():
     assert pchip_uc.phys_to_eng(1) == 1
     assert pchip_uc.phys_to_eng(1.5) == 1.5
 
+
 def test_pp_not_monotonically_increasing_error():
     with pytest.raises(ValueError):
         PchipUnitConv([1, 2, 3], [1, 3, 2])
@@ -62,12 +64,14 @@ def test_pp_not_monotonically_increasing_error():
     with pytest.raises(ValueError):
         PchipUnitConv([-1, -2, -3], [-1, -2, -3])
 
+
 def test_PchipUnitConv_with_additional_function():
     pchip_uc = PchipUnitConv([2, 4], [2, 4], f1, f2)
     assert pchip_uc.eng_to_phys(2) == 4.0
     assert pchip_uc.eng_to_phys(3) == 6.0
     assert pchip_uc.phys_to_eng(4.0) == 2
     assert pchip_uc.phys_to_eng(6.0) == 3
+
 
 def test_PolyUnitConv_with_additional_function():
     ucpoly_uc = PolyUnitConv([2, 3], f1, f2)

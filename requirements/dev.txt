@@ -1,6 +1,7 @@
 python-coveralls
 cothread
-pytest-cov
 pytest
+pytest-cov
+pytest-pep8
 mock
 sphinx_rtd_theme
