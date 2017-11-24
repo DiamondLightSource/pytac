@@ -21,9 +21,13 @@ Documentation is available at Readthedocs_.
 Testing
 =======
 
-It is simplest to work with pipenv.  Then::
+It is simplest to work with pipenv::
 
  $ pipenv install --dev
+ $ pipenv shell
+
+To run the tests::
+
  $ python -m pytest
 
 To see a coverage report, check pep8 and pyflakes::
