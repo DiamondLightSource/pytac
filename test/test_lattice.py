@@ -2,6 +2,7 @@ import pytest
 import pytac.lattice
 import pytac.element
 import pytac.device
+import pytac.model
 import mock
 from pytac.units import PolyUnitConv
 
@@ -18,6 +19,7 @@ def simple_element(identity=1):
     device2 = pytac.device.Device(PREFIX, mock.MagicMock(), True, RB_SUFFIX, SP_SUFFIX)
     element.add_to_family('family')
 
+    element.set_model(pytac.model.DeviceModel(), pytac.LIVE)
     element.add_device('x', device1, uc)
     element.add_device('y', device2, uc)
 

@@ -38,9 +38,8 @@ class Element(object):
         self.index = index
         self.cell = cell
         self.families = set()
-        self._uc = dict()
-        self._devices = dict()
-        self._model = None
+        self._uc = {}
+        self._models = {}
 
     def __str__(self):
         """Auxiliary function to print out an element.
@@ -57,32 +56,51 @@ class Element(object):
 
     __repr__ = __str__
 
-    def set_model(self, model):
-        self._model = model
+    def set_model(self, model, model_type):
+        """Add a model to the element.
+
+        Args:
+            model (Model): instance of Model
+            model_type (str): pytac.LIVE or pytac.SIM
+
+        """
+        self._models[model_type] = model
 
     def get_fields(self):
         """Get the fields defined on an element.
 
+        Includes all fields defined by all models.
+
         Returns:
             list: A sequence of all the fields defined on an element.
         """
-        return self._devices.keys()
+        fields = set()
+        for model in self._models:
+            fields.update(self._models[model].get_fields())
+        return fields
 
     def add_device(self, field, device, uc):
         """Add device and unit conversion objects to a given field.
 
+        A DeviceModel must be set before calling this method.
+
         Args:
             field (str): The key to store the unit conversion and device
                 objects.
-            device (Device): Represents a device stored on an element.
-            uc (UnitConv): Represents a unit conversion object used for this
-                device.
+            device (Device): device object used for this field.
+            uc (UnitConv): unit conversion object used for this field.
+
+        Raises:
+            KeyError if no DeviceModel is set
+
         """
-        self._devices[field] = device
+        self._models[pytac.LIVE].add_device(field, device)
         self._uc[field] = uc
 
     def get_device(self, field):
         """Get the device for the given field.
+
+        A DeviceModel must be set before calling this method.
 
         Args:
             field (str): The lookup key to find the device on an element.
@@ -91,9 +109,9 @@ class Element(object):
             Device: The device on the given field.
 
         Raises:
-            KeyError if no such device exists
+            KeyError if no DeviceModel is set
         """
-        return self._devices[field]
+        return self._models[pytac.LIVE].get_device(field)
 
     def add_to_family(self, family):
         """Add the element to the specified family.
@@ -103,7 +121,7 @@ class Element(object):
         """
         self.families.add(family)
 
-    def get_value(self, field, handle, unit=pytac.ENG, model=pytac.LIVE):
+    def get_value(self, field, handle=pytac.RB, units=pytac.ENG, model=pytac.LIVE):
         """Get the value for a field.
 
         Returns the value for a field on the element. This value is uniquely
@@ -112,34 +130,27 @@ class Element(object):
         or simulated values.
 
         Args:
-            field (str): Choose which device to use.
-            handle (str): Can take as value either 'setpoint' or 'readback'.
-            unit (str): Specify either engineering or physics units to be
+            field (str): requested field
+            handle (str): pytac.SP or pytac.RB
+            unit (str): pytac.ENG or pytac.PHYS
                 returned.
-            model (str): Set whether real or simulated values to be returned.
+            model (str): pytac.LIVE or pytac.SIM
 
         Returns:
-            Number: A number that corresponds to the value of the identified
-            field.
+            Number: value of the requested field
 
         Raises:
-            DeviceException: When there is no associated device on the given field.
+            DeviceException if there is no device on the given field
         """
-        if model == pytac.LIVE:
-            if field in self._devices:
-                value = self._devices[field].get_value(handle)
-                if unit == pytac.PHYS:
-                    value = self._uc[field].eng_to_phys(value)
-                return value
-            else:
-                raise DeviceException("No device associated with field {0}".format(field))
-        else:
-            value = self._model.get_value(field)
-            if unit == pytac.ENG:
-                value = self._uc[field].phys_to_eng(value)
-            return value
+        try:
+            model = self._models[model]
+            value = model.get_value(field, handle)
+            return self._uc[field].convert(value, origin=model.units, target=units)
+        except KeyError:
+            raise DeviceException('No model type {} on element {}'.format(model,
+                self))
 
-    def set_value(self, field, value, unit=pytac.ENG, model=pytac.LIVE):
+    def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG, model=pytac.LIVE):
         """Set the value on a uniquely identified device.
 
         This value can be set on the machine or the simulation.
@@ -147,46 +158,39 @@ class Element(object):
         can be engineering or physics.
 
         Args:
-            field (str): The key used to identify a device.
-            value (float): The value set on the device.
-            unit (str): Can be engineering or physics units.
-            model (str): The type of model: simulation or live
+            field (str): requested field
+            value (float): value to set
+            unit (str): pytac.ENG or pytac.PHYS
+            model (str): pytac.LIVE or pytac.SIM
 
         Raises:
-            DeviceException: An exception occured accessing a field with
-            no associated device.
+            DeviceException if arguments are incorrect
         """
-        if model == pytac.LIVE:
-            if field in self._devices:
-                if unit == pytac.PHYS:
-                    value = self._uc[field].phys_to_eng(value)
-                self._devices[field].put_value(value)
-            else:
-                raise DeviceException('''There is no device associated with
-                                     field {0}'''.format(field))
-        else:
-            if unit == pytac.ENG:
-                value = self._uc[field].eng_to_phys(value)
-            self._model.set_value(field, value)
+        if handle != pytac.SP:
+            raise DeviceException('Must write using {}'.format(pytac.SP))
+        try:
+            model = self._models[model]
+            self._uc[field].convert(origin=units, target=model.units)
+            model.set_value(field, value)
+        except KeyError:
+            raise DeviceException('No model type {} on element {}'.format(model,
+                self))
 
     def get_pv_name(self, field, handle):
         """ Get a pv name on a device.
 
-        Can return the readback and setpoint pvs if no handle is specified.
-
         Args:
-            field (str): Uniquely identifies a device.
+            field (str): requested field
             handle (str): pytac.RB or pytac.SP
 
         Returns:
-            str: A readback or setpoint pv associated with the identified device.
+            str: readback or setpoint pv for the specified field
 
         Raises:
-            DeviceException: An exception occured accessing a field with
-            no associated device.
+            DeviceException if there is no device for this field
         """
         try:
-            return self._devices[field].get_pv_name(handle)
+            return self._models[pytac.LIVE].get_pv_name(field, handle)
         except KeyError:
             raise DeviceException('{} has no device for field {}'.format(self, field))
 

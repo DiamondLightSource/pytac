@@ -46,7 +46,7 @@ class Device(object):
         """
         return bool(self._enabled)
 
-    def put_value(self, value):
+    def set_value(self, value):
         """Set the device value.
 
         Args:
