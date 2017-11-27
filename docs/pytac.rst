@@ -30,22 +30,6 @@ pytac.element module
     :undoc-members:
     :show-inheritance:
 
-pytac.epics module
-------------------
-
-.. automodule:: pytac.epics
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pytac.exceptions module
------------------------
-
-.. automodule:: pytac.exceptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 pytac.lattice module
 --------------------
 
@@ -58,6 +42,14 @@ pytac.load_csv module
 ---------------------
 
 .. automodule:: pytac.load_csv
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pytac.model module
+---------------------
+
+.. automodule:: pytac.model
     :members:
     :undoc-members:
     :show-inheritance:
