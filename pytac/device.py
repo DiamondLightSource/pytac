@@ -43,7 +43,7 @@ class Device(object):
         """
         return bool(self._enabled)
 
-    def put_value(self, value):
+    def set_value(self, value):
         """Set the device value.
 
         Args:
@@ -72,6 +72,7 @@ class Device(object):
         Raises:
             PvException: In case the requested pv doesn't exist.
         """
+        print('getting {}'.format('handle'))
         if handle == pytac.RB and self.rb_pv:
             return self._cs.get(self.rb_pv)
         elif handle == pytac.SP and self.sp_pv:

@@ -15,14 +15,14 @@ def create_device(prefix=PREFIX, rb_suff=RB_SUFFIX, sp_suff=SP_SUFFIX, enabled=T
 
 def test_set_device_value():
     device = create_device()
-    device.put_value(40)
+    device.set_value(40)
     device._cs.put.assert_called_with(PREFIX + SP_SUFFIX, 40)
 
 
 def test_device_invalid_sp_raise_exception():
     device2 = create_device(PREFIX, RB_SUFFIX, None)
     with pytest.raises(PvException):
-        device2.put_value(40)
+        device2.set_value(40)
 
 
 def test_get_device_value():

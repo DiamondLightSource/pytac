@@ -1,6 +1,7 @@
 from pytac.exceptions import PvException
 import pytac.element
 import pytac.device
+import pytac.model
 from pytac.units import PolyUnitConv
 import pytest
 import mock
@@ -34,12 +35,14 @@ def test_element(length=0.0, uc=mock_uc()):
     device1 = pytac.device.Device(PREFIX, mock_cs, True, RB_SUFF, SP_SUFF)
     device2 = pytac.device.Device(PREFIX, mock_cs, True, SP_SUFF, RB_SUFF)
 
+    device_model = pytac.model.DeviceModel()
+    element.set_model(device_model, pytac.LIVE)
     element.add_device('x', device1, uc)
     element.add_device('y', device2, uc)
 
     mock_model = mock.MagicMock()
     mock_model.get_value.return_value = DUMMY_VALUE_2
-    element.set_model(mock_model)
+    element.set_model(mock_model, pytac.SIM)
 
     return element
 
@@ -70,13 +73,14 @@ def test_get_value_uses_cs_if_model_live(test_element):
 
 
 def test_get_value_uses_uc_if_necessary_for_cs_call(test_element):
-    test_element.get_value('x', handle=pytac.SP, unit=pytac.PHYS, model=pytac.LIVE)
+    test_element.get_value('x', handle=pytac.SP, units=pytac.PHYS, model=pytac.LIVE)
     test_element._uc['x'].eng_to_phys.assert_called_with(DUMMY_VALUE_1)
     test_element.get_device('x')._cs.get.assert_called_with(SP_PV)
 
 
 def test_get_value_uses_uc_if_necessary_for_model_call(test_element):
-    test_element.get_value('x', handle=pytac.SP, unit=pytac.ENG, model=pytac.SIM)
+    print(test_element._models)
+    test_element.get_value('x', handle=pytac.SP, units=pytac.ENG, model=pytac.SIM)
     test_element._uc['x'].phys_to_eng.assert_called_with(DUMMY_VALUE_2)
     test_element._model.get_value.assert_called_with('x')
 
@@ -91,7 +95,7 @@ def test_set_value(test_element):
     test_element.set_value('x', DUMMY_VALUE_2)
     test_element.get_device('x')._cs.put.assert_called_with(SP_PV, DUMMY_VALUE_2)
 
-    test_element.set_value('x', DUMMY_VALUE_2, unit=pytac.PHYS)
+    test_element.set_value('x', DUMMY_VALUE_2, units=pytac.PHYS)
     test_element.get_device('x')._cs.put.assert_called_with(SP_PV, DUMMY_VALUE_2)
 
     with pytest.raises(PvException):
