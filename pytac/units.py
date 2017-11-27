@@ -1,8 +1,9 @@
 """ An unit conversion object used to convert between physics and engineering units."""
 
+import pytac
 import numpy
 from scipy.interpolate import PchipInterpolator
-from pytac.exceptions import UniqueSolutionException
+from pytac.exceptions import UniqueSolutionException, UnitsException
 
 
 def unit_function(value):
@@ -85,6 +86,15 @@ class UnitConv(object):
         result = self._raw_phys_to_eng(x)
         return result
 
+    def convert(self, value, origin, target):
+        if origin == target:
+            return value
+        if origin == pytac.PHYS and target == pytac.ENG:
+            return self.phys_to_eng(value)
+        if origin == pytac.ENG and target == pytac.PHYS:
+            return self.eng_to_phys(value)
+        raise UnitsException('Conversion {} to {} not understood'.format(origin,
+                target))
 
 class PolyUnitConv(UnitConv):
     def __init__(self, coef, post_eng_to_phys=unit_function, pre_phys_to_eng=unit_function):

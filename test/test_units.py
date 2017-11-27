@@ -1,4 +1,5 @@
 import pytest
+import pytac
 from pytac.units import PolyUnitConv, PchipUnitConv
 import numpy
 
@@ -24,6 +25,14 @@ def test_linear_conversion():
     physics_value = linear_conversion.eng_to_phys(4)
     machine_value = linear_conversion.phys_to_eng(5)
     assert physics_value == 11
+    assert machine_value == 1
+
+
+def test_linear_conversion_specifying_units():
+    linear_conversion = PolyUnitConv([2, 3])
+    physics_value = linear_conversion.convert(4, pytac.ENG, pytac.PHYS)
+    assert physics_value == 11
+    machine_value = linear_conversion.convert(5, pytac.PHYS, pytac.ENG)
     assert machine_value == 1
 
 

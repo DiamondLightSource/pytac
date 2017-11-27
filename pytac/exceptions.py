@@ -11,3 +11,7 @@ class ElementNotFoundException(Exception):
 
 class UniqueSolutionException(Exception):
     pass
+
+
+class UnitsException(Exception):
+    pass
