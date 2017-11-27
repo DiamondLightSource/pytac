@@ -3,7 +3,8 @@ from __future__ import print_function
 import sys
 import os
 import csv
-from pytac import lattice, element, device, units, utils
+import pytac
+from pytac import lattice, element, device, model, units, utils
 import collections
 
 
@@ -103,6 +104,7 @@ def load(mode, control_system=None, directory=None):
             e = element.Element(item['name'], length,
                                 item['type'], s, index, cell)
             e.add_to_family(item['type'])
+            e.set_model(model.DeviceModel(), pytac.LIVE)
             lat.add_element(e)
             s += length
             index += 1

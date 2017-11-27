@@ -5,7 +5,7 @@ class DeviceModel(object):
 
     def __init__(self):
         self._devices = {}
-        self.units = pytac.LIVE
+        self.units = pytac.ENG
 
     def add_device(self, field, device):
         self._devices[field] = device

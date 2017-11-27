@@ -21,7 +21,7 @@ def test_set_device_value():
 def test_device_invalid_sp_raise_exception():
     device2 = create_device(PREFIX, RB_SUFFIX, None)
     with pytest.raises(pytac.device.DeviceException):
-        device2.put_value(40)
+        device2.set_value(40)
 
 
 def test_get_device_value():
