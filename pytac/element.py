@@ -38,7 +38,7 @@ class Element(object):
         self.index = index
         self.cell = cell
         self.families = set()
-        self._uc = dict()
+        self._uc = {}
         self._models = {pytac.LIVE: None, pytac.SIM: None}
 
     def __str__(self):
