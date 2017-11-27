@@ -4,7 +4,6 @@ import pytac.element
 import pytac.device
 import mock
 from pytac.units import PolyUnitConv
-from pytac.exceptions import ElementNotFoundException, PvException
 
 from constants import PREFIX, RB_SUFFIX, SP_SUFFIX, RB_PV, SP_PV, LATTICE
 
@@ -104,7 +103,7 @@ def test_set_pv_values(simple_element_and_lattice):
 
 def test_set_pv_values_raise_exception(simple_element_and_lattice):
     element, lattice = simple_element_and_lattice
-    with pytest.raises(PvException):
+    with pytest.raises(pytac.lattice.LatticeException):
         lattice.set_pv_values('family', 'x', [1, 2])
 
 
@@ -124,7 +123,7 @@ def test_s_position(simple_element_and_lattice):
 def test_get_s_throws_exception_if_element_not_in_lattice():
     l = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)
     element = pytac.element.Element(1, 1.0, 'Quad')
-    with pytest.raises(ElementNotFoundException):
+    with pytest.raises(pytac.lattice.LatticeException):
         l.get_s(element)
 
 

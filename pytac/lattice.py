@@ -1,7 +1,8 @@
 """ Representation of a lattice object which contains all the elements of the machine."""
 
-from pytac.exceptions import PvException
-from pytac.exceptions import ElementNotFoundException
+
+class LatticeException(Exception):
+    pass
 
 
 class Lattice(object):
@@ -163,13 +164,12 @@ class Lattice(object):
             values(list(float)): A list of values to assign to the pvs.
 
         Raises:
-            PvException: An exception raised in case the given list of values
-            doesn't match the number of found pvs.
+            LatticeException: if the given list of values doesn't match the number of found pvs.
 
         """
         pv_names = self.get_pv_names(family, field, 'setpoint')
         if len(pv_names) != len(values):
-            raise PvException("Number of elements in given array must be equal"
+            raise LatticeException("Number of elements in given array must be equal"
                               "to the number of elements in the lattice")
         self._cs.put(pv_names, values)
 
@@ -185,8 +185,7 @@ class Lattice(object):
             float: the position of the given element.
 
         Raises
-            ElementNotFoundException: An exception is raised in case the element
-            doesn't exist inside the lattice.
+            LatticeException: if element doesn't exist in the lattice.
         """
         s_pos = 0
         for el in self._lattice:
@@ -194,7 +193,7 @@ class Lattice(object):
                 s_pos += el.length
             else:
                 return s_pos
-        raise ElementNotFoundException('Element {} does not exist in the lattice'.format(element))
+        raise LatticeException('Element {} does not exist in the lattice'.format(element))
 
     def get_family_s(self, family):
         """Get the positions for a set of elements from the same family.

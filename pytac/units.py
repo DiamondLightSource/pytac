@@ -1,9 +1,11 @@
 """ An unit conversion object used to convert between physics and engineering units."""
-
 import pytac
 import numpy
 from scipy.interpolate import PchipInterpolator
-from pytac.exceptions import UniqueSolutionException, UnitsException
+
+
+class UnitsException(Exception):
+    pass
 
 
 def unit_function(value):
@@ -95,6 +97,7 @@ class UnitConv(object):
             return self.eng_to_phys(value)
         raise UnitsException('Conversion {} to {} not understood'.format(origin,
                 target))
+
 
 class PolyUnitConv(UnitConv):
     def __init__(self, coef, post_eng_to_phys=unit_function, pre_phys_to_eng=unit_function):
@@ -197,8 +200,8 @@ class PchipUnitConv(UnitConv):
                     solution_within_bounds = True
                     correct_root = root
                 else:
-                    raise UniqueSolutionException("The function is not invertible.")
+                    raise UnitsException('The function {} is not invertible.'.format(new_pp))
         if solution_within_bounds:
             return correct_root
         else:
-            raise UniqueSolutionException("The function does not have a solution within the bounds.")
+            raise UnitsException("The function {} does not have a solution within bounds.")
