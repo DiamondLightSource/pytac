@@ -39,7 +39,7 @@ class Element(object):
         self.cell = cell
         self.families = set()
         self._uc = {}
-        self._models = {pytac.LIVE: None, pytac.SIM: None}
+        self._models = {}
 
     def __str__(self):
         """Auxiliary function to print out an element.
@@ -57,6 +57,13 @@ class Element(object):
     __repr__ = __str__
 
     def set_model(self, model, model_type):
+        """Add a model to the element.
+
+        Args:
+            model (Model): instance of Model
+            model_type (str): pytac.LIVE or pytac.SIM
+
+        """
         self._models[model_type] = model
 
     def get_fields(self):
