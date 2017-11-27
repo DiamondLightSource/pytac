@@ -1,6 +1,6 @@
 import pytest
 import pytac
-from pytac.units import PolyUnitConv, PchipUnitConv
+from pytac.units import UnitConv, PolyUnitConv, PchipUnitConv, UnitsException
 import numpy
 
 
@@ -10,6 +10,25 @@ def f1(value):
 
 def f2(value):
     return value / 2
+
+
+def test_UnitConv_not_implemented():
+    uc = UnitConv()
+    with pytest.raises(NotImplementedError):
+        uc.phys_to_eng(10)
+    with pytest.raises(NotImplementedError):
+        uc.eng_to_phys(-11)
+
+
+@pytest.mark.parametrize('origin,target', [
+        (pytac.LIVE, pytac.ENG),
+        (pytac.PHYS, pytac.SP),
+        ('a', 'b')
+])
+def test_UnitConv_requires_correct_arguments(origin, target):
+    uc = UnitConv()
+    with pytest.raises(UnitsException):
+        uc.convert(10, origin, target)
 
 
 def test_identity_conversion():
