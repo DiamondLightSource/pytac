@@ -1,4 +1,3 @@
-from pytac.exceptions import PvException
 import pytac.device
 import pytest
 import mock
@@ -21,13 +20,13 @@ def test_set_device_value():
 
 def test_device_invalid_sp_raise_exception():
     device2 = create_device(PREFIX, RB_SUFFIX, None)
-    with pytest.raises(PvException):
-        device2.set_value(40)
+    with pytest.raises(pytac.device.DeviceException):
+        device2.put_value(40)
 
 
 def test_get_device_value():
     device = create_device()
-    with pytest.raises(PvException):
+    with pytest.raises(pytac.device.DeviceException):
         device.get_value('non_existent')
 
 

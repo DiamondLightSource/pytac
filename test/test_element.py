@@ -1,4 +1,3 @@
-from pytac.exceptions import PvException
 import pytac.element
 import pytac.device
 import pytac.model
@@ -98,14 +97,14 @@ def test_set_value(test_element):
     test_element.set_value('x', DUMMY_VALUE_2, units=pytac.PHYS)
     test_element.get_device('x')._cs.put.assert_called_with(SP_PV, DUMMY_VALUE_2)
 
-    with pytest.raises(PvException):
+    with pytest.raises(pytac.device.DeviceException):
         test_element.set_value('non_existent', 40.0)
 
 
 def test_get_pv_exceptions(test_element):
-    with pytest.raises(PvException):
+    with pytest.raises(pytac.device.DeviceException):
         test_element.get_value('setpoint', 'unknown_field')
-    with pytest.raises(PvException):
+    with pytest.raises(pytac.device.DeviceException):
         test_element.get_value('unknown_handle', 'y')
 
 

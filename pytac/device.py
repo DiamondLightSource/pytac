@@ -4,9 +4,12 @@ A physical element in an accelerator may have multiple devices: an example at DL
 is a sextupole magnet that contains also horizontal and vertical corrector magnets
 and a skew quadrupole.
 """
-
-from pytac.exceptions import PvException
 import pytac
+
+
+class DeviceException(Exception):
+    """Exception associated with Device misconfiguration or invalid requests."""
+    pass
 
 
 class Device(object):
@@ -14,7 +17,7 @@ class Device(object):
 
     Contains a control system, readback and setpoint pvs. A readback
     or setpoint pv is required when creating a device otherwise a
-    PvException is raised. The device is enabled by default.
+    DeviceException is raised. The device is enabled by default.
 
     """
 
@@ -50,17 +53,15 @@ class Device(object):
             value (float): The value to set on the pv.
 
         Raises:
-            PvException: An exception occured when no setpoint pv exists.
+            DeviceException: if no setpoint pv exists.
         """
         if self.sp_pv is None:
-            raise PvException("""This device {0} has no setpoint pv."""
+            raise DeviceException("""Device {0} has no setpoint pv."""
                               .format(self.name))
         self._cs.put(self.sp_pv, value)
 
     def get_value(self, handle):
         """Read the value of a readback or setpoint pv.
-
-        If neither readback or setpoint pvs exist then a PvException is raised.
 
         Args:
             handle (str): Handle used to get the value off a readback or setpoint
@@ -70,7 +71,7 @@ class Device(object):
             float: The value of the pv.
 
         Raises:
-            PvException: In case the requested pv doesn't exist.
+            DeviceException: if the requested pv doesn't exist.
         """
         print('getting {}'.format('handle'))
         if handle == pytac.RB and self.rb_pv:
@@ -78,7 +79,7 @@ class Device(object):
         elif handle == pytac.SP and self.sp_pv:
             return self._cs.get(self.sp_pv)
 
-        raise PvException("""This device {0} has no {1} pv."""
+        raise DeviceException("""Device {0} has no {1} pv."""
                           .format(self.name, handle))
 
     def get_pv_name(self, handle):
@@ -89,13 +90,16 @@ class Device(object):
 
         Returns:
             str: A readback or setpoint pv.
+
+        Raises:
+            DeviceException: if the PV doesn't exist.
         """
         if handle == pytac.RB and self.rb_pv:
             return self.rb_pv
         elif handle == pytac.SP and self.sp_pv:
             return self.sp_pv
 
-        raise PvException("""This device {0} has no {1} pv."""
+        raise DeviceException("""Device {0} has no {1} pv."""
                           .format(self.name, handle))
 
     def get_cs(self):

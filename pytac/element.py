@@ -1,7 +1,6 @@
 """Module containing the element class."""
-
-from pytac.exceptions import PvException
 import pytac
+from pytac.device import DeviceException
 
 
 class Element(object):
@@ -125,14 +124,14 @@ class Element(object):
             field.
 
         Raises:
-            PvException: When there is no associated device on the given field.
+            DeviceException: When there is no associated device on the given field.
         """
         try:
             model = self._models[model]
             value = model.get_value(field, handle)
             return self._uc[field].convert(value, origin=model.units, target=units)
         except KeyError:
-            raise PvException('No model type {} on element {}'.format(model,
+            raise DeviceException('No model type {} on element {}'.format(model,
                 self))
 
     def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG, model=pytac.LIVE):
@@ -149,17 +148,17 @@ class Element(object):
             model (str): The type of model: simulation or live
 
         Raises:
-            PvException: An exception occured accessing a field with
+            DeviceException: An exception occured accessing a field with
             no associated device.
         """
         if handle != pytac.SP:
-            raise PvException('Must write using {}'.format(pytac.SP))
+            raise DeviceException('Must write using {}'.format(pytac.SP))
         try:
             model = self._models[model]
             self._uc[field].convert(origin=units, target=model.units)
             model.set_value(field, value)
         except KeyError:
-            raise PvException('No model type {} on element {}'.format(model,
+            raise DeviceException('No model type {} on element {}'.format(model,
                 self))
 
     def get_pv_name(self, field, handle):
@@ -175,13 +174,13 @@ class Element(object):
             str: A readback or setpoint pv associated with the identified device.
 
         Raises:
-            PvException: An exception occured accessing a field with
+            DeviceException: An exception occured accessing a field with
             no associated device.
         """
         try:
             return self._models[pytac.LIVE].get_pv_name(field, handle)
         except KeyError:
-            raise PvException('{} has no device for field {}'.format(self, field))
+            raise DeviceException('{} has no device for field {}'.format(self, field))
 
     def get_cs(self, field):
         return self._devices[field].get_cs()
