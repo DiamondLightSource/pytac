@@ -1,7 +1,6 @@
 """Module containing the element class."""
-
-from pytac.exceptions import PvException
 import pytac
+from pytac.device import DeviceException
 
 
 class Element(object):
@@ -124,7 +123,7 @@ class Element(object):
             field.
 
         Raises:
-            PvException: When there is no associated device on the given field.
+            DeviceException: When there is no associated device on the given field.
         """
         if model == pytac.LIVE:
             if field in self._devices:
@@ -133,7 +132,7 @@ class Element(object):
                     value = self._uc[field].eng_to_phys(value)
                 return value
             else:
-                raise PvException("No device associated with field {0}".format(field))
+                raise DeviceException("No device associated with field {0}".format(field))
         else:
             value = self._model.get_value(field)
             if unit == pytac.ENG:
@@ -154,7 +153,7 @@ class Element(object):
             model (str): The type of model: simulation or live
 
         Raises:
-            PvException: An exception occured accessing a field with
+            DeviceException: An exception occured accessing a field with
             no associated device.
         """
         if model == pytac.LIVE:
@@ -163,7 +162,7 @@ class Element(object):
                     value = self._uc[field].phys_to_eng(value)
                 self._devices[field].put_value(value)
             else:
-                raise PvException('''There is no device associated with
+                raise DeviceException('''There is no device associated with
                                      field {0}'''.format(field))
         else:
             if unit == pytac.ENG:
@@ -183,13 +182,13 @@ class Element(object):
             str: A readback or setpoint pv associated with the identified device.
 
         Raises:
-            PvException: An exception occured accessing a field with
+            DeviceException: An exception occured accessing a field with
             no associated device.
         """
         try:
             return self._devices[field].get_pv_name(handle)
         except KeyError:
-            raise PvException('{} has no device for field {}'.format(self, field))
+            raise DeviceException('{} has no device for field {}'.format(self, field))
 
     def get_cs(self, field):
         return self._devices[field].get_cs()
