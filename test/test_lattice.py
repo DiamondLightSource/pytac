@@ -6,7 +6,7 @@ import pytac.model
 import mock
 from pytac.units import PolyUnitConv
 
-from constants import PREFIX, RB_SUFFIX, SP_SUFFIX, RB_PV, SP_PV, LATTICE
+from constants import PREFIX, RB_PV, SP_PV, LATTICE
 
 
 @pytest.fixture
@@ -15,8 +15,8 @@ def simple_element(identity=1):
 
     # Create devices and attach them to the element
     element = pytac.element.Element(identity, 0, 'BPM', cell=1)
-    device1 = pytac.device.Device(PREFIX, mock.MagicMock(), True, RB_SUFFIX, SP_SUFFIX)
-    device2 = pytac.device.Device(PREFIX, mock.MagicMock(), True, RB_SUFFIX, SP_SUFFIX)
+    device1 = pytac.device.Device(PREFIX, mock.MagicMock(), True, RB_PV, SP_PV)
+    device2 = pytac.device.Device(PREFIX, mock.MagicMock(), True, RB_PV, SP_PV)
     element.add_to_family('family')
 
     element.set_model(pytac.model.DeviceModel(), pytac.LIVE)
