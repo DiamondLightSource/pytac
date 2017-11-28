@@ -1,4 +1,5 @@
 """ Representation of a lattice object which contains all the elements of the machine."""
+import numpy
 
 
 class LatticeException(Exception):
@@ -138,19 +139,24 @@ class Lattice(object):
             pv_names.append(element.get_pv_name(field, handle))
         return pv_names
 
-    def get_values(self, family, field, handle):
+    def get_values(self, family, field, handle, dtype=None):
         """Get all values for a family and field.
 
         Args:
             family (str): family to request the values of
             field (str): field to request values for
             handle (str): pytac.RB or pytac.SP
+            dtype (numpy.dtype): if None, return a list. If not None,
+                return a numpy array of the specified type.
 
         Returns:
-            list(float): list of values
+            list or numpy array: sequence of values
         """
         pv_names = self.get_pv_names(family, field, handle)
-        return self._cs.get(pv_names)
+        values = self._cs.get(pv_names)
+        if dtype is not None:
+            values = numpy.array(values, dtype=dtype)
+        return values
 
     def set_values(self, family, field, values):
         """Sets the values for a family and field.
