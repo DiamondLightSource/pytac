@@ -5,8 +5,18 @@ import pytac.device
 import pytac.model
 import mock
 from pytac.units import PolyUnitConv
+import numpy
 
 from constants import PREFIX, RB_PV, SP_PV, LATTICE
+
+DUMMY_ARRAY = [0, 1, 2]
+
+
+@pytest.fixture
+def mock_cs():
+    cs = mock.MagicMock()
+    cs.get.return_value = DUMMY_ARRAY
+    return cs
 
 
 @pytest.fixture
@@ -27,8 +37,8 @@ def simple_element(identity=1):
 
 
 @pytest.fixture
-def simple_element_and_lattice(simple_element):
-    l = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)
+def simple_element_and_lattice(simple_element, mock_cs):
+    l = pytac.lattice.Lattice(LATTICE, mock_cs, 1)
     l.add_element(simple_element)
     return simple_element, l
 
@@ -91,22 +101,35 @@ def test_get_all_families(simple_element_and_lattice):
     assert len(families) > 0
 
 
-def test_get_pv_values(simple_element_and_lattice):
+def test_get_values(simple_element_and_lattice):
     element, lattice = simple_element_and_lattice
-    lattice.get_pv_values('family', 'x', pytac.RB)
+    lattice.get_values('family', 'x', pytac.RB)
     lattice._cs.get.assert_called_with([RB_PV])
 
 
-def test_set_pv_values(simple_element_and_lattice):
+@pytest.mark.parametrize('dtype,expected', (
+        (numpy.float64, numpy.array(DUMMY_ARRAY, dtype=numpy.float64)),
+        (numpy.int32, numpy.array(DUMMY_ARRAY, dtype=numpy.int32)),
+        (numpy.bool_, numpy.array((False, True, True), dtype=numpy.bool_)),
+        (None, DUMMY_ARRAY)
+))
+def test_get_values_returns_numpy_array_if_requested(simple_element_and_lattice, dtype, expected):
     element, lattice = simple_element_and_lattice
-    lattice.set_pv_values('family', 'x', [1])
+    values = lattice.get_values('family', 'x', pytac.RB, dtype=dtype)
+    numpy.testing.assert_equal(values, expected)
+    lattice._cs.get.assert_called_with([RB_PV])
+
+
+def test_set_values(simple_element_and_lattice):
+    element, lattice = simple_element_and_lattice
+    lattice.set_values('family', 'x', [1])
     lattice._cs.put.assert_called_with([SP_PV], [1])
 
 
-def test_set_pv_values_raise_exception(simple_element_and_lattice):
+def test_set_values_raise_exception_if_number_of_values_does_not_match(simple_element_and_lattice):
     element, lattice = simple_element_and_lattice
     with pytest.raises(pytac.lattice.LatticeException):
-        lattice.set_pv_values('family', 'x', [1, 2])
+        lattice.set_values('family', 'x', [1, 2])
 
 
 def test_s_position(simple_element_and_lattice):

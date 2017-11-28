@@ -1,4 +1,5 @@
 """ Representation of a lattice object which contains all the elements of the machine."""
+import numpy
 
 
 class LatticeException(Exception):
@@ -138,39 +139,45 @@ class Lattice(object):
             pv_names.append(element.get_pv_name(field, handle))
         return pv_names
 
-    def get_pv_values(self, family, field, handle):
-        """Get all pv values for a set of pvs.
+    def get_values(self, family, field, handle, dtype=None):
+        """Get all values for a family and field.
 
         Args:
-            family(string): A specific family to requests the values of.
-            field(string): The field to uniquely identify a device.
-            handle(string): It is used to identify a readback or setpoint pv.
+            family (str): family to request the values of
+            field (str): field to request values for
+            handle (str): pytac.RB or pytac.SP
+            dtype (numpy.dtype): if None, return a list. If not None,
+                return a numpy array of the specified type.
 
         Returns:
-            list(float): A list of readback or setpoint pv values from the device.
+            list or numpy array: sequence of values
         """
         pv_names = self.get_pv_names(family, field, handle)
-        return self._cs.get(pv_names)
+        values = self._cs.get(pv_names)
+        if dtype is not None:
+            values = numpy.array(values, dtype=dtype)
+        return values
 
-    def set_pv_values(self, family, field, values):
-        """Set the pv value of a given family of pvs.
+    def set_values(self, family, field, values):
+        """Sets the values for a family and field.
 
         The pvs are determined by family and device. Note that only setpoint
         pvs can be modified.
 
         Args:
-            family(string): A specific family to set the value of.
-            field(string): The field to uniquely identify a device.
-            values(list(float)): A list of values to assign to the pvs.
+            family (str): family on which to set values
+            field (str):  field to set values for
+            values (sequence): A list of values to assign
 
         Raises:
-            LatticeException: if the given list of values doesn't match the number of found pvs.
+            LatticeException: if the given list of values doesn't match the
+                number of elements in the family
 
         """
         pv_names = self.get_pv_names(family, field, 'setpoint')
         if len(pv_names) != len(values):
-            raise LatticeException("Number of elements in given array must be equal"
-                              "to the number of elements in the lattice")
+            raise LatticeException("Number of elements in given array must be "
+                    "equal to the number of elements in the lattice")
         self._cs.put(pv_names, values)
 
     def get_s(self, element):
