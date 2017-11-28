@@ -91,22 +91,22 @@ def test_get_all_families(simple_element_and_lattice):
     assert len(families) > 0
 
 
-def test_get_pv_values(simple_element_and_lattice):
+def test_get_values(simple_element_and_lattice):
     element, lattice = simple_element_and_lattice
-    lattice.get_pv_values('family', 'x', pytac.RB)
+    lattice.get_values('family', 'x', pytac.RB)
     lattice._cs.get.assert_called_with([RB_PV])
 
 
-def test_set_pv_values(simple_element_and_lattice):
+def test_set_values(simple_element_and_lattice):
     element, lattice = simple_element_and_lattice
-    lattice.set_pv_values('family', 'x', [1])
+    lattice.set_values('family', 'x', [1])
     lattice._cs.put.assert_called_with([SP_PV], [1])
 
 
-def test_set_pv_values_raise_exception(simple_element_and_lattice):
+def test_set_values_raise_exception_if_number_of_values_does_not_match(simple_element_and_lattice):
     element, lattice = simple_element_and_lattice
     with pytest.raises(pytac.lattice.LatticeException):
-        lattice.set_pv_values('family', 'x', [1, 2])
+        lattice.set_values('family', 'x', [1, 2])
 
 
 def test_s_position(simple_element_and_lattice):
