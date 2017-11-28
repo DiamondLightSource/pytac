@@ -21,7 +21,7 @@ class Device(object):
 
     """
 
-    def __init__(self, name, cs, enabled=True, rb_suffix=None, sp_suffix=None):
+    def __init__(self, name, cs, enabled=True, rb_pv=None, sp_pv=None):
         """
         Args:
             name: prefix of EPICS PVs for this device
@@ -29,13 +29,13 @@ class Device(object):
                 the value of a pv.
             enabled (bool-like): Whether the device is enabled.  May be
                 a PvEnabler object.
-            rb_suffix (str): suffix of EPICS readback pv
-            sp_suffix (str): suffix of EPICS setpoint pv
+            rb_suffix (str): EPICS readback pv
+            sp_suffix (str): EPICS setpoint pv
         """
         self.name = name
         self._cs = cs
-        self.rb_pv = name + rb_suffix if rb_suffix is not None else None
-        self.sp_pv = name + sp_suffix if sp_suffix is not None else None
+        self.rb_pv = rb_pv
+        self.sp_pv = sp_pv
         self._enabled = enabled
 
     def is_enabled(self):

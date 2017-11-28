@@ -22,7 +22,7 @@ function load_mml(ringmode)
     fprintf(f_elements, 'id,name,type,length,cell\n');
     devices_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'devices.csv');
     f_devices = fopen(devices_file, 'w');
-    fprintf(f_devices, 'id,name,field,get_pv,set_pv,enable_pv,enable_value\n');
+    fprintf(f_devices, 'id,name,field,get_pv,set_pv\n');
     families_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'families.csv');
     f_families = fopen(families_file, 'w');
     fprintf(f_families, 'id,family\n');
@@ -76,7 +76,7 @@ function load_mml(ringmode)
     new_index = new_index + 1;
     old_index = old_index + 1;
     insertelement(new_index, old_index, dcct);
-    s = pv_struct('I', 'SR-DI-DCCT-01:SIGNAL', '', '', '');
+    s = pv_struct('I', 'SR-DI-DCCT-01:SIGNAL', '');
     insertpvs(new_index, {s});
 
     renamed_indexes(old_index) = new_index;
@@ -107,10 +107,7 @@ function load_mml(ringmode)
         parts = strsplit(pvs{1}.get_pv,':');
         prefix = parts{1};
         for i = 1:size(pvs, 2)
-            get_suffix = pvs{i}.get_pv(length(prefix) + 1:end);
-            set_suffix = pvs{i}.set_pv(length(prefix) + 1:end);
-            enable_suffix = pvs{i}.enable_pv(length(prefix) + 1:end);
-            fprintf(f_devices, '%d,%s,%s,%s,%s,%s,%s\n', index, prefix, pvs{i}.field, deblank(get_suffix), deblank(set_suffix), enable_suffix, pvs{i}.enable_value);
+            fprintf(f_devices, '%d,%s,%s,%s,%s\n', index, prefix, pvs{i}.field, deblank(pvs{i}.get_pv), deblank(pvs{i}.set_pv));
         end
     end
 
@@ -135,17 +132,9 @@ function load_mml(ringmode)
 
     function pvs = getpvs(ao, elm)
         type = gettype(elm);
-
         if any(ismember(type, TYPE_MAP.keys))
-            if strcmp(type, 'QUAD')
-                field = 'b1';
-            elseif strcmp(type, 'SEXT')
-                field = 'b2';
-            elseif strcmp(type, 'VSTR')
-                field = 'a0';
-            elseif strcmp(type, 'HSTR') || strcmp(type, 'BEND')
-                field = 'b0';
-            end
+
+            index = used_elements(type);
             % MML is inconsistent about whether the family for the bends
             % is BEND or BB.
             if strcmp(type, 'BEND') && isfield(ao, 'BEND')
@@ -153,24 +142,56 @@ function load_mml(ringmode)
             else
                 family = TYPE_MAP(type);
             end
-            index = used_elements(type);
 
             get_pv = char(ao.(family).Monitor.ChannelNames(index, :));
             set_pv = char(ao.(family).Setpoint.ChannelNames(index, :));
-            pvs = pv_struct(field, get_pv, set_pv, '', '');
-            pvs = {pvs};
+            alt_pv1 = {};
+            alt_pv2 = {};
+
+            if strcmp(type, 'QUAD')
+                field = 'b1';
+            elseif strcmp(type, 'SEXT')
+                field = 'b2';
+            elseif strcmp(type, 'BEND')
+                field = 'b0';
+            elseif strcmp(type, 'VSTR')
+                field = 'a0';
+                alt_prefix = strrep(strrep(get_pv, 'DI', 'PC'), ':I', '');
+                alt_template = strcat(alt_prefix, ':%s:DISABLED');
+                alt_pv1 = pv_struct('v_fast_disabled', sprintf(alt_template, 'FAST'), '');
+                alt_pv2 = pv_struct('v_slow_disabled', sprintf(alt_template, 'SLOW'), '');
+            elseif strcmp(type, 'HSTR')
+                field = 'b0';
+                alt_prefix = strrep(strrep(get_pv, 'DI', 'PC'), ':I', '');
+                alt_template = strcat(alt_prefix, ':%s:DISABLED');
+                alt_pv1 = pv_struct('h_fast_disabled', sprintf(alt_template,'FAST'), '');
+                alt_pv2 = pv_struct('h_slow_disabled', sprintf(alt_template, 'SLOW'), '');
+            end
+            pvs = pv_struct(field, get_pv, set_pv);
+            if numel(alt_pv1) > 0 && numel(alt_pv2) > 0
+                pvs = {pvs, alt_pv1, alt_pv2};
+            else
+                pvs = {pvs};
+            end
         elseif strcmp(type, 'BPM')
             index = used_elements(type);
             enable_pv = strcat(BPMS{index}, ':CF:ENABLED_S');
+            en_pv = pv_struct('enabled', enable_pv, '');
             get_x_pv = strcat(BPMS{index}, ':SA:X');
-            x_pv = pv_struct('x', get_x_pv, '', enable_pv, '1');
+            x_pv = pv_struct('x', get_x_pv, '');
             get_y_pv = strcat(BPMS{index}, ':SA:Y');
-            y_pv = pv_struct('y', get_y_pv, '', enable_pv, '1');
-            pvs = {x_pv, y_pv};
+            y_pv = pv_struct('y', get_y_pv, '');
+            alt_prefix = strrep(strrep(BPMS{index}, 'DI', 'PC'), 'EBPM', '%sBPM');
+            alt_template = strcat(alt_prefix, ':%s:DISABLED');
+            x_fast_pv = pv_struct('x_fast_disabled', sprintf(alt_template, 'H', 'FAST'), '');
+            x_slow_pv = pv_struct('x_slow_disabled', sprintf(alt_template, 'H', 'SLOW'), '');
+            y_fast_pv = pv_struct('y_fast_disabled', sprintf(alt_template, 'V', 'FAST'), '');
+            y_slow_pv = pv_struct('y_slow_disabled', sprintf(alt_template, 'H', 'FAST'), '');
+            pvs = {x_pv, y_pv, en_pv, x_fast_pv, x_slow_pv, y_fast_pv, y_slow_pv};
         elseif strcmp(type, 'RF')
             gfpv = ao.(type).Monitor.ChannelNames;
             sfpv = ao.(type).Setpoint.ChannelNames;
-            f_pvs = pv_struct('f', gfpv, sfpv, '', '');
+            f_pvs = pv_struct('f', gfpv, sfpv);
             % voltage?
             pvs = {f_pvs};
         else
@@ -185,14 +206,14 @@ function load_mml(ringmode)
             for i = 1:length(elms.AT.ATIndex)
                 get_pv = elms.Monitor.ChannelNames(i,:);
                 set_pv = elms.Setpoint.ChannelNames(i,:);
-                pvs = pv_struct(field, get_pv, set_pv, '', '');
+                pvs = pv_struct(field, get_pv, set_pv);
                 insertpvs(renamed_indexes(elms.AT.ATIndex(i)), {pvs});
             end
         end
     end
 
-    function s = pv_struct(field, get_pv, set_pv, enable_pv, enable_value)
-        s = struct('field', field, 'get_pv', get_pv, 'set_pv', set_pv, 'enable_pv', enable_pv, 'enable_value', enable_value);
+    function s = pv_struct(field, get_pv, set_pv)
+        s = struct('field', field, 'get_pv', get_pv, 'set_pv', set_pv);
     end
 
     function insertelement(i, old_i, at_elm)

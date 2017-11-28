@@ -2,24 +2,25 @@ import pytac.device
 import pytest
 import mock
 
-from constants import PREFIX, RB_SUFFIX, SP_SUFFIX
+from constants import PREFIX, RB_PV, SP_PV
 
 
-def create_device(prefix=PREFIX, rb_suff=RB_SUFFIX, sp_suff=SP_SUFFIX, enabled=True):
+def create_device(prefix=PREFIX, rb_pv=RB_PV, sp_pv=SP_PV, enabled=True):
     mock_cs = mock.MagicMock()
     mock_cs.get.return_value = '1.0'
-    device = pytac.device.Device(prefix, mock.MagicMock(), enabled=enabled, rb_suffix=rb_suff, sp_suffix=sp_suff)
+    device = pytac.device.Device(prefix, mock.MagicMock(), enabled=enabled,
+            rb_pv=rb_pv, sp_pv=sp_pv)
     return device
 
 
 def test_set_device_value():
     device = create_device()
     device.set_value(40)
-    device._cs.put.assert_called_with(PREFIX + SP_SUFFIX, 40)
+    device._cs.put.assert_called_with(SP_PV, 40)
 
 
 def test_device_invalid_sp_raise_exception():
-    device2 = create_device(PREFIX, RB_SUFFIX, None)
+    device2 = create_device(PREFIX, RB_PV, None)
     with pytest.raises(pytac.device.DeviceException):
         device2.set_value(40)
 
@@ -50,6 +51,5 @@ def test_PvEnabler():
     mock_cs.get.return_value = '40'
     pve = pytac.device.PvEnabler('enable-pv', '40', mock_cs)
     assert pve
-
     mock_cs.get.return_value = 50
     assert not pve

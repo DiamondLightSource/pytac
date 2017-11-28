@@ -113,13 +113,9 @@ def load(mode, control_system=None, directory=None):
         csv_reader = csv.DictReader(devices)
         for item in csv_reader:
             name = item['name']
-            enable_pv = item['enable_pv']
-            enable_value = item['enable_value']
             get_pv = item['get_pv'] if item['get_pv'] else None
             set_pv = item['set_pv'] if item['set_pv'] else None
             pve = True
-            if enable_pv and enable_value:
-                pve = device.PvEnabler(name + enable_pv, enable_value, control_system)
             d = device.Device(name, control_system, pve, get_pv, set_pv)
             lat[int(item['id']) - 1].add_device(item['field'], d, control_system)
 
