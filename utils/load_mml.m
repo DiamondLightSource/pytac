@@ -158,14 +158,14 @@ function load_mml(ringmode)
                 field = 'a0';
                 alt_prefix = strrep(strrep(get_pv, 'DI', 'PC'), ':I', '');
                 alt_template = strcat(alt_prefix, ':%s:DISABLED');
-                alt_pv1 = pv_struct('v_fast_disabled', sprintf(alt_template, 'FAST'), '');
-                alt_pv2 = pv_struct('v_slow_disabled', sprintf(alt_template, 'SLOW'), '');
+                alt_pv1 = pv_struct('v_fofb_disabled', sprintf(alt_template, 'FAST'), '');
+                alt_pv2 = pv_struct('v_sofb_disabled', sprintf(alt_template, 'SLOW'), '');
             elseif strcmp(type, 'HSTR')
                 field = 'b0';
                 alt_prefix = strrep(strrep(get_pv, 'DI', 'PC'), ':I', '');
                 alt_template = strcat(alt_prefix, ':%s:DISABLED');
-                alt_pv1 = pv_struct('h_fast_disabled', sprintf(alt_template,'FAST'), '');
-                alt_pv2 = pv_struct('h_slow_disabled', sprintf(alt_template, 'SLOW'), '');
+                alt_pv1 = pv_struct('h_fofb_disabled', sprintf(alt_template,'FAST'), '');
+                alt_pv2 = pv_struct('h_sofb_disabled', sprintf(alt_template, 'SLOW'), '');
             end
             pvs = pv_struct(field, get_pv, set_pv);
             if numel(alt_pv1) > 0 && numel(alt_pv2) > 0
@@ -183,11 +183,11 @@ function load_mml(ringmode)
             y_pv = pv_struct('y', get_y_pv, '');
             alt_prefix = strrep(strrep(BPMS{index}, 'DI', 'PC'), 'EBPM', '%sBPM');
             alt_template = strcat(alt_prefix, ':%s:DISABLED');
-            x_fast_pv = pv_struct('x_fast_disabled', sprintf(alt_template, 'H', 'FAST'), '');
-            x_slow_pv = pv_struct('x_slow_disabled', sprintf(alt_template, 'H', 'SLOW'), '');
-            y_fast_pv = pv_struct('y_fast_disabled', sprintf(alt_template, 'V', 'FAST'), '');
-            y_slow_pv = pv_struct('y_slow_disabled', sprintf(alt_template, 'H', 'FAST'), '');
-            pvs = {x_pv, y_pv, en_pv, x_fast_pv, x_slow_pv, y_fast_pv, y_slow_pv};
+            x_fofb_pv = pv_struct('x_fofb_disabled', sprintf(alt_template, 'H', 'FAST'), '');
+            x_sofb_pv = pv_struct('x_sofb_disabled', sprintf(alt_template, 'H', 'SLOW'), '');
+            y_fofb_pv = pv_struct('y_fofb_disabled', sprintf(alt_template, 'V', 'FAST'), '');
+            y_sofb_pv = pv_struct('y_sofb_disabled', sprintf(alt_template, 'V', 'SLOW'), '');
+            pvs = {x_pv, y_pv, en_pv, x_fofb_pv, x_sofb_pv, y_fofb_pv, y_sofb_pv};
         elseif strcmp(type, 'RF')
             gfpv = ao.(type).Monitor.ChannelNames;
             sfpv = ao.(type).Setpoint.ChannelNames;

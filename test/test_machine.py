@@ -44,9 +44,9 @@ def test_get_pv_names(ring_mode, n_bpms):
     assert len(bpm_x_pvs) == n_bpms
     for pv in bpm_x_pvs:
         assert re.match('SR.*BPM.*X', pv)
-    x_slow_enabled_pvs = lattice.get_pv_names('BPM', 'x_slow_disabled', handle='readback')
+    x_sofb_enabled_pvs = lattice.get_pv_names('BPM', 'x_sofb_disabled', handle='readback')
     assert len(bpm_x_pvs) == n_bpms
-    for pv in x_slow_enabled_pvs:
+    for pv in x_sofb_enabled_pvs:
         assert re.match('SR.*HBPM.*SLOW:DISABLED', pv)
 
 
@@ -58,7 +58,10 @@ def test_load_bpms(ring_mode, n_bpms):
     lattice = get_lattice(ring_mode)
     bpms = lattice.get_elements('BPM')
     for bpm in bpms:
-        assert set(bpm.get_fields()) == set(('x', 'y', 'enabled', 'x_fast_disabled', 'x_slow_disabled', 'y_fast_disabled', 'y_slow_disabled'))
+        assert set(bpm.get_fields()) == set(
+                ('x', 'y', 'enabled', 'x_fofb_disabled', 'x_sofb_disabled',
+                 'y_fofb_disabled', 'y_sofb_disabled')
+        )
         assert re.match('SR.*BPM.*X', bpm.get_pv_name('x', pytac.RB))
         with pytest.raises(pytac.device.DeviceException):
             bpm.get_pv_name('x', pytac.SP)
@@ -117,10 +120,10 @@ def test_load_correctors(ring_mode, n_correctors):
     assert len(hcm) == n_correctors
     for element in hcm:
         # each one has both a0 (VSTR) and b0 (HSTR) as fields
-        # it also has h and v, fast and slow disabled fields
+        # it also has h and v, fofb and sofb disabled fields
         assert set(
-                ('a0', 'b0', 'h_slow_disabled', 'v_slow_disabled',
-                 'h_fast_disabled', 'v_fast_disabled')
+                ('a0', 'b0', 'h_sofb_disabled', 'v_sofb_disabled',
+                 'h_fofb_disabled', 'v_fofb_disabled')
         ).issubset(element.get_fields())
 
 
