@@ -1,4 +1,4 @@
-""" An unit conversion object used to convert between physics and engineering units."""
+"""Classes for use in unit conversion."""
 import pytac
 import numpy
 from scipy.interpolate import PchipInterpolator
@@ -23,6 +23,11 @@ def unit_function(value):
 class UnitConv(object):
     """Class to convert between physics and engineering units.
 
+    This class does not do conversion but does return values if the target
+    units are the same as the provided units. Subclasses should implement
+    _raw_eng_to_phys() and _raw_phys_to_eng() in order to provide complete
+    unit conversion.
+
     The two arguments to this function represent functions that are
     applied to the result of the initial conversion. One happens after
     the conversion, the other happens before the conversion back.
@@ -46,7 +51,7 @@ class UnitConv(object):
             value (float): Value to be converted from engineering to physics
                 units.
         """
-        raise NotImplementedError()
+        raise NotImplementedError('No eng-to-phys conversion provided')
 
     def eng_to_phys(self, value):
         """Function that does the unit conversion.
@@ -70,7 +75,7 @@ class UnitConv(object):
         Args:
             value (float): Value to be converted from physics to engineering units.
         """
-        raise NotImplementedError()
+        raise NotImplementedError('No phys-to-eng conversion provided')
 
     def phys_to_eng(self, value):
         """Function that does the unit conversion.
@@ -95,8 +100,9 @@ class UnitConv(object):
             return self.phys_to_eng(value)
         if origin == pytac.ENG and target == pytac.PHYS:
             return self.eng_to_phys(value)
-        raise UnitsException('Conversion {} to {} not understood'.format(origin,
-                target))
+        raise UnitsException(
+            'Conversion {} to {} not understood'.format(origin, target)
+        )
 
 
 class PolyUnitConv(UnitConv):
