@@ -60,9 +60,11 @@ def load_unitconv(directory, mode, lattice):
         csv_reader = csv.DictReader(unitconv)
         for item in csv_reader:
             element = lattice[int(item['el_id']) - 1]
-            if 'QUAD' in element.families or 'SEXT' in element.families:
-                uc[int(item['uc_id'])].f1 = get_div_rigidity(lattice.get_energy())
-                uc[int(item['uc_id'])].f2 = get_mult_rigidity(lattice.get_energy())
+            # For certain magnet types, we need an additional rigidity
+            # conversion factor as well as the raw conversion.
+            if 'HSTR' in element.families or 'VSTR' in element.families or 'QUAD' in element.families or 'SEXT' in element.families:
+                uc[int(item['uc_id'])]._post_eng_to_phys = get_div_rigidity(lattice.get_energy())
+                uc[int(item['uc_id'])]._pre_phys_to_eng = get_mult_rigidity(lattice.get_energy())
             element._uc[item['field']] = uc[int(item['uc_id'])]
 
 
@@ -117,7 +119,7 @@ def load(mode, control_system=None, directory=None):
             set_pv = item['set_pv'] if item['set_pv'] else None
             pve = True
             d = device.Device(name, control_system, pve, get_pv, set_pv)
-            lat[int(item['id']) - 1].add_device(item['field'], d, control_system)
+            lat[int(item['id']) - 1].add_device(item['field'], d, units.UnitConv())
 
     with open(os.path.join(directory, mode, 'families.csv')) as families:
         csv_reader = csv.DictReader(families)
