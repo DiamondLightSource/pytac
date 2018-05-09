@@ -21,7 +21,7 @@ def mock_uc():
 
 
 @pytest.fixture
-def test_element(length=0.0, uc=mock_uc()):
+def test_element(uc=mock_uc()):
     mock_cs = mock.MagicMock()
     mock_cs.get.return_value = DUMMY_VALUE_1
 
@@ -58,6 +58,18 @@ def test_add_element_to_family():
 def test_get_device_raises_KeyError_if_device_not_present(test_element):
     with pytest.raises(KeyError):
         test_element.get_device('not-a-device')
+
+
+def test_get_unitconv_returns_unitconv_object():
+    dummy_uc = mock.MagicMock()
+    element = test_element(dummy_uc)
+    assert element.get_unitconv('x') == dummy_uc
+    assert element.get_unitconv('y') == dummy_uc
+
+
+def test_get_unitconv_raises_KeyError_if_device_not_present(test_element):
+    with pytest.raises(KeyError):
+        test_element.get_unitconv('not-a-device')
 
 
 def test_get_value_uses_cs_if_model_live(test_element):

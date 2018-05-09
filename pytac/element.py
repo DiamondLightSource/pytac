@@ -113,6 +113,21 @@ class Element(object):
         """
         return self._models[pytac.LIVE].get_device(field)
 
+    def get_unitconv(self, field):
+        """Get the unit conversion option for the specified field.
+
+        Args:
+            field (str): Field associated with this conversion
+
+        Returns:
+            UnitConv object associated with the specified field
+
+        Raises:
+            KeyError if no unit conversion object is present.
+
+        """
+        return self._uc[field]
+
     def add_to_family(self, family):
         """Add the element to the specified family.
 
