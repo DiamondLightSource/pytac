@@ -163,19 +163,20 @@ def test_bpm_unitconv(ring_mode, field):
 
 
 def test_quad_unitconv():
+    # From MML: hw2physics('Q1D', 'Monitor', 70, [1])
     lattice = get_lattice('VMX')
     q1d = lattice.get_elements('Q1D')
     lattice._energy = 3000
     for q in q1d:
         uc = q._uc['b1']
-        numpy.testing.assert_allclose(uc.eng_to_phys(70), -6.918132432432433)
-        numpy.testing.assert_allclose(uc.phys_to_eng(-6.918132432432433), 70)
+        numpy.testing.assert_allclose(uc.eng_to_phys(70), -0.691334652255027)
+        numpy.testing.assert_allclose(uc.phys_to_eng(-0.691334652255027), 70)
 
 
 def test_quad_unitconv_raise_exception():
     uc = pytac.units.PchipUnitConv([50.0, 100.0, 180.0], [-4.95, -9.85, -17.56])
     with pytest.raises(pytac.units.UnitsException):
-        numpy.testing.assert_allclose(uc.phys_to_eng(-0.7), 70.8834284954)
+        uc.phys_to_eng(-0.7)
 
 
 def test_quad_unitconv_known_failing_test():
