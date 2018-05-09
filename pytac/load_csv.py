@@ -1,4 +1,15 @@
-"""Module to load the elements of the machine from multiple csv files stored in the same directory."""
+"""Module to load the elements of the machine from csv files.
+
+The csv files are stored in one directory with specified names:
+
+ * elements.csv
+ * devices.csv
+ * families.csv
+ * unitconv.csv
+ * uc_poly_data.csv
+ * uc_pchip_data.csv
+
+"""
 from __future__ import print_function
 import sys
 import os
@@ -6,6 +17,14 @@ import csv
 import pytac
 from pytac import lattice, element, device, model, units, utils
 import collections
+
+
+ELEMENTS_FILENAME = 'elements.csv'
+DEVICES_FILENAME = 'devices.csv'
+FAMILIES_FILENAME = 'families.csv'
+UNITCONV_FILENAME = 'unitconv.csv'
+POLY_FILENAME = 'uc_poly_data.csv'
+PCHIP_FILENAME = 'uc_pchip_data.csv'
 
 
 def get_div_rigidity(energy):
@@ -26,29 +45,27 @@ def get_mult_rigidity(energy):
     return mult_rigidity
 
 
-def load_unitconv(directory, mode, lattice):
-    """Load the unit conversion objects from a file.
-
-    Args:
-        directory (str): The directory where the data is stored.
-        mode (str): The name of the mode that is used.
-        lattice(Lattice): The lattice object that will be used.
-    """
-    data = collections.defaultdict(list)
+def load_poly_unitconv(filename):
+    """Load polynomial unit conversions from a csv file."""
     unitconvs = {}
-    # Assemble datasets from the polynomial file
-    with open(os.path.join(directory, mode, 'uc_poly_data.csv')) as poly:
+    data = collections.defaultdict(list)
+    with open(filename) as poly:
         csv_reader = csv.DictReader(poly)
         for item in csv_reader:
             data[(int(item['uc_id']))].append((int(item['coeff']), float(item['val'])))
+
     # Create PolyUnitConv for each item and put in the dict
     for uc_id in data:
         u = units.PolyUnitConv([x[1] for x in reversed(sorted(data[uc_id]))])
         unitconvs[uc_id] = u
-    data.clear()
+    return unitconvs
 
-    # Assemble datasets from the pchip file.
-    with open(os.path.join(directory, mode, 'uc_pchip_data.csv')) as pchip:
+
+def load_pchip_unitconv(filename):
+    """Load pchip unit conversions from a csv file."""
+    unitconvs = {}
+    data = collections.defaultdict(list)
+    with open(filename) as pchip:
         csv_reader = csv.DictReader(pchip)
         for item in csv_reader:
             data[(int(item['uc_id']))].append((float(item['eng']), float(item['phy'])))
@@ -59,8 +76,27 @@ def load_unitconv(directory, mode, lattice):
         phy = [x[1] for x in sorted(data[uc_id])]
         u = units.PchipUnitConv(eng, phy)
         unitconvs[uc_id] = u
+    return unitconvs
 
-    with open(os.path.join(directory, mode, 'unitconv.csv')) as unitconv:
+
+def load_unitconv(directory, mode, lattice):
+    """Load the unit conversion objects from a file.
+
+    Args:
+        directory (str): The directory where the data is stored.
+        mode (str): The name of the mode that is used.
+        lattice(Lattice): The lattice object that will be used.
+    """
+    unitconvs = {}
+    # Assemble datasets from the polynomial file
+    poly_file = os.path.join(directory, mode, POLY_FILENAME)
+    unitconvs.update(load_poly_unitconv(poly_file))
+    # Assemble datasets from the pchip file
+    pchip_file = os.path.join(directory, mode, PCHIP_FILENAME)
+    unitconvs.update(load_pchip_unitconv(pchip_file))
+
+    # Add the unitconv objects to the elements
+    with open(os.path.join(directory, mode, UNITCONV_FILENAME)) as unitconv:
         csv_reader = csv.DictReader(unitconv)
         for item in csv_reader:
             element = lattice[int(item['el_id']) - 1]
@@ -102,7 +138,7 @@ def load(mode, control_system=None, directory=None):
     lat = lattice.Lattice(mode, control_system, 3000)
     s = 0
     index = 1
-    with open(os.path.join(directory, mode, 'elements.csv')) as elements:
+    with open(os.path.join(directory, mode, ELEMENTS_FILENAME)) as elements:
         csv_reader = csv.DictReader(elements)
         for item in csv_reader:
             length = float(item['length'])
@@ -115,7 +151,7 @@ def load(mode, control_system=None, directory=None):
             s += length
             index += 1
 
-    with open(os.path.join(directory, mode, 'devices.csv')) as devices:
+    with open(os.path.join(directory, mode, DEVICES_FILENAME)) as devices:
         csv_reader = csv.DictReader(devices)
         for item in csv_reader:
             name = item['name']
@@ -125,12 +161,12 @@ def load(mode, control_system=None, directory=None):
             d = device.Device(name, control_system, pve, get_pv, set_pv)
             lat[int(item['id']) - 1].add_device(item['field'], d, units.UnitConv())
 
-    with open(os.path.join(directory, mode, 'families.csv')) as families:
+    with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)
         for item in csv_reader:
             lat[int(item['id']) - 1].add_to_family(item['family'])
 
-    if os.path.exists(os.path.join(directory, mode, 'unitconv.csv')):
+    if os.path.exists(os.path.join(directory, mode, UNITCONV_FILENAME)):
         load_unitconv(directory, mode, lat)
 
     return lat
