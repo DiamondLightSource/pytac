@@ -176,7 +176,7 @@ def test_quad_unitconv():
 def test_quad_unitconv_raise_exception():
     uc = pytac.units.PchipUnitConv([50.0, 100.0, 180.0], [-4.95, -9.85, -17.56])
     with pytest.raises(pytac.units.UnitsException):
-        numpy.testing.assert_allclose(uc.phys_to_eng(-0.7), 70.8834284954)
+        uc.phys_to_eng(-0.7)
 
 
 def test_quad_unitconv_known_failing_test():

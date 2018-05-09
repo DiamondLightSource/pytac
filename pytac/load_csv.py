@@ -35,26 +35,30 @@ def load_unitconv(directory, mode, lattice):
         lattice(Lattice): The lattice object that will be used.
     """
     data = collections.defaultdict(list)
-    uc = {}
+    unitconvs = {}
+    # Assemble datasets from the polynomial file
     with open(os.path.join(directory, mode, 'uc_poly_data.csv')) as poly:
         csv_reader = csv.DictReader(poly)
         for item in csv_reader:
             data[(int(item['uc_id']))].append((int(item['coeff']), float(item['val'])))
-
-    for d in data:
-        u = units.PolyUnitConv([x[1] for x in reversed(sorted(data[d]))])
-        uc[d] = u
+    # Create PolyUnitConv for each item and put in the dict
+    for uc_id in data:
+        u = units.PolyUnitConv([x[1] for x in reversed(sorted(data[uc_id]))])
+        unitconvs[uc_id] = u
     data.clear()
+
+    # Assemble datasets from the pchip file.
     with open(os.path.join(directory, mode, 'uc_pchip_data.csv')) as pchip:
         csv_reader = csv.DictReader(pchip)
         for item in csv_reader:
             data[(int(item['uc_id']))].append((float(item['eng']), float(item['phy'])))
 
-    for d in data:
-        eng = [x[0] for x in sorted(data[d])]
-        phy = [x[1] for x in sorted(data[d])]
+    # Create PchipUnitConv for each item and put in the dict
+    for uc_id in data:
+        eng = [x[0] for x in sorted(data[uc_id])]
+        phy = [x[1] for x in sorted(data[uc_id])]
         u = units.PchipUnitConv(eng, phy)
-        uc[d] = u
+        unitconvs[uc_id] = u
 
     with open(os.path.join(directory, mode, 'unitconv.csv')) as unitconv:
         csv_reader = csv.DictReader(unitconv)
@@ -62,10 +66,10 @@ def load_unitconv(directory, mode, lattice):
             element = lattice[int(item['el_id']) - 1]
             # For certain magnet types, we need an additional rigidity
             # conversion factor as well as the raw conversion.
-            if 'HSTR' in element.families or 'VSTR' in element.families or 'QUAD' in element.families or 'SEXT' in element.families:
-                uc[int(item['uc_id'])]._post_eng_to_phys = get_div_rigidity(lattice.get_energy())
-                uc[int(item['uc_id'])]._pre_phys_to_eng = get_mult_rigidity(lattice.get_energy())
-            element._uc[item['field']] = uc[int(item['uc_id'])]
+            if element.families.intersection(('HSTR', 'VSTR', 'QUAD', 'SEXT')):
+                unitconvs[int(item['uc_id'])]._post_eng_to_phys = get_div_rigidity(lattice.get_energy())
+                unitconvs[int(item['uc_id'])]._pre_phys_to_eng = get_mult_rigidity(lattice.get_energy())
+            element._uc[item['field']] = unitconvs[int(item['uc_id'])]
 
 
 def load(mode, control_system=None, directory=None):
