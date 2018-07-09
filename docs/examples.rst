@@ -65,7 +65,7 @@ Get the pv value from the quad elements
 
     >>> quads = lattice.get_elements('QUAD')
     >>> for quad in quads:
-    >>>    print(quad.get_pv_value('b1', pytac.RB))
+    >>>    print(quad.get_value('b1', pytac.RB))
     71.3240509033
     129.351394653
     98.2537231445
@@ -75,7 +75,7 @@ Get the pv value from the quad elements
 - Print the quad pv values on the b1 field using the lattice. This is more efficient
   since it uses only one request to the control system::
 
-    >>> lattice.get_pv_values('QUAD', 'b1', pytac.RB)
+    >>> lattice.get_values('QUAD', 'b1', pytac.RB)
     [71.32496643066406,
      129.35191345214844,
      98.25287628173828,
