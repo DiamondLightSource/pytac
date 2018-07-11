@@ -208,6 +208,3 @@ class Element(object):
             return self._models[pytac.LIVE].get_pv_name(field, handle)
         except KeyError:
             raise DeviceException('{} has no device for field {}'.format(self, field))
-
-    def get_cs(self, field):
-        return self._devices[field].get_cs()
