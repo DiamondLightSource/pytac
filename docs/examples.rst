@@ -6,11 +6,10 @@ Installation
 
 This is only required on your first use.
 
-- Ensure you have the following requirements: Pip, Pipenv, and a local copy of pytac.
+- Ensure you have Pip and a local copy of pytac.
 
-- Install dev-packages, pytac, and cothread::
+- Install pytac and cothread::
 
-    $ pipenv install --dev
     $ pip install pytac
     $ pip install cothread	#cothread is required for EPICS funtionality, but pytac can run without it.
 
@@ -20,10 +19,9 @@ Initialisation
 
 This is required each time you want to start up pytac.
 
-- Navigate to your pytac directory and activate a Pipenv shell, and start Python::
+- Navigate to your pytac directory and start Python::
 
     $ cd <directory-path>
-    $ pipenv shell
     $ python
     Python 2.7.3 (default, Nov  9 2013, 21:59:00)
     [GCC 4.4.7 20120313 (Red Hat 4.4.7-3)] on linux2
