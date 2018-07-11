@@ -9,11 +9,11 @@ This is only required on your first use.
 
 - Ensure you have the following requirements: Pip, Pipenv, and a local copy of pytac.
 
-- Install dev-packages, pytac, and cothread for EPICS support::
+- Install dev-packages, pytac, and cothread::
 
     $ pipenv install --dev
     $ pip install pytac
-    $ pip install cothread
+    $ pip install cothread	#cothread is required for EPICS funtionality, but pytac can run without it.
 
 
 Initialisation
