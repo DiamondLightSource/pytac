@@ -33,6 +33,7 @@ Contents:
 
    self
    examples
+   developers
    pytac
 
 
