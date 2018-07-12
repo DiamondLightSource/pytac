@@ -17,6 +17,9 @@ class Element(object):
         index (int): the element's index within the ring, starting at 1
         cell (int): the element's cell within the lattice
         families (set): the families this element is a member of
+    Private attributes:
+        _uc (UnitConv): unit conversion object used for this field
+        _models (dict): dictionary of all the models of the element
 
     """
     def __init__(self, name, length, element_type,
