@@ -56,8 +56,7 @@ class Element(object):
             String: A representation of an element.
         """
         repn = '<Element {0}, length {1} m, families {2}>'
-        return repn.format(self.name,
-                           self.length,
+        return repn.format(self.name, self.length,
                            ', '.join(f for f in self.families))
 
     __repr__ = __str__
@@ -94,7 +93,7 @@ class Element(object):
 
         Args:
             field (str): The key to store the unit conversion and device
-                        objects.
+                          objects.
             device (Device): The device object used for this field.
             uc (UnitConv): The unit conversion object used for this field.
 
@@ -146,7 +145,8 @@ class Element(object):
         """
         self.families.add(family)
 
-    def get_value(self, field, handle=pytac.RB, units=pytac.ENG, model=pytac.LIVE):
+    def get_value(self, field, handle=pytac.RB, units=pytac.ENG,
+                  model=pytac.LIVE):
         """
         Get the value for a field.
 
@@ -163,7 +163,7 @@ class Element(object):
 
         Returns:
             Object: The value of the requested field, returned from EPICS as a
-                   string or cothread float.
+                     string or cothread float.
 
         Raises:
             DeviceException if there is no device on the given field.
@@ -171,12 +171,14 @@ class Element(object):
         try:
             model = self._models[model]
             value = model.get_value(field, handle)
-            return self._uc[field].convert(value, origin=model.units, target=units)
+            return self._uc[field].convert(value, origin=model.units,
+                                           target=units)
         except KeyError:
             raise DeviceException('No model type {} on element {}'.format(model,
-                self))
+                                                                          self))
 
-    def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG, model=pytac.LIVE):
+    def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
+                  model=pytac.LIVE):
         """
         Set the value on a uniquely identified device.
 
@@ -201,7 +203,7 @@ class Element(object):
             model.set_value(field, value)
         except KeyError:
             raise DeviceException('No model type {} on element {}'.format(model,
-                self))
+                                                                          self))
 
     def get_pv_name(self, field, handle):
         """
@@ -220,4 +222,5 @@ class Element(object):
         try:
             return self._models[pytac.LIVE].get_pv_name(field, handle)
         except KeyError:
-            raise DeviceException('{} has no device for field {}'.format(self, field))
+            raise DeviceException('{} has no device for field {}'.format(self,
+                                                                         field))
