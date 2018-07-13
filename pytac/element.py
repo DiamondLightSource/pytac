@@ -50,7 +50,7 @@ class Element(object):
         Return a representation of an element, as a string.
 
         Returns:
-            String: A representation of an element.
+            str: A representation of an element.
         """
         repn = '<Element {0}, length {1} m, families {2}>'
         return repn.format(self.name, self.length,
@@ -73,7 +73,7 @@ class Element(object):
         Includes all fields defined by all models.
 
         Returns:
-            List: A sequence of all the fields defined on an element.
+            list: A sequence of all the fields defined on an element.
         """
         fields = set()
         for model in self._models:
@@ -152,7 +152,7 @@ class Element(object):
             model (str): pytac.LIVE or pytac.SIM.
 
         Returns:
-            Object: The value of the requested field, returned from EPICS as a
+            object: The value of the requested field, returned from EPICS as a
                      string or cothread float.
 
         Raises:
