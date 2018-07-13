@@ -162,7 +162,7 @@ class Element(object):
             model (str): pytac.LIVE or pytac.SIM.
 
         Returns:
-            Object: The value of the requested field, returned from EPICS as a 
+            Object: The value of the requested field, returned from EPICS as a
                    string or cothread float.
 
         Raises:
