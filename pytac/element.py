@@ -18,7 +18,7 @@ class Element(object):
         length (number): length of the element in metres.
         s (float): the element's start position within the lattice in metres.
         index (int): the element's index within the ring, starting at 1.
-        cell (int): the element's cell within the lattice.
+        cell (int): lattice cell this element is wihin.
         families (set): the families this element is a member of.
 
     .. Private Attributes:
