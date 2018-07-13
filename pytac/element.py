@@ -10,7 +10,7 @@ class Element(object):
     An element has zero or more devices (e.g. quadrupole magnet) associated
     with a field ('b1' for a quadrupole).
 
-    **Attributes:** 
+    **Attributes:**
 
     Attributes:
         name (str): name identifying the element.
@@ -20,11 +20,10 @@ class Element(object):
         index (int): the element's index within the ring, starting at 1.
         cell (int): the element's cell within the lattice.
         families (set): the families this element is a member of.
-    """
-    """..
-    Private Attributes:
-        _uc (UnitConv): unit conversion object used for this field.
-        _models (dict): dictionary of all the models of the element.
+
+    .. Private Attributes:
+           _uc (UnitConv): unit conversion object used for this field.
+           _models (dict): dictionary of all the models of the element.
     """
     def __init__(self, name, length, element_type,
                  s=None, index=None, cell=None):
@@ -54,7 +53,7 @@ class Element(object):
         Return a representation of an element, as a string.
 
         Returns:
-            str: A representation of an element.
+            String: A representation of an element.
         """
         repn = '<Element {0}, length {1} m, families {2}>'
         return repn.format(self.name,
@@ -80,7 +79,7 @@ class Element(object):
         Includes all fields defined by all models.
 
         Returns:
-            list: A sequence of all the fields defined on an element.
+            List: A sequence of all the fields defined on an element.
         """
         fields = set()
         for model in self._models:
@@ -95,7 +94,7 @@ class Element(object):
 
         Args:
             field (str): The key to store the unit conversion and device
-                objects.
+                        objects.
             device (Device): device object used for this field.
             uc (UnitConv): unit conversion object used for this field.
 
@@ -164,7 +163,8 @@ class Element(object):
             model (str): pytac.LIVE or pytac.SIM.
 
         Returns:
-            Number: value of the requested field.
+            Object: value of the requested field, returned from EPICS as a 
+                   string or cothread float.
 
         Raises:
             DeviceException if there is no device on the given field.
