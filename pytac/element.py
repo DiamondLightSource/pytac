@@ -4,8 +4,7 @@ from pytac.device import DeviceException
 
 
 class Element(object):
-    """
-    Class representing one physical element in an accelerator lattice.
+    """Class representing one physical element in an accelerator lattice.
 
     An element has zero or more devices (e.g. quadrupole magnet) associated
     with a field ('b1' for a quadrupole).
@@ -27,14 +26,13 @@ class Element(object):
     """
     def __init__(self, name, length, element_type,
                  s=None, index=None, cell=None):
-        """
-        Args:
-            name (int): The unique identifier for the element in the ring.
-            length (float): The length of the element.
-            element_type (str): The type of the element.
-            s (float): The position of the start of the element in the ring.
-            index (float): The index of the element in the ring, starting at 1.
-            cell (int): The lattice cell this element is wihin.
+        """Args:
+               name (int): The unique identifier for the element in the ring.
+               length (float): The length of the element.
+               element_type (str): The type of the element.
+               s (float): The position of the start of the element in the ring.
+               index (float): The index of the element in the ring, starting at 1.
+               cell (int): The lattice cell this element is wihin.
         """
         self.name = name
         self.type_ = element_type
@@ -47,8 +45,7 @@ class Element(object):
         self._models = {}
 
     def __str__(self):
-        """
-        Auxiliary function to print out an element.
+        """Auxiliary function to print out an element.
 
         Return a representation of an element, as a string.
 
@@ -62,8 +59,7 @@ class Element(object):
     __repr__ = __str__
 
     def set_model(self, model, model_type):
-        """
-        Add a model to the element.
+        """Add a model to the element.
 
         Args:
             model (Model): instance of Model.
@@ -72,8 +68,7 @@ class Element(object):
         self._models[model_type] = model
 
     def get_fields(self):
-        """
-        Get the fields defined on an element.
+        """Get the fields defined on an element.
 
         Includes all fields defined by all models.
 
@@ -86,8 +81,7 @@ class Element(object):
         return fields
 
     def add_device(self, field, device, uc):
-        """
-        Add device and unit conversion objects to a given field.
+        """Add device and unit conversion objects to a given field.
 
         A DeviceModel must be set before calling this method.
 
@@ -104,8 +98,7 @@ class Element(object):
         self._uc[field] = uc
 
     def get_device(self, field):
-        """
-        Get the device for the given field.
+        """Get the device for the given field.
 
         A DeviceModel must be set before calling this method.
 
@@ -121,8 +114,7 @@ class Element(object):
         return self._models[pytac.LIVE].get_device(field)
 
     def get_unitconv(self, field):
-        """
-        Get the unit conversion option for the specified field.
+        """Get the unit conversion option for the specified field.
 
         Args:
             field (str): The field associated with this conversion.
@@ -137,8 +129,7 @@ class Element(object):
         return self._uc[field]
 
     def add_to_family(self, family):
-        """
-        Add the element to the specified family.
+        """Add the element to the specified family.
 
         Args:
             family (str): Represents the name of the family.
@@ -147,8 +138,7 @@ class Element(object):
 
     def get_value(self, field, handle=pytac.RB, units=pytac.ENG,
                   model=pytac.LIVE):
-        """
-        Get the value for a field.
+        """Get the value for a field.
 
         Returns the value for a field on the element. This value is uniquely
         identified by a field and a handle. The returned value is either
@@ -179,8 +169,7 @@ class Element(object):
 
     def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
                   model=pytac.LIVE):
-        """
-        Set the value on a uniquely identified device.
+        """Set the value on a uniquely identified device.
 
         This value can be set on the machine or the simulation.
         A field is required to identify a device. Returned value
@@ -206,8 +195,7 @@ class Element(object):
                                                                           self))
 
     def get_pv_name(self, field, handle):
-        """
-        Get a pv name on a device.
+        """Get a pv name on a device.
 
         Args:
             field (str): The requested field.
