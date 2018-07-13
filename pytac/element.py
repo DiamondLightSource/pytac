@@ -26,13 +26,14 @@ class Element(object):
     """
     def __init__(self, name, length, element_type,
                  s=None, index=None, cell=None):
-        """Args:
-               name (int): The unique identifier for the element in the ring.
-               length (float): The length of the element.
-               element_type (str): The type of the element.
-               s (float): The position of the start of the element in the ring.
-               index (float): The index of the element in the ring, starting at 1.
-               cell (int): The lattice cell this element is wihin.
+        """
+        Args:
+            name (int): The unique identifier for the element in the ring.
+            length (float): The length of the element.
+            element_type (str): The type of the element.
+            s (float): The position of the start of the element in the ring.
+            index (float): The index of the element in the ring, starting at 1.
+            cell (int): The lattice cell this element is wihin.
         """
         self.name = name
         self.type_ = element_type
