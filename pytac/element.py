@@ -13,28 +13,28 @@ class Element(object):
     **Attributes:**
 
     Attributes:
-        name (str): name identifying the element.
-        type_ (str): type of the element.
-        length (number): length of the element in metres.
-        s (float): the element's start position within the lattice in metres.
-        index (int): the element's index within the ring, starting at 1.
-        cell (int): lattice cell this element is wihin.
-        families (set): the families this element is a member of.
+        name (str): The name identifying the element.
+        type_ (str): The type of the element.
+        length (number): The length of the element in metres.
+        s (float): The element's start position within the lattice in metres.
+        index (int): The element's index within the ring, starting at 1.
+        cell (int): The lattice cell this element is wihin.
+        families (set): The families this element is a member of.
 
     .. Private Attributes:
-           _uc (UnitConv): unit conversion object used for this field.
-           _models (dict): dictionary of all the models of the element.
+           _uc (UnitConv): The unit conversion object used for this field.
+           _models (dict): The dictionary of all the models of the element.
     """
     def __init__(self, name, length, element_type,
                  s=None, index=None, cell=None):
         """
         Args:
-            name (int): Unique identifier for the element in the ring.
+            name (int): The unique identifier for the element in the ring.
             length (float): The length of the element.
-            element_type (str): Type of the element.
-            s (float): Position of the start of the element in the ring.
-            index (float): Index of the element in the ring, starting at 1.
-            cell (int): lattice cell this element is wihin.
+            element_type (str): The type of the element.
+            s (float): The position of the start of the element in the ring.
+            index (float): The index of the element in the ring, starting at 1.
+            cell (int): The lattice cell this element is wihin.
         """
         self.name = name
         self.type_ = element_type
@@ -95,8 +95,8 @@ class Element(object):
         Args:
             field (str): The key to store the unit conversion and device
                         objects.
-            device (Device): device object used for this field.
-            uc (UnitConv): unit conversion object used for this field.
+            device (Device): The device object used for this field.
+            uc (UnitConv): The unit conversion object used for this field.
 
         Raises:
             KeyError if no DeviceModel is set.
@@ -126,10 +126,10 @@ class Element(object):
         Get the unit conversion option for the specified field.
 
         Args:
-            field (str): Field associated with this conversion.
+            field (str): The field associated with this conversion.
 
         Returns:
-            UnitConv: object associated with the specified field.
+            UnitConv: The object associated with the specified field.
 
         Raises:
             KeyError if no unit conversion object is present.
@@ -156,14 +156,13 @@ class Element(object):
         or simulated values.
 
         Args:
-            field (str): requested field.
+            field (str): The requested field.
             handle (str): pytac.SP or pytac.RB.
-            unit (str): pytac.ENG or pytac.PHYS
-                returned.
+            unit (str): pytac.ENG or pytac.PHYS returned.
             model (str): pytac.LIVE or pytac.SIM.
 
         Returns:
-            Object: value of the requested field, returned from EPICS as a 
+            Object: The value of the requested field, returned from EPICS as a 
                    string or cothread float.
 
         Raises:
@@ -186,8 +185,8 @@ class Element(object):
         can be engineering or physics.
 
         Args:
-            field (str): requested field.
-            value (float): value to set.
+            field (str): The requested field.
+            value (float): The value to set.
             unit (str): pytac.ENG or pytac.PHYS.
             model (str): pytac.LIVE or pytac.SIM.
 
@@ -209,11 +208,11 @@ class Element(object):
         Get a pv name on a device.
 
         Args:
-            field (str): requested field.
+            field (str): The requested field.
             handle (str): pytac.RB or pytac.SP.
 
         Returns:
-            str: readback or setpoint pv for the specified field.
+            str: The readback or setpoint pv for the specified field.
 
         Raises:
             DeviceException if there is no device for this field.
