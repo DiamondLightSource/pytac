@@ -21,7 +21,7 @@ class Lattice(object):
            _lattice (list): The list of all the element objects in the lattice.
            _cs (ControlSystem): The control system used to store the values on
                                  a pv.
-           _energy (float): The total energy of the lattice.
+           _energy (int): The total energy of the lattice.
            _model (Model): A pytac model object associated with the lattice.
     """
 
@@ -31,7 +31,7 @@ class Lattice(object):
             name (str): The name of the lattice.
             control_system (ControlSystem): The control system used to store
                                              the values on a pv.
-            energy (float): The total energy of the lattice.
+            energy (int): The total energy of the lattice.
         """
         self.name = name
         self._lattice = []
@@ -51,7 +51,7 @@ class Lattice(object):
         """Function to get the total energy of the lattice.
 
         Returns:
-            float: energy of the lattice
+            int: energy of the lattice
         """
         return self._energy
 
