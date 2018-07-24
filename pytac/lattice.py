@@ -22,7 +22,7 @@ class Lattice(object):
            _cs (ControlSystem): The control system used to store the values on
                                  a pv.
            _energy (float): The total energy of the lattice.
-           _model (Model): A pytac model object.
+           _model (Model): A pytac model object associated with the lattice.
     """
 
     def __init__(self, name, control_system, energy):
@@ -40,10 +40,10 @@ class Lattice(object):
         self._model = None
 
     def set_model(self, model):
-        """A pytac model object.
+        """Sets the pytac model object associated with the lattice.
 
         Returns:
-            Model: A pytac model object.
+            Model: A pytac model object associated with the lattice.
         """
         self._model = model
 
