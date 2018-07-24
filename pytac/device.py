@@ -125,12 +125,13 @@ class Device(object):
 
 
 class PvEnabler(object):
+    """A PvEnabler class to check whether a device is enabled.
+
+    The class will behave like True if the pv value equals enabled_value,
+    and False otherwise.
+    """
     def __init__(self, pv, enabled_value, cs):
-        """A PvEnabler class to check whether a device is enabled.
-
-        The class will behave like True if the pv value equals enabled_value,
-        and False otherwise.
-
+        """
         Args:
             pv (str): The pv name.
             enabled_value (str): The value for pv for which the device should

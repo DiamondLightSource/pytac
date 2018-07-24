@@ -32,7 +32,6 @@ class Lattice(object):
             control_system (ControlSystem): The control system used to store
                                              the values on a pv.
             energy (float): The total energy of the lattice.
-
         """
         self.name = name
         self._lattice = []
@@ -48,7 +47,6 @@ class Lattice(object):
 
         Returns:
             float: energy of the lattice
-
         """
         return self._energy
 
@@ -61,7 +59,6 @@ class Lattice(object):
 
         Returns:
             Element: indexed element
-
         """
 
         return self._lattice[n]
@@ -74,7 +71,6 @@ class Lattice(object):
 
         Returns:
             int: The number of elements in the lattice.
-
         """
         return len(self._lattice)
 
@@ -94,7 +90,6 @@ class Lattice(object):
 
         Args:
             element (Element): element to append
-
         """
         self._lattice.append(element)
 
@@ -111,7 +106,6 @@ class Lattice(object):
 
         Returns:
             list(Element): list containing all elements of the specified family
-
         """
         elements = []
         if family is None:
@@ -149,7 +143,6 @@ class Lattice(object):
 
         Returns:
             list(str): list of pv names
-
         """
         elements = self.get_elements(family)
         pv_names = []
@@ -190,7 +183,6 @@ class Lattice(object):
         Raises:
             LatticeException: if the given list of values doesn't match the
                 number of elements in the family
-
         """
         pv_names = self.get_pv_names(family, field, 'setpoint')
         if len(pv_names) != len(values):
@@ -211,7 +203,6 @@ class Lattice(object):
 
         Raises
             LatticeException: if element doesn't exist in the lattice.
-
         """
         s_pos = 0
         for el in self._lattice:
@@ -231,7 +222,6 @@ class Lattice(object):
 
         Returns:
             list(float): list of s positions for each element
-
         """
         elements = self.get_elements(family)
         s_positions = []
@@ -277,7 +267,6 @@ class Lattice(object):
 
         Returns:
             list(str): devices names for specified family and field
-
         """
         devices = self.get_devices(family, field)
         return [device.name for device in devices]

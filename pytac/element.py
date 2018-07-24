@@ -127,7 +127,6 @@ class Element(object):
 
         Raises:
             KeyError if no unit conversion object is present.
-
         """
         return self._uc[field]
 
