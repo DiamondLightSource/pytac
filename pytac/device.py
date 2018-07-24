@@ -36,7 +36,7 @@ class Device(object):
     def __init__(self, name, cs, enabled=True, rb_pv=None, sp_pv=None):
         """
         Args:
-            name: The prefix of EPICS PVs for this device.
+            name (str): The prefix of EPICS PVs for this device.
             cs (ControlSystem): The control system object used to get and set
                                  the value of a pv.
             enabled (bool-like): Whether the device is enabled. May be a
@@ -54,7 +54,7 @@ class Device(object):
         """Whether the device is enabled.
 
         Returns:
-            boolean: whether the device is enabled
+            bool: whether the device is enabled.
         """
         return bool(self._enabled)
 
@@ -76,8 +76,8 @@ class Device(object):
         """Read the value of a readback or setpoint pv.
 
         Args:
-            handle (str): Handle used to get the value off a readback or setpoint
-                pv.
+            handle (str): The handle used to get the value off a readback or
+                           setpoint pv.
 
         Returns:
             float: The value of the pv.
@@ -104,7 +104,7 @@ class Device(object):
             str: A readback or setpoint pv.
 
         Raises:
-            DeviceException: if the PV doesn't exist.
+            DeviceException: if the pv doesn't exist.
         """
         if handle == pytac.RB and self.rb_pv:
             return self.rb_pv
@@ -115,6 +115,12 @@ class Device(object):
                           .format(self.name, handle))
 
     def get_cs(self):
+        """The control system object used to get and set the value of a pv.
+
+        Returns:
+            ControlSystem: The control system object used to get and set the
+                            value of a pv.
+        """
         return self._cs
 
 
@@ -126,10 +132,10 @@ class PvEnabler(object):
         and False otherwise.
 
         Args:
-            pv (str): pv name
-            enabled_value (str): value for pv for which the device should
-                be considered enabled
-            cs: Control system object
+            pv (str): The pv name.
+            enabled_value (str): The value for pv for which the device should
+                be considered enabled.
+            cs (ControlSystem): The control system object.
         """
         self._pv = pv
         self._enabled_value = str(int(float(enabled_value)))
