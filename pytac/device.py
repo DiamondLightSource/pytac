@@ -19,18 +19,30 @@ class Device(object):
     or setpoint pv is required when creating a device otherwise a
     DeviceException is raised. The device is enabled by default.
 
+    **Attributes:**
+
+    Attributes:
+        name (str): The prefix of EPICS PVs for this device.
+        rb_pv (str): The EPICS readback pv.
+        sp_pv (str): The EPICS setpoint pv.
+
+    .. Private Attributes:
+           _cs (ControlSystem): The control system object used to get and set
+                                 the value of a pv.
+           _enabled (bool-like): Whether the device is enabled. May be a
+                                  PvEnabler object.
     """
 
     def __init__(self, name, cs, enabled=True, rb_pv=None, sp_pv=None):
         """
         Args:
-            name: prefix of EPICS PVs for this device
-            cs (ControlSystem): Control system object used to get and set
-                the value of a pv.
-            enabled (bool-like): Whether the device is enabled.  May be
-                a PvEnabler object.
-            rb_suffix (str): EPICS readback pv
-            sp_suffix (str): EPICS setpoint pv
+            name: The prefix of EPICS PVs for this device.
+            cs (ControlSystem): The control system object used to get and set
+                                 the value of a pv.
+            enabled (bool-like): Whether the device is enabled. May be a
+                                  PvEnabler object.
+            rb_suffix (str): The EPICS readback pv.
+            sp_suffix (str): The EPICS setpoint pv.
         """
         self.name = name
         self._cs = cs

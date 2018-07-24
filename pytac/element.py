@@ -27,7 +27,7 @@ class Element(object):
     def __init__(self, name, length, element_type,
                  s=None, index=None, cell=None):
         """.. The constructor method for the class, called whenever an 'Element'
-              object is constructed.
+               object is constructed.
 
         Args:
             name (int): The unique identifier for the element in the ring.
