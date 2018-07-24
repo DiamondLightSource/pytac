@@ -32,7 +32,6 @@ class Device(object):
            _enabled (bool-like): Whether the device is enabled. May be a
                                   PvEnabler object.
     """
-
     def __init__(self, name, cs, enabled=True, rb_pv=None, sp_pv=None):
         """
         Args:

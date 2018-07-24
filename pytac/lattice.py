@@ -24,7 +24,6 @@ class Lattice(object):
            _energy (int): The total energy of the lattice.
            _model (Model): A pytac model object associated with the lattice.
     """
-
     def __init__(self, name, control_system, energy):
         """
         Args:
@@ -51,7 +50,7 @@ class Lattice(object):
         """Function to get the total energy of the lattice.
 
         Returns:
-            int: energy of the lattice
+            int: energy of the lattice.
         """
         return self._energy
 
@@ -60,12 +59,11 @@ class Lattice(object):
         the first element in the lattice.
 
         Args:
-            n (int): index
+            n (int): index.
 
         Returns:
-            Element: indexed element
+            Element: indexed element.
         """
-
         return self._lattice[n]
 
     def __len__(self):
