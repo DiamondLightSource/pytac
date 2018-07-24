@@ -22,7 +22,7 @@ class Device(object):
     **Attributes:**
 
     Attributes:
-        name (str): The prefix of EPICS PVs for this device.
+        name (str): The prefix of EPICS pvs for this device.
         rb_pv (str): The EPICS readback pv.
         sp_pv (str): The EPICS setpoint pv.
 
@@ -36,7 +36,7 @@ class Device(object):
     def __init__(self, name, cs, enabled=True, rb_pv=None, sp_pv=None):
         """
         Args:
-            name (str): The prefix of EPICS PVs for this device.
+            name (str): The prefix of EPICS pvs for this device.
             cs (ControlSystem): The control system object used to get and set
                                  the value of a pv.
             enabled (bool-like): Whether the device is enabled. May be a
@@ -119,7 +119,7 @@ class Device(object):
 
         Returns:
             ControlSystem: The control system object used to get and set the
-                            value of a pv.
+            value of a pv.
         """
         return self._cs
 
@@ -147,7 +147,7 @@ class PvEnabler(object):
         Support for Python 2.7.
 
         Returns:
-            bool: True if the device should be considered enabled
+            bool: True if the device should be considered enabled.
         """
         pv_value = self._cs.get(self._pv)
         return self._enabled_value == str(int(float(pv_value)))
@@ -158,6 +158,6 @@ class PvEnabler(object):
         Support for Python 3.x.
 
         Returns:
-            bool: True if the device should be considered enabled
+            bool: True if the device should be considered enabled.
         """
         return self.__nonzero__()
