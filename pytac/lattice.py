@@ -7,18 +7,30 @@ class LatticeException(Exception):
 
 
 class Lattice(object):
+    """Representation of a lattice.
+
+    Represents a lattice object that contains all elements of the ring. It has
+    a name and a control system to be used for unit conversion.
+
+    **Attributes:**
+
+    Attributes:
+        name (str): The name of the lattice.
+
+    .. Private Attributes:
+           _lattice (list): The list of all the element objects in the lattice.
+           _cs (ControlSystem): The control system used to store the values on
+                                 a pv.
+           _energy (float): The total energy of the lattice.
+           _model (Model): A pytac model object.
+    """
 
     def __init__(self, name, control_system, energy):
-        """Representation of a lattice.
-
-        Represents a lattice object that contains all elements
-        of the ring. It has a name and a control system to be used
-        for unit conversion.
-
+        """
         Args:
             name (str): The name of the lattice.
-            control_system (ControlSystem): The control system used
-                to store the values on a pv.
+            control_system (ControlSystem): The control system used to store
+                                             the values on a pv.
             energy (float): The total energy of the lattice.
 
         """
