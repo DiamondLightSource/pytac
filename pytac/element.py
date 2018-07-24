@@ -7,7 +7,7 @@ class Element(object):
     """Class representing one physical element in an accelerator lattice.
 
     An element has zero or more devices (e.g. quadrupole magnet) associated
-    with a field ('b1' for a quadrupole).
+    with each of its fields (e.g. 'b1' for a quadrupole).
 
     **Attributes:**
 
@@ -143,7 +143,7 @@ class Element(object):
                   model=pytac.LIVE):
         """Get the value for a field.
 
-        Returns the value for a field on the element. This value is uniquely
+        Returns the value of a field on the element. This value is uniquely
         identified by a field and a handle. The returned value is either
         in engineering or physics units. The model flag returns either real
         or simulated values.
