@@ -40,6 +40,11 @@ class Lattice(object):
         self._model = None
 
     def set_model(self, model):
+        """A pytac model object.
+
+        Returns:
+            Model: A pytac model object.
+        """
         self._model = model
 
     def get_energy(self):
