@@ -129,13 +129,19 @@ class PvEnabler(object):
 
     The class will behave like True if the pv value equals enabled_value,
     and False otherwise.
+
+    .. Private Attributes:
+           _pv (str): The pv name.
+           _enabled_value (str): The value for pv for which the device should
+                                  be considered enabled.
+           _cs (ControlSystem): The control system object.
     """
     def __init__(self, pv, enabled_value, cs):
         """
         Args:
             pv (str): The pv name.
             enabled_value (str): The value for pv for which the device should
-                be considered enabled.
+                                  be considered enabled.
             cs (ControlSystem): The control system object.
         """
         self._pv = pv
