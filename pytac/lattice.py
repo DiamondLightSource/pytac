@@ -202,7 +202,7 @@ class Lattice(object):
         Returns:
             float: the position of the given element.
 
-        Raises
+        Raises:
             LatticeException: if element doesn't exist in the lattice.
         """
         s_pos = 0
