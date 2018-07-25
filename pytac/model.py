@@ -12,6 +12,8 @@ class Model(object):
 
     Attributes:
         units (str): pytac.PHYS or pytac.ENG.
+
+    **Methods:**
     """
     def get_fields(self):
         """Get all the fields represented by this model.
