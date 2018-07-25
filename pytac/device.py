@@ -138,7 +138,9 @@ class PvEnabler(object):
            _cs (ControlSystem): The control system object.
     """
     def __init__(self, pv, enabled_value, cs):
-        """
+        """.. The constructor method for the class, called whenever a
+               'PvEnabler' object is constructed.
+
         Args:
             pv (str): The pv name.
             enabled_value (str): The value for pv for which the device should
