@@ -25,7 +25,9 @@ class Lattice(object):
            _model (Model): A pytac model object associated with the lattice.
     """
     def __init__(self, name, control_system, energy):
-        """
+        """.. The constructor method for the class, called whenever a 'Lattice'
+               object is constructed.
+
         Args:
             name (str): The name of the lattice.
             control_system (ControlSystem): The control system used to store

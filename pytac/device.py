@@ -33,7 +33,9 @@ class Device(object):
                                   PvEnabler object.
     """
     def __init__(self, name, cs, enabled=True, rb_pv=None, sp_pv=None):
-        """
+        """.. The constructor method for the class, called whenever a 'Device'
+               object is constructed.
+
         Args:
             name (str): The prefix of EPICS pvs for this device.
             cs (ControlSystem): The control system object used to get and set
