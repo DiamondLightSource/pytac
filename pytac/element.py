@@ -36,6 +36,8 @@ class Element(object):
             s (float): The position of the start of the element in the ring.
             index (float): The index of the element in the ring, starting at 1.
             cell (int): The lattice cell this element is wihin.
+
+        **Methods:**
         """
         self.name = name
         self.type_ = element_type

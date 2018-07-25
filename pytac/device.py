@@ -44,6 +44,8 @@ class Device(object):
                                   PvEnabler object.
             rb_suffix (str): The EPICS readback pv.
             sp_suffix (str): The EPICS setpoint pv.
+
+        **Methods:**
         """
         self.name = name
         self._cs = cs
@@ -146,6 +148,8 @@ class PvEnabler(object):
             enabled_value (str): The value for pv for which the device should
                                   be considered enabled.
             cs (ControlSystem): The control system object.
+
+        **Methods:**
         """
         self._pv = pv
         self._enabled_value = str(int(float(enabled_value)))

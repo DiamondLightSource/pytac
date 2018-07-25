@@ -33,6 +33,8 @@ class Lattice(object):
             control_system (ControlSystem): The control system used to store
                                              the values on a pv.
             energy (int): The total energy of the lattice.
+
+        **Methods:**
         """
         self.name = name
         self._lattice = []
