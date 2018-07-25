@@ -8,6 +8,8 @@ class Model(object):
     Typically an instance would represent hardware via a control system,
     or a simulation.
 
+    **Attributes:**
+
     Attributes:
         units (str): pytac.PHYS or pytac.ENG.
     """
@@ -57,6 +59,7 @@ class DeviceModel(object):
     def __init__(self):
         """.. The constructor method for the class, called whenever a
                'DeviceModel' object is constructed.
+
         """
         self._devices = {}
         self.units = pytac.ENG
