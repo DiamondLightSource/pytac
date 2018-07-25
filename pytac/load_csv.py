@@ -46,7 +46,15 @@ def get_mult_rigidity(energy):
 
 
 def load_poly_unitconv(filename):
-    """Load polynomial unit conversions from a csv file."""
+    """Load polynomial unit conversions from a csv file.
+
+    Args:
+        filename (path-like object): The pathname of the file from which to
+                                      load the polynomial unit conversions.
+
+    Returns:
+        dict: A dictionary of the unit conversions.
+    """
     unitconvs = {}
     data = collections.defaultdict(list)
     with open(filename) as poly:
@@ -62,7 +70,15 @@ def load_poly_unitconv(filename):
 
 
 def load_pchip_unitconv(filename):
-    """Load pchip unit conversions from a csv file."""
+    """Load pchip unit conversions from a csv file.
+
+    Args:
+        filename (path-like object): The pathname of the file from which to
+                                      load the pchip unit conversions.
+
+    Returns:
+        dict: A dictionary of the unit conversions.
+    """
     unitconvs = {}
     data = collections.defaultdict(list)
     with open(filename) as pchip:
