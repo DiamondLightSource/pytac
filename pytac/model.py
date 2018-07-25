@@ -57,9 +57,9 @@ class DeviceModel(object):
            _devices (dict): A dictionary of the devices for each key(field).
     """
     def __init__(self):
-        """.. The constructor method for the class, called whenever a
-               'DeviceModel' object is constructed.
-
+        """
+        .. The constructor method for the class, called whenever a
+            'DeviceModel' object is constructed.
         """
         self._devices = {}
         self.units = pytac.ENG
