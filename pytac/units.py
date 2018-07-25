@@ -31,15 +31,23 @@ class UnitConv(object):
     The two arguments to this function represent functions that are
     applied to the result of the initial conversion. One happens after
     the conversion, the other happens before the conversion back.
+
+    .. Private Attributes:
+           post_eng_to_phys (function): Function to be applied after the initial
+                                         conversion.
+           pre_phys_to_eng (function): Function to be applied before the initial
+                                        conversion.
     """
 
     def __init__(self, post_eng_to_phys=unit_function, pre_phys_to_eng=unit_function):
-        """
+        """.. The constructor method for the class, called whenever a 'UnitConv'
+               object is constructed.
+
         Args:
             post_eng_to_phys (function): Function to be applied after the initial
-                conversion.
+                                          conversion.
             pre_phys_to_eng (function): Function to be applied before the initial
-                conversion.
+                                         conversion.
         """
         self._post_eng_to_phys = post_eng_to_phys
         self._pre_phys_to_eng = pre_phys_to_eng
@@ -49,7 +57,7 @@ class UnitConv(object):
 
         Args:
             value (float): Value to be converted from engineering to physics
-                units.
+                            units.
         """
         raise NotImplementedError('No eng-to-phys conversion provided')
 
@@ -63,7 +71,7 @@ class UnitConv(object):
             value (float): Value to be converted from engineering to physics units.
 
         Returns:
-            result (float): The result value.
+            float: The result value.
         """
         x = self._raw_eng_to_phys(value)
         result = self._post_eng_to_phys(x)
@@ -87,13 +95,22 @@ class UnitConv(object):
             value (float): Value to be converted from physics to engineering units.
 
         Returns:
-            result (float): The result value.
+            float: The result value.
         """
         x = self._pre_phys_to_eng(value)
         result = self._raw_phys_to_eng(x)
         return result
 
     def convert(self, value, origin, target):
+        """
+        Args:
+            value (float):
+            origin (str): pytac.ENG or pytac.PHYS
+            target (str): pytac.ENG or pytac.PHYS
+
+        Returns:
+            float: The result value.
+        """
         if origin == target:
             return value
         if origin == pytac.PHYS and target == pytac.ENG:
@@ -106,11 +123,21 @@ class UnitConv(object):
 
 
 class PolyUnitConv(UnitConv):
+    """Linear interpolation for converting between physics and engineering units.
+
+    **Attributes:**
+
+    Attributes:
+        p (poly1d): A one-dimensional polynomial of coefficients.
+    """
     def __init__(self, coef, post_eng_to_phys=unit_function, pre_phys_to_eng=unit_function):
-        """Linear interpolation for converting between physics and engineering units.
+        """.. The constructor method for the class, called whenever a 'PolyUnitConv'
+               object is constructed.
 
         Args:
             coef (array_like): The polynomial's coefficients, in decreasing powers.
+            post_eng_to_phys (float): The value after conversion between ENG and PHYS.
+            pre_eng_to_phys (float): The value before conversion.
         """
         super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng)
         self.p = numpy.poly1d(coef)
@@ -130,7 +157,7 @@ class PolyUnitConv(UnitConv):
         """Convert between physics and engineering units.
 
         Args:
-            physics_value(float): The physics value to be converted to the
+            physics_value (float): The physics value to be converted to the
                 engineering value.
 
         Returns:
@@ -153,14 +180,14 @@ class PchipUnitConv(UnitConv):
         """ PChip interpolation for converting between physics and engineering units.
 
         Args:
-            x(list): A list of points on the x axis. These must be in increasing order
+            x (list): A list of points on the x axis. These must be in increasing order
                 for the interpolation to work. Otherwise, a ValueError is raised.
-            y(list): A list of points on the y axis. These must be in increasing or
+            y (list): A list of points on the y axis. These must be in increasing or
                 decreasing order. Otherwise, a ValueError is raised.
 
         Raises:
             ValueError: An error occured when the given y coefficients are neither in
-            increasing or decreasing order.
+             increasing or decreasing order.
         """
         super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng)
         self.x = x
@@ -176,7 +203,7 @@ class PchipUnitConv(UnitConv):
         """Convert between engineering and physics units.
 
         Args:
-            eng_value(float): The engineering value to be converted to the engineering unit.
+            eng_value (float): The engineering value to be converted to the engineering unit.
         Returns:
             float: The converted engineering value from the given engineering value.
         """
@@ -186,7 +213,7 @@ class PchipUnitConv(UnitConv):
         """Convert between physics and engineering units.
 
         Args:
-            physics_value(float): The engineering value to be converted to the
+            physics_value (float): The engineering value to be converted to the
                 engineering value.
 
         Returns:
