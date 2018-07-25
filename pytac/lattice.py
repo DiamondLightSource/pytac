@@ -109,7 +109,7 @@ class Lattice(object):
             cell (int): restrict elements to those in the specified cell.
 
         Returns:
-            list(Element): list containing all elements of the specified family.
+            list: list containing all elements of the specified family.
         """
         elements = []
         if family is None:
@@ -128,7 +128,7 @@ class Lattice(object):
         """Get all families of elements in the lattice.
 
         Returns:
-            set(str): all defined families.
+            set: all defined families.
         """
         families = set()
         for element in self._lattice:
@@ -137,7 +137,7 @@ class Lattice(object):
         return families
 
     def get_pv_names(self, family, field, handle):
-        """Get all pv names for a specific family, field and handle.
+        """Get all pv names for a specific family, field, and handle.
 
         Args:
             family (str): requested family.
@@ -145,7 +145,7 @@ class Lattice(object):
             handle (str): pytac.RB or pytac.SP.
 
         Returns:
-            list(str): list of pv names.
+            list: list of pv names.
         """
         elements = self.get_elements(family)
         pv_names = []
@@ -224,7 +224,7 @@ class Lattice(object):
             family (str): requested family.
 
         Returns:
-            list(float): list of s positions for each element.
+            list: list of s positions for each element.
         """
         elements = self.get_elements(family)
         s_positions = []
@@ -244,7 +244,7 @@ class Lattice(object):
             field (str): field specifying the devices.
 
         Returns:
-            list(devices): devices for specified family and field.
+            list: devices for specified family and field.
         """
         elements = self.get_elements(family)
         devices = []
@@ -269,7 +269,7 @@ class Lattice(object):
             field (str): field specifying the devices.
 
         Returns:
-            list(str): devices names for specified family and field.
+            list: devices names for specified family and field.
         """
         devices = self.get_devices(family, field)
         return [device.name for device in devices]
