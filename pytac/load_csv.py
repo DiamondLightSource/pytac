@@ -28,6 +28,12 @@ PCHIP_FILENAME = 'uc_pchip_data.csv'
 
 
 def get_div_rigidity(energy):
+    """
+    Args:
+        energy (int):
+    Returns:
+        float?: div rigidity.
+    """
     rigidity = utils.rigidity(energy)
 
     def div_rigidity(input):
@@ -37,8 +43,13 @@ def get_div_rigidity(energy):
 
 
 def get_mult_rigidity(energy):
+    """
+    Args:
+        energy (int):
+    Returns:
+        float?: mult rigidity.
+    """
     rigidity = utils.rigidity(energy)
-
     def mult_rigidity(input):
         return input * rigidity
 
