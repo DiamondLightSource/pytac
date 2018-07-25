@@ -202,7 +202,7 @@ class Lattice(object):
             elem (Element): The element that the position is being asked for.
 
         Returns:
-            float: the position of the given element.
+            float: The position of the given element.
 
         Raises:
             LatticeException: if element doesn't exist in the lattice.
@@ -269,7 +269,7 @@ class Lattice(object):
             field (str): field specifying the devices.
 
         Returns:
-            list: devices names for specified family and field.
+            list: device names for specified family and field.
         """
         devices = self.get_devices(family, field)
         return [device.name for device in devices]
