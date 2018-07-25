@@ -52,7 +52,7 @@ class DeviceModel(object):
         units (str): pytac.ENG or pytac.PHYS, pytac.ENG by default.
 
     .. Private Attributes:
-           _devices (dict): A dictionary of the devices for each key (field).
+           _devices (dict): A dictionary of the devices for each key(field).
     """
     def __init__(self):
         """.. The constructor method for the class, called whenever a
@@ -89,7 +89,7 @@ class DeviceModel(object):
         return self._devices.keys()
 
     def get_pv_name(self, field, handle):
-        """Get PV name for a field and handle.
+        """Get pv name for a field and handle.
 
         Args:
             field (str): field of the requested pv.
