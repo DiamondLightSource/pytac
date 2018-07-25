@@ -48,6 +48,8 @@ class UnitConv(object):
                                           conversion.
             pre_phys_to_eng (function): Function to be applied before the initial
                                          conversion.
+
+        **Methods:**
         """
         self._post_eng_to_phys = post_eng_to_phys
         self._pre_phys_to_eng = pre_phys_to_eng
@@ -138,6 +140,8 @@ class PolyUnitConv(UnitConv):
             coef (array_like): The polynomial's coefficients, in decreasing powers.
             post_eng_to_phys (float): The value after conversion between ENG and PHYS.
             pre_eng_to_phys (float): The value before conversion.
+
+        **Methods:**
         """
         super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng)
         self.p = numpy.poly1d(coef)
@@ -176,6 +180,19 @@ class PolyUnitConv(UnitConv):
 
 
 class PchipUnitConv(UnitConv):
+    """Piecewise Cubic Hermite Interpolating Polynomial unit conversion.
+
+    **Attributes:**
+
+    Attributes:
+        x (list): A list of points on the x axis. These must be in increasing order
+            for the interpolation to work. Otherwise, a ValueError is raised.
+        y (list): A list of points on the y axis. These must be in increasing or
+            decreasing order. Otherwise, a ValueError is raised.
+        pp (PchipInterpolator): A pchip one-dimensional monotonic cubic interpolation
+            of points on both x and y axes.
+
+    """
     def __init__(self, x, y, post_eng_to_phys=unit_function, pre_phys_to_eng=unit_function):
         """ PChip interpolation for converting between physics and engineering units.
 
@@ -188,6 +205,8 @@ class PchipUnitConv(UnitConv):
         Raises:
             ValueError: An error occured when the given y coefficients are neither in
              increasing or decreasing order.
+
+        **Methods:**
         """
         super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng)
         self.x = x
