@@ -15,7 +15,7 @@ def unit_function(value):
         value (float): The value to be converted.
 
     Returns:
-        value (float): The result of the conversion.
+        float: The result of the conversion.
     """
     return value
 
@@ -33,9 +33,9 @@ class UnitConv(object):
     the conversion, the other happens before the conversion back.
 
     .. Private Attributes:
-           post_eng_to_phys (function): Function to be applied after the initial
+           _post_eng_to_phys (function): Function to be applied after the initial
                                          conversion.
-           pre_phys_to_eng (function): Function to be applied before the initial
+           _pre_phys_to_eng (function): Function to be applied before the initial
                                         conversion.
     """
 
@@ -67,7 +67,7 @@ class UnitConv(object):
         """Function that does the unit conversion.
 
         Conversion from engineering to physics units. An additional function may
-        be casted on the initial conversion.
+        be cast on the initial conversion.
 
         Args:
             value (float): Value to be converted from engineering to physics units.
@@ -91,7 +91,7 @@ class UnitConv(object):
         """Function that does the unit conversion.
 
         Conversion from physics to engineering units. An additional function may
-        be casted on the initial conversion.
+        be cast on the initial conversion.
 
         Args:
             value (float): Value to be converted from physics to engineering units.
@@ -137,7 +137,7 @@ class PolyUnitConv(UnitConv):
                object is constructed.
 
         Args:
-            coef (array_like): The polynomial's coefficients, in decreasing powers.
+            coef (array-like): The polynomial's coefficients, in decreasing powers.
             post_eng_to_phys (float): The value after conversion between ENG and PHYS.
             pre_eng_to_phys (float): The value before conversion.
 
@@ -194,7 +194,7 @@ class PchipUnitConv(UnitConv):
 
     """
     def __init__(self, x, y, post_eng_to_phys=unit_function, pre_phys_to_eng=unit_function):
-        """ PChip interpolation for converting between physics and engineering units.
+        """PChip interpolation for converting between physics and engineering units.
 
         Args:
             x (list): A list of points on the x axis. These must be in increasing order
