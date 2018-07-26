@@ -6,9 +6,7 @@ Installation
 
 This is only required on your first use.
 
-- Ensure you have Pip and a local copy of pytac.
-
-- Install pytac and cothread::
+- Ensure you have Pip, then install pytac and cothread::
 
     $ pip install pytac
     $ pip install cothread	#cothread is required for EPICS funtionality, but pytac can run without it.
