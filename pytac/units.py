@@ -5,6 +5,8 @@ from scipy.interpolate import PchipInterpolator
 
 
 class UnitsException(Exception):
+    """Conversion not understood
+    """
     pass
 
 
@@ -116,6 +118,9 @@ class UnitConv(object):
 
         Returns:
             float: The result value.
+
+        Raises:
+            UnitsException: invalid conversion.
         """
         if origin == target:
             return value
