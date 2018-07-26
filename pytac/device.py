@@ -1,5 +1,5 @@
 """The device class used to represent a particular function of an accelerator
-    element.
+element.
 
 A physical element in an accelerator may have multiple devices: an example at
 DLS is a sextupole magnet that contains also horizontal and vertical corrector
@@ -124,7 +124,7 @@ class Device(object):
 
         Returns:
             ControlSystem: The control system object used to get and set the
-                            value of a pv.
+            value of a pv.
         """
         return self._cs
 

@@ -134,9 +134,9 @@ def load_unitconv(directory, mode, lattice):
             # conversion factor as well as the raw conversion.
             if element.families.intersection(('HSTR', 'VSTR', 'QUAD', 'SEXT')):
                 (unitconvs[int(item['uc_id'])]
-                 ._post_eng_to_phys = get_div_rigidity(lattice.get_energy()))
+                 ._post_eng_to_phys) = get_div_rigidity(lattice.get_energy())
                 (unitconvs[int(item['uc_id'])]
-                 ._pre_phys_to_eng = get_mult_rigidity(lattice.get_energy()))
+                 ._pre_phys_to_eng) = get_mult_rigidity(lattice.get_energy())
             element._uc[item['field']] = unitconvs[int(item['uc_id'])]
 
 
