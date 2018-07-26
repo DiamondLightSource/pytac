@@ -1,4 +1,6 @@
-""" Module to implement an EpicsControlSystem object which is used to get real-time data from the machine. """
+""" Module to implement an EpicsControlSystem object which is used to get 
+     real-time data from the machine.
+"""
 
 from pytac.cs import ControlSystem
 from cothread.catools import caget, caput
@@ -17,8 +19,8 @@ class EpicsControlSystem(ControlSystem):
         """ Get the value of a given pv.
 
         Args:
-            pv(string): The process variable given as a string. It can be
-                a readback or a setpoint pv.
+            pv(string): The process variable given as a string. It can be a
+                         readback or a setpoint pv.
 
         Returns:
             float: Represents the current value of the given pv.
