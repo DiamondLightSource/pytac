@@ -97,7 +97,7 @@ class Element(object):
             uc (UnitConv): The unit conversion object used for this field.
 
         Raises:
-            KeyError if no DeviceModel is set.
+            KeyError: if no DeviceModel is set.
         """
         self._models[pytac.LIVE].add_device(field, device)
         self._uc[field] = uc
@@ -114,7 +114,7 @@ class Element(object):
             Device: The device on the given field.
 
         Raises:
-            KeyError if no DeviceModel is set.
+            KeyError: if no DeviceModel is set.
         """
         return self._models[pytac.LIVE].get_device(field)
 
@@ -128,7 +128,7 @@ class Element(object):
             UnitConv: The object associated with the specified field.
 
         Raises:
-            KeyError if no unit conversion object is present.
+            KeyError: if no unit conversion object is present.
         """
         return self._uc[field]
 
@@ -160,7 +160,7 @@ class Element(object):
             string or cothread float.
 
         Raises:
-            DeviceException if there is no device on the given field.
+            DeviceException: if there is no device on the given field.
         """
         try:
             model = self._models[model]
@@ -186,7 +186,7 @@ class Element(object):
             model (str): pytac.LIVE or pytac.SIM.
 
         Raises:
-            DeviceException if arguments are incorrect.
+            DeviceException: if arguments are incorrect.
         """
         if handle != pytac.SP:
             raise DeviceException('Must write using {}'.format(pytac.SP))
@@ -209,7 +209,7 @@ class Element(object):
             str: The readback or setpoint pv for the specified field.
 
         Raises:
-            DeviceException if there is no device for this field.
+            DeviceException: if there is no device for this field.
         """
         try:
             return self._models[pytac.LIVE].get_pv_name(field, handle)

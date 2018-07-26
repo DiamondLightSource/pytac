@@ -175,7 +175,7 @@ class PolyUnitConv(UnitConv):
                     value.
 
         Raises:
-            ValueError: An error occured when there exist no or more than one
+            ValueError: An error occurred when there exist no or more than one
                          roots.
         """
         roots = (self.p - physics_value).roots
