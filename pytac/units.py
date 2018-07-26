@@ -147,8 +147,6 @@ class PolyUnitConv(UnitConv):
             post_eng_to_phys (float): The value after conversion between ENG
                                        and PHYS.
             pre_eng_to_phys (float): The value before conversion.
-
-        **Methods:**
         """
         super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng)
         self.p = numpy.poly1d(coef)
@@ -220,8 +218,6 @@ class PchipUnitConv(UnitConv):
         Raises:
             ValueError: An error occured when the given y coefficients are
                          neither in increasing or decreasing order.
-
-        **Methods:**
         """
         super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng)
         self.x = x
