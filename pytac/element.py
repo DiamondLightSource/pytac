@@ -24,10 +24,10 @@ class Element(object):
            _uc (UnitConv): The unit conversion object used for this field.
            _models (dict): The dictionary of all the models of the element.
     """
-    def __init__(self, name, length, element_type,
-                 s=None, index=None, cell=None):
-        """.. The constructor method for the class, called whenever an 'Element'
-               object is constructed.
+    def __init__(self, name, length, element_type, s=None, index=None,
+                 cell=None):
+        """.. The constructor method for the class, called whenever an
+               'Element' object is constructed.
 
         Args:
             name (int): The unique identifier for the element in the ring.
@@ -157,7 +157,7 @@ class Element(object):
 
         Returns:
             object: The value of the requested field, returned from EPICS as a
-            string or cothread float.
+                     string or cothread float.
 
         Raises:
             DeviceException if there is no device on the given field.

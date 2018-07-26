@@ -107,7 +107,8 @@ class DeviceModel(object):
         return self._devices[field].get_pv_name(handle)
 
     def get_value(self, field, handle):
-        """Get the value of a readback or setpoint pv for a field from the model.
+        """Get the value of a readback or setpoint pv for a field from the
+        model.
 
         Args:
             field (str): field of the requested value.
@@ -119,7 +120,8 @@ class DeviceModel(object):
         return self._devices[field].get_value(handle)
 
     def set_value(self, field, value):
-        """Set the value of a readback or setpoint pv for a field from the model.
+        """Set the value of a readback or setpoint pv for a field from the
+        model.
 
         Args:
             field (str): field for the requested value.

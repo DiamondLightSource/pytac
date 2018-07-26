@@ -72,7 +72,8 @@ def load_poly_unitconv(filename):
     with open(filename) as poly:
         csv_reader = csv.DictReader(poly)
         for item in csv_reader:
-            data[(int(item['uc_id']))].append((int(item['coeff']), float(item['val'])))
+            data[(int(item['uc_id']))].append((int(item['coeff']),
+                                               float(item['val'])))
 
     # Create PolyUnitConv for each item and put in the dict
     for uc_id in data:
@@ -96,7 +97,8 @@ def load_pchip_unitconv(filename):
     with open(filename) as pchip:
         csv_reader = csv.DictReader(pchip)
         for item in csv_reader:
-            data[(int(item['uc_id']))].append((float(item['eng']), float(item['phy'])))
+            data[(int(item['uc_id']))].append((float(item['eng']),
+                                               float(item['phy'])))
 
     # Create PchipUnitConv for each item and put in the dict
     for uc_id in data:
@@ -131,8 +133,10 @@ def load_unitconv(directory, mode, lattice):
             # For certain magnet types, we need an additional rigidity
             # conversion factor as well as the raw conversion.
             if element.families.intersection(('HSTR', 'VSTR', 'QUAD', 'SEXT')):
-                unitconvs[int(item['uc_id'])]._post_eng_to_phys = get_div_rigidity(lattice.get_energy())
-                unitconvs[int(item['uc_id'])]._pre_phys_to_eng = get_mult_rigidity(lattice.get_energy())
+                (unitconvs[int(item['uc_id'])]
+                 ._post_eng_to_phys = get_div_rigidity(lattice.get_energy()))
+                (unitconvs[int(item['uc_id'])]
+                 ._pre_phys_to_eng = get_mult_rigidity(lattice.get_energy()))
             element._uc[item['field']] = unitconvs[int(item['uc_id'])]
 
 
@@ -141,10 +145,12 @@ def load(mode, control_system=None, directory=None):
 
     Args:
         mode (str): The name of the mode to be loaded.
-        control_system (ControlSystem): The control system to be used. If none is provided
-            an EpicsControlSystem will be created.
-        directory (str): Directory where to load the files from. If no directory is given
-            the data directory at the root of the repository is used.
+        control_system (ControlSystem): The control system to be used. If none
+                                         is provided an EpicsControlSystem will
+                                         be created.
+        directory (str): Directory where to load the files from. If no
+                          directory is given the data directory at the root of
+                          the repository is used.
 
     Returns:
         Lattice: The lattice containing all elements.
@@ -156,9 +162,8 @@ def load(mode, control_system=None, directory=None):
             from pytac import epics
             control_system = epics.EpicsControlSystem()
     except ImportError:
-        print(('To load a lattice using the default control system,'
-                ' please install cothread.'),
-              file=sys.stderr)
+        print(('To load a lattice using the default control system, please'
+                ' install cothread.'), file=sys.stderr)
         return None
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -187,7 +192,8 @@ def load(mode, control_system=None, directory=None):
             set_pv = item['set_pv'] if item['set_pv'] else None
             pve = True
             d = device.Device(name, control_system, pve, get_pv, set_pv)
-            lat[int(item['id']) - 1].add_device(item['field'], d, units.UnitConv())
+            lat[int(item['id']) - 1].add_device(item['field'], d,
+                                                units.UnitConv())
 
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)

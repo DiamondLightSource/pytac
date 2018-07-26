@@ -1,14 +1,16 @@
-"""The device class used to represent a particular function of an accelerator element.
+"""The device class used to represent a particular function of an accelerator
+    element.
 
-A physical element in an accelerator may have multiple devices: an example at DLS
-is a sextupole magnet that contains also horizontal and vertical corrector magnets
-and a skew quadrupole.
+A physical element in an accelerator may have multiple devices: an example at
+DLS is a sextupole magnet that contains also horizontal and vertical corrector
+magnets and a skew quadrupole.
 """
 import pytac
 
 
 class DeviceException(Exception):
-    """Exception associated with Device misconfiguration or invalid requests."""
+    """Exception associated with Device misconfiguration or invalid requests.
+    """
     pass
 
 
@@ -122,7 +124,7 @@ class Device(object):
 
         Returns:
             ControlSystem: The control system object used to get and set the
-            value of a pv.
+                            value of a pv.
         """
         return self._cs
 

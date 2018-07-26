@@ -1,4 +1,6 @@
-""" Representation of a lattice object which contains all the elements of the machine."""
+"""Representation of a lattice object which contains all the elements of the
+    machine.
+"""
 import numpy
 
 
@@ -191,8 +193,9 @@ class Lattice(object):
         """
         pv_names = self.get_pv_names(family, field, 'setpoint')
         if len(pv_names) != len(values):
-            raise LatticeException("Number of elements in given array must be "
-                    "equal to the number of elements in the lattice")
+            raise LatticeException("Number of elements in given array must be"
+                                   " equal to the number of elements in the "
+                                   "lattice")
         self._cs.put(pv_names, values)
 
     def get_s(self, elem):
@@ -215,9 +218,7 @@ class Lattice(object):
                 s_pos += el.length
             else:
                 return s_pos
-        raise LatticeException(
-                'Element {} not in lattice {}'.format(elem, self)
-        )
+        raise LatticeException('Element {} not in lattice {}'.format(elem, self))
 
     def get_family_s(self, family):
         """Get s positions for all elements from the same family.
@@ -235,7 +236,8 @@ class Lattice(object):
         return s_positions
 
     def get_devices(self, family, field):
-        """Get devices for a specific field for elements in the specfied family.
+        """Get devices for a specific field for elements in the specfied
+        family.
 
         Typically all elements of a family will have devices associated with
         the same fields - for example, BPMs each have a device for fields 'x'
