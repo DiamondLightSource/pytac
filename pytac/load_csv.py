@@ -50,6 +50,7 @@ def get_mult_rigidity(energy):
         float?: mult rigidity.
     """
     rigidity = utils.rigidity(energy)
+
     def mult_rigidity(input):
         return input * rigidity
 
