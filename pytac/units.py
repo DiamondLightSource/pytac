@@ -258,8 +258,8 @@ class PchipUnitConv(UnitConv):
                     value.
 
         Raises:
-            ValueError: An error occured when there exist no or more than one
-                         roots.
+            UnitsException: An error occured when there exist no or more than
+                             one roots.
         """
         y = [val - physics_value for val in self.y]
         new_pp = PchipInterpolator(self.x, y)
