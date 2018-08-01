@@ -176,8 +176,7 @@ class Element(object):
         """Set the value on a uniquely identified device.
 
         This value can be set on the machine or the simulation.
-        A field is required to identify a device. Returned value
-        can be engineering or physics.
+        A field is required to identify a device.
 
         Args:
             field (str): The requested field.
