@@ -78,7 +78,7 @@ class Element(object):
         Includes all fields defined by all models.
 
         Returns:
-            list: A sequence of all the fields defined on an element.
+            set: A sequence of all the fields defined on an element.
         """
         fields = set()
         for model in self._models:
