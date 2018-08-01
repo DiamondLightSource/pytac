@@ -38,7 +38,7 @@ class UnitConv(object):
            _post_eng_to_phys (function): Function to be applied after the
                                          initial conversion.
            _pre_phys_to_eng (function): Function to be applied before the
-                                        initial conversion.
+                                         initial conversion.
     """
 
     def __init__(self, post_eng_to_phys=unit_function,
