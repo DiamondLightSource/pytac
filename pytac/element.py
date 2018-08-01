@@ -152,7 +152,7 @@ class Element(object):
         Args:
             field (str): The requested field.
             handle (str): pytac.SP or pytac.RB.
-            unit (str): pytac.ENG or pytac.PHYS returned.
+            units (str): pytac.ENG or pytac.PHYS returned.
             model (str): pytac.LIVE or pytac.SIM.
 
         Returns:
@@ -182,7 +182,7 @@ class Element(object):
         Args:
             field (str): The requested field.
             value (float): The value to set.
-            unit (str): pytac.ENG or pytac.PHYS.
+            units (str): pytac.ENG or pytac.PHYS.
             model (str): pytac.LIVE or pytac.SIM.
 
         Raises:
