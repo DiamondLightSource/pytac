@@ -32,7 +32,7 @@ def get_div_rigidity(energy):
     Args:
         energy (int):
     Returns:
-        float?: div rigidity.
+        function: div rigidity.
     """
     rigidity = utils.rigidity(energy)
 
@@ -47,7 +47,7 @@ def get_mult_rigidity(energy):
     Args:
         energy (int):
     Returns:
-        float?: mult rigidity.
+        function: mult rigidity.
     """
     rigidity = utils.rigidity(energy)
 
