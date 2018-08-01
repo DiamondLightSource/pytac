@@ -9,7 +9,7 @@ This is only required on your first use.
 - Ensure you have Pip, then install pytac and cothread::
 
     $ pip install pytac
-    $ pip install cothread	#cothread is required for EPICS funtionality, but pytac can run without it.
+    $ pip install cothread	# cothread is required for EPICS functionality, but pytac can run without it.
 
 
 Initialisation
