@@ -14,7 +14,7 @@ This is only required on your first use.
 - Install dev-packages and cothread for EPICS support::
 
     $ pipenv install --dev
-    $ pip install cothread	#cothread is required for EPICS funtionality, but pytac can run without it.
+    $ pip install cothread	# cothread is required for EPICS functionality, but pytac can run without it.
 
 
 Initialisation
