@@ -140,6 +140,12 @@ class PolyUnitConv(UnitConv):
 
     Attributes:
         p (poly1d): A one-dimensional polynomial of coefficients.
+
+    .. Private Attributes:
+           _post_eng_to_phys (function): Function to be applied after the
+                                         initial conversion.
+           _pre_phys_to_eng (function): Function to be applied before the
+                                         initial conversion.
     """
     def __init__(self, coef, post_eng_to_phys=unit_function,
                  pre_phys_to_eng=unit_function):
@@ -206,6 +212,11 @@ class PchipUnitConv(UnitConv):
         pp (PchipInterpolator): A pchip one-dimensional monotonic cubic
                                  interpolation of points on both x and y axes.
 
+    .. Private Attributes:
+           _post_eng_to_phys (function): Function to be applied after the
+                                         initial conversion.
+           _pre_phys_to_eng (function): Function to be applied before the
+                                         initial conversion.
     """
     def __init__(self, x, y, post_eng_to_phys=unit_function,
                  pre_phys_to_eng=unit_function):
