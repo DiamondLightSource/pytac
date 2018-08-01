@@ -14,7 +14,7 @@ class Element(object):
     Attributes:
         name (str): The name identifying the element.
         type_ (str): The type of the element.
-        length (number): The length of the element in metres.
+        length (float): The length of the element in metres.
         s (float): The element's start position within the lattice in metres.
         index (int): The element's index within the ring, starting at 1.
         cell (int): The lattice cell this element is wihin.
