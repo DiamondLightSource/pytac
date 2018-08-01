@@ -44,8 +44,8 @@ class Device(object):
                                  the value of a pv.
             enabled (bool-like): Whether the device is enabled. May be a
                                   PvEnabler object.
-            rb_suffix (str): The EPICS readback pv.
-            sp_suffix (str): The EPICS setpoint pv.
+            rb_pv (str): The EPICS readback pv.
+            sp_pv (str): The EPICS setpoint pv.
 
         **Methods:**
         """
