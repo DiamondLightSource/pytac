@@ -38,7 +38,7 @@ The ``lattice`` object is used for interacting with elements of the accelerator.
 Print BPM PV names along with s position
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Get all elements that represent ``BPM``s::
+- Get all elements that represent ``BPM`` s::
 
     >>> bpms = lattice.get_elements('BPM')
 
