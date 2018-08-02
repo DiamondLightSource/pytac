@@ -17,20 +17,20 @@ class DeviceException(Exception):
 class Device(object):
     """A device attached to an element.
 
-    Contains a control system, readback and setpoint pvs. A readback
-    or setpoint pv is required when creating a device otherwise a
+    Contains a control system, readback and setpoint PVs. A readback
+    or setpoint PV is required when creating a device otherwise a
     DeviceException is raised. The device is enabled by default.
 
     **Attributes:**
 
     Attributes:
-        name (str): The prefix of EPICS pvs for this device.
-        rb_pv (str): The EPICS readback pv.
-        sp_pv (str): The EPICS setpoint pv.
+        name (str): The prefix of EPICS PVs for this device.
+        rb_pv (str): The EPICS readback PV.
+        sp_pv (str): The EPICS setpoint PV.
 
     .. Private Attributes:
            _cs (ControlSystem): The control system object used to get and set
-                                 the value of a pv.
+                                 the value of a PV.
            _enabled (bool-like): Whether the device is enabled. May be a
                                   PvEnabler object.
     """
@@ -39,13 +39,13 @@ class Device(object):
                object is constructed.
 
         Args:
-            name (str): The prefix of EPICS pvs for this device.
+            name (str): The prefix of EPICS PV for this device.
             cs (ControlSystem): The control system object used to get and set
-                                 the value of a pv.
+                                 the value of a PV.
             enabled (bool-like): Whether the device is enabled. May be a
                                   PvEnabler object.
-            rb_pv (str): The EPICS readback pv.
-            sp_pv (str): The EPICS setpoint pv.
+            rb_pv (str): The EPICS readback PV.
+            sp_pv (str): The EPICS setpoint PV.
 
         **Methods:**
         """
@@ -67,28 +67,28 @@ class Device(object):
         """Set the device value.
 
         Args:
-            value (float): The value to set on the pv.
+            value (float): The value to set on the PV.
 
         Raises:
-            DeviceException: if no setpoint pv exists.
+            DeviceException: if no setpoint PV exists.
         """
         if self.sp_pv is None:
-            raise DeviceException("""Device {0} has no setpoint pv."""
+            raise DeviceException("""Device {0} has no setpoint PV."""
                               .format(self.name))
         self._cs.put(self.sp_pv, value)
 
     def get_value(self, handle):
-        """Read the value of a readback or setpoint pv.
+        """Read the value of a readback or setpoint PV.
 
         Args:
             handle (str): The handle used to get the value off a readback or
-                           setpoint pv.
+                           setpoint PV.
 
         Returns:
-            float: The value of the pv.
+            float: The value of the PV.
 
         Raises:
-            DeviceException: if the requested pv doesn't exist.
+            DeviceException: if the requested PV doesn't exist.
         """
         print('getting {}'.format('handle'))
         if handle == pytac.RB and self.rb_pv:
@@ -96,35 +96,35 @@ class Device(object):
         elif handle == pytac.SP and self.sp_pv:
             return self._cs.get(self.sp_pv)
 
-        raise DeviceException("""Device {0} has no {1} pv."""
+        raise DeviceException("""Device {0} has no {1} PV."""
                           .format(self.name, handle))
 
     def get_pv_name(self, handle):
-        """Get a pv name on a specified handle.
+        """Get a PV name on a specified handle.
 
         Args:
             handle (str): The readback or setpoint handle to be returned.
 
         Returns:
-            str: A readback or setpoint pv.
+            str: A readback or setpoint PV.
 
         Raises:
-            DeviceException: if the pv doesn't exist.
+            DeviceException: if the PV doesn't exist.
         """
         if handle == pytac.RB and self.rb_pv:
             return self.rb_pv
         elif handle == pytac.SP and self.sp_pv:
             return self.sp_pv
 
-        raise DeviceException("""Device {0} has no {1} pv."""
+        raise DeviceException("""Device {0} has no {1} PV."""
                           .format(self.name, handle))
 
     def get_cs(self):
-        """The control system object used to get and set the value of a pv.
+        """The control system object used to get and set the value of a PV.
 
         Returns:
             ControlSystem: The control system object used to get and set the
-            value of a pv.
+            value of a PV.
         """
         return self._cs
 
@@ -132,12 +132,12 @@ class Device(object):
 class PvEnabler(object):
     """A PvEnabler class to check whether a device is enabled.
 
-    The class will behave like True if the pv value equals enabled_value,
+    The class will behave like True if the PV value equals enabled_value,
     and False otherwise.
 
     .. Private Attributes:
-           _pv (str): The pv name.
-           _enabled_value (str): The value for pv for which the device should
+           _pv (str): The PV name.
+           _enabled_value (str): The value for PV for which the device should
                                   be considered enabled.
            _cs (ControlSystem): The control system object.
     """
@@ -146,8 +146,8 @@ class PvEnabler(object):
                'PvEnabler' object is constructed.
 
         Args:
-            pv (str): The pv name.
-            enabled_value (str): The value for pv for which the device should
+            pv (str): The PV name.
+            enabled_value (str): The value for PV for which the device should
                                   be considered enabled.
             cs (ControlSystem): The control system object.
         """

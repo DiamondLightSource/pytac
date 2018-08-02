@@ -22,7 +22,7 @@ class Lattice(object):
     .. Private Attributes:
            _lattice (list): The list of all the element objects in the lattice.
            _cs (ControlSystem): The control system used to store the values on
-                                 a pv.
+                                 a PV.
            _energy (int): The total energy of the lattice.
            _model (Model): A pytac model object associated with the lattice.
     """
@@ -33,7 +33,7 @@ class Lattice(object):
         Args:
             name (str): The name of the lattice.
             control_system (ControlSystem): The control system used to store
-                                             the values on a pv.
+                                             the values on a PV.
             energy (int): The total energy of the lattice.
 
         **Methods:**
@@ -141,7 +141,7 @@ class Lattice(object):
         return families
 
     def get_pv_names(self, family, field, handle):
-        """Get all pv names for a specific family, field, and handle.
+        """Get all PV names for a specific family, field, and handle.
 
         Args:
             family (str): requested family.
@@ -149,7 +149,7 @@ class Lattice(object):
             handle (str): pytac.RB or pytac.SP.
 
         Returns:
-            list: list of pv names.
+            list: list of PV names.
         """
         elements = self.get_elements(family)
         pv_names = []
@@ -179,8 +179,8 @@ class Lattice(object):
     def set_values(self, family, field, values):
         """Sets the values for a family and field.
 
-        The pvs are determined by family and device. Note that only setpoint
-        pvs can be modified.
+        The PVs are determined by family and device. Note that only setpoint
+        PVs can be modified.
 
         Args:
             family (str): family on which to set values.

@@ -95,19 +95,19 @@ class DeviceModel(object):
         return self._devices.keys()
 
     def get_pv_name(self, field, handle):
-        """Get pv name for a field and handle.
+        """Get PV name for a field and handle.
 
         Args:
-            field (str): field of the requested pv.
+            field (str): field of the requested PV.
             handle (str): pytac.RB or pytac.SP.
 
         Returns:
-            str: pv name for specified field and handle.
+            str: PV name for specified field and handle.
         """
         return self._devices[field].get_pv_name(handle)
 
     def get_value(self, field, handle):
-        """Get the value of a readback or setpoint pv for a field from the
+        """Get the value of a readback or setpoint PV for a field from the
         model.
 
         Args:
@@ -115,16 +115,16 @@ class DeviceModel(object):
             handle (str): pytac.RB or pytac.SP.
 
         Returns:
-            float: The value of the pv.
+            float: The value of the PV.
         """
         return self._devices[field].get_value(handle)
 
     def set_value(self, field, value):
-        """Set the value of a readback or setpoint pv for a field from the
+        """Set the value of a readback or setpoint PV for a field from the
         model.
 
         Args:
             field (str): field for the requested value.
-            value (float): The value to set on the pv.
+            value (float): The value to set on the PV.
         """
         self._devices[field].set_value(value)

@@ -199,14 +199,14 @@ class Element(object):
                                                                           self))
 
     def get_pv_name(self, field, handle):
-        """Get a pv name on a device.
+        """Get a PV name on a device.
 
         Args:
             field (str): The requested field.
             handle (str): pytac.RB or pytac.SP.
 
         Returns:
-            str: The readback or setpoint pv for the specified field.
+            str: The readback or setpoint PV for the specified field.
 
         Raises:
             DeviceException: if there is no device for this field.
