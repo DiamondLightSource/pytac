@@ -38,7 +38,7 @@ The ``lattice`` object is used for interacting with elements of the accelerator.
 Print BPM pv names along with s position
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Get all elements that represent BPMs::
+- Get all elements that represent ``BPM``s::
 
     >>> bpms = lattice.get_elements('BPM')
 
@@ -53,7 +53,7 @@ Print BPM pv names along with s position
     BPM SR01C-DI-EBPM-05 at position 14.9425
     ...
 
-- Get PV names and positions for BPMs directly from the lattice object::
+- Get pv names and positions for BPMs directly from the lattice object::
 
     >>> lattice.get_pv_names('BPM', 'x', pytac.RB)
     ['SR01C-DI-EBPM-01:SA:X',
@@ -85,7 +85,7 @@ Get the value of the 'b1' field of the quad elements
     ...
 
 
-- Print the quad read back values of the b1 field using the lattice. This is more efficient
+- Print the ``QUAD`` read back values of the 'b1' field using the lattice. This is more efficient
   since it uses only one request to the control system::
 
     >>> lattice.get_values('QUAD', 'b1', pytac.RB)
