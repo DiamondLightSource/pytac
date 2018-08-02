@@ -181,6 +181,7 @@ class Element(object):
         Args:
             field (str): The requested field.
             value (float): The value to set.
+            handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
             model (str): pytac.LIVE or pytac.SIM.
 
