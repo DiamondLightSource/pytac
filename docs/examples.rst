@@ -27,7 +27,7 @@ This is required each time you want to start up pytac.
     >>>
 
 
-- Import pytac and initialise the ``VMX`` ring mode::
+- Import pytac and initialise the lattice from the ``VMX`` directory::
 
     >>> import pytac.load_csv
     >>> lattice = pytac.load_csv.load('VMX')
@@ -35,10 +35,10 @@ This is required each time you want to start up pytac.
 
 The ``lattice`` object is used for interacting with elements of the accelerator.
 
-Print BPM pv names along with s position
+Print BPM PV names along with s position
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Get all elements that represent BPMs::
+- Get all elements that represent ``BPM`` s::
 
     >>> bpms = lattice.get_elements('BPM')
 
@@ -85,7 +85,7 @@ Get the value of the 'b1' field of the quad elements
     ...
 
 
-- Print the quad read back values of the b1 field using the lattice. This is more efficient
+- Print the ``QUAD`` read back values of the 'b1' field using the lattice. This is more efficient
   since it uses only one request to the control system::
 
     >>> lattice.get_values('QUAD', 'b1', pytac.RB)
