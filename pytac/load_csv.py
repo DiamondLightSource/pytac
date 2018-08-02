@@ -169,7 +169,7 @@ def load(mode, control_system=None, directory=None):
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
     lat = lattice.Lattice(mode, control_system, 3000)
-    s = 0
+    s = 0.0
     index = 1
     with open(os.path.join(directory, mode, ELEMENTS_FILENAME)) as elements:
         csv_reader = csv.DictReader(elements)
