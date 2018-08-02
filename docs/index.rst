@@ -22,7 +22,7 @@ Elements may be grouped into families (an element may be in more than one family
 
 Data may be requested or sent in ``ENG`` (engineering) or ``PHYS`` (physics) units and will be converted as appropriate. This conversion is a fundamental part of how pytac integrates with the physical accelerator, as physics units are what our description of the accelerator works with (e.g. the current in a magnet) and engineering units are what the IOCs on the physical components use (e.g. the current in a magnet). Two types of unit conversion are available: Polynomial (Poly; often used for linear conversion) and Piecewise Cubic Hermite Interpolating Polynomial (Pchip; often used for magnet data where field may not be linear with current). In the case that measurement data (used to set up the conversion objects) is not in the same units as the physical models, further functions may be given to these objects to complete the conversion correctly.
 
-Machines are defined using a set of ``.csv`` files, located by default in the ``pytac/data`` directory. 
+Models of accelerators, physical or simulated, are defined using a set of ``.csv`` files, located by default in the ``pytac/data`` directory. Each model should be saved in its own directory, i.e. by default the VMX and VMXSP directories each contain a different model of Diamond.
 
 
 Contents:
