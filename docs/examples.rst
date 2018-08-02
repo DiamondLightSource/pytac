@@ -35,7 +35,7 @@ This is required each time you want to start up pytac.
 
 The ``lattice`` object is used for interacting with elements of the accelerator.
 
-Print BPM pv names along with s position
+Print BPM PV names along with s position
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Get all elements that represent ``BPM``s::
@@ -53,7 +53,7 @@ Print BPM pv names along with s position
     BPM SR01C-DI-EBPM-05 at position 14.9425
     ...
 
-- Get pv names and positions for BPMs directly from the lattice object::
+- Get PV names and positions for BPMs directly from the lattice object::
 
     >>> lattice.get_pv_names('BPM', 'x', pytac.RB)
     ['SR01C-DI-EBPM-01:SA:X',
