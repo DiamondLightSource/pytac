@@ -33,7 +33,7 @@ This is required each time you want to start up pytac.
     >>>
 
 
-- Import pytac and initialise from the ``VMX`` ring model::
+- Import pytac and initialise the lattice from the ``VMX`` directory::
 
     >>> import pytac.load_csv
     >>> lattice = pytac.load_csv.load('VMX')
