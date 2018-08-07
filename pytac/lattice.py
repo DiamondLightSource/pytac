@@ -1,4 +1,6 @@
-""" Representation of a lattice object which contains all the elements of the machine."""
+"""Representation of a lattice object which contains all the elements of the
+    machine.
+"""
 import numpy
 
 
@@ -7,20 +9,34 @@ class LatticeException(Exception):
 
 
 class Lattice(object):
+    """Representation of a lattice.
 
+    Represents a lattice object that contains all elements of the ring. It has
+    a name and a control system to be used for unit conversion.
+
+    **Attributes:**
+
+    Attributes:
+        name (str): The name of the lattice.
+
+    .. Private Attributes:
+           _lattice (list): The list of all the element objects in the lattice.
+           _cs (ControlSystem): The control system used to store the values on
+                                 a PV.
+           _energy (int): The total energy of the lattice.
+           _model (Model): A pytac model object associated with the lattice.
+    """
     def __init__(self, name, control_system, energy):
-        """Representation of a lattice.
-
-        Represents a lattice object that contains all elements
-        of the ring. It has a name and a control system to be used
-        for unit conversion.
+        """.. The constructor method for the class, called whenever a 'Lattice'
+               object is constructed.
 
         Args:
             name (str): The name of the lattice.
-            control_system (ControlSystem): The control system used
-                to store the values on a pv.
-            energy (float): The total energy of the lattice.
+            control_system (ControlSystem): The control system used to store
+                                             the values on a PV.
+            energy (int): The total energy of the lattice.
 
+        **Methods:**
         """
         self.name = name
         self._lattice = []
@@ -29,14 +45,18 @@ class Lattice(object):
         self._model = None
 
     def set_model(self, model):
+        """Sets the pytac model object associated with the lattice.
+
+        Returns:
+            Model: A pytac model object associated with the lattice.
+        """
         self._model = model
 
     def get_energy(self):
         """Function to get the total energy of the lattice.
 
         Returns:
-            float: energy of the lattice
-
+            int: energy of the lattice.
         """
         return self._energy
 
@@ -45,13 +65,11 @@ class Lattice(object):
         the first element in the lattice.
 
         Args:
-            n (int): index
+            n (int): index.
 
         Returns:
-            Element: indexed element
-
+            Element: indexed element.
         """
-
         return self._lattice[n]
 
     def __len__(self):
@@ -62,7 +80,6 @@ class Lattice(object):
 
         Returns:
             int: The number of elements in the lattice.
-
         """
         return len(self._lattice)
 
@@ -81,25 +98,22 @@ class Lattice(object):
         """Append an element to the lattice.
 
         Args:
-            element (Element): element to append
-
+            element (Element): element to append.
         """
         self._lattice.append(element)
 
     def get_elements(self, family=None, cell=None):
         """Get the elements of a family from the lattice.
 
-        If no family is specified it returns all elements.
-
-        Elements are returned in the order they exist in the ring.
+        If no family is specified it returns all elements. Elements are
+        returned in the order they exist in the ring.
 
         Args:
-            family (str): requested family
-            cell (int): restrict elements to those in the specified cell
+            family (str): requested family.
+            cell (int): restrict elements to those in the specified cell.
 
         Returns:
-            list(Element): list containing all elements of the specified family
-
+            list: list containing all elements of the specified family.
         """
         elements = []
         if family is None:
@@ -115,11 +129,10 @@ class Lattice(object):
         return elements
 
     def get_all_families(self):
-        """Get all families of elements in the lattice
+        """Get all families of elements in the lattice.
 
         Returns:
-            set(str): all defined families
-
+            set: all defined families.
         """
         families = set()
         for element in self._lattice:
@@ -128,16 +141,15 @@ class Lattice(object):
         return families
 
     def get_pv_names(self, family, field, handle):
-        """Get all pv names for a specific family, field and handle.
+        """Get all PV names for a specific family, field, and handle.
 
         Args:
-            family (str): requested family
-            field (str): requested field
-            handle (str): pytac.RB or pytac.SP
+            family (str): requested family.
+            field (str): requested field.
+            handle (str): pytac.RB or pytac.SP.
 
         Returns:
-            list(str): list of pv names
-
+            list: list of PV names.
         """
         elements = self.get_elements(family)
         pv_names = []
@@ -149,14 +161,14 @@ class Lattice(object):
         """Get all values for a family and field.
 
         Args:
-            family (str): family to request the values of
-            field (str): field to request values for
-            handle (str): pytac.RB or pytac.SP
-            dtype (numpy.dtype): if None, return a list. If not None,
-                return a numpy array of the specified type.
+            family (str): family to request the values of.
+            field (str): field to request values for.
+            handle (str): pytac.RB or pytac.SP.
+            dtype (numpy.dtype): if None, return a list. If not None, return a
+                                  numpy array of the specified type.
 
         Returns:
-            list or numpy array: sequence of values
+            list or numpy array: sequence of values.
         """
         pv_names = self.get_pv_names(family, field, handle)
         values = self._cs.get(pv_names)
@@ -167,23 +179,23 @@ class Lattice(object):
     def set_values(self, family, field, values):
         """Sets the values for a family and field.
 
-        The pvs are determined by family and device. Note that only setpoint
-        pvs can be modified.
+        The PVs are determined by family and device. Note that only setpoint
+        PVs can be modified.
 
         Args:
-            family (str): family on which to set values
-            field (str):  field to set values for
-            values (sequence): A list of values to assign
+            family (str): family on which to set values.
+            field (str):  field to set values for.
+            values (sequence): A list of values to assign.
 
         Raises:
             LatticeException: if the given list of values doesn't match the
-                number of elements in the family
-
+                               number of elements in the family.
         """
         pv_names = self.get_pv_names(family, field, 'setpoint')
         if len(pv_names) != len(values):
-            raise LatticeException("Number of elements in given array must be "
-                    "equal to the number of elements in the lattice")
+            raise LatticeException("Number of elements in given array must be"
+                                   " equal to the number of elements in the "
+                                   "lattice")
         self._cs.put(pv_names, values)
 
     def get_s(self, elem):
@@ -195,11 +207,10 @@ class Lattice(object):
             elem (Element): The element that the position is being asked for.
 
         Returns:
-            float: the position of the given element.
+            float: The position of the given element.
 
-        Raises
+        Raises:
             LatticeException: if element doesn't exist in the lattice.
-
         """
         s_pos = 0
         for el in self._lattice:
@@ -207,19 +218,16 @@ class Lattice(object):
                 s_pos += el.length
             else:
                 return s_pos
-        raise LatticeException(
-                'Element {} not in lattice {}'.format(elem, self)
-        )
+        raise LatticeException('Element {} not in lattice {}'.format(elem, self))
 
     def get_family_s(self, family):
         """Get s positions for all elements from the same family.
 
         Args:
-            family (str): requested family
+            family (str): requested family.
 
         Returns:
-            list(float): list of s positions for each element
-
+            list: list of s positions for each element.
         """
         elements = self.get_elements(family)
         s_positions = []
@@ -228,18 +236,19 @@ class Lattice(object):
         return s_positions
 
     def get_devices(self, family, field):
-        """Get devices for a specific field for elements in the specfied family.
+        """Get devices for a specific field for elements in the specfied
+        family.
 
         Typically all elements of a family will have devices associated with
-        the same fields - for example, BPMs each have a device for fields
-        'x' and 'y'.
+        the same fields - for example, BPMs each have a device for fields 'x'
+        and 'y'.
 
         Args:
-            family (str): family of elements
-            field (str): field specifying the devices
+            family (str): family of elements.
+            field (str): field specifying the devices.
 
         Returns:
-            list(devices): devices for specified family and field
+            list: devices for specified family and field.
         """
         elements = self.get_elements(family)
         devices = []
@@ -256,16 +265,15 @@ class Lattice(object):
         in the specfied family.
 
         Typically all elements of a family will have devices associated with
-        the same fields - for example, BPMs each have device for fields
-        'x' and 'y'.
+        the same fields - for example, BPMs each have a device for fields 'x'
+        and 'y'.
 
         Args:
-            family (str): family of elements
-            field (str): field specifying the devices
+            family (str): family of elements.
+            field (str): field specifying the devices.
 
         Returns:
-            list(str): devices names for specified family and field
-
+            list: device names for specified family and field.
         """
         devices = self.get_devices(family, field)
         return [device.name for device in devices]

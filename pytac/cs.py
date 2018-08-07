@@ -8,21 +8,21 @@ class ControlSystem(object):
         raise NotImplementedError()
 
     def get(self, pv):
-        """ Get the value of the given pv.
+        """ Get the value of the given PV.
 
         Args:
-            pv(string): The pv to get the value of.
+            pv (string): The PV to get the value of.
 
         Returns:
-            Number: The numeric value of the pv.
+            Number: The numeric value of the PV.
         """
         raise NotImplementedError()
 
     def put(self, pv, value):
-        """ Put the value of a given pv.
+        """ Put the value of a given PV.
 
         Args:
-            pv(string): The pv to put the value for.
-            value(Number): The value to be set.
+            pv (string): The PV to put the value for.
+            value (Number): The value to be set.
         """
         raise NotImplementedError()
