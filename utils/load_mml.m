@@ -49,6 +49,9 @@ function load_mml(ringmode)
         if not(strcmp(at_elm.FamName, 'HSTR') || strcmp(at_elm.FamName, 'VSTR'))
             new_index = new_index + 1;
             insertelement(new_index, old_index, at_elm);
+        elseif not(strcmp(THERING{old_index-1}.FamName(1), 'S'))
+            new_index = new_index + 1;
+            insertelement(new_index, old_index, at_elm);
         else
             fprintf(f_families, '%i,%s\n', new_index, at_elm.FamName);
         end
