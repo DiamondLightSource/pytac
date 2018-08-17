@@ -100,13 +100,32 @@ def test_get_pv_name(pv_type, test_element):
     assert isinstance(test_element.get_pv_name('y', pv_type), str)
 
 
-def test_set_value(test_element):
+def test_set_value_eng(test_element):
     test_element.set_value('x', DUMMY_VALUE_2)
-    test_element.get_device('x')._cs.put.assert_called_with(SP_PV, DUMMY_VALUE_2)
+    test_element.get_device('x')._cs.put.assert_called_with(
+        SP_PV,
+        DUMMY_VALUE_2
+    )
+    # No conversion needed
+    test_element._uc['x'].convert.assert_called_with(
+        DUMMY_VALUE_2,
+        origin=pytac.ENG,
+        target=pytac.ENG
+    )
 
+
+def test_set_value_phys(test_element):
     test_element.set_value('x', DUMMY_VALUE_2, units=pytac.PHYS)
+    # Conversion to physics units
+    test_element._uc['x'].convert.assert_called_with(
+        DUMMY_VALUE_2,
+        origin=pytac.PHYS,
+        target=pytac.ENG
+    )
     test_element.get_device('x')._cs.put.assert_called_with(SP_PV, DUMMY_VALUE_2)
 
+
+def test_set_value_incorrect_field(test_element):
     with pytest.raises(pytac.device.DeviceException):
         test_element.set_value('non_existent', 40.0)
 
