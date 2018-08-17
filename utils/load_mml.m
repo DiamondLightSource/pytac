@@ -46,14 +46,16 @@ function load_mml(ringmode)
 
     for old_index = 1:length(THERING)
         at_elm = THERING{old_index};
-        if not(strcmp(at_elm.FamName, 'HSTR') || strcmp(at_elm.FamName, 'VSTR'))
-            new_index = new_index + 1;
-            insertelement(new_index, old_index, at_elm);
-        elseif not(strcmp(THERING{old_index-1}.FamName(1), 'S'))
-            new_index = new_index + 1;
-            insertelement(new_index, old_index, at_elm);
-        else
+        % If an HSTR is preceded by a sext or a VSTR is two elements after
+        % a sext, assume that they are in fact parts of the same element.
+        % Just add that family to the sext element.
+        % Don't increment the new_index count as we haven't added an
+        % element.
+        if (strcmp(at_elm.FamName, 'HSTR') && strcmp(THERING{old_index - 1}.Class, 'SEXT')) || (strcmp(at_elm.FamName, 'VSTR') && strcmp(THERING{old_index - 2}.Class, 'SEXT'))
             fprintf(f_families, '%i,%s\n', new_index, at_elm.FamName);
+        else
+            new_index = new_index + 1;
+            insertelement(new_index, old_index, at_elm);
         end
 
         type = gettype(at_elm);
