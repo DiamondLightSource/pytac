@@ -18,7 +18,7 @@ import pytac
 from pytac import lattice, element, device, model, units, utils
 import collections
 
-
+UNIT_UNITCONV = units.PolyUnitConv([1, 0])
 ELEMENTS_FILENAME = 'elements.csv'
 DEVICES_FILENAME = 'devices.csv'
 FAMILIES_FILENAME = 'families.csv'
@@ -193,7 +193,7 @@ def load(mode, control_system=None, directory=None):
             pve = True
             d = device.Device(name, control_system, pve, get_pv, set_pv)
             lat[int(item['id']) - 1].add_device(item['field'], d,
-                                                units.UnitConv())
+                                                UNIT_UNITCONV)
 
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)
