@@ -28,11 +28,11 @@ setup(
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/willrogers/pytac',
+    url='https://github.com/dls-controls/pytac',
 
     # Author details
-    author='Will Rogers, Razvan Vasile',
-    author_email='will.rogers@diamond.ac.uk, razvan.vasile@diamond.ac.uk',
+    author='Will Rogers, Razvan Vasile, Tobyn Nicholls',
+    author_email='will.rogers@diamond.ac.uk',
 
     # Choose your license
     license='Apache License 2.0',
