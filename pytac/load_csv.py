@@ -18,7 +18,9 @@ import pytac
 from pytac import lattice, element, device, model, units, utils
 import collections
 
+# Create a default unit conversion object that returns the input unchanged.
 UNIT_UNITCONV = units.PolyUnitConv([1, 0])
+
 ELEMENTS_FILENAME = 'elements.csv'
 DEVICES_FILENAME = 'devices.csv'
 FAMILIES_FILENAME = 'families.csv'
