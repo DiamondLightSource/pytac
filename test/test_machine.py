@@ -20,11 +20,11 @@ def get_lattice(ring_mode):
 
 def test_load_lattice_using_default_dir():
     lat = pytac.load_csv.load('VMX', mock.MagicMock())
-    assert len(lat) == 2131
+    assert len(lat) == 2143
 
 
 @pytest.mark.parametrize('ring_mode,n_elements,length', [
-        ('VMX', 2131, 561.571),
+        ('VMX', 2143, 561.571),
         ('DIAD', 2133, 561.571)
     ])
 def test_load_lattice(ring_mode, n_elements, length):
@@ -115,16 +115,16 @@ def test_load_correctors(ring_mode, n_correctors):
     lattice = get_lattice(ring_mode)
     hcm = lattice.get_elements('HSTR')
     vcm = lattice.get_elements('VSTR')
-    # these are the same elements with both devices on each
-    assert hcm == vcm
     assert len(hcm) == n_correctors
+    assert len(vcm) == n_correctors
     for element in hcm:
-        # each one has both a0 (VSTR) and b0 (HSTR) as fields
-        # it also has h and v, fofb and sofb disabled fields
-        assert set(
-                ('a0', 'b0', 'h_sofb_disabled', 'v_sofb_disabled',
-                 'h_fofb_disabled', 'v_fofb_disabled')
-        ).issubset(element.get_fields())
+        # each one has b0, h_fofb_disabled and h_sofb_disabled fields.
+        assert set(('b0', 'h_sofb_disabled','h_fofb_disabled')
+                   ).issubset(element.get_fields())
+    for element in vcm:
+        # each one has a0, v_fofb_disabled and v_sofb_disabled fields.
+        assert set(('a0', 'v_sofb_disabled', 'v_fofb_disabled')
+                   ).issubset(element.get_fields())
 
 
 @pytest.mark.parametrize('ring_mode,n_squads', [
