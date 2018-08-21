@@ -200,23 +200,3 @@ class Element(object):
             )
 
 
-class EpicsElement(Element):
-
-    def get_pv_name(self, field, handle):
-        """Get a PV name on a device.
-
-        Args:
-            field (str): The requested field.
-            handle (str): pytac.RB or pytac.SP.
-
-        Returns:
-            str: The readback or setpoint PV for the specified field.
-
-        Raises:
-            DeviceException: if there is no device for this field.
-        """
-        try:
-            return self._models[pytac.LIVE].get_pv_name(field, handle)
-        except KeyError:
-            raise DeviceException('{} has no device for field {}'.format(self,
-                                                                         field))

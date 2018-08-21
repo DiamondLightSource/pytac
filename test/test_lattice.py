@@ -1,8 +1,9 @@
 import pytest
+from pytac.epics import EpicsElement, EpicsDevice, EpicsLattice
 import pytac.lattice
+from pytac.model import DeviceModel
 import pytac.element
 import pytac.device
-import pytac.model
 import mock
 from pytac.units import PolyUnitConv
 import numpy
@@ -24,12 +25,12 @@ def simple_element(identity=1):
     uc = PolyUnitConv([0, 1])
     mock_cs = mock.MagicMock(get=mock.MagicMock(return_value=1))
     # Create devices and attach them to the element
-    element = pytac.element.EpicsElement(identity, 0, 'BPM', cell=1)
-    device1 = pytac.device.EpicsDevice(PREFIX, mock_cs, True, RB_PV, SP_PV)
-    device2 = pytac.device.EpicsDevice(PREFIX, mock_cs, True, RB_PV, SP_PV)
+    element = EpicsElement(identity, 0, 'BPM', cell=1)
+    device1 = EpicsDevice(PREFIX, mock_cs, True, RB_PV, SP_PV)
+    device2 = EpicsDevice(PREFIX, mock_cs, True, RB_PV, SP_PV)
     element.add_to_family('family')
 
-    element.set_model(pytac.model.DeviceModel(), pytac.LIVE)
+    element.set_model(DeviceModel(), pytac.LIVE)
     element.add_device('x', device1, uc)
     element.add_device('y', device2, uc)
 
@@ -45,7 +46,7 @@ def simple_element_and_lattice(simple_element):
 
 @pytest.fixture
 def simple_epics_element_and_lattice(simple_element, mock_cs):
-    l = pytac.lattice.EpicsLattice(LATTICE, 1, mock_cs)
+    l = EpicsLattice(LATTICE, 1, mock_cs)
     l.add_element(simple_element)
     return simple_element, l
 

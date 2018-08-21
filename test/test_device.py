@@ -1,4 +1,5 @@
-import pytac.device
+from pytac.device import DeviceException
+from pytac.epics import EpicsDevice, PvEnabler
 import pytest
 import mock
 
@@ -8,7 +9,7 @@ from constants import PREFIX, RB_PV, SP_PV
 def create_device(prefix=PREFIX, rb_pv=RB_PV, sp_pv=SP_PV, enabled=True):
     mock_cs = mock.MagicMock()
     mock_cs.get.return_value = '1.0'
-    device = pytac.device.EpicsDevice(prefix, mock.MagicMock(), enabled=enabled,
+    device = EpicsDevice(prefix, mock.MagicMock(), enabled=enabled,
             rb_pv=rb_pv, sp_pv=sp_pv)
     return device
 
@@ -21,13 +22,13 @@ def test_set_device_value():
 
 def test_device_invalid_sp_raise_exception():
     device2 = create_device(PREFIX, RB_PV, None)
-    with pytest.raises(pytac.device.DeviceException):
+    with pytest.raises(DeviceException):
         device2.set_value(40)
 
 
 def test_get_device_value():
     device = create_device()
-    with pytest.raises(pytac.device.DeviceException):
+    with pytest.raises(DeviceException):
         device.get_value('non_existent')
 
 
@@ -49,7 +50,7 @@ def test_device_is_enabled_returns_bool_value():
 def test_PvEnabler():
     mock_cs = mock.MagicMock()
     mock_cs.get.return_value = '40'
-    pve = pytac.device.PvEnabler('enable-pv', '40', mock_cs)
+    pve = PvEnabler('enable-pv', '40', mock_cs)
     assert pve
     mock_cs.get.return_value = 50
     assert not pve
