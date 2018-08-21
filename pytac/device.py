@@ -14,7 +14,7 @@ class DeviceException(Exception):
     pass
 
 
-class Device(object):
+class EpicsDevice(object):
     """A device attached to an element.
 
     Contains a control system, readback and setpoint PVs. A readback

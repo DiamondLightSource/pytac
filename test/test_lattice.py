@@ -9,7 +9,7 @@ import numpy
 
 from constants import PREFIX, RB_PV, SP_PV, LATTICE
 
-DUMMY_ARRAY = [0, 1, 2]
+DUMMY_ARRAY = [1]
 
 
 @pytest.fixture
@@ -22,11 +22,11 @@ def mock_cs():
 @pytest.fixture
 def simple_element(identity=1):
     uc = PolyUnitConv([0, 1])
-
+    mock_cs = mock.MagicMock(get=mock.MagicMock(return_value=1))
     # Create devices and attach them to the element
-    element = pytac.element.Element(identity, 0, 'BPM', cell=1)
-    device1 = pytac.device.Device(PREFIX, mock.MagicMock(), True, RB_PV, SP_PV)
-    device2 = pytac.device.Device(PREFIX, mock.MagicMock(), True, RB_PV, SP_PV)
+    element = pytac.element.EpicsElement(identity, 0, 'BPM', cell=1)
+    device1 = pytac.device.EpicsDevice(PREFIX, mock_cs, True, RB_PV, SP_PV)
+    device2 = pytac.device.EpicsDevice(PREFIX, mock_cs, True, RB_PV, SP_PV)
     element.add_to_family('family')
 
     element.set_model(pytac.model.DeviceModel(), pytac.LIVE)
@@ -37,15 +37,23 @@ def simple_element(identity=1):
 
 
 @pytest.fixture
-def simple_element_and_lattice(simple_element, mock_cs):
-    l = pytac.lattice.Lattice(LATTICE, mock_cs, 1)
+def simple_element_and_lattice(simple_element):
+    l = pytac.lattice.Lattice(LATTICE, 1)
+    l.add_element(simple_element)
+    return simple_element, l
+
+
+@pytest.fixture
+def simple_epics_element_and_lattice(simple_element, mock_cs):
+    l = pytac.lattice.EpicsLattice(LATTICE, 1, mock_cs)
     l.add_element(simple_element)
     return simple_element, l
 
 
 def test_create_lattice():
-    l = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)
+    l = pytac.lattice.Lattice(LATTICE, 1)
     assert(len(l)) == 0
+    assert l.get_energy() == 1
     assert l.name == LATTICE
 
 
@@ -101,8 +109,8 @@ def test_get_all_families(simple_element_and_lattice):
     assert len(families) > 0
 
 
-def test_get_values(simple_element_and_lattice):
-    element, lattice = simple_element_and_lattice
+def test_get_values(simple_epics_element_and_lattice):
+    element, lattice = simple_epics_element_and_lattice
     lattice.get_values('family', 'x', pytac.RB)
     lattice._cs.get.assert_called_with([RB_PV])
 
@@ -110,18 +118,18 @@ def test_get_values(simple_element_and_lattice):
 @pytest.mark.parametrize('dtype,expected', (
         (numpy.float64, numpy.array(DUMMY_ARRAY, dtype=numpy.float64)),
         (numpy.int32, numpy.array(DUMMY_ARRAY, dtype=numpy.int32)),
-        (numpy.bool_, numpy.array((False, True, True), dtype=numpy.bool_)),
+        (numpy.bool_, numpy.array(DUMMY_ARRAY, dtype=numpy.bool_)),
         (None, DUMMY_ARRAY)
 ))
-def test_get_values_returns_numpy_array_if_requested(simple_element_and_lattice, dtype, expected):
-    element, lattice = simple_element_and_lattice
+def test_get_values_returns_numpy_array_if_requested(simple_epics_element_and_lattice, dtype, expected):
+    element, lattice = simple_epics_element_and_lattice
     values = lattice.get_values('family', 'x', pytac.RB, dtype=dtype)
     numpy.testing.assert_equal(values, expected)
     lattice._cs.get.assert_called_with([RB_PV])
 
 
-def test_set_values(simple_element_and_lattice):
-    element, lattice = simple_element_and_lattice
+def test_set_values(simple_epics_element_and_lattice):
+    element, lattice = simple_epics_element_and_lattice
     lattice.set_values('family', 'x', [1])
     lattice._cs.put.assert_called_with([SP_PV], [1])
 
@@ -146,7 +154,7 @@ def test_s_position(simple_element_and_lattice):
 
 
 def test_get_s_throws_exception_if_element_not_in_lattice():
-    l = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)
+    l = pytac.lattice.Lattice(LATTICE, 1)
     element = pytac.element.Element(1, 1.0, 'Quad')
     with pytest.raises(pytac.lattice.LatticeException):
         l.get_s(element)
@@ -170,8 +178,3 @@ def test_get_family_s(simple_element_and_lattice):
     element4.add_to_family('family')
     lattice.add_element(element4)
     assert lattice.get_family_s('family') == [0, 0, 1.0, 2.5]
-
-
-def test_lattice_initial_energy():
-    lattice = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)
-    assert lattice.get_energy() == 1

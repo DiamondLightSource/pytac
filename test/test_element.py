@@ -20,9 +20,9 @@ def test_element(uc=mock_uc):
     mock_cs = mock.MagicMock()
     mock_cs.get.return_value = DUMMY_VALUE_1
 
-    element = pytac.element.Element('dummy', 1.0, 'Quad')
-    device1 = pytac.device.Device(PREFIX, mock_cs, True, RB_PV, SP_PV)
-    device2 = pytac.device.Device(PREFIX, mock_cs, True, SP_PV, RB_PV)
+    element = pytac.element.EpicsElement('dummy', 1.0, 'Quad')
+    device1 = pytac.device.EpicsDevice(PREFIX, mock_cs, True, RB_PV, SP_PV)
+    device2 = pytac.device.EpicsDevice(PREFIX, mock_cs, True, SP_PV, RB_PV)
 
     device_model = pytac.model.DeviceModel()
     element.set_model(device_model, pytac.LIVE)

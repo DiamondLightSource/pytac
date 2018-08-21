@@ -195,8 +195,12 @@ class Element(object):
             value = self._uc[field].convert(value, origin=units, target=model.units)
             model.set_value(field, value)
         except KeyError:
-            raise DeviceException('No model type {} on element {}'.format(model,
-                                                                          self))
+            raise DeviceException(
+                'No model type {} on element {}'.format(model, self)
+            )
+
+
+class EpicsElement(Element):
 
     def get_pv_name(self, field, handle):
         """Get a PV name on a device.
