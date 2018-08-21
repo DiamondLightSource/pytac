@@ -3,7 +3,8 @@ import pytac
 
 
 class FieldException(Exception):
-    '''Exception associated with invalid field requests.'''
+    """Exception associated with invalid field requests.
+    """
     pass
 
 

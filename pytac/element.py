@@ -1,6 +1,6 @@
 """Module containing the element class."""
 import pytac
-from pytac.device import DeviceException
+from pytac.device import DeviceException, HandleException
 from pytac.model import FieldException
 
 
@@ -194,14 +194,17 @@ class Element(object):
             FieldException: if the element does not have the specified field.
         """
         if handle != pytac.SP:
-            raise DeviceException('Must write using {}'.format(pytac.SP))
+            raise HandleException('Must write using {}'.format(pytac.SP))
         try:
             model = self._models[model]
-            value = self._uc[field].convert(value, origin=units, target=model.units)
-            model.set_value(field, value)
         except KeyError:
             raise DeviceException('No model type {} on element {}'.format(model,
                                                                           self))
+        try:            
+            value = self._uc[field].convert(value, origin=units, target=model.units)
+            model.set_value(field, value)
+        except KeyError:
+            raise FieldException('No field {} on element {}'.format(model, self))
         except FieldException:
             raise FieldException('No field {} on element {}'.format(field, self))
 

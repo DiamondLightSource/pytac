@@ -8,6 +8,12 @@ magnets and a skew quadrupole.
 import pytac
 
 
+class HandleException(Exception):
+    """Exception associated with requests with invalid handles.
+    """
+    pass
+
+
 class DeviceException(Exception):
     """Exception associated with Device misconfiguration or invalid requests.
     """
@@ -73,7 +79,7 @@ class Device(object):
             DeviceException: if no setpoint PV exists.
         """
         if self.sp_pv is None:
-            raise DeviceException("""Device {0} has no setpoint PV."""
+            raise HandleException("""Device {0} has no setpoint PV."""
                               .format(self.name))
         self._cs.put(self.sp_pv, value)
 
@@ -96,7 +102,7 @@ class Device(object):
         elif handle == pytac.SP and self.sp_pv:
             return self._cs.get(self.sp_pv)
 
-        raise DeviceException("""Device {0} has no {1} PV."""
+        raise HandleException("""Device {0} has no {1} PV."""
                           .format(self.name, handle))
 
     def get_pv_name(self, handle):
@@ -116,7 +122,7 @@ class Device(object):
         elif handle == pytac.SP and self.sp_pv:
             return self.sp_pv
 
-        raise DeviceException("""Device {0} has no {1} PV."""
+        raise HandleException("""Device {0} has no {1} PV."""
                           .format(self.name, handle))
 
     def get_cs(self):
