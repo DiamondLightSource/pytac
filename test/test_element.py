@@ -12,16 +12,11 @@ DUMMY_VALUE_1 = 40.0
 DUMMY_VALUE_2 = 4.7
 DUMMY_VALUE_3 = -6
 
-
-def mock_uc():
-    uc = mock.MagicMock()
-    uc.phys_to_eng.return_value = DUMMY_VALUE_2
-    uc.eng_to_phys.return_value = DUMMY_VALUE_3
-    return uc
+mock_uc = PolyUnitConv([2, 0])
 
 
 @pytest.fixture
-def test_element(uc=mock_uc()):
+def test_element(uc=mock_uc):
     mock_cs = mock.MagicMock()
     mock_cs.get.return_value = DUMMY_VALUE_1
 
@@ -80,17 +75,15 @@ def test_get_value_uses_cs_if_model_live(test_element):
 
 
 def test_get_value_uses_uc_if_necessary_for_cs_call(test_element):
-    test_element.get_value('x', handle=pytac.SP, units=pytac.PHYS, model=pytac.LIVE)
-    test_element._uc['x'].convert.assert_called_with(DUMMY_VALUE_1,
-            origin=pytac.ENG, target=pytac.PHYS)
+    assert test_element.get_value('x', handle=pytac.SP, units=pytac.PHYS,
+                                  model=pytac.LIVE) == DUMMY_VALUE_1*2
     test_element.get_device('x')._cs.get.assert_called_with(SP_PV)
 
 
 def test_get_value_uses_uc_if_necessary_for_model_call(test_element):
     print(test_element._models)
-    test_element.get_value('x', handle=pytac.SP, units=pytac.ENG, model=pytac.SIM)
-    test_element._uc['x'].convert.assert_called_with(DUMMY_VALUE_2,
-            origin=pytac.PHYS, target=pytac.ENG)
+    assert test_element.get_value('x', handle=pytac.SP, units=pytac.ENG,
+                                  model=pytac.SIM) == DUMMY_VALUE_2/2
     test_element._models[pytac.SIM].get_value.assert_called_with('x', pytac.SP)
 
 
@@ -102,27 +95,16 @@ def test_get_pv_name(pv_type, test_element):
 
 def test_set_value_eng(test_element):
     test_element.set_value('x', DUMMY_VALUE_2)
-    test_element.get_device('x')._cs.put.assert_called_with(
-        SP_PV,
-        DUMMY_VALUE_2
-    )
     # No conversion needed
-    test_element._uc['x'].convert.assert_called_with(
-        DUMMY_VALUE_2,
-        origin=pytac.ENG,
-        target=pytac.ENG
-    )
+    test_element.get_device('x')._cs.put.assert_called_with(SP_PV,
+                                                            DUMMY_VALUE_2)
 
 
 def test_set_value_phys(test_element):
     test_element.set_value('x', DUMMY_VALUE_2, units=pytac.PHYS)
-    # Conversion to physics units
-    test_element._uc['x'].convert.assert_called_with(
-        DUMMY_VALUE_2,
-        origin=pytac.PHYS,
-        target=pytac.ENG
-    )
-    test_element.get_device('x')._cs.put.assert_called_with(SP_PV, DUMMY_VALUE_2)
+    # Conversion fron physics to engineering units
+    test_element.get_device('x')._cs.put.assert_called_with(SP_PV,
+                                                            DUMMY_VALUE_2/2)
 
 
 def test_set_value_incorrect_field(test_element):
