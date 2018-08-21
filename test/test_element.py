@@ -76,14 +76,14 @@ def test_get_value_uses_cs_if_model_live(test_element):
 
 def test_get_value_uses_uc_if_necessary_for_cs_call(test_element):
     assert test_element.get_value('x', handle=pytac.SP, units=pytac.PHYS,
-                                  model=pytac.LIVE) == DUMMY_VALUE_1*2
+                                  model=pytac.LIVE) == (DUMMY_VALUE_1 * 2)
     test_element.get_device('x')._cs.get.assert_called_with(SP_PV)
 
 
 def test_get_value_uses_uc_if_necessary_for_model_call(test_element):
     print(test_element._models)
     assert test_element.get_value('x', handle=pytac.SP, units=pytac.ENG,
-                                  model=pytac.SIM) == DUMMY_VALUE_2/2
+                                  model=pytac.SIM) == (DUMMY_VALUE_2 / 2)
     test_element._models[pytac.SIM].get_value.assert_called_with('x', pytac.SP)
 
 
@@ -104,7 +104,7 @@ def test_set_value_phys(test_element):
     test_element.set_value('x', DUMMY_VALUE_2, units=pytac.PHYS)
     # Conversion fron physics to engineering units
     test_element.get_device('x')._cs.put.assert_called_with(SP_PV,
-                                                            DUMMY_VALUE_2/2)
+                                                            (DUMMY_VALUE_2 / 2))
 
 
 def test_set_value_incorrect_field(test_element):
