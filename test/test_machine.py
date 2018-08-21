@@ -25,7 +25,7 @@ def test_load_lattice_using_default_dir():
 
 @pytest.mark.parametrize('ring_mode,n_elements,length', [
         ('VMX', 2143, 561.571),
-        ('DIAD', 2133, 561.571)
+        ('DIAD', 2145, 561.571)
     ])
 def test_load_lattice(ring_mode, n_elements, length):
     lattice = get_lattice(ring_mode)
@@ -129,7 +129,7 @@ def test_load_correctors(ring_mode, n_correctors):
 
 @pytest.mark.parametrize('ring_mode,n_squads', [
         ('VMX', 98),
-        ('DIAD', 97)
+        ('DIAD', 98)
     ])
 def test_load_squads(ring_mode, n_squads):
     lattice = get_lattice(ring_mode)
