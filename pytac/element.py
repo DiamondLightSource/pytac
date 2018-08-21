@@ -1,6 +1,7 @@
 """Module containing the element class."""
 import pytac
 from pytac.device import DeviceException
+from pytac.model import FieldException
 
 
 class Element(object):
@@ -161,6 +162,7 @@ class Element(object):
 
         Raises:
             DeviceException: if there is no device on the given field.
+            FieldException: if the element does not have the specified field.
         """
         try:
             model = self._models[model]
@@ -170,6 +172,8 @@ class Element(object):
         except KeyError:
             raise DeviceException('No model type {} on element {}'.format(model,
                                                                           self))
+        except FieldException:
+            raise FieldException('No field {} on element {}'.format(field, self))
 
     def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
                   model=pytac.LIVE):
@@ -187,6 +191,7 @@ class Element(object):
 
         Raises:
             DeviceException: if arguments are incorrect.
+            FieldException: if the element does not have the specified field.
         """
         if handle != pytac.SP:
             raise DeviceException('Must write using {}'.format(pytac.SP))
@@ -197,6 +202,8 @@ class Element(object):
         except KeyError:
             raise DeviceException('No model type {} on element {}'.format(model,
                                                                           self))
+        except FieldException:
+            raise FieldException('No field {} on element {}'.format(field, self))
 
     def get_pv_name(self, field, handle):
         """Get a PV name on a device.
@@ -210,9 +217,12 @@ class Element(object):
 
         Raises:
             DeviceException: if there is no device for this field.
+            FieldException: if the element does not have the specified field.
         """
         try:
             return self._models[pytac.LIVE].get_pv_name(field, handle)
         except KeyError:
             raise DeviceException('{} has no device for field {}'.format(self,
                                                                          field))
+        except FieldException:
+            raise FieldException('No field {} on element {}'.format(field, self))

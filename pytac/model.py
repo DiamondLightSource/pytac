@@ -2,6 +2,11 @@
 import pytac
 
 
+class FieldException(Exception):
+    '''Exception associated with invalid field requests.'''
+    pass
+
+
 class Model(object):
     """Abstract base classes for element models.
 
@@ -116,8 +121,14 @@ class DeviceModel(object):
 
         Returns:
             float: The value of the PV.
+
+        Raises:
+            FieldException: if the device does not have the specified field.
         """
-        return self._devices[field].get_value(handle)
+        try:
+            return self._devices[field].get_value(handle)
+        except KeyError:
+            raise FieldException('No field {} on device {}'.format(field, self))
 
     def set_value(self, field, value):
         """Set the value of a readback or setpoint PV for a field from the
@@ -126,5 +137,11 @@ class DeviceModel(object):
         Args:
             field (str): field for the requested value.
             value (float): The value to set on the PV.
+
+        Raises:
+            FieldException: if the device does not have the specified field.
         """
-        self._devices[field].set_value(value)
+        try:
+            self._devices[field].set_value(value)
+        except KeyError:
+            raise FieldException('No field {} on device {}'.format(field, self))
