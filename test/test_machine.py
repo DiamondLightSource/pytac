@@ -119,7 +119,7 @@ def test_load_correctors(ring_mode, n_correctors):
     assert len(vcm) == n_correctors
     for element in hcm:
         # each one has b0, h_fofb_disabled and h_sofb_disabled fields.
-        assert set(('b0', 'h_sofb_disabled','h_fofb_disabled')
+        assert set(('b0', 'h_sofb_disabled', 'h_fofb_disabled')
                    ).issubset(element.get_fields())
     for element in vcm:
         # each one has a0, v_fofb_disabled and v_sofb_disabled fields.
