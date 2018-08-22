@@ -1,5 +1,4 @@
-"""EPICS implementations of the classes in pytac.
-"""
+"""EPICS implementations of the classes in pytac."""
 import numpy
 import pytac
 from pytac.device import Device, DeviceException
@@ -8,6 +7,12 @@ from pytac.lattice import Lattice, LatticeException
 
 
 class EpicsLattice(Lattice):
+    """EPICS-aware lattice class.
+
+    Allows efficient get_values() and set_values() methods, and adds
+    get_pv_names() method.
+
+    """
 
     def __init__(self, name, energy, epics_cs):
         """
@@ -55,6 +60,9 @@ class EpicsLattice(Lattice):
 
 class EpicsElement(Element):
     """EPICS-aware element.
+
+    Adds get_pv_name() method.
+
     """
 
     def get_pv_name(self, field, handle):
