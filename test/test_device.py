@@ -9,8 +9,9 @@ from constants import PREFIX, RB_PV, SP_PV
 def create_device(prefix=PREFIX, rb_pv=RB_PV, sp_pv=SP_PV, enabled=True):
     mock_cs = mock.MagicMock()
     mock_cs.get.return_value = '1.0'
-    device = EpicsDevice(prefix, mock.MagicMock(), enabled=enabled,
-            rb_pv=rb_pv, sp_pv=sp_pv)
+    device = EpicsDevice(
+        prefix, mock.MagicMock(), enabled=enabled, rb_pv=rb_pv, sp_pv=sp_pv
+    )
     return device
 
 
