@@ -2,6 +2,7 @@
 import pytac
 from pytac.exceptions import FieldException
 
+
 class Model(object):
     """Abstract base classes for element models.
 
