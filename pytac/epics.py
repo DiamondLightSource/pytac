@@ -181,15 +181,6 @@ class EpicsDevice(Device):
             "Device {0} has no {1} PV.".format(self.name, handle)
         )
 
-    def get_cs(self):
-        """The control system object used to get and set the value of a PV.
-
-        Returns:
-            ControlSystem: The control system object used to get and set the
-            value of a PV.
-        """
-        return self._cs
-
 
 class PvEnabler(object):
     """A PvEnabler class to check whether a device is enabled.
