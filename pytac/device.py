@@ -79,14 +79,9 @@ class Device(object):
             HandleException: if no setpoint PV exists.
         """
         if self.sp_pv is None:
-<<<<<<< HEAD
-            raise HandleException("""Device {0} has no setpoint PV."""
-                              .format(self.name))
-=======
-            raise DeviceException(
+            raise HandleException(
                 "Device {0} has no setpoint PV.".format(self.name)
             )
->>>>>>> 106930cd6a2dd86a1533bf73d03c4ef14bd72e49
         self._cs.put(self.sp_pv, value)
 
     def get_value(self, handle):
@@ -108,14 +103,9 @@ class Device(object):
         elif handle == pytac.SP and self.sp_pv:
             return self._cs.get(self.sp_pv)
 
-<<<<<<< HEAD
-        raise HandleException("""Device {0} has no {1} PV."""
-                          .format(self.name, handle))
-=======
-        raise DeviceException(
+        raise HandleException(
             "Device {0} has no {1} PV.".format(self.name, handle)
         )
->>>>>>> 106930cd6a2dd86a1533bf73d03c4ef14bd72e49
 
     def get_pv_name(self, handle):
         """Get a PV name on a specified handle.
@@ -134,14 +124,9 @@ class Device(object):
         elif handle == pytac.SP and self.sp_pv:
             return self.sp_pv
 
-<<<<<<< HEAD
-        raise HandleException("""Device {0} has no {1} PV."""
-                          .format(self.name, handle))
-=======
-        raise DeviceException(
+        raise HandleException(
             "Device {0} has no {1} PV.".format(self.name, handle)
         )
->>>>>>> 106930cd6a2dd86a1533bf73d03c4ef14bd72e49
 
     def get_cs(self):
         """The control system object used to get and set the value of a PV.
