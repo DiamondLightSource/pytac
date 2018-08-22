@@ -39,15 +39,6 @@ class Lattice(object):
         self.name = name
         self._lattice = []
         self._energy = energy
-        self._model = None
-
-    def set_model(self, model):
-        """Sets the pytac model object associated with the lattice.
-
-        Returns:
-            Model: A pytac model object associated with the lattice.
-        """
-        self._model = model
 
     def get_energy(self):
         """Function to get the total energy of the lattice.
