@@ -1,6 +1,7 @@
 import pytest
 import pytac
-from pytac.units import UnitConv, PolyUnitConv, PchipUnitConv, UnitsException
+from pytac.units import UnitConv, PolyUnitConv, PchipUnitConv
+from pytac.exceptions import UnitsException
 import numpy
 
 

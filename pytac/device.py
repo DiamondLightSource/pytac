@@ -6,12 +6,7 @@ DLS is a sextupole magnet that contains also horizontal and vertical corrector
 magnets and a skew quadrupole.
 """
 import pytac
-
-
-class DeviceException(Exception):
-    """Exception associated with Device misconfiguration or invalid requests.
-    """
-    pass
+from pytac.exceptions import HandleException
 
 
 class Device(object):
@@ -70,10 +65,10 @@ class Device(object):
             value (float): The value to set on the PV.
 
         Raises:
-            DeviceException: if no setpoint PV exists.
+            HandleException: if no setpoint PV exists.
         """
         if self.sp_pv is None:
-            raise DeviceException(
+            raise HandleException(
                 "Device {0} has no setpoint PV.".format(self.name)
             )
         self._cs.put(self.sp_pv, value)
@@ -89,7 +84,7 @@ class Device(object):
             float: The value of the PV.
 
         Raises:
-            DeviceException: if the requested PV doesn't exist.
+            HandleException: if the requested PV doesn't exist.
         """
         print('getting {}'.format('handle'))
         if handle == pytac.RB and self.rb_pv:
@@ -97,7 +92,7 @@ class Device(object):
         elif handle == pytac.SP and self.sp_pv:
             return self._cs.get(self.sp_pv)
 
-        raise DeviceException(
+        raise HandleException(
             "Device {0} has no {1} PV.".format(self.name, handle)
         )
 
@@ -111,14 +106,14 @@ class Device(object):
             str: A readback or setpoint PV.
 
         Raises:
-            DeviceException: if the PV doesn't exist.
+            HandleException: if the PV doesn't exist.
         """
         if handle == pytac.RB and self.rb_pv:
             return self.rb_pv
         elif handle == pytac.SP and self.sp_pv:
             return self.sp_pv
 
-        raise DeviceException(
+        raise HandleException(
             "Device {0} has no {1} PV.".format(self.name, handle)
         )
 
