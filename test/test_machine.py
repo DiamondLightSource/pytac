@@ -67,7 +67,7 @@ def test_load_bpms(ring_mode, n_bpms):
     for bpm in bpms:
         assert set(bpm.get_fields()) == bpm_fields
         assert re.match('SR.*BPM.*X', bpm.get_pv_name('x', pytac.RB))
-        with pytest.raises(pytac.device.DeviceException):
+        with pytest.raises(pytac.exceptions.HandleException):
             bpm.get_pv_name('x', pytac.SP)
     assert len(bpms) == n_bpms
     assert bpms[0].cell == 1
@@ -184,7 +184,7 @@ def test_quad_unitconv():
 
 def test_quad_unitconv_raise_exception():
     uc = pytac.units.PchipUnitConv([50.0, 100.0, 180.0], [-4.95, -9.85, -17.56])
-    with pytest.raises(pytac.units.UnitsException):
+    with pytest.raises(pytac.exceptions.UnitsException):
         uc.phys_to_eng(-0.7)
 
 

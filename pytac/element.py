@@ -1,6 +1,6 @@
 """Module containing the element class."""
 import pytac
-from pytac.device import DeviceException
+from pytac.exceptions import FieldException, HandleException, DeviceException
 
 
 class Element(object):
@@ -161,6 +161,7 @@ class Element(object):
 
         Raises:
             DeviceException: if there is no device on the given field.
+            FieldException: if the element does not have the specified field.
         """
         try:
             model = self._models[model]
@@ -170,6 +171,8 @@ class Element(object):
         except KeyError:
             raise DeviceException('No model type {} on element {}'.format(model,
                                                                           self))
+        except FieldException:
+            raise FieldException('No field {} on element {}'.format(field, self))
 
     def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
                   model=pytac.LIVE):
@@ -187,14 +190,20 @@ class Element(object):
 
         Raises:
             DeviceException: if arguments are incorrect.
+            FieldException: if the element does not have the specified field.
         """
         if handle != pytac.SP:
-            raise DeviceException('Must write using {}'.format(pytac.SP))
+            raise HandleException('Must write using {}'.format(pytac.SP))
         try:
             model = self._models[model]
-            value = self._uc[field].convert(value, origin=units, target=model.units)
-            model.set_value(field, value)
         except KeyError:
             raise DeviceException(
                 'No model type {} on element {}'.format(model, self)
             )
+        try:
+            value = self._uc[field].convert(value, origin=units, target=model.units)
+            model.set_value(field, value)
+        except KeyError:
+            raise FieldException('No field {} on element {}'.format(model, self))
+        except FieldException:
+            raise FieldException('No field {} on element {}'.format(field, self))

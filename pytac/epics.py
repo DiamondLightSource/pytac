@@ -1,9 +1,10 @@
 """EPICS implementations of the classes in pytac."""
 import numpy
 import pytac
-from pytac.device import Device, DeviceException
+from pytac.device import Device
 from pytac.element import Element
-from pytac.lattice import Lattice, LatticeException
+from pytac.exceptions import DeviceException, HandleException, LatticeException
+from pytac.lattice import Lattice
 
 
 class EpicsLattice(Lattice):
@@ -140,11 +141,12 @@ class EpicsDevice(Device):
             value (float): The value to set.
 
         Raises:
-            DeviceException: if no setpoint PV exists.
+            HandleException: if no setpoint PV exists.
         """
         if self.sp_pv is None:
-            raise DeviceException("""Device {0} has no setpoint PV."""
-                                  .format(self.name))
+            raise HandleException(
+                "Device {0} has no setpoint PV.".format(self.name)
+            )
         self._cs.put(self.sp_pv, value)
 
     def get_value(self, handle):
@@ -157,14 +159,14 @@ class EpicsDevice(Device):
             float: The value of the PV.
 
         Raises:
-            DeviceException: if the requested PV doesn't exist.
+            HandleException: if the requested PV doesn't exist.
         """
         if handle == pytac.RB and self.rb_pv:
             return self._cs.get(self.rb_pv)
         elif handle == pytac.SP and self.sp_pv:
             return self._cs.get(self.sp_pv)
 
-        raise DeviceException(
+        raise HandleException(
             "Device {0} has no {1} PV." .format(self.name, handle)
         )
 
@@ -178,14 +180,14 @@ class EpicsDevice(Device):
             str: A readback or setpoint PV.
 
         Raises:
-            DeviceException: if the PV doesn't exist.
+            HandleException: if the PV doesn't exist.
         """
         if handle == pytac.RB and self.rb_pv:
             return self.rb_pv
         elif handle == pytac.SP and self.sp_pv:
             return self.sp_pv
 
-        raise DeviceException(
+        raise HandleException(
             "Device {0} has no {1} PV.".format(self.name, handle)
         )
 

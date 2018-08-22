@@ -7,12 +7,6 @@ magnets and a skew quadrupole.
 """
 
 
-class DeviceException(Exception):
-    """Exception associated with Device misconfiguration or invalid requests.
-    """
-    pass
-
-
 class Device(object):
     """A representation of a property of an element associated with a field.
 

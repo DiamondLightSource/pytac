@@ -107,16 +107,22 @@ def test_set_value_phys(test_element):
                                                             (DUMMY_VALUE_2 / 2))
 
 
-def test_set_value_incorrect_field(test_element):
-    with pytest.raises(pytac.device.DeviceException):
-        test_element.set_value('non_existent', 40.0)
+def test_set_exceptions(test_element):
+    with pytest.raises(pytac.exceptions.FieldException):
+        test_element.set_value('unknown_field', 40.0, 'setpoint')
+    with pytest.raises(pytac.exceptions.HandleException):
+        test_element.set_value('y', 40.0, 'unknown_handle')
+    with pytest.raises(pytac.exceptions.DeviceException):
+        test_element.set_value('y', 40.0, 'setpoint', model='unknown_model')
 
 
-def test_get_pv_exceptions(test_element):
-    with pytest.raises(pytac.device.DeviceException):
-        test_element.get_value('setpoint', 'unknown_field')
-    with pytest.raises(pytac.device.DeviceException):
-        test_element.get_value('unknown_handle', 'y')
+def test_get_exceptions(test_element):
+    with pytest.raises(pytac.exceptions.FieldException):
+        test_element.get_value('unknown_field', 'setpoint')
+    with pytest.raises(pytac.exceptions.HandleException):
+        test_element.get_value('y', 'unknown_handle')
+    with pytest.raises(pytac.exceptions.DeviceException):
+        test_element.get_value('y', 'setpoint', model='unknown_model')
 
 
 def test_identity_conversion():

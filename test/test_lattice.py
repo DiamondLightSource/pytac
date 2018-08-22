@@ -1,11 +1,11 @@
+import mock
+import numpy
 import pytest
 import pytac
-from pytac.lattice import Lattice, LatticeException
-from pytac.model import DeviceModel
 from pytac.element import Element
-import mock
+from pytac.lattice import Lattice
+from pytac.model import DeviceModel
 from pytac.units import PolyUnitConv
-import numpy
 
 from constants import LATTICE, SP_PV
 
@@ -122,9 +122,8 @@ def test_set_values(simple_lattice):
     simple_lattice.get_devices('family', 'x')[0].set_value.assert_called_with(1)
 
 
-def test_set_values_raise_exception_if_number_of_values_does_not_match(
-        simple_lattice):
-    with pytest.raises(LatticeException):
+def test_set_values_raise_exception_if_number_of_values_does_not_match(simple_lattice):
+    with pytest.raises(pytac.exceptions.LatticeException):
         simple_lattice.set_values('family', 'x', [1, 2])
 
 
@@ -144,7 +143,7 @@ def test_s_position(simple_lattice):
 def test_get_s_throws_exception_if_element_not_in_lattice():
     lat = Lattice(LATTICE, 1)
     element = Element(1, 1.0, 'Quad')
-    with pytest.raises(LatticeException):
+    with pytest.raises(pytac.exceptions.LatticeException):
         lat.get_s(element)
 
 

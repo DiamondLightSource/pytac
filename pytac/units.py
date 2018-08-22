@@ -1,13 +1,8 @@
 """Classes for use in unit conversion."""
 import pytac
 import numpy
+from pytac.exceptions import UnitsException
 from scipy.interpolate import PchipInterpolator
-
-
-class UnitsException(Exception):
-    """Conversion not understood
-    """
-    pass
 
 
 def unit_function(value):

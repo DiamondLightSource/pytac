@@ -1,5 +1,5 @@
-from pytac.device import DeviceException
 from pytac.epics import EpicsDevice, PvEnabler
+from pytac.exceptions import HandleException
 import pytest
 import mock
 
@@ -23,13 +23,13 @@ def test_set_device_value():
 
 def test_device_invalid_sp_raise_exception():
     device2 = create_device(PREFIX, RB_PV, None)
-    with pytest.raises(DeviceException):
+    with pytest.raises(HandleException):
         device2.set_value(40)
 
 
 def test_get_device_value():
     device = create_device()
-    with pytest.raises(DeviceException):
+    with pytest.raises(HandleException):
         device.get_value('non_existent')
 
 

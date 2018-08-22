@@ -2,10 +2,7 @@
     machine.
 """
 import numpy
-
-
-class LatticeException(Exception):
-    pass
+from pytac.exceptions import LatticeException
 
 
 class Lattice(object):
