@@ -1,13 +1,10 @@
 """EPICS implementations of the classes in pytac.
 """
-
 import numpy
 import pytac
-from pytac.cs import ControlSystem
 from pytac.device import Device, DeviceException
 from pytac.element import Element
 from pytac.lattice import Lattice, LatticeException
-from pytac.model import DeviceModel
 
 
 class EpicsLattice(Lattice):

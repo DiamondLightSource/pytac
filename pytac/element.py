@@ -198,5 +198,3 @@ class Element(object):
             raise DeviceException(
                 'No model type {} on element {}'.format(model, self)
             )
-
-

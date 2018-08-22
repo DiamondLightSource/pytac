@@ -180,8 +180,9 @@ def load(mode, control_system=None, directory=None):
         for item in csv_reader:
             length = float(item['length'])
             cell = int(item['cell']) if item['cell'] else None
-            e = epics.EpicsElement(item['name'], length,
-                                item['type'], s, index, cell)
+            e = epics.EpicsElement(
+                item['name'], length, item['type'], s, index, cell
+            )
             e.add_to_family(item['type'])
             e.set_model(model.DeviceModel(), pytac.LIVE)
             lat.add_element(e)
