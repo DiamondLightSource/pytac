@@ -7,7 +7,7 @@ import mock
 from pytac.units import PolyUnitConv
 import numpy
 
-from constants import PREFIX, RB_PV, SP_PV, LATTICE
+from constants import LATTICE, SP_PV
 
 
 DUMMY_ARRAY = [1]

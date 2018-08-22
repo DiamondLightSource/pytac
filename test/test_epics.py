@@ -68,10 +68,10 @@ def test_set_values(simple_epics_lattice):
 
 @pytest.mark.parametrize(
     'dtype,expected', (
-            (numpy.float64, numpy.array(DUMMY_ARRAY, dtype=numpy.float64)),
-            (numpy.int32, numpy.array(DUMMY_ARRAY, dtype=numpy.int32)),
-            (numpy.bool_, numpy.array(DUMMY_ARRAY, dtype=numpy.bool_)),
-            (None, DUMMY_ARRAY)
+        (numpy.float64, numpy.array(DUMMY_ARRAY, dtype=numpy.float64)),
+        (numpy.int32, numpy.array(DUMMY_ARRAY, dtype=numpy.int32)),
+        (numpy.bool_, numpy.array(DUMMY_ARRAY, dtype=numpy.bool_)),
+        (None, DUMMY_ARRAY)
     ))
 def test_get_values_returns_numpy_array_if_requested(simple_epics_lattice, dtype, expected):
     values = simple_epics_lattice.get_values('family', 'x', pytac.RB, dtype=dtype)
