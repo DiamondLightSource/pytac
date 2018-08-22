@@ -63,7 +63,7 @@ def test_load_bpms(ring_mode, n_bpms):
                  'y_fofb_disabled', 'y_sofb_disabled')
         )
         assert re.match('SR.*BPM.*X', bpm.get_pv_name('x', pytac.RB))
-        with pytest.raises(pytac.device.DeviceException):
+        with pytest.raises(pytac.device.HandleException):
             bpm.get_pv_name('x', pytac.SP)
     assert len(bpms) == n_bpms
     assert bpms[0].cell == 1
