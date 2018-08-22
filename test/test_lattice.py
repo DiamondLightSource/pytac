@@ -129,7 +129,7 @@ def test_set_values(simple_element_and_lattice):
 
 def test_set_values_raise_exception_if_number_of_values_does_not_match(simple_element_and_lattice):
     element, lattice = simple_element_and_lattice
-    with pytest.raises(pytac.lattice.LatticeException):
+    with pytest.raises(pytac.exceptions.LatticeException):
         lattice.set_values('family', 'x', [1, 2])
 
 
@@ -149,7 +149,7 @@ def test_s_position(simple_element_and_lattice):
 def test_get_s_throws_exception_if_element_not_in_lattice():
     lat = pytac.lattice.Lattice(LATTICE, mock.MagicMock(), 1)
     element = pytac.element.Element(1, 1.0, 'Quad')
-    with pytest.raises(pytac.lattice.LatticeException):
+    with pytest.raises(pytac.exceptions.LatticeException):
         lat.get_s(element)
 
 

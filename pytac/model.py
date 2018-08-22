@@ -1,12 +1,6 @@
 """Module containing pytac model classes."""
 import pytac
-
-
-class FieldException(Exception):
-    """Exception associated with invalid field requests.
-    """
-    pass
-
+from pytac.exceptions import FieldException
 
 class Model(object):
     """Abstract base classes for element models.

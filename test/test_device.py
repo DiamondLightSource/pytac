@@ -22,13 +22,13 @@ def test_set_device_value():
 
 def test_device_invalid_sp_raise_exception():
     device2 = create_device(PREFIX, RB_PV, None)
-    with pytest.raises(pytac.device.HandleException):
+    with pytest.raises(pytac.exceptions.HandleException):
         device2.set_value(40)
 
 
 def test_get_device_value():
     device = create_device()
-    with pytest.raises(pytac.device.HandleException):
+    with pytest.raises(pytac.exceptions.HandleException):
         device.get_value('non_existent')
 
 

@@ -6,18 +6,7 @@ DLS is a sextupole magnet that contains also horizontal and vertical corrector
 magnets and a skew quadrupole.
 """
 import pytac
-
-
-class HandleException(Exception):
-    """Exception associated with requests with invalid handles.
-    """
-    pass
-
-
-class DeviceException(Exception):
-    """Exception associated with Device misconfiguration or invalid requests.
-    """
-    pass
+from pytac.exceptions import HandleException
 
 
 class Device(object):

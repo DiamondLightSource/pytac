@@ -1,7 +1,6 @@
 """Module containing the element class."""
 import pytac
-from pytac.device import DeviceException, HandleException
-from pytac.model import FieldException
+from pytac.exceptions import FieldException, HandleException, DeviceException
 
 
 class Element(object):

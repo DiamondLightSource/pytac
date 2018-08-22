@@ -107,20 +107,20 @@ def test_set_value_phys(test_element):
 
 
 def test_set_exceptions(test_element):
-    with pytest.raises(pytac.model.FieldException):
+    with pytest.raises(pytac.exceptions.FieldException):
         test_element.set_value('unknown_field', 40.0, 'setpoint')
-    with pytest.raises(pytac.device.HandleException):
+    with pytest.raises(pytac.exceptions.HandleException):
         test_element.set_value('y', 40.0, 'unknown_handle')
-    with pytest.raises(pytac.device.DeviceException):
+    with pytest.raises(pytac.exceptions.DeviceException):
         test_element.set_value('y', 40.0, 'setpoint', model='unknown_model')
 
 
 def test_get_exceptions(test_element):
-    with pytest.raises(pytac.model.FieldException):
+    with pytest.raises(pytac.exceptions.FieldException):
         test_element.get_value('unknown_field', 'setpoint')
-    with pytest.raises(pytac.device.HandleException):
+    with pytest.raises(pytac.exceptions.HandleException):
         test_element.get_value('y', 'unknown_handle')
-    with pytest.raises(pytac.device.DeviceException):
+    with pytest.raises(pytac.exceptions.DeviceException):
         test_element.get_value('y', 'setpoint', model='unknown_model')
 
 
