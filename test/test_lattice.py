@@ -1,14 +1,14 @@
 import pytest
-from pytac.epics import EpicsElement, EpicsDevice, EpicsLattice
-import pytac.lattice
+import pytac
+from pytac.lattice import Lattice, LatticeException
 from pytac.model import DeviceModel
-import pytac.element
-import pytac.device
+from pytac.element import Element
 import mock
 from pytac.units import PolyUnitConv
 import numpy
 
 from constants import PREFIX, RB_PV, SP_PV, LATTICE
+
 
 DUMMY_ARRAY = [1]
 
@@ -23,97 +23,86 @@ def mock_cs():
 @pytest.fixture
 def simple_element(identity=1):
     uc = PolyUnitConv([0, 1])
-    mock_cs = mock.MagicMock(get=mock.MagicMock(return_value=1))
-    # Create devices and attach them to the element
-    element = EpicsElement(identity, 0, 'BPM', cell=1)
-    device1 = EpicsDevice(PREFIX, mock_cs, True, RB_PV, SP_PV)
-    device2 = EpicsDevice(PREFIX, mock_cs, True, RB_PV, SP_PV)
+    element = Element(identity, 0, 'BPM', cell=1)
+    # Create mock devices and attach them to the element
+    x_device = mock.MagicMock()
+    x_device.name = 'x_device'
+    x_device.get_value.return_value = 1
+    y_device = mock.MagicMock()
+    y_device.name = 'y_device'
+    y_device.get_pv_name.return_value = SP_PV
     element.add_to_family('family')
 
     element.set_model(DeviceModel(), pytac.LIVE)
-    element.add_device('x', device1, uc)
-    element.add_device('y', device2, uc)
+    element.add_device('x', x_device, uc)
+    element.add_device('y', y_device, uc)
 
     return element
 
 
 @pytest.fixture
-def simple_element_and_lattice(simple_element):
-    lat = pytac.lattice.Lattice(LATTICE, 1)
+def simple_lattice(simple_element):
+    lat = Lattice(LATTICE, 1)
     lat.add_element(simple_element)
-    return simple_element, lat
-
-
-@pytest.fixture
-def simple_epics_element_and_lattice(simple_element, mock_cs):
-    lat = EpicsLattice(LATTICE, 1, mock_cs)
-    lat.add_element(simple_element)
-    return simple_element, lat
+    return lat
 
 
 def test_create_lattice():
-    lat = pytac.lattice.Lattice(LATTICE, 1)
+    lat = Lattice(LATTICE, 1)
     assert(len(lat)) == 0
     assert lat.get_energy() == 1
     assert lat.name == LATTICE
 
 
-def test_get_devices(simple_element_and_lattice):
-    _, lattice = simple_element_and_lattice
-    devices = lattice.get_devices('family', 'x')
+def test_get_devices(simple_lattice):
+    devices = simple_lattice.get_devices('family', 'x')
     assert len(devices) == 1
-    assert devices[0].name == PREFIX
+    assert devices[0].name == 'x_device'
 
 
-def test_get_devices_returns_empty_list_if_family_not_matched(simple_element_and_lattice):
-    _, lattice = simple_element_and_lattice
-    devices = lattice.get_devices('not-a-family', 'x')
+def test_get_devices_returns_empty_list_if_family_not_matched(simple_lattice):
+    devices = simple_lattice.get_devices('not-a-family', 'x')
     assert devices == []
 
 
-def test_get_devices_returns_empty_list_if_field_not_matched(simple_element_and_lattice):
-    _, lattice = simple_element_and_lattice
-    devices = lattice.get_devices('family', 'not-a-field')
+def test_get_devices_returns_empty_list_if_field_not_matched(simple_lattice):
+    devices = simple_lattice.get_devices('family', 'not-a-field')
     assert devices == []
 
 
-def test_get_device_names(simple_element_and_lattice):
-    _, lattice = simple_element_and_lattice
-    assert lattice.get_device_names('family', 'x') == [PREFIX]
+def test_get_device_names(simple_lattice):
+    assert simple_lattice.get_device_names('family', 'x') == ['x_device']
 
 
-def test_lattice_with_n_elements(simple_element_and_lattice):
-    elem, lattice = simple_element_and_lattice
-
+def test_lattice_with_n_elements(simple_lattice):
     # Getting elements
-    lattice.add_element(elem)
-    assert lattice[0] == elem
-    assert lattice.get_elements() == [elem, elem]
+    elem = simple_lattice[0]
+    simple_lattice.add_element(elem)
+    assert simple_lattice[0] == elem
+    assert simple_lattice.get_elements() == [elem, elem]
 
 
-def test_lattice_get_element_with_family(simple_element_and_lattice):
-    element, lattice = simple_element_and_lattice
-    element.add_to_family('fam')
-    assert lattice.get_elements('fam') == [element]
-    assert lattice.get_elements('nofam') == []
+def test_lattice_get_element_with_family(simple_lattice):
+    elem = simple_lattice[0]
+    elem.add_to_family('fam')
+    assert simple_lattice.get_elements('fam') == [elem]
+    assert simple_lattice.get_elements('nofam') == []
 
 
-def test_lattice_get_elements_by_cell(simple_element_and_lattice):
-    element, lattice = simple_element_and_lattice
-    assert lattice.get_elements(cell=1) == [element]
-    assert lattice.get_elements(cell=2) == []
+def test_lattice_get_elements_by_cell(simple_lattice):
+    elem = simple_lattice[0]
+    assert simple_lattice.get_elements(cell=1) == [elem]
+    assert simple_lattice.get_elements(cell=2) == []
 
 
-def test_get_all_families(simple_element_and_lattice):
-    element, lattice = simple_element_and_lattice
-    families = lattice.get_all_families()
+def test_get_all_families(simple_lattice):
+    families = simple_lattice.get_all_families()
     assert len(families) > 0
 
 
-def test_get_values(simple_epics_element_and_lattice):
-    element, lattice = simple_epics_element_and_lattice
-    lattice.get_values('family', 'x', pytac.RB)
-    lattice._cs.get.assert_called_with([RB_PV])
+def test_get_values(simple_lattice):
+    simple_lattice.get_values('family', 'x', pytac.RB)
+    simple_lattice.get_devices('family', 'x')[0].get_value.assert_called_with(pytac.RB)
 
 
 @pytest.mark.parametrize(
@@ -123,60 +112,56 @@ def test_get_values(simple_epics_element_and_lattice):
         (numpy.bool_, numpy.array(DUMMY_ARRAY, dtype=numpy.bool_)),
         (None, DUMMY_ARRAY)
     ))
-def test_get_values_returns_numpy_array_if_requested(simple_epics_element_and_lattice, dtype, expected):
-    element, lattice = simple_epics_element_and_lattice
-    values = lattice.get_values('family', 'x', pytac.RB, dtype=dtype)
+def test_get_values_returns_numpy_array_if_requested(simple_lattice, dtype, expected):
+    values = simple_lattice.get_values('family', 'x', pytac.RB, dtype=dtype)
     numpy.testing.assert_equal(values, expected)
-    lattice._cs.get.assert_called_with([RB_PV])
 
 
-def test_set_values(simple_epics_element_and_lattice):
-    element, lattice = simple_epics_element_and_lattice
-    lattice.set_values('family', 'x', [1])
-    lattice._cs.put.assert_called_with([SP_PV], [1])
+def test_set_values(simple_lattice):
+    simple_lattice.set_values('family', 'x', [1])
+    simple_lattice.get_devices('family', 'x')[0].set_value.assert_called_with(1)
 
 
-def test_set_values_raise_exception_if_number_of_values_does_not_match(simple_element_and_lattice):
-    element, lattice = simple_element_and_lattice
-    with pytest.raises(pytac.lattice.LatticeException):
-        lattice.set_values('family', 'x', [1, 2])
+def test_set_values_raise_exception_if_number_of_values_does_not_match(
+        simple_lattice):
+    with pytest.raises(LatticeException):
+        simple_lattice.set_values('family', 'x', [1, 2])
 
 
-def test_s_position(simple_element_and_lattice):
-    element1, lattice = simple_element_and_lattice
-    assert lattice.get_s(element1) == 0.0
+def test_s_position(simple_lattice):
+    element1 = simple_lattice[0]
+    assert simple_lattice.get_s(element1) == 0.0
 
-    element2 = pytac.element.Element(2, 1.0, 'Quad')
-    lattice.add_element(element2)
-    assert lattice.get_s(element2) == 0.0
+    element2 = Element(2, 1.0, 'Quad')
+    simple_lattice.add_element(element2)
+    assert simple_lattice.get_s(element2) == 0.0
 
-    element3 = pytac.element.Element(3, 2.0, 'Quad')
-    lattice.add_element(element3)
-    assert lattice.get_s(element3) == 1.0
+    element3 = Element(3, 2.0, 'Quad')
+    simple_lattice.add_element(element3)
+    assert simple_lattice.get_s(element3) == 1.0
 
 
 def test_get_s_throws_exception_if_element_not_in_lattice():
-    lat = pytac.lattice.Lattice(LATTICE, 1)
-    element = pytac.element.Element(1, 1.0, 'Quad')
-    with pytest.raises(pytac.lattice.LatticeException):
+    lat = Lattice(LATTICE, 1)
+    element = Element(1, 1.0, 'Quad')
+    with pytest.raises(LatticeException):
         lat.get_s(element)
 
 
-def test_get_family_s(simple_element_and_lattice):
-    element1, lattice = simple_element_and_lattice
-    assert lattice.get_family_s('family') == [0]
+def test_get_family_s(simple_lattice):
+    assert simple_lattice.get_family_s('family') == [0]
 
-    element2 = pytac.element.Element(2, 1.0, 'family')
+    element2 = Element(2, 1.0, 'family')
     element2.add_to_family('family')
-    lattice.add_element(element2)
-    assert lattice.get_family_s('family') == [0, 0]
+    simple_lattice.add_element(element2)
+    assert simple_lattice.get_family_s('family') == [0, 0]
 
-    element3 = pytac.element.Element(3, 1.5, 'family')
+    element3 = Element(3, 1.5, 'family')
     element3.add_to_family('family')
-    lattice.add_element(element3)
-    assert lattice.get_family_s('family') == [0, 0, 1.0]
+    simple_lattice.add_element(element3)
+    assert simple_lattice.get_family_s('family') == [0, 0, 1.0]
 
-    element4 = pytac.element.Element(3, 1.5, 'family')
+    element4 = Element(3, 1.5, 'family')
     element4.add_to_family('family')
-    lattice.add_element(element4)
-    assert lattice.get_family_s('family') == [0, 0, 1.0, 2.5]
+    simple_lattice.add_element(element4)
+    assert simple_lattice.get_family_s('family') == [0, 0, 1.0, 2.5]
