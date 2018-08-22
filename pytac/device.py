@@ -76,7 +76,7 @@ class Device(object):
             value (float): The value to set on the PV.
 
         Raises:
-            DeviceException: if no setpoint PV exists.
+            HandleException: if no setpoint PV exists.
         """
         if self.sp_pv is None:
             raise HandleException("""Device {0} has no setpoint PV."""
@@ -94,7 +94,7 @@ class Device(object):
             float: The value of the PV.
 
         Raises:
-            DeviceException: if the requested PV doesn't exist.
+            HandleException: if the requested PV doesn't exist.
         """
         print('getting {}'.format('handle'))
         if handle == pytac.RB and self.rb_pv:
@@ -115,7 +115,7 @@ class Device(object):
             str: A readback or setpoint PV.
 
         Raises:
-            DeviceException: if the PV doesn't exist.
+            HandleException: if the PV doesn't exist.
         """
         if handle == pytac.RB and self.rb_pv:
             return self.rb_pv
