@@ -200,7 +200,7 @@ class Element(object):
         except KeyError:
             raise DeviceException('No model type {} on element {}'.format(model,
                                                                           self))
-        try:            
+        try:
             value = self._uc[field].convert(value, origin=units, target=model.units)
             model.set_value(field, value)
         except KeyError:
