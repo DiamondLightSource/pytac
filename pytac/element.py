@@ -156,8 +156,7 @@ class Element(object):
             model (str): pytac.LIVE or pytac.SIM.
 
         Returns:
-            object: The value of the requested field, returned from EPICS as a
-            string or cothread float.
+            float: The value of the requested field
 
         Raises:
             DeviceException: if there is no device on the given field.
