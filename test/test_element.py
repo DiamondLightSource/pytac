@@ -1,6 +1,7 @@
-import pytac.element
+import pytac.epics
 import pytac.device
-import pytac.model
+from pytac.model import DeviceModel
+from pytac.epics import EpicsElement, EpicsDevice
 from pytac.units import PolyUnitConv
 import pytest
 import mock
@@ -20,11 +21,11 @@ def test_element(uc=mock_uc):
     mock_cs = mock.MagicMock()
     mock_cs.get.return_value = DUMMY_VALUE_1
 
-    element = pytac.element.Element('dummy', 1.0, 'Quad')
-    device1 = pytac.device.Device(PREFIX, mock_cs, True, RB_PV, SP_PV)
-    device2 = pytac.device.Device(PREFIX, mock_cs, True, SP_PV, RB_PV)
+    element = EpicsElement('dummy', 1.0, 'Quad')
+    device1 = EpicsDevice(PREFIX, mock_cs, True, RB_PV, SP_PV)
+    device2 = EpicsDevice(PREFIX, mock_cs, True, SP_PV, RB_PV)
 
-    device_model = pytac.model.DeviceModel()
+    device_model = DeviceModel()
     element.set_model(device_model, pytac.LIVE)
     element.add_device('x', device1, uc)
     element.add_device('y', device2, uc)

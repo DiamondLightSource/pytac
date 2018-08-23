@@ -23,31 +23,19 @@ class Lattice(object):
            _energy (int): The total energy of the lattice.
            _model (Model): A pytac model object associated with the lattice.
     """
-    def __init__(self, name, control_system, energy):
+    def __init__(self, name, energy):
         """.. The constructor method for the class, called whenever a 'Lattice'
                object is constructed.
 
         Args:
             name (str): The name of the lattice.
-            control_system (ControlSystem): The control system used to store
-                                             the values on a PV.
             energy (int): The total energy of the lattice.
 
         **Methods:**
         """
         self.name = name
         self._lattice = []
-        self._cs = control_system
         self._energy = energy
-        self._model = None
-
-    def set_model(self, model):
-        """Sets the pytac model object associated with the lattice.
-
-        Returns:
-            Model: A pytac model object associated with the lattice.
-        """
-        self._model = model
 
     def get_energy(self):
         """Function to get the total energy of the lattice.
@@ -137,64 +125,6 @@ class Lattice(object):
 
         return families
 
-    def get_pv_names(self, family, field, handle):
-        """Get all PV names for a specific family, field, and handle.
-
-        Args:
-            family (str): requested family.
-            field (str): requested field.
-            handle (str): pytac.RB or pytac.SP.
-
-        Returns:
-            list: list of PV names.
-        """
-        elements = self.get_elements(family)
-        pv_names = []
-        for element in elements:
-            pv_names.append(element.get_pv_name(field, handle))
-        return pv_names
-
-    def get_values(self, family, field, handle, dtype=None):
-        """Get all values for a family and field.
-
-        Args:
-            family (str): family to request the values of.
-            field (str): field to request values for.
-            handle (str): pytac.RB or pytac.SP.
-            dtype (numpy.dtype): if None, return a list. If not None, return a
-                                  numpy array of the specified type.
-
-        Returns:
-            list or numpy array: sequence of values.
-        """
-        pv_names = self.get_pv_names(family, field, handle)
-        values = self._cs.get(pv_names)
-        if dtype is not None:
-            values = numpy.array(values, dtype=dtype)
-        return values
-
-    def set_values(self, family, field, values):
-        """Sets the values for a family and field.
-
-        The PVs are determined by family and device. Note that only setpoint
-        PVs can be modified.
-
-        Args:
-            family (str): family on which to set values.
-            field (str):  field to set values for.
-            values (sequence): A list of values to assign.
-
-        Raises:
-            LatticeException: if the given list of values doesn't match the
-                               number of elements in the family.
-        """
-        pv_names = self.get_pv_names(family, field, 'setpoint')
-        if len(pv_names) != len(values):
-            raise LatticeException("Number of elements in given array must be"
-                                   " equal to the number of elements in the "
-                                   "lattice")
-        self._cs.put(pv_names, values)
-
     def get_s(self, elem):
         """Find the s position of an element in the lattice.
 
@@ -274,3 +204,45 @@ class Lattice(object):
         """
         devices = self.get_devices(family, field)
         return [device.name for device in devices]
+
+    def get_values(self, family, field, handle, dtype=None):
+        """Get all values for a family and field.
+
+        Args:
+            family (str): family to request the values of.
+            field (str): field to request values for.
+            handle (str): pytac.RB or pytac.SP.
+            dtype (numpy.dtype): if None, return a list. If not None, return a
+                                  numpy array of the specified type.
+
+        Returns:
+            list or numpy array: sequence of values.
+        """
+        elements = self.get_elements(family)
+        values = [element.get_value(field, handle) for element in elements]
+        if dtype is not None:
+            values = numpy.array(values, dtype=dtype)
+        return values
+
+    def set_values(self, family, field, values):
+        """Sets the values for a family and field.
+
+        The PVs are determined by family and device. Note that only setpoint
+        PVs can be modified.
+
+        Args:
+            family (str): family on which to set values.
+            field (str):  field to set values for.
+            values (sequence): A list of values to assign.
+
+        Raises:
+            LatticeException: if the given list of values doesn't match the
+                               number of elements in the family.
+        """
+        elements = self.get_elements(family)
+        if len(elements) != len(values):
+            raise LatticeException("Number of elements in given array must be"
+                                   " equal to the number of elements in the "
+                                   "family")
+        for element, value in zip(elements, values):
+            element.set_value(field, value)

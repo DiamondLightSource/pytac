@@ -15,7 +15,7 @@ import sys
 import os
 import csv
 import pytac
-from pytac import lattice, element, device, model, units, utils
+from pytac import epics, model, units, utils
 import collections
 
 # Create a default unit conversion object that returns the input unchanged.
@@ -161,8 +161,8 @@ def load(mode, control_system=None, directory=None):
         if control_system is None:
             # Don't import epics unless we need it to avoid unnecessary
             # installation of cothread
-            from pytac import epics
-            control_system = epics.EpicsControlSystem()
+            from pytac import cothread
+            control_system = cothread.CothreadControlSystem()
     except ImportError:
         print(
             ('To load a lattice using the default control system, please'
@@ -172,7 +172,7 @@ def load(mode, control_system=None, directory=None):
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
-    lat = lattice.Lattice(mode, control_system, 3000)
+    lat = epics.EpicsLattice(mode, 3000, control_system)
     s = 0.0
     index = 1
     with open(os.path.join(directory, mode, ELEMENTS_FILENAME)) as elements:
@@ -180,8 +180,9 @@ def load(mode, control_system=None, directory=None):
         for item in csv_reader:
             length = float(item['length'])
             cell = int(item['cell']) if item['cell'] else None
-            e = element.Element(item['name'], length,
-                                item['type'], s, index, cell)
+            e = epics.EpicsElement(
+                item['name'], length, item['type'], s, index, cell
+            )
             e.add_to_family(item['type'])
             e.set_model(model.DeviceModel(), pytac.LIVE)
             lat.add_element(e)
@@ -195,7 +196,7 @@ def load(mode, control_system=None, directory=None):
             get_pv = item['get_pv'] if item['get_pv'] else None
             set_pv = item['set_pv'] if item['set_pv'] else None
             pve = True
-            d = device.Device(name, control_system, pve, get_pv, set_pv)
+            d = epics.EpicsDevice(name, control_system, pve, get_pv, set_pv)
             lat[int(item['id']) - 1].add_device(item['field'], d,
                                                 UNIT_UNITCONV)
 

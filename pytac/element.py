@@ -156,8 +156,7 @@ class Element(object):
             model (str): pytac.LIVE or pytac.SIM.
 
         Returns:
-            object: The value of the requested field, returned from EPICS as a
-            string or cothread float.
+            float: The value of the requested field
 
         Raises:
             DeviceException: if there is no device on the given field.
@@ -197,34 +196,13 @@ class Element(object):
         try:
             model = self._models[model]
         except KeyError:
-            raise DeviceException('No model type {} on element {}'.format(model,
-                                                                          self))
+            raise DeviceException(
+                'No model type {} on element {}'.format(model, self)
+            )
         try:
             value = self._uc[field].convert(value, origin=units, target=model.units)
             model.set_value(field, value)
         except KeyError:
             raise FieldException('No field {} on element {}'.format(model, self))
-        except FieldException:
-            raise FieldException('No field {} on element {}'.format(field, self))
-
-    def get_pv_name(self, field, handle):
-        """Get a PV name on a device.
-
-        Args:
-            field (str): The requested field.
-            handle (str): pytac.RB or pytac.SP.
-
-        Returns:
-            str: The readback or setpoint PV for the specified field.
-
-        Raises:
-            DeviceException: if there is no device for this field.
-            FieldException: if the element does not have the specified field.
-        """
-        try:
-            return self._models[pytac.LIVE].get_pv_name(field, handle)
-        except KeyError:
-            raise DeviceException('{} has no device for field {}'.format(self,
-                                                                         field))
         except FieldException:
             raise FieldException('No field {} on element {}'.format(field, self))

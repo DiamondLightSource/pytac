@@ -95,18 +95,6 @@ class DeviceModel(object):
         """
         return self._devices.keys()
 
-    def get_pv_name(self, field, handle):
-        """Get PV name for a field and handle.
-
-        Args:
-            field (str): field of the requested PV.
-            handle (str): pytac.RB or pytac.SP.
-
-        Returns:
-            str: PV name for specified field and handle.
-        """
-        return self._devices[field].get_pv_name(handle)
-
     def get_value(self, field, handle):
         """Get the value of a readback or setpoint PV for a field from the
         model.
