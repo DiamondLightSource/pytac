@@ -36,6 +36,16 @@ class Lattice(object):
         self.name = name
         self._lattice = []
         self._energy = energy
+        self._models = {}
+
+    def set_model(self, model, model_type):
+        """Add a model to the lattice.
+
+        Args:
+            model (Model): instance of Model.
+            model_type (str): EpicsModel or ATModel.
+        """
+        self.models[model_type] = model
 
     def get_energy(self):
         """Function to get the total energy of the lattice.
