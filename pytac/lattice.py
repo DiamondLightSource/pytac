@@ -37,6 +37,7 @@ class Lattice(object):
         self._lattice = []
         self._energy = energy
         self._models = {}
+        self._uc = {}
 
     def set_model(self, model, model_type):
         """Add a model to the lattice.
