@@ -172,7 +172,7 @@ class Lattice(object):
             s_positions.append(self.get_s(element))
         return s_positions
 
-    def get_devices(self, family, field):
+    def get_element_devices(self, family, field):
         """Get devices for a specific field for elements in the specfied
         family.
 
@@ -197,7 +197,7 @@ class Lattice(object):
 
         return devices
 
-    def get_device_names(self, family, field):
+    def get_element_device_names(self, family, field):
         """Get the names for devices attached to a specific field for elements
         in the specfied family.
 
@@ -215,7 +215,7 @@ class Lattice(object):
         devices = self.get_devices(family, field)
         return [device.name for device in devices]
 
-    def get_values(self, family, field, handle, dtype=None):
+    def get_element_values(self, family, field, handle, dtype=None):
         """Get all values for a family and field.
 
         Args:
@@ -234,7 +234,7 @@ class Lattice(object):
             values = numpy.array(values, dtype=dtype)
         return values
 
-    def set_values(self, family, field, values):
+    def set_element_values(self, family, field, values):
         """Sets the values for a family and field.
 
         The PVs are determined by family and device. Note that only setpoint
