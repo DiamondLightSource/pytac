@@ -2,6 +2,7 @@
     machine.
 """
 import numpy
+import pytac
 from pytac.exceptions import LatticeException, DeviceException, FieldException, HandleException
 
 
@@ -333,7 +334,7 @@ class Lattice(object):
         Returns:
             list: device names for specified family and field.
         """
-        devices = self.get_devices(family, field)
+        devices = self.get_element_devices(family, field)
         return [device.name for device in devices]
 
     def get_element_values(self, family, field, handle, dtype=None):
