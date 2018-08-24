@@ -48,6 +48,19 @@ class Lattice(object):
         """
         self.models[model_type] = model
 
+    def get_fields(self):
+        """Get the fields defined on the lattice.
+
+        Includes all fields defined by all models.
+
+        Returns:
+            set: A sequence of all the fields defined on the lattice.
+        """
+        fields = set()
+        for model in self._models:
+            fields.update(self._models[model].get_fields())
+        return fields
+
     def add_device(self, field, device, uc):
         """Add device and unit conversion objects to a given field.
 
@@ -71,7 +84,7 @@ class Lattice(object):
         A DeviceModel must be set before calling this method.
 
         Args:
-            field (str): The lookup key to find the device on an element.
+            field (str): The lookup key to find the device on the lattice.
 
         Returns:
             Device: The device on the given field.
@@ -80,6 +93,80 @@ class Lattice(object):
             KeyError: if no DeviceModel is set.
         """
         return self._models[pytac.LIVE].get_device(field)
+
+    def get_unitconv(self, field):
+        """Get the unit conversion option for the specified field.
+
+        Args:
+            field (str): The field associated with this conversion.
+
+        Returns:
+            UnitConv: The object associated with the specified field.
+
+        Raises:
+            KeyError: if no unit conversion object is present.
+        """
+        return self._uc[field]
+
+    def get_value(self, field, handle=pytac.RB, units=pytac.ENG,
+                  model=pytac.LIVE):
+        """Get the value for a field on the lattice.
+
+        Args:
+            field (str): The requested field.
+            handle (str): pytac.SP or pytac.RB.
+            units (str): pytac.ENG or pytac.PHYS returned.
+            model (str): pytac.LIVE or pytac.SIM.
+
+        Returns:
+            float: The value of the requested field
+
+        Raises:
+            DeviceException: if there is no device on the given field.
+            FieldException: if the lattice does not have the specified field.
+        """
+        try:
+            model = self._models[model]
+            value = model.get_value(field, handle)
+            return self._uc[field].convert(value, origin=model.units,
+                                           target=units)
+        except KeyError:
+            raise DeviceException('No model type {} on lattice {}'.format(model,
+                                                                          self))
+        except FieldException:
+            raise FieldException('No field {} on lattice {}'.format(field, self))
+
+    def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
+                  model=pytac.LIVE):
+        """Set the value for a field.
+
+        This value can be set on the machine or the simulation.
+
+        Args:
+            field (str): The requested field.
+            value (float): The value to set.
+            handle (str): pytac.SP or pytac.RB.
+            units (str): pytac.ENG or pytac.PHYS.
+            model (str): pytac.LIVE or pytac.SIM.
+
+        Raises:
+            DeviceException: if arguments are incorrect.
+            FieldException: if the lattice does not have the specified field.
+        """
+        if handle != pytac.SP:
+            raise HandleException('Must write using {}'.format(pytac.SP))
+        try:
+            model = self._models[model]
+        except KeyError:
+            raise DeviceException('No model type {} on lattice {}'.format(model,
+                                                                          self))
+        try:
+            value = self._uc[field].convert(value, origin=units, target=model.units)
+            model.set_value(field, value)
+        except KeyError:
+            raise FieldException('No field {} on lattice {}'.format(model, self))
+        except FieldException:
+            raise FieldException('No field {} on lattice {}'.format(field, self))
 
     def get_energy(self):
         """Function to get the total energy of the lattice.
