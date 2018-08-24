@@ -175,10 +175,9 @@ class Element(object):
 
     def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
                   model=pytac.LIVE):
-        """Set the value on a uniquely identified device.
+        """Set the value for a field.
 
         This value can be set on the machine or the simulation.
-        A field is required to identify a device.
 
         Args:
             field (str): The requested field.
@@ -196,9 +195,8 @@ class Element(object):
         try:
             model = self._models[model]
         except KeyError:
-            raise DeviceException(
-                'No model type {} on element {}'.format(model, self)
-            )
+            raise DeviceException('No model type {} on element {}'.format(model,
+                                                                          self))
         try:
             value = self._uc[field].convert(value, origin=units, target=model.units)
             model.set_value(field, value)
