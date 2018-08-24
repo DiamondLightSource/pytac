@@ -139,7 +139,7 @@ def load_unitconv(directory, mode, lattice):
                  ._post_eng_to_phys) = get_div_rigidity(lattice.get_energy())
                 (unitconvs[int(item['uc_id'])]
                  ._pre_phys_to_eng) = get_mult_rigidity(lattice.get_energy())
-            element._uc[item['field']] = unitconvs[int(item['uc_id'])]
+            element._model_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
 
 
 def load(mode, control_system=None, directory=None):

@@ -22,11 +22,6 @@ def test_create_lattice():
     assert lat.get_energy() == 1
     assert lat.name == LATTICE_NAME
 
-#new tests
-def test_device_raises_KeyError_if_device_not_present(lat)
-    with pytest.rasises(KeyError):
-        lat.get_device('not-a-device')
-
 
 def test_get_element_devices(simple_lattice):
     devices = simple_lattice.get_element_devices('family', 'x')

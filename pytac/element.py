@@ -1,5 +1,6 @@
 """Module containing the element class."""
 import pytac
+from pytac.model import ModelManager
 from pytac.exceptions import FieldException, HandleException, DeviceException
 
 
@@ -46,6 +47,7 @@ class Element(object):
         self.index = index
         self.cell = cell
         self.families = set()
+        self._model_manager = ModelManager()
 
     def __str__(self):
         """Auxiliary function to print out an element.
