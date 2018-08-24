@@ -14,9 +14,10 @@ DUMMY_ARRAY = [1]
 
 
 @pytest.fixture
-def simple_element(identity=1):
-    uc = PolyUnitConv([0, 1])
-    element = Element(identity, 0, 'BPM', cell=1)
+def simple_element():
+    # A unit conversion object that returns the same as the input.
+    uc = PolyUnitConv([1, 0])
+    element = Element('element1', 0, 'BPM', cell=1)
     # Create mock devices and attach them to the element
     x_device = mock.MagicMock()
     x_device.name = 'x_device'
@@ -68,10 +69,9 @@ def test_get_device_names(simple_lattice):
 
 
 def test_lattice_with_n_elements(simple_lattice):
-    # Getting elements
     elem = simple_lattice[0]
     simple_lattice.add_element(elem)
-    assert simple_lattice[0] == elem
+    assert simple_lattice[1] == elem
     assert simple_lattice.get_elements() == [elem, elem]
 
 
@@ -90,7 +90,7 @@ def test_lattice_get_elements_by_cell(simple_lattice):
 
 def test_get_all_families(simple_lattice):
     families = simple_lattice.get_all_families()
-    assert len(families) > 0
+    assert list(families) == ['family']
 
 
 def test_get_values(simple_lattice):
