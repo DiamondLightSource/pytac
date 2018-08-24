@@ -24,24 +24,22 @@ def test_load_lattice_using_default_dir():
 
 
 @pytest.mark.parametrize(
-    'ring_mode,n_elements,length', [
-        ('VMX', 2143, 561.571),
-        ('DIAD', 2145, 561.571)
+    'lattice,name,n_elements,length', [
+        (pytest.lazy_fixture('vmx_ring'), 'VMX', 2143, 561.571),
+        (pytest.lazy_fixture('diad_ring'), 'DIAD', 2145, 561.571)
     ])
-def test_load_lattice(ring_mode, n_elements, length):
-    lattice = get_lattice(ring_mode)
+def test_load_lattice(lattice, name, n_elements, length):
     assert len(lattice) == n_elements
-    assert lattice.name == ring_mode
+    assert lattice.name == name
     assert (lattice.get_length() - length) < EPS
 
 
 @pytest.mark.parametrize(
-    'ring_mode,n_bpms', [
-        ('VMX', 173),
-        ('DIAD', 173)
+    'lattice,n_bpms', [
+        (pytest.lazy_fixture('vmx_ring'), 173),
+        (pytest.lazy_fixture('diad_ring'), 173)
     ])
-def test_get_pv_names(ring_mode, n_bpms):
-    lattice = get_lattice(ring_mode)
+def test_get_pv_names(lattice, n_bpms):
     bpm_x_pvs = lattice.get_pv_names('BPM', 'x', handle='readback')
     assert len(bpm_x_pvs) == n_bpms
     for pv in bpm_x_pvs:
@@ -53,12 +51,11 @@ def test_get_pv_names(ring_mode, n_bpms):
 
 
 @pytest.mark.parametrize(
-    'ring_mode,n_bpms', [
-        ('VMX', 173),
-        ('DIAD', 173)
+    'lattice,n_bpms', [
+        (pytest.lazy_fixture('vmx_ring'), 173),
+        (pytest.lazy_fixture('diad_ring'), 173)
     ])
-def test_load_bpms(ring_mode, n_bpms):
-    lattice = get_lattice(ring_mode)
+def test_load_bpms(lattice, n_bpms):
     bpms = lattice.get_elements('BPM')
     bpm_fields = {
         'x', 'y', 'enabled', 'x_fofb_disabled', 'x_sofb_disabled',
@@ -75,23 +72,21 @@ def test_load_bpms(ring_mode, n_bpms):
 
 
 @pytest.mark.parametrize(
-    'ring_mode,n_drifts', [
-        ('VMX', 1308),
-        ('DIAD', 1311)
+    'lattice,n_drifts', [
+        (pytest.lazy_fixture('vmx_ring'), 1308),
+        (pytest.lazy_fixture('diad_ring'), 1311)
     ])
-def test_load_drift_elements(ring_mode, n_drifts):
-    lattice = get_lattice(ring_mode)
+def test_load_drift_elements(lattice, n_drifts):
     drifts = lattice.get_elements('DRIFT')
     assert len(drifts) == n_drifts
 
 
 @pytest.mark.parametrize(
-    'ring_mode,n_quads', [
-        ('VMX', 248),
-        ('DIAD', 248)
+    'lattice,n_quads', [
+        (pytest.lazy_fixture('vmx_ring'), 248),
+        (pytest.lazy_fixture('diad_ring'), 248)
     ])
-def test_load_quadrupoles(ring_mode, n_quads):
-    lattice = get_lattice(ring_mode)
+def test_load_quadrupoles(lattice, n_quads):
     quads = lattice.get_elements('QUAD')
     assert len(quads) == n_quads
     for quad in quads:
@@ -102,12 +97,11 @@ def test_load_quadrupoles(ring_mode, n_quads):
 
 
 @pytest.mark.parametrize(
-    'ring_mode,n_q1b,n_q1d', [
-        ('VMX', 34, 12),
-        ('DIAD', 34, 12)
+    'lattice,n_q1b,n_q1d', [
+        (pytest.lazy_fixture('vmx_ring'), 34, 12),
+        (pytest.lazy_fixture('diad_ring'), 34, 12)
     ])
-def test_load_quad_family(ring_mode, n_q1b, n_q1d):
-    lattice = get_lattice(ring_mode)
+def test_load_quad_family(lattice, n_q1b, n_q1d):
     q1b = lattice.get_elements('Q1B')
     assert len(q1b) == n_q1b
     q1d = lattice.get_elements('Q1D')
@@ -115,12 +109,11 @@ def test_load_quad_family(ring_mode, n_q1b, n_q1d):
 
 
 @pytest.mark.parametrize(
-    'ring_mode,n_correctors', [
-        ('VMX', 173),
-        ('DIAD', 172)
+    'lattice,n_correctors', [
+        (pytest.lazy_fixture('vmx_ring'), 173),
+        (pytest.lazy_fixture('diad_ring'), 172)
     ])
-def test_load_correctors(ring_mode, n_correctors):
-    lattice = get_lattice(ring_mode)
+def test_load_correctors(lattice, n_correctors):
     hcm = lattice.get_elements('HSTR')
     vcm = lattice.get_elements('VSTR')
     assert len(hcm) == n_correctors
@@ -134,12 +127,11 @@ def test_load_correctors(ring_mode, n_correctors):
 
 
 @pytest.mark.parametrize(
-    'ring_mode,n_squads', [
-        ('VMX', 98),
-        ('DIAD', 98)
+    'lattice,n_squads', [
+        (pytest.lazy_fixture('vmx_ring'), 98),
+        (pytest.lazy_fixture('diad_ring'), 98)
     ])
-def test_load_squads(ring_mode, n_squads):
-    lattice = get_lattice(ring_mode)
+def test_load_squads(lattice, n_squads):
     squads = lattice.get_elements('SQUAD')
     assert len(squads) == n_squads
     for squad in squads:
@@ -150,20 +142,18 @@ def test_load_squads(ring_mode, n_squads):
 
 
 @pytest.mark.parametrize(
-    'ring_mode', ('VMX', 'DIAD')
+    'lattice', (pytest.lazy_fixture('diad_ring'), pytest.lazy_fixture('vmx_ring'))
 )
-def test_cell(ring_mode):
-    lattice = get_lattice(ring_mode)
+def test_cell(lattice):
     # there are squads in every cell
     sq = lattice.get_elements('SQUAD')
     assert sq[0].cell == 1
     assert sq[-1].cell == 24
 
 
-@pytest.mark.parametrize('ring_mode', ('VMX', 'DIAD'))
+@pytest.mark.parametrize('lattice', (pytest.lazy_fixture('diad_ring'), pytest.lazy_fixture('vmx_ring')))
 @pytest.mark.parametrize('field', ('x', 'y'))
-def test_bpm_unitconv(ring_mode, field):
-    lattice = get_lattice(ring_mode)
+def test_bpm_unitconv(lattice, field):
     bpm = lattice.get_elements('BPM')[0]
     uc = bpm._uc[field]
 
@@ -171,11 +161,10 @@ def test_bpm_unitconv(ring_mode, field):
     assert uc.phys_to_eng(2) == 2000
 
 
-def test_quad_unitconv():
+def test_quad_unitconv(vmx_ring):
     # From MML: hw2physics('Q1D', 'Monitor', 70, [1])
-    lattice = get_lattice('VMX')
-    q1d = lattice.get_elements('Q1D')
-    lattice._energy = 3000
+    q1d = vmx_ring.get_elements('Q1D')
+    vmx_ring._energy = 3000
     for q in q1d:
         uc = q._uc['b1']
         numpy.testing.assert_allclose(uc.eng_to_phys(70), -0.691334652255027)
