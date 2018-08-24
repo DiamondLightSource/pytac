@@ -47,7 +47,7 @@ class Lattice(object):
             model (Model): instance of Model.
             model_type (str): EpicsModel or ATModel.
         """
-        self.models[model_type] = model
+        self._models[model_type] = model
 
     def get_fields(self):
         """Get the fields defined on the lattice.
