@@ -3,6 +3,7 @@
 """
 import numpy
 import pytac
+from pytac.model import ModelManager
 from pytac.exceptions import LatticeException, DeviceException, FieldException, HandleException
 
 
@@ -37,8 +38,7 @@ class Lattice(object):
         self.name = name
         self._lattice = []
         self._energy = energy
-        self._models = {}
-        self._uc = {}
+        self._model_manager = ModelManager()
 
     def set_model(self, model, model_type):
         """Add a model to the lattice.
@@ -47,7 +47,7 @@ class Lattice(object):
             model (Model): instance of Model.
             model_type (str): EpicsModel or ATModel.
         """
-        self._models[model_type] = model
+        self._model_manager.set_model(model, model_type)
 
     def get_fields(self):
         """Get the fields defined on the lattice.
@@ -57,10 +57,7 @@ class Lattice(object):
         Returns:
             set: A sequence of all the fields defined on the lattice.
         """
-        fields = set()
-        for model in self._models:
-            fields.update(self._models[model].get_fields())
-        return fields
+        return self._model_manager.get_fields()
 
     def add_device(self, field, device, uc):
         """Add device and unit conversion objects to a given field.
@@ -76,8 +73,7 @@ class Lattice(object):
         Raises:
             KeyError: if no DeviceModel is set.
         """
-        self._models[pytac.LIVE].add_device(field, device)
-        self._uc[field] = uc
+        self._model_manager.add_device(field, device, uc)
 
     def get_device(self, field):
         """Get the device for the given field.
@@ -93,7 +89,7 @@ class Lattice(object):
         Raises:
             KeyError: if no DeviceModel is set.
         """
-        return self._models[pytac.LIVE].get_device(field)
+        return self._model_manager.get_device(field)
 
     def get_unitconv(self, field):
         """Get the unit conversion option for the specified field.
@@ -107,7 +103,7 @@ class Lattice(object):
         Raises:
             KeyError: if no unit conversion object is present.
         """
-        return self._uc[field]
+        return self._model_manager.get_unitconv(field)
 
     def get_value(self, field, handle=pytac.RB, units=pytac.ENG,
                   model=pytac.LIVE):
@@ -126,16 +122,7 @@ class Lattice(object):
             DeviceException: if there is no device on the given field.
             FieldException: if the lattice does not have the specified field.
         """
-        try:
-            model = self._models[model]
-            value = model.get_value(field, handle)
-            return self._uc[field].convert(value, origin=model.units,
-                                           target=units)
-        except KeyError:
-            raise DeviceException('No model type {} on lattice {}'.format(model,
-                                                                          self))
-        except FieldException:
-            raise FieldException('No field {} on lattice {}'.format(field, self))
+        return self._model_manager.get_value(field, handle, units, model)
 
     def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
                   model=pytac.LIVE):
@@ -154,20 +141,7 @@ class Lattice(object):
             DeviceException: if arguments are incorrect.
             FieldException: if the lattice does not have the specified field.
         """
-        if handle != pytac.SP:
-            raise HandleException('Must write using {}'.format(pytac.SP))
-        try:
-            model = self._models[model]
-        except KeyError:
-            raise DeviceException('No model type {} on lattice {}'.format(model,
-                                                                          self))
-        try:
-            value = self._uc[field].convert(value, origin=units, target=model.units)
-            model.set_value(field, value)
-        except KeyError:
-            raise FieldException('No field {} on lattice {}'.format(model, self))
-        except FieldException:
-            raise FieldException('No field {} on lattice {}'.format(field, self))
+        self._model_manager.set_value(field, value, handle, units, model)
 
     def get_energy(self):
         """Function to get the total energy of the lattice.
