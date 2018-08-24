@@ -46,8 +46,6 @@ class Element(object):
         self.index = index
         self.cell = cell
         self.families = set()
-        self._uc = {}
-        self._models = {}
 
     def __str__(self):
         """Auxiliary function to print out an element.
@@ -70,7 +68,7 @@ class Element(object):
             model (Model): instance of Model.
             model_type (str): pytac.LIVE or pytac.SIM.
         """
-        self._models[model_type] = model
+        self._model_manager.set_model(model, model_type)
 
     def get_fields(self):
         """Get the fields defined on an element.
@@ -80,10 +78,7 @@ class Element(object):
         Returns:
             set: A sequence of all the fields defined on an element.
         """
-        fields = set()
-        for model in self._models:
-            fields.update(self._models[model].get_fields())
-        return fields
+        return self._model_manager.get_fields()
 
     def add_device(self, field, device, uc):
         """Add device and unit conversion objects to a given field.
@@ -99,8 +94,7 @@ class Element(object):
         Raises:
             KeyError: if no DeviceModel is set.
         """
-        self._models[pytac.LIVE].add_device(field, device)
-        self._uc[field] = uc
+        self._model_manager.add_device(field, device, uc)
 
     def get_device(self, field):
         """Get the device for the given field.
@@ -116,7 +110,7 @@ class Element(object):
         Raises:
             KeyError: if no DeviceModel is set.
         """
-        return self._models[pytac.LIVE].get_device(field)
+        return self._model_manager.get_device(field)
 
     def get_unitconv(self, field):
         """Get the unit conversion option for the specified field.
@@ -130,7 +124,7 @@ class Element(object):
         Raises:
             KeyError: if no unit conversion object is present.
         """
-        return self._uc[field]
+        return self._model_manager.get_unitconv(field)
 
     def add_to_family(self, family):
         """Add the element to the specified family.
@@ -162,16 +156,7 @@ class Element(object):
             DeviceException: if there is no device on the given field.
             FieldException: if the element does not have the specified field.
         """
-        try:
-            model = self._models[model]
-            value = model.get_value(field, handle)
-            return self._uc[field].convert(value, origin=model.units,
-                                           target=units)
-        except KeyError:
-            raise DeviceException('No model type {} on element {}'.format(model,
-                                                                          self))
-        except FieldException:
-            raise FieldException('No field {} on element {}'.format(field, self))
+        return self._model_manager.get_value(field, handle, units, model)
 
     def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
                   model=pytac.LIVE):
@@ -190,17 +175,4 @@ class Element(object):
             DeviceException: if arguments are incorrect.
             FieldException: if the element does not have the specified field.
         """
-        if handle != pytac.SP:
-            raise HandleException('Must write using {}'.format(pytac.SP))
-        try:
-            model = self._models[model]
-        except KeyError:
-            raise DeviceException('No model type {} on element {}'.format(model,
-                                                                          self))
-        try:
-            value = self._uc[field].convert(value, origin=units, target=model.units)
-            model.set_value(field, value)
-        except KeyError:
-            raise FieldException('No field {} on element {}'.format(model, self))
-        except FieldException:
-            raise FieldException('No field {} on element {}'.format(field, self))
+        self._model_manager.set_value(field, value, handle, units, model)
