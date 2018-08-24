@@ -3,6 +3,59 @@ import pytac
 from pytac.exceptions import FieldException
 
 
+class ModelManager(object):
+    def __init__(self):
+        self._models = {}
+        self._uc = {}
+
+    def set_model(self, model, model_type):
+        self._models[model_type] = model
+
+    def get_fields(self):
+        fields = {}
+        for model in self._models:
+            fields[model] = self._models[model].get_fields()
+        return fields
+
+    def add_device(self, field, device, uc):
+        self._models[pytac.LIVE].add_device(field, device)
+        self._uc[field] = uc
+
+    def get_device(self, field):
+        return self._models[pytac.LIVE].get_device(field)
+
+    def get_unitconv(self, field):
+        return self._uc[field]
+
+    def get_value(self, field, handle, units, model):
+        try:
+            model = self._models[model]
+            value = model.get_value(field, handle)
+            return self._uc[field].convert(value, origin=model.units,
+                                           target=units)
+        except KeyError:
+            raise DeviceException('No model type {} on element {}'.format(model,
+                                                                          self))
+        except FieldException:
+            raise FieldException('No field {} on element {}'.format(field, self))
+
+    def set_value(self, field, value, handle, units, model):
+        if handle != pytac.SP:
+            raise HandleException('Must write using {}'.format(pytac.SP))
+        try:
+            model = self._models[model]
+        except KeyError:
+            raise DeviceException('No model type {} on element {}'.format(model,
+                                                                          self))
+        try:
+            value = self._uc[field].convert(value, origin=units, target=model.units)
+            model.set_value(field, value)
+        except KeyError:
+            raise FieldException('No field {} on element {}'.format(model, self))
+        except FieldException:
+            raise FieldException('No field {} on element {}'.format(field, self))
+
+
 class Model(object):
     """Abstract base classes for element models.
 
