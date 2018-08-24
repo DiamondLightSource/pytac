@@ -14,13 +14,6 @@ DUMMY_ARRAY = [1]
 
 
 @pytest.fixture
-def mock_cs():
-    cs = mock.MagicMock()
-    cs.get.return_value = DUMMY_ARRAY
-    return cs
-
-
-@pytest.fixture
 def simple_element(identity=1):
     uc = PolyUnitConv([0, 1])
     element = Element(identity, 0, 'BPM', cell=1)
