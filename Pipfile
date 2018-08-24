@@ -12,6 +12,7 @@ mock = "*"
 bpython = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
+pytest-lazy-fixture = "*"
 
 [packages]
 numpy = "*"
