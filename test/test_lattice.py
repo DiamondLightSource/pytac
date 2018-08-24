@@ -11,6 +11,8 @@ from constants import DUMMY_ARRAY, LATTICE_NAME
 def simple_lattice(simple_element):
     lat = Lattice(LATTICE_NAME, 1)
     lat.add_element(simple_element)
+    lat.set_model(DeviceModel(), pytac.LIVE)
+    lat.add_device('x', x_device, unit_uc)
     return lat
 
 
@@ -19,6 +21,11 @@ def test_create_lattice():
     assert(len(lat)) == 0
     assert lat.get_energy() == 1
     assert lat.name == LATTICE_NAME
+
+#new tests
+def test_device_raises_KeyError_if_device_not_present(lat)
+    with pytest.rasises(KeyError):
+        lat.get_device('not-a-device')
 
 
 def test_get_element_devices(simple_lattice):
