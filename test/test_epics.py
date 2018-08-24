@@ -1,15 +1,10 @@
-import copy
 import mock
 import numpy
 import pytest
 import pytac
-from pytac.epics import EpicsElement, EpicsLattice
+from pytac.epics import EpicsDevice, EpicsElement, EpicsLattice
 from pytac.model import DeviceModel
-from pytac.units import PolyUnitConv
-from constants import RB_PV, SP_PV
-
-
-DUMMY_ARRAY = [1]
+from constants import DUMMY_ARRAY, RB_PV, SP_PV
 
 
 @pytest.fixture
@@ -20,32 +15,14 @@ def mock_cs():
 
 
 @pytest.fixture
-def mock_device():
-
-    def get_pv_name(handle):
-        return SP_PV if handle == pytac.SP else RB_PV
-
-    device = mock.MagicMock()
-    device.get_value.return_value = 1
-    device.get_pv_name.side_effect = get_pv_name
-    return device
-
-
-@pytest.fixture
-def simple_epics_element(mock_device):
-    uc = PolyUnitConv([0, 1])
+def simple_epics_element(mock_cs, unit_uc):
     element = EpicsElement(1, 0, 'BPM', cell=1)
-    x_device = mock_device
-    x_device.name = 'x_device'
-    print(x_device.get_pv_name)
-    y_device = copy.copy(x_device)
-    y_device.name = 'y_device'
+    x_device = EpicsDevice('x_device', mock_cs, True, RB_PV, SP_PV)
+    y_device = EpicsDevice('y_device', mock_cs, True, SP_PV, RB_PV)
     element.add_to_family('family')
-
     element.set_model(DeviceModel(), pytac.LIVE)
-    element.add_device('x', x_device, uc)
-    element.add_device('y', y_device, uc)
-
+    element.add_device('x', x_device, unit_uc)
+    element.add_device('y', y_device, unit_uc)
     return element
 
 
@@ -77,3 +54,21 @@ def test_get_values_returns_numpy_array_if_requested(simple_epics_lattice, dtype
     values = simple_epics_lattice.get_values('family', 'x', pytac.RB, dtype=dtype)
     numpy.testing.assert_equal(values, expected)
     simple_epics_lattice._cs.get.assert_called_with([RB_PV])
+
+
+@pytest.mark.parametrize('pv_type', ['readback', 'setpoint'])
+def test_get_pv_name(pv_type, simple_epics_element):
+    assert isinstance(simple_epics_element.get_pv_name('x', pv_type), str)
+    assert isinstance(simple_epics_element.get_pv_name('y', pv_type), str)
+
+
+def test_get_value_uses_cs_if_model_live(simple_epics_element):
+    simple_epics_element.get_value('x', handle=pytac.SP, model=pytac.LIVE)
+    simple_epics_element.get_device('x')._cs.get.assert_called_with(SP_PV)
+    simple_epics_element.get_value('x', handle=pytac.RB, model=pytac.LIVE)
+    simple_epics_element.get_device('x')._cs.get.assert_called_with(RB_PV)
+
+
+def test_get_value_raises_HandleExceptions(simple_epics_element):
+    with pytest.raises(pytac.exceptions.HandleException):
+        simple_epics_element.get_value('y', 'unknown_handle')

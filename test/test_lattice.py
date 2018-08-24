@@ -1,51 +1,24 @@
-import mock
 import numpy
 import pytest
 import pytac
 from pytac.element import Element
 from pytac.lattice import Lattice
-from pytac.model import DeviceModel
-from pytac.units import PolyUnitConv
 
-from constants import LATTICE, SP_PV
-
-
-DUMMY_ARRAY = [1]
-
-
-@pytest.fixture
-def simple_element():
-    # A unit conversion object that returns the same as the input.
-    uc = PolyUnitConv([1, 0])
-    element = Element('element1', 0, 'BPM', cell=1)
-    # Create mock devices and attach them to the element
-    x_device = mock.MagicMock()
-    x_device.name = 'x_device'
-    x_device.get_value.return_value = 1
-    y_device = mock.MagicMock()
-    y_device.name = 'y_device'
-    y_device.get_pv_name.return_value = SP_PV
-    element.add_to_family('family')
-
-    element.set_model(DeviceModel(), pytac.LIVE)
-    element.add_device('x', x_device, uc)
-    element.add_device('y', y_device, uc)
-
-    return element
+from constants import DUMMY_ARRAY, LATTICE_NAME
 
 
 @pytest.fixture
 def simple_lattice(simple_element):
-    lat = Lattice(LATTICE, 1)
+    lat = Lattice(LATTICE_NAME, 1)
     lat.add_element(simple_element)
     return lat
 
 
 def test_create_lattice():
-    lat = Lattice(LATTICE, 1)
+    lat = Lattice(LATTICE_NAME, 1)
     assert(len(lat)) == 0
     assert lat.get_energy() == 1
-    assert lat.name == LATTICE
+    assert lat.name == LATTICE_NAME
 
 
 def test_get_devices(simple_lattice):
@@ -134,7 +107,7 @@ def test_s_position(simple_lattice):
 
 
 def test_get_s_throws_exception_if_element_not_in_lattice():
-    lat = Lattice(LATTICE, 1)
+    lat = Lattice(LATTICE_NAME, 1)
     element = Element(1, 1.0, 'Quad')
     with pytest.raises(pytac.exceptions.LatticeException):
         lat.get_s(element)
