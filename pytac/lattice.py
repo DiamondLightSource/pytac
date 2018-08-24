@@ -48,6 +48,39 @@ class Lattice(object):
         """
         self.models[model_type] = model
 
+    def add_device(self, field, device, uc):
+        """Add device and unit conversion objects to a given field.
+
+        A DeviceModel must be set before calling this method.
+
+        Args:
+            field (str): The key to store the unit conversion and device
+                          objects.
+            device (Device): The device object used for this field.
+            uc (UnitConv): The unit conversion object used for this field.
+
+        Raises:
+            KeyError: if no DeviceModel is set.
+        """
+        self._models[pytac.LIVE].add_device(field, device)
+        self._uc[field] = uc
+
+    def get_device(self, field):
+        """Get the device for the given field.
+
+        A DeviceModel must be set before calling this method.
+
+        Args:
+            field (str): The lookup key to find the device on an element.
+
+        Returns:
+            Device: The device on the given field.
+
+        Raises:
+            KeyError: if no DeviceModel is set.
+        """
+        return self._models[pytac.LIVE].get_device(field)
+
     def get_energy(self):
         """Function to get the total energy of the lattice.
 
