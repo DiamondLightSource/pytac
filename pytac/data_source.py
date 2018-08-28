@@ -1,10 +1,10 @@
-"""Module containing pytac model classes."""
+"""Module containing pytac data source classes."""
 import pytac
 from pytac.exceptions import FieldException, DeviceException, HandleException
 
 
 class DataSource(object):
-    """Abstract base classes for element models.
+    """Abstract base classes for element data_sources.
 
     Typically an instance would represent hardware via a control system,
     or a simulation.
@@ -17,7 +17,7 @@ class DataSource(object):
     **Methods:**
     """
     def get_fields(self):
-        """Get all the fields represented by this model.
+        """Get all the fields represented by this data_source.
 
         Returns:
             iterable: all fields.
@@ -50,59 +50,57 @@ class DataSource(object):
 
 class DataSourceManager(object):
     def __init__(self):
-        self._models = {}
+        self._data_sources = {}
         self._uc = {}
 
-    def set_model(self, model, model_type):
-        self._models[model_type] = model
+    def set_data_source(self, data_source, data_source_type):
+        self._data_sources[data_source_type] = data_source
 
     def get_fields(self):
         fields = {}
-        for model in self._models:
-            fields[model] = self._models[model].get_fields()
+        for data_source in self._data_sources:
+            fields[data_source] = self._data_sources[data_source].get_fields()
         return fields
 
     def add_device(self, field, device, uc):
-        self._models[pytac.LIVE].add_device(field, device)
+        self._data_sources[pytac.LIVE].add_device(field, device)
         self._uc[field] = uc
 
     def get_device(self, field):
-        return self._models[pytac.LIVE].get_device(field)
+        return self._data_sources[pytac.LIVE].get_device(field)
 
     def get_unitconv(self, field):
         return self._uc[field]
 
-    def get_value(self, field, handle, units, model):
+    def get_value(self, field, handle, units, data_source):
         try:
-            model = self._models[model]
-            value = model.get_value(field, handle)
-            return self._uc[field].convert(value, origin=model.units,
+            data_source = self._data_sources[data_source]
+            value = data_source.get_value(field, handle)
+            return self._uc[field].convert(value, origin=data_source.units,
                                            target=units)
         except KeyError:
-            raise DeviceException('No model type {} on element {}'.format(model,
-                                                                          self))
+            raise DeviceException('No data_source type {} on element {}'.format(data_source, self))
         except FieldException:
             raise FieldException('No field {} on element {}'.format(field, self))
 
-    def set_value(self, field, value, handle, units, model):
+    def set_value(self, field, value, handle, units, data_source):
         if handle != pytac.SP:
             raise HandleException('Must write using {}'.format(pytac.SP))
         try:
-            model = self._models[model]
+            data_source = self._data_sources[data_source]
         except KeyError:
-            raise DeviceException('No model type {} on element {}'.format(model,
-                                                                          self))
+            raise DeviceException('No data_source type {} on element {}'.format(data_source, self))
         try:
-            value = self._uc[field].convert(value, origin=units, target=model.units)
-            model.set_value(field, value)
+            value = self._uc[field].convert(value, origin=units, target=data_source.units)
+            data_source.set_value(field, value)
         except KeyError:
-            raise FieldException('No field {} on element {}'.format(model, self))
+            raise FieldException('No field {} on element {}'.format(data_source, self))
         except FieldException:
             raise FieldException('No field {} on element {}'.format(field, self))
 
 
 class DeviceDataSource(object):
-    """Model containing control system devices.
+    """Data source containing control system devices.
 
     **Attributes:**
 
@@ -114,7 +112,7 @@ class DeviceDataSource(object):
     """
     def __init__(self):
         """.. The constructor method for the class, called whenever a
-               'DeviceModel' object is constructed.
+               'DeviceDataSource' object is constructed.
 
         **Methods:**
         """
@@ -122,7 +120,7 @@ class DeviceDataSource(object):
         self.units = pytac.ENG
 
     def add_device(self, field, device):
-        """Add device to this model.
+        """Add device to this data_source.
 
         Args:
             field (str): field this device represents.
@@ -131,7 +129,7 @@ class DeviceDataSource(object):
         self._devices[field] = device
 
     def get_device(self, field):
-        """Get device from the model.
+        """Get device from the data_source.
 
         Args:
             field (str): field of the requested device.
@@ -141,16 +139,16 @@ class DeviceDataSource(object):
         return self._devices[field]
 
     def get_fields(self):
-        """Get all the fields from the model.
+        """Get all the fields from the data_source.
 
         Returns:
-            list: list of strings of all the fields of the model.
+            list: list of strings of all the fields of the data_source.
         """
         return self._devices.keys()
 
     def get_value(self, field, handle):
         """Get the value of a readback or setpoint PV for a field from the
-        model.
+        data_source.
 
         Args:
             field (str): field of the requested value.
@@ -169,7 +167,7 @@ class DeviceDataSource(object):
 
     def set_value(self, field, value):
         """Set the value of a readback or setpoint PV for a field from the
-        model.
+        data_source.
 
         Args:
             field (str): field for the requested value.

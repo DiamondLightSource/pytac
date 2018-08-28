@@ -6,7 +6,7 @@ RB = 'readback'
 # Unit systems
 ENG = 'engineering'
 PHYS = 'physics'
-# Model types.
+# Data Source types.
 SIM = 'simulation'
 LIVE = 'live'
 

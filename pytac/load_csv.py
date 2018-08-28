@@ -184,7 +184,7 @@ def load(mode, control_system=None, directory=None):
                 item['name'], length, item['type'], s, index, cell
             )
             e.add_to_family(item['type'])
-            e.set_model(data_source.DeviceDataSource(), pytac.LIVE)
+            e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)
             s += length
             index += 1

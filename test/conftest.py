@@ -16,10 +16,10 @@ x_device.get_value.return_value = DUMMY_VALUE_1
 y_device = mock.MagicMock()
 y_device.name = 'y_device'
 y_device.get_pv_name.return_value = SP_PV
-# Add mock sim model
-mock_sim_model = mock.MagicMock()
-mock_sim_model.get_value.return_value = DUMMY_VALUE_2
-mock_sim_model.units = pytac.PHYS
+# Add mock sim data_source
+mock_sim_data_source = mock.MagicMock()
+mock_sim_data_source.get_value.return_value = DUMMY_VALUE_2
+mock_sim_data_source.units = pytac.PHYS
 
 
 @pytest.fixture
@@ -37,10 +37,10 @@ def simple_element(unit_uc):
     # A unit conversion object that returns the same as the input.
     element = Element('element1', 0, 'BPM', cell=1)
     element.add_to_family('family')
-    element.set_model(DeviceDataSource(), pytac.LIVE)
+    element.set_data_source(DeviceDataSource(), pytac.LIVE)
     element.add_device('x', x_device, unit_uc)
     element.add_device('y', y_device, unit_uc)
-    element.set_model(mock_sim_model, pytac.SIM)
+    element.set_data_source(mock_sim_data_source, pytac.SIM)
     return element
 
 
@@ -48,10 +48,10 @@ def simple_element(unit_uc):
 def simple_lattice(simple_element):
     lat = Lattice(LATTICE_NAME, 1)
     lat.add_element(simple_element)
-    lat.set_model(DeviceDataSource(), pytac.LIVE)
+    lat.set_data_source(DeviceDataSource(), pytac.LIVE)
     lat.add_device('x', x_device, unit_uc)
     lat.add_device('y', y_device, unit_uc)
-    lat.set_model(mock_sim_model, pytac.SIM)
+    lat.set_data_source(mock_sim_data_source, pytac.SIM)
     return lat
 
 

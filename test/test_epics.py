@@ -20,7 +20,7 @@ def simple_epics_element(mock_cs, unit_uc):
     x_device = EpicsDevice('x_device', mock_cs, True, RB_PV, SP_PV)
     y_device = EpicsDevice('y_device', mock_cs, True, SP_PV, RB_PV)
     element.add_to_family('family')
-    element.set_model(DeviceDataSource(), pytac.LIVE)
+    element.set_data_source(DeviceDataSource(), pytac.LIVE)
     element.add_device('x', x_device, unit_uc)
     element.add_device('y', y_device, unit_uc)
     return element
@@ -62,10 +62,10 @@ def test_get_pv_name(pv_type, simple_epics_element):
     assert isinstance(simple_epics_element.get_pv_name('y', pv_type), str)
 
 
-def test_get_value_uses_cs_if_model_live(simple_epics_element):
-    simple_epics_element.get_value('x', handle=pytac.SP, model=pytac.LIVE)
+def test_get_value_uses_cs_if_data_source_live(simple_epics_element):
+    simple_epics_element.get_value('x', handle=pytac.SP, data_source=pytac.LIVE)
     simple_epics_element.get_device('x')._cs.get.assert_called_with(SP_PV)
-    simple_epics_element.get_value('x', handle=pytac.RB, model=pytac.LIVE)
+    simple_epics_element.get_value('x', handle=pytac.RB, data_source=pytac.LIVE)
     simple_epics_element.get_device('x')._cs.get.assert_called_with(RB_PV)
 
 

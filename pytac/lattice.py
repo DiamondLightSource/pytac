@@ -22,8 +22,7 @@ class Lattice(object):
            _lattice (list): The list of all the element objects in the lattice.
            _cs (ControlSystem): The control system used to store the values on
                                  a PV.
-           _energy (int): The total energy of the lattice.
-           _model (Model): A pytac model object associated with the lattice.
+           _data_source_manager
     """
     def __init__(self, name, energy):
         """.. The constructor method for the class, called whenever a 'Lattice'
@@ -40,19 +39,19 @@ class Lattice(object):
         self._energy = energy
         self._data_source_manager = DataSourceManager()
 
-    def set_model(self, model, model_type):
-        """Add a model to the lattice.
+    def set_data_source(self, data_source, data_source_type):
+        """Add a data_source to the lattice.
 
         Args:
-            model (Model): instance of Model.
-            model_type (str): EpicsModel or ATModel.
+            data_source (DataSource): instance of DataSource.
+            data_source_type (str): EpicsDataSource or ATDataSource.
         """
-        self._data_source_manager.set_model(model, model_type)
+        self._data_source_manager.set_data_source(data_source, data_source_type)
 
     def get_fields(self):
         """Get the fields defined on the lattice.
 
-        Includes all fields defined by all models.
+        Includes all fields defined by all data_sources.
 
         Returns:
             set: A sequence of all the fields defined on the lattice.
@@ -62,7 +61,7 @@ class Lattice(object):
     def add_device(self, field, device, uc):
         """Add device and unit conversion objects to a given field.
 
-        A DeviceModel must be set before calling this method.
+        A DeviceDataSource must be set before calling this method.
 
         Args:
             field (str): The key to store the unit conversion and device
@@ -71,14 +70,14 @@ class Lattice(object):
             uc (UnitConv): The unit conversion object used for this field.
 
         Raises:
-            KeyError: if no DeviceModel is set.
+            KeyError: if no DeviceDataSource is set.
         """
         self._data_source_manager.add_device(field, device, uc)
 
     def get_device(self, field):
         """Get the device for the given field.
 
-        A DeviceModel must be set before calling this method.
+        A DeviceDataSource must be set before calling this method.
 
         Args:
             field (str): The lookup key to find the device on the lattice.
@@ -87,7 +86,7 @@ class Lattice(object):
             Device: The device on the given field.
 
         Raises:
-            KeyError: if no DeviceModel is set.
+            KeyError: if no DeviceDataSource is set.
         """
         return self._data_source_manager.get_device(field)
 
@@ -106,14 +105,14 @@ class Lattice(object):
         return self._data_source_manager.get_unitconv(field)
 
     def get_value(self, field, handle=pytac.RB, units=pytac.ENG,
-                  model=pytac.LIVE):
+                  data_source=pytac.LIVE):
         """Get the value for a field on the lattice.
 
         Args:
             field (str): The requested field.
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS returned.
-            model (str): pytac.LIVE or pytac.SIM.
+            data_source (str): pytac.LIVE or pytac.SIM.
 
         Returns:
             float: The value of the requested field
@@ -122,10 +121,10 @@ class Lattice(object):
             DeviceException: if there is no device on the given field.
             FieldException: if the lattice does not have the specified field.
         """
-        return self._data_source_manager.get_value(field, handle, units, model)
+        return self._data_source_manager.get_value(field, handle, units, data_source)
 
     def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
-                  model=pytac.LIVE):
+                  data_source=pytac.LIVE):
         """Set the value for a field.
 
         This value can be set on the machine or the simulation.
@@ -135,13 +134,13 @@ class Lattice(object):
             value (float): The value to set.
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
-            model (str): pytac.LIVE or pytac.SIM.
+            data_source (str): pytac.LIVE or pytac.SIM.
 
         Raises:
             DeviceException: if arguments are incorrect.
             FieldException: if the lattice does not have the specified field.
         """
-        self._data_source_manager.set_value(field, value, handle, units, model)
+        self._data_source_manager.set_value(field, value, handle, units, data_source)
 
     def get_energy(self):
         """Function to get the total energy of the lattice.
