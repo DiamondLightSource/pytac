@@ -52,3 +52,13 @@ def simple_lattice(simple_element):
     lat.add_device('y', y_device, unit_uc)
     lat.set_model(mock_sim_model, pytac.SIM)
     return lat
+
+
+@pytest.fixture(scope="session")
+def vmx_ring():
+    return pytac.load_csv.load('VMX', mock.MagicMock)
+
+
+@pytest.fixture(scope="session")
+def diad_ring():
+    return pytac.load_csv.load('DIAD', mock.MagicMock)

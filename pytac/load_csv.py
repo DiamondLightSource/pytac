@@ -161,8 +161,8 @@ def load(mode, control_system=None, directory=None):
         if control_system is None:
             # Don't import epics unless we need it to avoid unnecessary
             # installation of cothread
-            from pytac import cothread
-            control_system = cothread.CothreadControlSystem()
+            from pytac import cothread_cs
+            control_system = cothread_cs.CothreadControlSystem()
     except ImportError:
         print(
             ('To load a lattice using the default control system, please'
