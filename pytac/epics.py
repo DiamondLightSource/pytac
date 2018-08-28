@@ -80,7 +80,7 @@ class EpicsElement(Element):
             DeviceException: if there is no device for this field.
         """
         try:
-            return self._models[pytac.LIVE].get_device(field).get_pv_name(handle)
+            return self._model_manager._models[pytac.LIVE].get_device(field).get_pv_name(handle)
         except KeyError:
             raise DeviceException(
                 '{} has no device for field {}'.format(self, field)
