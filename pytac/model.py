@@ -1,6 +1,6 @@
 """Module containing pytac model classes."""
 import pytac
-from pytac.exceptions import FieldException
+from pytac.exceptions import FieldException, DeviceException, HandleException
 
 
 class ModelManager(object):
