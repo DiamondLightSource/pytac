@@ -36,13 +36,13 @@ def test_get_unitconv_raises_KeyError_if_device_not_present(simple_element):
 def test_get_value_uses_uc_if_necessary_for_cs_call(simple_element, double_uc):
     simple_element._model_manager._uc['x'] = double_uc
     assert simple_element.get_value('x', handle=pytac.SP, units=pytac.PHYS,
-                                  model=pytac.LIVE) == (DUMMY_VALUE_1 * 2)
+                                    model=pytac.LIVE) == (DUMMY_VALUE_1 * 2)
 
 
 def test_get_value_uses_uc_if_necessary_for_sim_call(simple_element, double_uc):
     simple_element._model_manager._uc['x'] = double_uc
     assert simple_element.get_value('x', handle=pytac.SP, units=pytac.ENG,
-                                  model=pytac.SIM) == (DUMMY_VALUE_2 / 2)
+                                    model=pytac.SIM) == (DUMMY_VALUE_2 / 2)
     simple_element._model_manager._models[pytac.SIM].get_value.assert_called_with('x', pytac.SP)
 
 

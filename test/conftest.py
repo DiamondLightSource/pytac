@@ -21,6 +21,7 @@ mock_sim_model = mock.MagicMock()
 mock_sim_model.get_value.return_value = DUMMY_VALUE_2
 mock_sim_model.units = pytac.PHYS
 
+
 @pytest.fixture
 def unit_uc():
     return PolyUnitConv([1, 0])
