@@ -3,7 +3,7 @@ import pytest
 import pytac
 from pytac.element import Element
 from pytac.lattice import Lattice
-from pytac.model import DeviceModel
+from pytac.data_source import DeviceDataSource
 from pytac.units import PolyUnitConv
 
 from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, SP_PV, LATTICE_NAME
@@ -37,7 +37,7 @@ def simple_element(unit_uc):
     # A unit conversion object that returns the same as the input.
     element = Element('element1', 0, 'BPM', cell=1)
     element.add_to_family('family')
-    element.set_model(DeviceModel(), pytac.LIVE)
+    element.set_model(DeviceDataSource(), pytac.LIVE)
     element.add_device('x', x_device, unit_uc)
     element.add_device('y', y_device, unit_uc)
     element.set_model(mock_sim_model, pytac.SIM)
@@ -48,7 +48,7 @@ def simple_element(unit_uc):
 def simple_lattice(simple_element):
     lat = Lattice(LATTICE_NAME, 1)
     lat.add_element(simple_element)
-    lat.set_model(DeviceModel(), pytac.LIVE)
+    lat.set_model(DeviceDataSource(), pytac.LIVE)
     lat.add_device('x', x_device, unit_uc)
     lat.add_device('y', y_device, unit_uc)
     lat.set_model(mock_sim_model, pytac.SIM)

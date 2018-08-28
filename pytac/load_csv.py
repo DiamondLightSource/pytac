@@ -15,7 +15,7 @@ import sys
 import os
 import csv
 import pytac
-from pytac import epics, model, units, utils
+from pytac import epics, data_source, units, utils
 import collections
 
 # Create a default unit conversion object that returns the input unchanged.
@@ -139,7 +139,7 @@ def load_unitconv(directory, mode, lattice):
                  ._post_eng_to_phys) = get_div_rigidity(lattice.get_energy())
                 (unitconvs[int(item['uc_id'])]
                  ._pre_phys_to_eng) = get_mult_rigidity(lattice.get_energy())
-            element._model_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
+            element._data_source_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
 
 
 def load(mode, control_system=None, directory=None):
@@ -184,7 +184,7 @@ def load(mode, control_system=None, directory=None):
                 item['name'], length, item['type'], s, index, cell
             )
             e.add_to_family(item['type'])
-            e.set_model(model.DeviceModel(), pytac.LIVE)
+            e.set_model(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)
             s += length
             index += 1

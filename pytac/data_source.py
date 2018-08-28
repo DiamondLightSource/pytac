@@ -3,7 +3,52 @@ import pytac
 from pytac.exceptions import FieldException, DeviceException, HandleException
 
 
-class ModelManager(object):
+class DataSource(object):
+    """Abstract base classes for element models.
+
+    Typically an instance would represent hardware via a control system,
+    or a simulation.
+
+    **Attributes:**
+
+    Attributes:
+        units (str): pytac.PHYS or pytac.ENG.
+
+    **Methods:**
+    """
+    def get_fields(self):
+        """Get all the fields represented by this model.
+
+        Returns:
+            iterable: all fields.
+        """
+        raise NotImplementedError()
+
+    def get_value(self, field, handle):
+        """Get a value for a field.
+
+        Args:
+            field (str): field of the requested value.
+            handle (str): pytac.RB or pytac.SP
+
+        Returns:
+            float: value for specified field and handle.
+        """
+        raise NotImplementedError()
+
+    def set_value(self, field, value):
+        """Set a value for a field.
+
+        This is always set to pytac.SP, never pytac.RB.
+
+        Args:
+            field (str): field to set.
+            value (str): value to set.
+        """
+        raise NotImplementedError()
+
+
+class DataSourceManager(object):
     def __init__(self):
         self._models = {}
         self._uc = {}
@@ -56,52 +101,7 @@ class ModelManager(object):
             raise FieldException('No field {} on element {}'.format(field, self))
 
 
-class Model(object):
-    """Abstract base classes for element models.
-
-    Typically an instance would represent hardware via a control system,
-    or a simulation.
-
-    **Attributes:**
-
-    Attributes:
-        units (str): pytac.PHYS or pytac.ENG.
-
-    **Methods:**
-    """
-    def get_fields(self):
-        """Get all the fields represented by this model.
-
-        Returns:
-            iterable: all fields.
-        """
-        raise NotImplementedError()
-
-    def get_value(self, field, handle):
-        """Get a value for a field.
-
-        Args:
-            field (str): field of the requested value.
-            handle (str): pytac.RB or pytac.SP
-
-        Returns:
-            float: value for specified field and handle.
-        """
-        raise NotImplementedError()
-
-    def set_value(self, field, value):
-        """Set a value for a field.
-
-        This is always set to pytac.SP, never pytac.RB.
-
-        Args:
-            field (str): field to set.
-            value (str): value to set.
-        """
-        raise NotImplementedError()
-
-
-class DeviceModel(object):
+class DeviceDataSource(object):
     """Model containing control system devices.
 
     **Attributes:**

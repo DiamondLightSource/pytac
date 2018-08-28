@@ -155,7 +155,7 @@ def test_cell(lattice):
 @pytest.mark.parametrize('field', ('x', 'y'))
 def test_bpm_unitconv(lattice, field):
     bpm = lattice.get_elements('BPM')[0]
-    uc = bpm._model_manager._uc[field]
+    uc = bpm._data_source_manager._uc[field]
 
     assert uc.eng_to_phys(1) == 0.001
     assert uc.phys_to_eng(2) == 2000
@@ -166,7 +166,7 @@ def test_quad_unitconv(vmx_ring):
     q1d = vmx_ring.get_elements('Q1D')
     vmx_ring._energy = 3000
     for q in q1d:
-        uc = q._model_manager._uc['b1']
+        uc = q._data_source_manager._uc['b1']
         numpy.testing.assert_allclose(uc.eng_to_phys(70), -0.691334652255027)
         numpy.testing.assert_allclose(uc.phys_to_eng(-0.691334652255027), 70)
 

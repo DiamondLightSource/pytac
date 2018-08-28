@@ -3,7 +3,7 @@ import numpy
 import pytest
 import pytac
 from pytac.epics import EpicsDevice, EpicsElement, EpicsLattice
-from pytac.model import DeviceModel
+from pytac.data_source import DeviceDataSource
 from constants import DUMMY_ARRAY, RB_PV, SP_PV
 
 
@@ -20,7 +20,7 @@ def simple_epics_element(mock_cs, unit_uc):
     x_device = EpicsDevice('x_device', mock_cs, True, RB_PV, SP_PV)
     y_device = EpicsDevice('y_device', mock_cs, True, SP_PV, RB_PV)
     element.add_to_family('family')
-    element.set_model(DeviceModel(), pytac.LIVE)
+    element.set_model(DeviceDataSource(), pytac.LIVE)
     element.add_device('x', x_device, unit_uc)
     element.add_device('y', y_device, unit_uc)
     return element
