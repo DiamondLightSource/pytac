@@ -7,15 +7,6 @@ from pytac.lattice import Lattice
 from constants import DUMMY_ARRAY, LATTICE_NAME
 
 
-@pytest.fixture
-def simple_lattice(simple_element):
-    lat = Lattice(LATTICE_NAME, 1)
-    lat.add_element(simple_element)
-    lat.set_model(DeviceModel(), pytac.LIVE)
-    lat.add_device('x', x_device, unit_uc)
-    return lat
-
-
 def test_create_lattice():
     lat = Lattice(LATTICE_NAME, 1)
     assert(len(lat)) == 0

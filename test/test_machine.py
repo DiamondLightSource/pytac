@@ -62,7 +62,7 @@ def test_load_bpms(lattice, n_bpms):
         'y_fofb_disabled', 'y_sofb_disabled'
     }
     for bpm in bpms:
-        assert set(bpm.get_fields()) == bpm_fields
+        assert set(bpm.get_fields()[pytac.LIVE]) == bpm_fields
         assert re.match('SR.*BPM.*X', bpm.get_pv_name('x', pytac.RB))
         with pytest.raises(pytac.exceptions.HandleException):
             bpm.get_pv_name('x', pytac.SP)
@@ -90,7 +90,7 @@ def test_load_quadrupoles(lattice, n_quads):
     quads = lattice.get_elements('QUAD')
     assert len(quads) == n_quads
     for quad in quads:
-        assert set(quad.get_fields()) == set(('b1',))
+        assert set(quad.get_fields()[pytac.LIVE]) == set(('b1',))
         device = quad.get_device('b1')
         assert re.match('SR.*Q.*:I', device.rb_pv)
         assert re.match('SR.*Q.*:SETI', device.sp_pv)
@@ -120,10 +120,10 @@ def test_load_correctors(lattice, n_correctors):
     assert len(vcm) == n_correctors
     for element in hcm:
         # each one has b0, h_fofb_disabled and h_sofb_disabled fields.
-        assert {'b0', 'h_sofb_disabled', 'h_fofb_disabled'}.issubset(element.get_fields())
+        assert {'b0', 'h_sofb_disabled', 'h_fofb_disabled'}.issubset(element.get_fields()[pytac.LIVE])
     for element in vcm:
         # each one has a0, v_fofb_disabled and v_sofb_disabled fields.
-        assert {'a0', 'v_sofb_disabled', 'v_fofb_disabled'}.issubset(element.get_fields())
+        assert {'a0', 'v_sofb_disabled', 'v_fofb_disabled'}.issubset(element.get_fields()[pytac.LIVE])
 
 
 @pytest.mark.parametrize(
@@ -135,7 +135,7 @@ def test_load_squads(lattice, n_squads):
     squads = lattice.get_elements('SQUAD')
     assert len(squads) == n_squads
     for squad in squads:
-        assert 'a1' in squad.get_fields()
+        assert 'a1' in squad.get_fields()[pytac.LIVE]
         device = squad.get_device('a1')
         assert re.match('SR.*SQ.*:I', device.rb_pv)
         assert re.match('SR.*SQ.*:SETI', device.sp_pv)
@@ -155,7 +155,7 @@ def test_cell(lattice):
 @pytest.mark.parametrize('field', ('x', 'y'))
 def test_bpm_unitconv(lattice, field):
     bpm = lattice.get_elements('BPM')[0]
-    uc = bpm._uc[field]
+    uc = bpm._model_manager._uc[field]
 
     assert uc.eng_to_phys(1) == 0.001
     assert uc.phys_to_eng(2) == 2000
@@ -166,7 +166,7 @@ def test_quad_unitconv(vmx_ring):
     q1d = vmx_ring.get_elements('Q1D')
     vmx_ring._energy = 3000
     for q in q1d:
-        uc = q._uc['b1']
+        uc = q._model_manager._uc['b1']
         numpy.testing.assert_allclose(uc.eng_to_phys(70), -0.691334652255027)
         numpy.testing.assert_allclose(uc.phys_to_eng(-0.691334652255027), 70)
 
