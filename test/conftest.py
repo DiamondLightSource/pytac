@@ -5,7 +5,6 @@ from pytac.element import Element
 from pytac.lattice import Lattice
 from pytac.data_source import DeviceDataSource
 from pytac.units import PolyUnitConv
-
 from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, SP_PV, LATTICE_NAME
 
 
@@ -16,12 +15,16 @@ def x_device():
     x_device.name = 'x_device'
     x_device.get_value.return_value = DUMMY_VALUE_1
     return x_device
+
+
 @pytest.fixture
 def y_device():
     y_device = mock.MagicMock()
     y_device.name = 'y_device'
     y_device.get_pv_name.return_value = SP_PV
     return y_device
+
+
 # Add mock sim data_source
 @pytest.fixture
 def mock_sim_data_source():
