@@ -10,16 +10,25 @@ from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, SP_PV, LATTICE_NAME
 
 
 # Create mock devices and attach them to the element
-x_device = mock.MagicMock()
-x_device.name = 'x_device'
-x_device.get_value.return_value = DUMMY_VALUE_1
-y_device = mock.MagicMock()
-y_device.name = 'y_device'
-y_device.get_pv_name.return_value = SP_PV
+@pytest.fixture
+def x_device():
+    x_device = mock.MagicMock()
+    x_device.name = 'x_device'
+    x_device.get_value.return_value = DUMMY_VALUE_1
+    return x_device
+@pytest.fixture
+def y_device():
+    y_device = mock.MagicMock()
+    y_device.name = 'y_device'
+    y_device.get_pv_name.return_value = SP_PV
+    return y_device
 # Add mock sim data_source
-mock_sim_data_source = mock.MagicMock()
-mock_sim_data_source.get_value.return_value = DUMMY_VALUE_2
-mock_sim_data_source.units = pytac.PHYS
+@pytest.fixture
+def mock_sim_data_source():
+    mock_sim_data_source = mock.MagicMock()
+    mock_sim_data_source.get_value.return_value = DUMMY_VALUE_2
+    mock_sim_data_source.units = pytac.PHYS
+    return mock_sim_data_source
 
 
 @pytest.fixture
@@ -33,7 +42,7 @@ def double_uc():
 
 
 @pytest.fixture
-def simple_element(unit_uc):
+def simple_element(x_device, y_device, mock_sim_data_source, unit_uc):
     # A unit conversion object that returns the same as the input.
     element = Element('element1', 0, 'BPM', cell=1)
     element.add_to_family('family')
@@ -45,14 +54,14 @@ def simple_element(unit_uc):
 
 
 @pytest.fixture
-def simple_lattice(simple_element):
-    lat = Lattice(LATTICE_NAME, 1)
-    lat.add_element(simple_element)
-    lat.set_data_source(DeviceDataSource(), pytac.LIVE)
-    lat.add_device('x', x_device, unit_uc)
-    lat.add_device('y', y_device, unit_uc)
-    lat.set_data_source(mock_sim_data_source, pytac.SIM)
-    return lat
+def simple_lattice(simple_element, x_device, y_device, mock_sim_data_source, unit_uc):
+    lattice = Lattice(LATTICE_NAME, 1)
+    lattice.add_element(simple_element)
+    lattice.set_data_source(DeviceDataSource(), pytac.LIVE)
+    lattice.add_device('x', x_device, unit_uc)
+    lattice.add_device('y', y_device, unit_uc)
+    lattice.set_data_source(mock_sim_data_source, pytac.SIM)
+    return lattice
 
 
 @pytest.fixture(scope="session")
