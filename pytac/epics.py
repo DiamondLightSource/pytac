@@ -55,10 +55,11 @@ class EpicsLattice(Lattice):
             family (str): requested family.
             field (str): requested field.
             handle (str): pytac.RB or pytac.SP.
-            dtype
+            dtype (numpy.dtype): if set it specifies the data type of the values
+                                  in the output array.
 
         Returns:
-            array?: The requested values.
+            list or array: The requested values.
         """
         pv_names = self.get_pv_names(family, field, handle)
         values = self._cs.get(pv_names)
@@ -72,7 +73,7 @@ class EpicsLattice(Lattice):
         Args:
             family (str): requested family.
             field (str): requested field.
-            values (?): values to set.
+            values (sequence): values to be set.
         """
         pv_names = self.get_pv_names(family, field, 'setpoint')
         if len(pv_names) != len(values):
