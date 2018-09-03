@@ -59,13 +59,16 @@ def test_set_value_phys(simple_element, double_uc):
     simple_element.get_device('x').set_value.assert_called_with((DUMMY_VALUE_2 / 2))
 
 
-def test_set_exceptions(simple_element):
+def test_set_exceptions(simple_element, unit_uc):
     with pytest.raises(pytac.exceptions.FieldException):
         simple_element.set_value('unknown_field', 40.0, 'setpoint')
     with pytest.raises(pytac.exceptions.HandleException):
         simple_element.set_value('y', 40.0, 'unknown_handle')
     with pytest.raises(pytac.exceptions.DeviceException):
         simple_element.set_value('y', 40.0, 'setpoint', data_source='unknown_data_source')
+    simple_element._data_source_manager._uc['uc_but_not_data_source_field'] = unit_uc
+    with pytest.raises(pytac.exceptions.FieldException):
+        simple_element.set_value('uc_but_not_data_source_field', 40.0, 'setpoint')
 
 
 def test_get_exceptions(simple_element):
