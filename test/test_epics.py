@@ -72,3 +72,15 @@ def test_get_value_uses_cs_if_data_source_live(simple_epics_element):
 def test_get_value_raises_HandleExceptions(simple_epics_element):
     with pytest.raises(pytac.exceptions.HandleException):
         simple_epics_element.get_value('y', 'unknown_handle')
+
+
+def test_get_pv_name_raises_DeviceException(simple_epics_element):
+    with pytest.raises(pytac.exceptions.DeviceException):
+        simple_epics_element.get_pv_name('unknown_field', 'setpoint')
+
+
+def test_set_values_raises_LatticeException(simple_epics_lattice):
+    with pytest.raises(pytac.exceptions.LatticeException):
+        simple_epics_lattice.set_values('family', 'x', [1, 2])
+    with pytest.raises(pytac.exceptions.LatticeException):
+        simple_epics_lattice.set_values('family', 'x', [])
