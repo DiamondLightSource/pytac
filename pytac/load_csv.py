@@ -164,10 +164,8 @@ def load(mode, control_system=None, directory=None):
             from pytac import cothread_cs
             control_system = cothread_cs.CothreadControlSystem()
     except ImportError:
-        print(
-            ('To load a lattice using the default control system, please'
-             ' install cothread.'), file=sys.stderr
-        )
+        print('To load a lattice using the default control system, please'
+              ' install cothread.', file=sys.stderr)
         return None
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -180,9 +178,8 @@ def load(mode, control_system=None, directory=None):
         for item in csv_reader:
             length = float(item['length'])
             cell = int(item['cell']) if item['cell'] else None
-            e = epics.EpicsElement(
-                item['name'], length, item['type'], s, index, cell
-            )
+            e = epics.EpicsElement(item['name'], length, item['type'], s, index,
+                                   cell)
             e.add_to_family(item['type'])
             e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)

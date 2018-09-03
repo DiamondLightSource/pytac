@@ -49,6 +49,17 @@ class EpicsLattice(Lattice):
         return pv_names
 
     def get_values(self, family, field, handle, dtype=None):
+        """Get the value for a family and field for all elements in the lattice.
+
+        Args:
+            family (str): requested family.
+            field (str): requested field.
+            handle (str): pytac.RB or pytac.SP.
+            dtype
+
+        Returns:
+            array?: The requested values.
+        """
         pv_names = self.get_pv_names(family, field, handle)
         values = self._cs.get(pv_names)
         if dtype is not None:
@@ -56,6 +67,13 @@ class EpicsLattice(Lattice):
         return values
 
     def set_values(self, family, field, values):
+        """Set the value for a family and field for all elements in the lattice.
+
+        Args:
+            family (str): requested family.
+            field (str): requested field.
+            values (?): values to set.
+        """
         pv_names = self.get_pv_names(family, field, 'setpoint')
         if len(pv_names) != len(values):
             raise LatticeException("Number of elements in given array must be"
