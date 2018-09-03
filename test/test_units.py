@@ -22,7 +22,7 @@ def test_UnitConv_not_implemented():
 
 
 @pytest.mark.parametrize('origin, target', [(pytac.LIVE, pytac.ENG),
-                                           (pytac.PHYS, pytac.SP), ('a', 'b')])
+                                            (pytac.PHYS, pytac.SP), ('a', 'b')])
 def test_UnitConv_requires_correct_arguments(origin, target):
     uc = UnitConv()
     with pytest.raises(UnitsException):

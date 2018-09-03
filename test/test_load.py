@@ -1,4 +1,4 @@
-import pytest
+# No imports needed.
 
 
 def test_elements_loaded(lattice):

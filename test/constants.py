@@ -1,5 +1,6 @@
 import os
 
+
 PREFIX = 'prefix'
 RB_SUFFIX = ':rb'
 SP_SUFFIX = ':sp'

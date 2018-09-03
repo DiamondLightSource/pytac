@@ -68,7 +68,7 @@ def test_get_element_values(simple_lattice):
                          ((numpy.float64, numpy.array(DUMMY_ARRAY,
                                                       dtype=numpy.float64)),
                           (numpy.int32, numpy.array(DUMMY_ARRAY,
-                                                   dtype=numpy.int32)),
+                                                    dtype=numpy.int32)),
                           (numpy.bool_, numpy.array(DUMMY_ARRAY,
                                                     dtype=numpy.bool_)),
                           (None, DUMMY_ARRAY)))

@@ -24,7 +24,7 @@ def test_load_lattice_using_default_dir():
 
 
 @pytest.mark.parametrize('lattice, name, n_elements, length',
-                         [(pytest.lazy_fixture('vmx_ring'), 'VMX', 2143, 
+                         [(pytest.lazy_fixture('vmx_ring'), 'VMX', 2143,
                            561.571),
                           (pytest.lazy_fixture('diad_ring'), 'DIAD', 2145,
                            561.571)])
