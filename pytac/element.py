@@ -27,9 +27,7 @@ class Element(object):
     """
     def __init__(self, name, length, element_type, s=None, index=None,
                  cell=None):
-        """.. The constructor method for the class, called whenever an
-               'Element' object is constructed.
-
+        """
         Args:
             name (int): The unique identifier for the element in the ring.
             length (float): The length of the element.
@@ -146,8 +144,8 @@ class Element(object):
 
         Returns the value of a field on the element. This value is uniquely
         identified by a field and a handle. The returned value is either
-        in engineering or physics units. The data_source flag returns either real
-        or simulated values.
+        in engineering or physics units. The data_source flag returns either
+        real or simulated values.
 
         Args:
             field (str): The requested field.
@@ -162,7 +160,8 @@ class Element(object):
             DeviceException: if there is no device on the given field.
             FieldException: if the element does not have the specified field.
         """
-        return self._data_source_manager.get_value(field, handle, units, data_source)
+        return self._data_source_manager.get_value(field, handle, units,
+                                                   data_source)
 
     def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
                   data_source=pytac.LIVE):
@@ -181,4 +180,5 @@ class Element(object):
             DeviceException: if arguments are incorrect.
             FieldException: if the element does not have the specified field.
         """
-        self._data_source_manager.set_value(field, value, handle, units, data_source)
+        self._data_source_manager.set_value(field, value, handle, units,
+                                            data_source)

@@ -27,10 +27,7 @@ class Lattice(object):
                                                       with this lattice.
     """
     def __init__(self, name, energy):
-        """.. The constructor method for the class, called whenever a 'Lattice'
-               object is constructed.
-
-        Args:
+        """Args:
             name (str): The name of the lattice.
             energy (int): The total energy of the lattice.
 
@@ -116,8 +113,8 @@ class Lattice(object):
 
         Returns the value of a field on the lattice. This value is uniquely
         identified by a field and a handle. The returned value is either
-        in engineering or physics units. The data_source flag returns either real
-        or simulated values.
+        in engineering or physics units. The data_source flag returns either
+        real or simulated values.
 
         Args:
             field (str): The requested field.
@@ -132,7 +129,8 @@ class Lattice(object):
             DeviceException: if there is no device on the given field.
             FieldException: if the lattice does not have the specified field.
         """
-        return self._data_source_manager.get_value(field, handle, units, data_source)
+        return self._data_source_manager.get_value(field, handle, units,
+                                                   data_source)
 
     def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
                   data_source=pytac.LIVE):
@@ -151,7 +149,8 @@ class Lattice(object):
             DeviceException: if arguments are incorrect.
             FieldException: if the lattice does not have the specified field.
         """
-        self._data_source_manager.set_value(field, value, handle, units, data_source)
+        self._data_source_manager.set_value(field, value, handle, units,
+                                            data_source)
 
     def get_energy(self):
         """Function to get the total energy of the lattice.
@@ -261,7 +260,8 @@ class Lattice(object):
                 s_pos += el.length
             else:
                 return s_pos
-        raise LatticeException('Element {} not in lattice {}'.format(elem, self))
+        raise LatticeException('Element {} not in lattice {}'.format(elem,
+                                                                     self))
 
     def get_family_s(self, family):
         """Get s positions for all elements from the same family.

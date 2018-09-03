@@ -17,8 +17,13 @@ class EpicsLattice(Lattice):
 
     def __init__(self, name, energy, epics_cs):
         """
-        control_system (ControlSystem): The control system used to store
-        the values on a PV.
+        Args:
+            name (str): The name of the epics lattice.
+            energy (int): The total energy of the epics lattice.
+            epics_cs (ControlSystem): The control system used to store the
+                                       values on a PV.
+
+        **Methods:**
         """
         super(EpicsLattice, self).__init__(name, energy)
         self._cs = epics_cs
@@ -64,8 +69,8 @@ class EpicsElement(Element):
 
     Adds get_pv_name() method.
 
+    **Methods:**
     """
-
     def get_pv_name(self, field, handle):
         """Get PV name for the specified field and handle.
 
@@ -82,9 +87,8 @@ class EpicsElement(Element):
         try:
             return self._data_source_manager._data_sources[pytac.LIVE].get_device(field).get_pv_name(handle)
         except KeyError:
-            raise DeviceException(
-                '{} has no device for field {}'.format(self, field)
-            )
+            raise DeviceException('{} has no device for field {}'.format(self,
+                                                                         field))
 
 
 class EpicsDevice(Device):
@@ -187,9 +191,8 @@ class EpicsDevice(Device):
         elif handle == pytac.SP and self.sp_pv:
             return self.sp_pv
 
-        raise HandleException(
-            "Device {0} has no {1} PV.".format(self.name, handle)
-        )
+        raise HandleException("Device {0} has no {1} PV.".format(self.name,
+                                                                 handle))
 
 
 class PvEnabler(object):
@@ -205,14 +208,14 @@ class PvEnabler(object):
            _cs (ControlSystem): The control system object.
     """
     def __init__(self, pv, enabled_value, cs):
-        """.. The constructor method for the class, called whenever a
-               'PvEnabler' object is constructed.
-
+        """
         Args:
             pv (str): The PV name.
             enabled_value (str): The value for PV for which the device should
                                   be considered enabled.
             cs (ControlSystem): The control system object.
+
+        **Methods:**
         """
         self._pv = pv
         self._enabled_value = str(int(float(enabled_value)))

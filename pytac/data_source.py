@@ -59,13 +59,10 @@ class DataSourceManager(object):
            _data_sources (dict): A dictionary of the data sources held.
            _uc (dict): A dictionary of the unit conversion objects for each
                         key(field).
+
+    **Methods:**
     """
     def __init__(self):
-        """.. The constructor method for the class, called whenever a
-               'DataSourceManager' object is constructed.
-
-        **Methods:**
-        """
         self._data_sources = {}
         self._uc = {}
 
@@ -147,8 +144,8 @@ class DataSourceManager(object):
 
         Returns the value of a field on the manager. This value is uniquely
         identified by a field and a handle. The returned value is either
-        in engineering or physics units. The data_source flag returns either real
-        or simulated values.
+        in engineering or physics units. The data_source flag returns either
+        real or simulated values.
 
         Args:
             field (str): The requested field.
@@ -169,9 +166,11 @@ class DataSourceManager(object):
             return self._uc[field].convert(value, origin=data_source.units,
                                            target=units)
         except KeyError:
-            raise DeviceException('No data source type {} on manager {}'.format(data_source, self))
+            raise DeviceException('No data source type {} on manager {}'
+                                  .format(data_source, self))
         except FieldException:
-            raise FieldException('No field {} on manager {}'.format(field, self))
+            raise FieldException('No field {} on manager {}'.format(field,
+                                                                    self))
 
     def set_value(self, field, value, handle, units, data_source):
         """Set the value for a field.
@@ -194,14 +193,18 @@ class DataSourceManager(object):
         try:
             data_source = self._data_sources[data_source]
         except KeyError:
-            raise DeviceException('No data source type {} on manager {}'.format(data_source, self))
+            raise DeviceException('No data source type {} on manager {}'
+                                  .format(data_source, self))
         try:
-            value = self._uc[field].convert(value, origin=units, target=data_source.units)
+            value = self._uc[field].convert(value, origin=units,
+                                            target=data_source.units)
             data_source.set_value(field, value)
         except KeyError:
-            raise FieldException('No field {} on manager {}'.format(data_source, self))
+            raise FieldException('No field {} on manager {}'.format(data_source,
+                                                                    self))
         except FieldException:
-            raise FieldException('No field {} on manager {}'.format(field, self))
+            raise FieldException('No field {} on manager {}'.format(field,
+                                                                    self))
 
 
 class DeviceDataSource(object):
@@ -214,13 +217,10 @@ class DeviceDataSource(object):
 
     .. Private Attributes:
            _devices (dict): A dictionary of the devices for each key(field).
+
+    **Methods:**
     """
     def __init__(self):
-        """.. The constructor method for the class, called whenever a
-               'DeviceDataSource' object is constructed.
-
-        **Methods:**
-        """
         self._devices = {}
         self.units = pytac.ENG
 
