@@ -1,16 +1,4 @@
-import os
 import pytest
-import mock
-from pytac import load_csv
-
-
-CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
-
-
-@pytest.fixture
-def lattice():
-    lat = load_csv.load('dummy', mock.MagicMock(), os.path.join(CURRENT_DIR, 'data'))
-    return lat
 
 
 def test_elements_loaded(lattice):

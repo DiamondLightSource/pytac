@@ -1,3 +1,5 @@
+import os
+
 PREFIX = 'prefix'
 RB_SUFFIX = ':rb'
 SP_SUFFIX = ':sp'
@@ -11,3 +13,5 @@ DUMMY_VALUE_3 = -6
 DUMMY_ARRAY = [DUMMY_VALUE_1]
 
 LATTICE_NAME = 'lattice'
+
+CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))

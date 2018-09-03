@@ -1,5 +1,6 @@
-from pytac import utils
 import numpy
+from pytac import utils
+
 
 
 def test_rigidity():

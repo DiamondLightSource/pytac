@@ -3,7 +3,6 @@ import pytest
 import pytac
 from pytac.element import Element
 from pytac.lattice import Lattice
-
 from constants import DUMMY_ARRAY, LATTICE_NAME
 
 
@@ -31,7 +30,8 @@ def test_get_element_devices_returns_empty_list_if_field_not_matched(simple_latt
 
 
 def test_get_element_device_names(simple_lattice):
-    assert simple_lattice.get_element_device_names('family', 'x') == ['x_device']
+    assert simple_lattice.get_element_device_names('family',
+                                                   'x') == ['x_device']
 
 
 def test_lattice_with_n_elements(simple_lattice):
@@ -64,21 +64,25 @@ def test_get_element_values(simple_lattice):
     simple_lattice.get_element_devices('family', 'x')[0].get_value.assert_called_with(pytac.RB)
 
 
-@pytest.mark.parametrize(
-    'dtype,expected', (
-        (numpy.float64, numpy.array(DUMMY_ARRAY, dtype=numpy.float64)),
-        (numpy.int32, numpy.array(DUMMY_ARRAY, dtype=numpy.int32)),
-        (numpy.bool_, numpy.array(DUMMY_ARRAY, dtype=numpy.bool_)),
-        (None, DUMMY_ARRAY)
-    ))
-def test_get_element_values_returns_numpy_array_if_requested(simple_lattice, dtype, expected):
-    values = simple_lattice.get_element_values('family', 'x', pytac.RB, dtype=dtype)
+@pytest.mark.parametrize('dtype, expected',
+                         ((numpy.float64, numpy.array(DUMMY_ARRAY,
+                                                      dtype=numpy.float64)),
+                          (numpy.int32, numpy.array(DUMMY_ARRAY,
+                                                   dtype=numpy.int32)),
+                          (numpy.bool_, numpy.array(DUMMY_ARRAY,
+                                                    dtype=numpy.bool_)),
+                          (None, DUMMY_ARRAY)))
+def test_get_element_values_returns_numpy_array_if_requested(simple_lattice,
+                                                             dtype, expected):
+    values = simple_lattice.get_element_values('family', 'x', pytac.RB,
+                                               dtype=dtype)
     numpy.testing.assert_equal(values, expected)
 
 
 def test_set_element_values(simple_lattice):
     simple_lattice.set_element_values('family', 'x', [1])
-    simple_lattice.get_element_devices('family', 'x')[0].set_value.assert_called_with(1)
+    simple_lattice.get_element_devices('family',
+                                       'x')[0].set_value.assert_called_with(1)
 
 
 def test_set_element_values_raise_exception_if_number_of_values_does_not_match(simple_lattice):

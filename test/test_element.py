@@ -23,7 +23,8 @@ def test_get_device_raises_KeyError_if_device_not_present(simple_element):
         simple_element.get_device('not-a-device')
 
 
-def test_get_unitconv_returns_unitconv_object(simple_element, unit_uc, double_uc):
+def test_get_unitconv_returns_unitconv_object(simple_element, unit_uc,
+                                              double_uc):
     assert simple_element.get_unitconv('x') == unit_uc
     assert simple_element.get_unitconv('y') == double_uc
 
@@ -35,14 +36,14 @@ def test_get_unitconv_raises_KeyError_if_device_not_present(simple_element):
 
 def test_get_value_uses_uc_if_necessary_for_cs_call(simple_element, double_uc):
     simple_element._data_source_manager._uc['x'] = double_uc
-    assert simple_element.get_value('x', handle=pytac.SP, units=pytac.PHYS,
-                                    data_source=pytac.LIVE) == (DUMMY_VALUE_1 * 2)
+    assert simple_element.get_value('x', handle=pytac.SP,data_source=pytac.LIVE,
+                                    units=pytac.PHYS) == (DUMMY_VALUE_1 * 2)
 
 
 def test_get_value_uses_uc_if_necessary_for_sim_call(simple_element, double_uc):
     simple_element._data_source_manager._uc['x'] = double_uc
-    assert simple_element.get_value('x', handle=pytac.SP, units=pytac.ENG,
-                                    data_source=pytac.SIM) == (DUMMY_VALUE_2 / 2)
+    assert simple_element.get_value('x', handle=pytac.SP, data_source=pytac.SIM,
+                                    units=pytac.ENG) == (DUMMY_VALUE_2 / 2)
     simple_element._data_source_manager._data_sources[pytac.SIM].get_value.assert_called_with('x', pytac.SP)
 
 
@@ -65,17 +66,20 @@ def test_set_exceptions(simple_element, unit_uc):
     with pytest.raises(pytac.exceptions.HandleException):
         simple_element.set_value('y', 40.0, 'unknown_handle')
     with pytest.raises(pytac.exceptions.DeviceException):
-        simple_element.set_value('y', 40.0, 'setpoint', data_source='unknown_data_source')
+        simple_element.set_value('y', 40.0, 'setpoint',
+                                 data_source='unknown_data_source')
     simple_element._data_source_manager._uc['uc_but_not_data_source_field'] = unit_uc
     with pytest.raises(pytac.exceptions.FieldException):
-        simple_element.set_value('uc_but_not_data_source_field', 40.0, 'setpoint')
+        simple_element.set_value('uc_but_not_data_source_field', 40.0,
+                                 'setpoint')
 
 
 def test_get_exceptions(simple_element):
     with pytest.raises(pytac.exceptions.FieldException):
         simple_element.get_value('unknown_field', 'setpoint')
     with pytest.raises(pytac.exceptions.DeviceException):
-        simple_element.get_value('y', 'setpoint', data_source='unknown_data_source')
+        simple_element.get_value('y', 'setpoint',
+                                 data_source='unknown_data_source')
 
 
 def test_identity_conversion(simple_element):

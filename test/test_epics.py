@@ -1,36 +1,7 @@
-import mock
 import numpy
 import pytest
 import pytac
-from pytac.epics import EpicsDevice, EpicsElement, EpicsLattice
-from pytac.data_source import DeviceDataSource
 from constants import DUMMY_ARRAY, RB_PV, SP_PV
-
-
-@pytest.fixture
-def mock_cs():
-    cs = mock.MagicMock()
-    cs.get.return_value = DUMMY_ARRAY
-    return cs
-
-
-@pytest.fixture
-def simple_epics_element(mock_cs, unit_uc):
-    element = EpicsElement(1, 0, 'BPM', cell=1)
-    x_device = EpicsDevice('x_device', mock_cs, True, RB_PV, SP_PV)
-    y_device = EpicsDevice('y_device', mock_cs, True, SP_PV, RB_PV)
-    element.add_to_family('family')
-    element.set_data_source(DeviceDataSource(), pytac.LIVE)
-    element.add_device('x', x_device, unit_uc)
-    element.add_device('y', y_device, unit_uc)
-    return element
-
-
-@pytest.fixture
-def simple_epics_lattice(simple_epics_element, mock_cs):
-    lat = EpicsLattice('lattice', 1, mock_cs)
-    lat.add_element(simple_epics_element)
-    return lat
 
 
 def test_get_values(simple_epics_lattice):
@@ -43,15 +14,18 @@ def test_set_values(simple_epics_lattice):
     simple_epics_lattice._cs.put.assert_called_with([SP_PV], [1])
 
 
-@pytest.mark.parametrize(
-    'dtype,expected', (
-        (numpy.float64, numpy.array(DUMMY_ARRAY, dtype=numpy.float64)),
-        (numpy.int32, numpy.array(DUMMY_ARRAY, dtype=numpy.int32)),
-        (numpy.bool_, numpy.array(DUMMY_ARRAY, dtype=numpy.bool_)),
-        (None, DUMMY_ARRAY)
-    ))
-def test_get_values_returns_numpy_array_if_requested(simple_epics_lattice, dtype, expected):
-    values = simple_epics_lattice.get_values('family', 'x', pytac.RB, dtype=dtype)
+@pytest.mark.parametrize('dtype, expected',
+                         ((numpy.float64, numpy.array(DUMMY_ARRAY,
+                                                      dtype=numpy.float64)),
+                          (numpy.int32, numpy.array(DUMMY_ARRAY,
+                                                    dtype=numpy.int32)),
+                          (numpy.bool_, numpy.array(DUMMY_ARRAY,
+                                                    dtype=numpy.bool_)),
+                          (None, DUMMY_ARRAY)))
+def test_get_values_returns_numpy_array_if_requested(simple_epics_lattice,
+                                                     dtype, expected):
+    values = simple_epics_lattice.get_values('family', 'x', pytac.RB,
+                                             dtype=dtype)
     numpy.testing.assert_equal(values, expected)
     simple_epics_lattice._cs.get.assert_called_with([RB_PV])
 
