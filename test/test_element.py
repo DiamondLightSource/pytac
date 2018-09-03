@@ -23,9 +23,9 @@ def test_get_device_raises_KeyError_if_device_not_present(simple_element):
         simple_element.get_device('not-a-device')
 
 
-def test_get_unitconv_returns_unitconv_object(simple_element, unit_uc):
+def test_get_unitconv_returns_unitconv_object(simple_element, unit_uc, double_uc):
     assert simple_element.get_unitconv('x') == unit_uc
-    assert simple_element.get_unitconv('y') == unit_uc
+    assert simple_element.get_unitconv('y') == double_uc
 
 
 def test_get_unitconv_raises_KeyError_if_device_not_present(simple_element):
