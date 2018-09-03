@@ -283,5 +283,5 @@ class PchipUnitConv(UnitConv):
         if solution_within_bounds:
             return correct_root
         else:
-            raise UnitsException("The function {} does not have a solution"
+            raise UnitsException("The function {} does not have a solution "
                                  "within bounds.")
