@@ -36,8 +36,8 @@ def test_get_unitconv_raises_KeyError_if_device_not_present(simple_element):
 
 def test_get_value_uses_uc_if_necessary_for_cs_call(simple_element, double_uc):
     simple_element._data_source_manager._uc['x'] = double_uc
-    assert simple_element.get_value('x', handle=pytac.SP,data_source=pytac.LIVE,
-                                    units=pytac.PHYS) == (DUMMY_VALUE_1 * 2)
+    assert simple_element.get_value('x', handle=pytac.SP, units=pytac.PHYS,
+                                    data_source=pytac.LIVE) == (DUMMY_VALUE_1 * 2)
 
 
 def test_get_value_uses_uc_if_necessary_for_sim_call(simple_element, double_uc):
