@@ -52,14 +52,13 @@ class DataSourceManager(object):
     """Class that manages the data sources associated with a lattice or element.
 
     It recieves requests from a lattice or element object and directs them to
-    the correct data source. The unit conversion objects for all fields are also 
+    the correct data source. The unit conversion objects for all fields are also
     held here.
 
     .. Private Attributes:
            _data_sources (dict): A dictionary of the data sources held.
            _uc (dict): A dictionary of the unit conversion objects for each
                         key(field).
-        
     """
     def __init__(self):
         """.. The constructor method for the class, called whenever a
