@@ -255,9 +255,9 @@ class Lattice(object):
             LatticeException: if element doesn't exist in the lattice.
         """
         s_pos = 0
-        for el in self._lattice:
-            if el is not elem:
-                s_pos += el.length
+        for e in self._lattice:
+            if e is not elem:
+                s_pos += e.length
             else:
                 return s_pos
         raise LatticeException('Element {} not in lattice {}'.format(elem,

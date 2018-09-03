@@ -19,7 +19,7 @@ from pytac import epics, data_source, units, utils
 import collections
 
 # Create a default unit conversion object that returns the input unchanged.
-UNIT_UNITCONV = units.PolyUnitConv([1, 0])
+UNIT_UC = units.PolyUnitConv([1, 0])
 
 ELEMENTS_FILENAME = 'elements.csv'
 DEVICES_FILENAME = 'devices.csv'
@@ -195,7 +195,7 @@ def load(mode, control_system=None, directory=None):
             pve = True
             d = epics.EpicsDevice(name, control_system, pve, get_pv, set_pv)
             lat[int(item['id']) - 1].add_device(item['field'], d,
-                                                UNIT_UNITCONV)
+                                                UNIT_UC)
 
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)
