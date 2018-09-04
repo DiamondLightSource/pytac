@@ -1,4 +1,16 @@
-# No imports needed.
+import sys
+import mock
+import pytac
+from pytac.load_csv import load
+
+
+def test_control_system_is_None_import():
+    # Assert ImportError is correctly raised / not raised.
+    with mock.patch.dict(sys.modules, {'pytac.cothread_cs': None}):
+        assert load('VMX') is None
+    assert load('VMX') is not None
+    # Assert that the default control system is Cothread.
+    assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
 
 
 def test_elements_loaded(lattice):
