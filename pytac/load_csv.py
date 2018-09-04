@@ -15,8 +15,10 @@ import sys
 import os
 import csv
 import pytac
-from pytac import epics, data_source, units, utils
 import collections
+from pytac import epics, data_source, units, utils
+from pytac.exceptions import LatticeException
+
 
 # Create a default unit conversion object that returns the input unchanged.
 UNIT_UC = units.PolyUnitConv([1, 0])
@@ -164,9 +166,8 @@ def load(mode, control_system=None, directory=None):
             from pytac import cothread_cs
             control_system = cothread_cs.CothreadControlSystem()
     except ImportError:
-        print('To load a lattice using the default control system, please'
-              ' install cothread.', file=sys.stderr)
-        return None
+        raise LatticeException('Please install cothread to load a lattice using'
+                               ' the default control system(cothread_cs)')
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
