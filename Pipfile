@@ -6,7 +6,7 @@ name = "pypi"
 [dev-packages]
 pytest = "*"
 pytest-cov = "*"
-python-coveralls = "*"
+coveralls = "*"
 mock = "*"
 "flake8" = "*"
 bpython = "*"
