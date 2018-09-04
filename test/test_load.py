@@ -1,5 +1,4 @@
 import sys
-import mock
 import pytac
 import pytest
 from pytac.load_csv import load
@@ -7,14 +6,15 @@ from pytac.exceptions import LatticeException
 
 
 def test_control_system_is_None_import():
-    # Check LatticeException is correctly raised when import fails.
-    with mock.patch.dict(sys.modules, {'pytac.cothread_cs': None}):
-        with pytest.raises(LatticeException):
-            load('VMX')
     # Assert lattice is loaded when LatticeException is not raised.
     assert bool(load('VMX'))
     # Assert that the default lattice control system is Cothread.
     assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
+    # Check LatticeException is correctly raised when import fails.
+    delattr(pytac, "cothread_cs")
+    with pytest.raises(LatticeException):
+        load('VMX')
+    setattr(pytac, "cothread_cs", sys.modules['pytac.cothread_cs'])
 
 
 def test_elements_loaded(lattice):

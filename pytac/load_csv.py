@@ -11,7 +11,6 @@ The csv files are stored in one directory with specified names:
 
 """
 from __future__ import print_function
-import sys
 import os
 import csv
 import pytac
