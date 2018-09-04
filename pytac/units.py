@@ -38,9 +38,7 @@ class UnitConv(object):
 
     def __init__(self, post_eng_to_phys=unit_function,
                  pre_phys_to_eng=unit_function):
-        """.. The constructor method for the class, called whenever a
-               'UnitConv' object is constructed.
-
+        """
         Args:
             post_eng_to_phys (function): Function to be applied after the
                                           initial conversion.
@@ -144,9 +142,7 @@ class PolyUnitConv(UnitConv):
     """
     def __init__(self, coef, post_eng_to_phys=unit_function,
                  pre_phys_to_eng=unit_function):
-        """.. The constructor method for the class, called whenever a
-               'PolyUnitConv' object is constructed.
-
+        """
         Args:
             coef (array-like): The polynomial's coefficients, in decreasing
                                 powers.
@@ -215,9 +211,7 @@ class PchipUnitConv(UnitConv):
     """
     def __init__(self, x, y, post_eng_to_phys=unit_function,
                  pre_phys_to_eng=unit_function):
-        """PChip interpolation for converting between physics and engineering
-        units.
-
+        """
         Args:
             x (list): A list of points on the x axis. These must be in
                        increasing order for the interpolation to work.
@@ -283,5 +277,5 @@ class PchipUnitConv(UnitConv):
         if solution_within_bounds:
             return correct_root
         else:
-            raise UnitsException("The function {} does not have a solution"
+            raise UnitsException("The function {} does not have a solution "
                                  "within bounds.")

@@ -17,8 +17,13 @@ class EpicsLattice(Lattice):
 
     def __init__(self, name, energy, epics_cs):
         """
-        control_system (ControlSystem): The control system used to store
-        the values on a PV.
+        Args:
+            name (str): The name of the epics lattice.
+            energy (int): The total energy of the epics lattice.
+            epics_cs (ControlSystem): The control system used to store the
+                                       values on a PV.
+
+        **Methods:**
         """
         super(EpicsLattice, self).__init__(name, energy)
         self._cs = epics_cs
@@ -44,6 +49,18 @@ class EpicsLattice(Lattice):
         return pv_names
 
     def get_values(self, family, field, handle, dtype=None):
+        """Get the value for a family and field for all elements in the lattice.
+
+        Args:
+            family (str): requested family.
+            field (str): requested field.
+            handle (str): pytac.RB or pytac.SP.
+            dtype (numpy.dtype): if set it specifies the data type of the values
+                                  in the output array.
+
+        Returns:
+            list or array: The requested values.
+        """
         pv_names = self.get_pv_names(family, field, handle)
         values = self._cs.get(pv_names)
         if dtype is not None:
@@ -51,6 +68,13 @@ class EpicsLattice(Lattice):
         return values
 
     def set_values(self, family, field, values):
+        """Set the value for a family and field for all elements in the lattice.
+
+        Args:
+            family (str): requested family.
+            field (str): requested field.
+            values (sequence): values to be set.
+        """
         pv_names = self.get_pv_names(family, field, 'setpoint')
         if len(pv_names) != len(values):
             raise LatticeException("Number of elements in given array must be"
@@ -64,8 +88,8 @@ class EpicsElement(Element):
 
     Adds get_pv_name() method.
 
+    **Methods:**
     """
-
     def get_pv_name(self, field, handle):
         """Get PV name for the specified field and handle.
 
@@ -80,11 +104,10 @@ class EpicsElement(Element):
             DeviceException: if there is no device for this field.
         """
         try:
-            return self._models[pytac.LIVE].get_device(field).get_pv_name(handle)
+            return self._data_source_manager._data_sources[pytac.LIVE].get_device(field).get_pv_name(handle)
         except KeyError:
-            raise DeviceException(
-                '{} has no device for field {}'.format(self, field)
-            )
+            raise DeviceException('{} has no device for field {}'.format(self,
+                                                                         field))
 
 
 class EpicsDevice(Device):
@@ -187,9 +210,8 @@ class EpicsDevice(Device):
         elif handle == pytac.SP and self.sp_pv:
             return self.sp_pv
 
-        raise HandleException(
-            "Device {0} has no {1} PV.".format(self.name, handle)
-        )
+        raise HandleException("Device {0} has no {1} PV.".format(self.name,
+                                                                 handle))
 
 
 class PvEnabler(object):
@@ -205,14 +227,14 @@ class PvEnabler(object):
            _cs (ControlSystem): The control system object.
     """
     def __init__(self, pv, enabled_value, cs):
-        """.. The constructor method for the class, called whenever a
-               'PvEnabler' object is constructed.
-
+        """
         Args:
             pv (str): The PV name.
             enabled_value (str): The value for PV for which the device should
                                   be considered enabled.
             cs (ControlSystem): The control system object.
+
+        **Methods:**
         """
         self._pv = pv
         self._enabled_value = str(int(float(enabled_value)))

@@ -1,6 +1,6 @@
 """Module containing the element class."""
 import pytac
-from pytac.exceptions import FieldException, HandleException, DeviceException
+from pytac.data_source import DataSourceManager
 
 
 class Element(object):
@@ -21,14 +21,13 @@ class Element(object):
         families (set): The families this element is a member of.
 
     .. Private Attributes:
-           _uc (UnitConv): The unit conversion object used for this field.
-           _models (dict): The dictionary of all the models of the element.
+           _data_source_manager (DataSourceManager): A class that manages the
+                                                      data sources associated
+                                                      with this element.
     """
     def __init__(self, name, length, element_type, s=None, index=None,
                  cell=None):
-        """.. The constructor method for the class, called whenever an
-               'Element' object is constructed.
-
+        """
         Args:
             name (int): The unique identifier for the element in the ring.
             length (float): The length of the element.
@@ -46,8 +45,7 @@ class Element(object):
         self.index = index
         self.cell = cell
         self.families = set()
-        self._uc = {}
-        self._models = {}
+        self._data_source_manager = DataSourceManager()
 
     def __str__(self):
         """Auxiliary function to print out an element.
@@ -63,32 +61,32 @@ class Element(object):
 
     __repr__ = __str__
 
-    def set_model(self, model, model_type):
-        """Add a model to the element.
+    def set_data_source(self, data_source, data_source_type):
+        """Add a data source to the element.
 
         Args:
-            model (Model): instance of Model.
-            model_type (str): pytac.LIVE or pytac.SIM.
+            data_source (DataSource): the data source to be set.
+            data_source_type (str): the type of the data source being set
+                                     pytac.LIVE or pytac.SIM.
         """
-        self._models[model_type] = model
+        self._data_source_manager.set_data_source(data_source, data_source_type)
 
     def get_fields(self):
-        """Get the fields defined on an element.
+        """Get the all fields defined on an element.
 
-        Includes all fields defined by all models.
+        Includes all fields defined by all data sources.
 
         Returns:
-            set: A sequence of all the fields defined on an element.
+            dict: A dictionary of all the fields defined on an element,
+                   separated by data source(key).
         """
-        fields = set()
-        for model in self._models:
-            fields.update(self._models[model].get_fields())
-        return fields
+        return self._data_source_manager.get_fields()
 
     def add_device(self, field, device, uc):
         """Add device and unit conversion objects to a given field.
 
-        A DeviceModel must be set before calling this method.
+        A DeviceDataSource must be set before calling this method, this defaults
+        to pytac.LIVE as that is the only DeviceDataSource currently.
 
         Args:
             field (str): The key to store the unit conversion and device
@@ -97,15 +95,15 @@ class Element(object):
             uc (UnitConv): The unit conversion object used for this field.
 
         Raises:
-            KeyError: if no DeviceModel is set.
+            KeyError: if no DeviceDataSource is set.
         """
-        self._models[pytac.LIVE].add_device(field, device)
-        self._uc[field] = uc
+        self._data_source_manager.add_device(field, device, uc)
 
     def get_device(self, field):
         """Get the device for the given field.
 
-        A DeviceModel must be set before calling this method.
+        A DeviceDataSource must be set before calling this method, this defaults
+        to pytac.LIVE as that is the only DeviceDataSource currently.
 
         Args:
             field (str): The lookup key to find the device on an element.
@@ -114,9 +112,9 @@ class Element(object):
             Device: The device on the given field.
 
         Raises:
-            KeyError: if no DeviceModel is set.
+            KeyError: if no DeviceDataSource is set.
         """
-        return self._models[pytac.LIVE].get_device(field)
+        return self._data_source_manager.get_device(field)
 
     def get_unitconv(self, field):
         """Get the unit conversion option for the specified field.
@@ -130,7 +128,7 @@ class Element(object):
         Raises:
             KeyError: if no unit conversion object is present.
         """
-        return self._uc[field]
+        return self._data_source_manager.get_unitconv(field)
 
     def add_to_family(self, family):
         """Add the element to the specified family.
@@ -141,19 +139,19 @@ class Element(object):
         self.families.add(family)
 
     def get_value(self, field, handle=pytac.RB, units=pytac.ENG,
-                  model=pytac.LIVE):
+                  data_source=pytac.LIVE):
         """Get the value for a field.
 
         Returns the value of a field on the element. This value is uniquely
         identified by a field and a handle. The returned value is either
-        in engineering or physics units. The model flag returns either real
-        or simulated values.
+        in engineering or physics units. The data_source flag returns either
+        real or simulated values.
 
         Args:
             field (str): The requested field.
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS returned.
-            model (str): pytac.LIVE or pytac.SIM.
+            data_source (str): pytac.LIVE or pytac.SIM.
 
         Returns:
             float: The value of the requested field
@@ -162,47 +160,25 @@ class Element(object):
             DeviceException: if there is no device on the given field.
             FieldException: if the element does not have the specified field.
         """
-        try:
-            model = self._models[model]
-            value = model.get_value(field, handle)
-            return self._uc[field].convert(value, origin=model.units,
-                                           target=units)
-        except KeyError:
-            raise DeviceException('No model type {} on element {}'.format(model,
-                                                                          self))
-        except FieldException:
-            raise FieldException('No field {} on element {}'.format(field, self))
+        return self._data_source_manager.get_value(field, handle, units,
+                                                   data_source)
 
     def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
-                  model=pytac.LIVE):
-        """Set the value on a uniquely identified device.
+                  data_source=pytac.LIVE):
+        """Set the value for a field.
 
         This value can be set on the machine or the simulation.
-        A field is required to identify a device.
 
         Args:
             field (str): The requested field.
             value (float): The value to set.
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
-            model (str): pytac.LIVE or pytac.SIM.
+            data_source (str): pytac.LIVE or pytac.SIM.
 
         Raises:
             DeviceException: if arguments are incorrect.
             FieldException: if the element does not have the specified field.
         """
-        if handle != pytac.SP:
-            raise HandleException('Must write using {}'.format(pytac.SP))
-        try:
-            model = self._models[model]
-        except KeyError:
-            raise DeviceException(
-                'No model type {} on element {}'.format(model, self)
-            )
-        try:
-            value = self._uc[field].convert(value, origin=units, target=model.units)
-            model.set_value(field, value)
-        except KeyError:
-            raise FieldException('No field {} on element {}'.format(model, self))
-        except FieldException:
-            raise FieldException('No field {} on element {}'.format(field, self))
+        self._data_source_manager.set_value(field, value, handle, units,
+                                            data_source)

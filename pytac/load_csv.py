@@ -15,11 +15,11 @@ import sys
 import os
 import csv
 import pytac
-from pytac import epics, model, units, utils
+from pytac import epics, data_source, units, utils
 import collections
 
 # Create a default unit conversion object that returns the input unchanged.
-UNIT_UNITCONV = units.PolyUnitConv([1, 0])
+UNIT_UC = units.PolyUnitConv([1, 0])
 
 ELEMENTS_FILENAME = 'elements.csv'
 DEVICES_FILENAME = 'devices.csv'
@@ -139,7 +139,7 @@ def load_unitconv(directory, mode, lattice):
                  ._post_eng_to_phys) = get_div_rigidity(lattice.get_energy())
                 (unitconvs[int(item['uc_id'])]
                  ._pre_phys_to_eng) = get_mult_rigidity(lattice.get_energy())
-            element._uc[item['field']] = unitconvs[int(item['uc_id'])]
+            element._data_source_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
 
 
 def load(mode, control_system=None, directory=None):
@@ -164,10 +164,8 @@ def load(mode, control_system=None, directory=None):
             from pytac import cothread_cs
             control_system = cothread_cs.CothreadControlSystem()
     except ImportError:
-        print(
-            ('To load a lattice using the default control system, please'
-             ' install cothread.'), file=sys.stderr
-        )
+        print('To load a lattice using the default control system, please'
+              ' install cothread.', file=sys.stderr)
         return None
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -180,11 +178,10 @@ def load(mode, control_system=None, directory=None):
         for item in csv_reader:
             length = float(item['length'])
             cell = int(item['cell']) if item['cell'] else None
-            e = epics.EpicsElement(
-                item['name'], length, item['type'], s, index, cell
-            )
+            e = epics.EpicsElement(item['name'], length, item['type'], s, index,
+                                   cell)
             e.add_to_family(item['type'])
-            e.set_model(model.DeviceModel(), pytac.LIVE)
+            e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)
             s += length
             index += 1
@@ -198,7 +195,7 @@ def load(mode, control_system=None, directory=None):
             pve = True
             d = epics.EpicsDevice(name, control_system, pve, get_pv, set_pv)
             lat[int(item['id']) - 1].add_device(item['field'], d,
-                                                UNIT_UNITCONV)
+                                                UNIT_UC)
 
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)

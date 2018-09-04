@@ -1,8 +1,8 @@
 import pytest
 import pytac
+import numpy
 from pytac.units import UnitConv, PolyUnitConv, PchipUnitConv
 from pytac.exceptions import UnitsException
-import numpy
 
 
 def f1(value):
@@ -21,12 +21,8 @@ def test_UnitConv_not_implemented():
         uc.eng_to_phys(-11)
 
 
-@pytest.mark.parametrize(
-    'origin,target', [
-        (pytac.LIVE, pytac.ENG),
-        (pytac.PHYS, pytac.SP),
-        ('a', 'b')
-    ])
+@pytest.mark.parametrize('origin, target', [(pytac.LIVE, pytac.ENG),
+                                            (pytac.PHYS, pytac.SP), ('a', 'b')])
 def test_UnitConv_requires_correct_arguments(origin, target):
     uc = UnitConv()
     with pytest.raises(UnitsException):

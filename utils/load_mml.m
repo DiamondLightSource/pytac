@@ -45,26 +45,26 @@ function load_mml(ringmode)
     new_index = 0;
 
     for old_index = 1:length(THERING)
-        at_elm = THERING{old_index};
+        at_elem = THERING{old_index};
         % If an HSTR is preceded by a sext or a VSTR is two elements after
         % a sext, assume that they are in fact parts of the same element.
         % Just add that family to the sext element.
         % Don't increment the new_index count as we haven't added an
         % element.
-        if (strcmp(at_elm.FamName, 'HSTR') && strcmp(THERING{old_index - 1}.Class, 'SEXT')) || (strcmp(at_elm.FamName, 'VSTR') && strcmp(THERING{old_index - 2}.Class, 'SEXT'))
-            fprintf(f_families, '%i,%s\n', new_index, at_elm.FamName);
+        if (strcmp(at_elem.FamName, 'HSTR') && strcmp(THERING{old_index - 1}.Class, 'SEXT')) || (strcmp(at_elem.FamName, 'VSTR') && strcmp(THERING{old_index - 2}.Class, 'SEXT'))
+            fprintf(f_families, '%i,%s\n', new_index, at_elem.FamName);
         else
             new_index = new_index + 1;
-            insertelement(new_index, old_index, at_elm);
+            insertelement(new_index, old_index, at_elem);
         end
 
-        type = gettype(at_elm);
+        type = gettype(at_elem);
         if used_elements.isKey(type)
             used_elements(type) = used_elements(type) + 1;
         else
             used_elements(type) = 1;
         end
-        pvs = getpvs(ao, at_elm);
+        pvs = getpvs(ao, at_elem);
         insertpvs(new_index, pvs);
 
         renamed_indexes(old_index) = new_index;
@@ -94,11 +94,11 @@ function load_mml(ringmode)
     % finally, load unit conversion data
     load_unitconv(ringmode, renamed_indexes);
 
-    function type = gettype(elm)
-        if isfield(elm, 'Class')
-            type = elm.Class;
-        elseif isfield(elm, 'FamName')
-                type = elm.FamName;
+    function type = gettype(elem)
+        if isfield(elem, 'Class')
+            type = elem.Class;
+        elseif isfield(elem, 'FamName')
+                type = elem.FamName;
         else
             type = '';
         end
@@ -135,8 +135,8 @@ function load_mml(ringmode)
     end
 
 
-    function pvs = getpvs(ao, elm)
-        type = gettype(elm);
+    function pvs = getpvs(ao, elem)
+        type = gettype(elem);
         if any(ismember(type, TYPE_MAP.keys))
 
             index = used_elements(type);
@@ -206,13 +206,13 @@ function load_mml(ringmode)
     end
 
     function insertextrapvs(family, field)
-        elms = getfamilydata(family);
-        if ~isempty(elms)
-            for i = 1:length(elms.AT.ATIndex)
-                get_pv = elms.Monitor.ChannelNames(i,:);
-                set_pv = elms.Setpoint.ChannelNames(i,:);
+        elems = getfamilydata(family);
+        if ~isempty(elems)
+            for i = 1:length(elems.AT.ATIndex)
+                get_pv = elems.Monitor.ChannelNames(i,:);
+                set_pv = elems.Setpoint.ChannelNames(i,:);
                 pvs = pv_struct(field, get_pv, set_pv);
-                insertpvs(renamed_indexes(elms.AT.ATIndex(i)), {pvs});
+                insertpvs(renamed_indexes(elems.AT.ATIndex(i)), {pvs});
             end
         end
     end
@@ -221,10 +221,10 @@ function load_mml(ringmode)
         s = struct('field', field, 'get_pv', get_pv, 'set_pv', set_pv);
     end
 
-    function insertelement(i, old_i, at_elm)
-        type = gettype(at_elm);
-        fprintf(f_families, '%i,%s\n', i, at_elm.FamName);
-        cell = getcell(old_i, at_elm.FamName);
+    function insertelement(i, old_i, at_elem)
+        type = gettype(at_elem);
+        fprintf(f_families, '%i,%s\n', i, at_elem.FamName);
+        cell = getcell(old_i, at_elem.FamName);
 
         % Elements with additional PVs require an extra group added.
         % The ATIndex array lists the original indexes, so we need
@@ -233,13 +233,13 @@ function load_mml(ringmode)
         extra_groups = {'SQUAD'};
         for j = 1:length(extra_groups)
             group = extra_groups{j};
-            elms = getfamilydata(group);
-            if ~isempty(elms) && ismember(old_i, elms.AT.ATIndex)
+            elems = getfamilydata(group);
+            if ~isempty(elems) && ismember(old_i, elems.AT.ATIndex)
                 fprintf(f_families, '%i,%s\n', i, group);
             end
         end
 
-        fprintf(f_elements, '%d,%d,%s,%f,%d\n', i, i, type, at_elm.Length, cell);
+        fprintf(f_elements, '%d,%d,%s,%f,%d\n', i, i, type, at_elem.Length, cell);
     end
 
     function cell = getcell(old_i, family)
