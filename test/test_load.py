@@ -27,7 +27,7 @@ def test_control_system_is_None_import():
     with mock.patch.dict(sys.modules, {'pytac.cothread_cs': None}):
         delattr(pytac, "cothread_cs")
         from pytac import cothread_cs
-        ValueError('{}'.format(cothread_cs))
+        raise ValueError('{}'.format(cothread_cs))
         #with pytest.raises(LatticeException):
             #load('VMX')
         setattr(pytac, "cothread_cs", cothread)
