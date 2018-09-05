@@ -166,7 +166,7 @@ def load(mode, control_system=None, directory=None):
             control_system = cothread_cs.CothreadControlSystem()
     except ImportError:
         raise LatticeException('Please install cothread to load a lattice using'
-                               ' the default control system(cothread_cs)')
+                               ' the default control system (in cothread_cs.py)')
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
