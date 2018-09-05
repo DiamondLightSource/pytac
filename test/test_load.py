@@ -1,3 +1,4 @@
+import sys
 import pytac
 import pytest
 from mock import patch
@@ -8,20 +9,30 @@ from pytac.exceptions import LatticeException
 def test_default_control_system_import():
     class CothreadControlSystem():
         pass
-    with patch.multiple('cothread.catools'):  # For Travis CI compatability.
-        with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
-            assert bool(load('VMX'))
-            assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
+    class catools(object):  # Can't make fixtures from classes.
+        def caget():
+            pass
+        def caput():
+            pass
+    sys.modules['cothread.catools'] = catools  # for Travis CI compatability.
+    with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
+        assert bool(load('VMX'))
+        assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
 
 
 def test_LatticeException_is_raised_when_import_fails():
     def CothreadControlSystem():
         # function not a class to stop it raising ImportError during compile.
         raise ImportError
-    with patch('cothread.catools'):  # For Travis CI compatability.
-        with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
-            with pytest.raises(LatticeException):
-                load('VMX')
+    class catools(object):  # Can't make fixtures from classes.
+        def caget():
+            pass
+        def caput():
+            pass
+    sys.modules['cothread.catools'] = catools  # for Travis CI compatability.
+    with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
+        with pytest.raises(LatticeException):
+            load('VMX')
 
 
 def test_elements_loaded(lattice):
