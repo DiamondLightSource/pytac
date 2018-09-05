@@ -23,7 +23,7 @@ def Travis_CI_compatability():
 
 
 @pytest.fixture
-def mock_cs():
+def mock_control_system():
     # Can't make class fixtures so have to hide class inside a function.
     class CothreadControlSystem():
         pass
@@ -31,27 +31,23 @@ def mock_cs():
 
 
 @pytest.fixture
-def mock_travis():
+def mock_ImportError():
+    # function not a class to stop it raising ImportError during compile.
     def CothreadControlSystem():
         raise ImportError
     return CothreadControlSystem
 
 
-#@pytest.mark.parametrize('Travis_CI_compatability', [Travis_CI_compatability])
-def test_default_control_system_import(Travis_CI_compatability, mock_cs):
+def test_default_control_system_import(Travis_CI_compatability, mock_control_system):
     Travis_CI_compatability
-    with patch('pytac.cothread_cs.CothreadControlSystem', mock_cs):
+    with patch('pytac.cothread_cs.CothreadControlSystem', mock_control_system):
         assert bool(load('VMX'))
         assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
 
 
-def test_LatticeException_is_raised_when_import_fails(Travis_CI_compatability, mock_travis):
-    """def CothreadControlSystem():
-        # function not a class to stop it raising ImportError during compile.
-        raise ImportError
-"""
+def test_LatticeException_is_raised_when_import_fails(Travis_CI_compatability, mock_ImportError):
     Travis_CI_compatability
-    with patch('pytac.cothread_cs.CothreadControlSystem', mock_travis):
+    with patch('pytac.cothread_cs.CothreadControlSystem', mock_ImportError):
         with pytest.raises(LatticeException):
             load('VMX')
 
