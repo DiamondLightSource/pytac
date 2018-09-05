@@ -7,11 +7,27 @@ from pytac.load_csv import load
 from pytac.exceptions import LatticeException
 
 
-def test_default_control_system_import():
+@pytest.fixture
+def Travis_CI_compatability():
+    class catools(object):
+        def caget():
+            pass
+
+        def caput():
+            pass
+
+    cothread = ModuleType('cothread')
+    cothread.catools = catools
+    sys.modules['cothread'] = cothread
+    sys.modules['cothread.catools'] = catools
+
+
+@pytest.mark.parametrize('Travis_CI_compatability', [Travis_CI_compatability])
+def test_default_control_system_import(Travis_CI_compatability):
     class CothreadControlSystem():
         pass
 
-    class catools(object):  # Can't make fixtures from classes.
+    """class catools(object):  # Can't make fixtures from classes.
         def caget():
             pass
 
@@ -20,7 +36,8 @@ def test_default_control_system_import():
     cothread = ModuleType('cothread')
     cothread.catools = catools
     sys.modules['cothread'] = cothread
-    sys.modules['cothread.catools'] = catools  # for Travis CI compatability.
+    sys.modules['cothread.catools'] = catools  # for Travis CI compatability."""
+    Travis_CI_compatability()
     with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
         assert bool(load('VMX'))
         assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
