@@ -22,43 +22,36 @@ def Travis_CI_compatability():
     sys.modules['cothread.catools'] = catools
 
 
-@pytest.mark.parametrize('Travis_CI_compatability', [Travis_CI_compatability])
-def test_default_control_system_import(Travis_CI_compatability):
+@pytest.fixture
+def mock_cs():
+    # Can't make class fixtures so have to hide class inside a function.
     class CothreadControlSystem():
         pass
+    return CothreadControlSystem
 
-    """class catools(object):  # Can't make fixtures from classes.
-        def caget():
-            pass
 
-        def caput():
-            pass
-    cothread = ModuleType('cothread')
-    cothread.catools = catools
-    sys.modules['cothread'] = cothread
-    sys.modules['cothread.catools'] = catools  # for Travis CI compatability."""
-    Travis_CI_compatability()
-    with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
+@pytest.fixture
+def mock_travis():
+    def CothreadControlSystem():
+        raise ImportError
+    return CothreadControlSystem
+
+
+#@pytest.mark.parametrize('Travis_CI_compatability', [Travis_CI_compatability])
+def test_default_control_system_import(Travis_CI_compatability, mock_cs):
+    Travis_CI_compatability
+    with patch('pytac.cothread_cs.CothreadControlSystem', mock_cs):
         assert bool(load('VMX'))
         assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
 
 
-def test_LatticeException_is_raised_when_import_fails():
-    def CothreadControlSystem():
+def test_LatticeException_is_raised_when_import_fails(Travis_CI_compatability, mock_travis):
+    """def CothreadControlSystem():
         # function not a class to stop it raising ImportError during compile.
         raise ImportError
-
-    class catools(object):  # Can't make fixtures from classes.
-        def caget():
-            pass
-
-        def caput():
-            pass
-    cothread = ModuleType('cothread')
-    cothread.catools = catools
-    sys.modules['cothread'] = cothread
-    sys.modules['cothread.catools'] = catools  # for Travis CI compatability.
-    with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
+"""
+    Travis_CI_compatability
+    with patch('pytac.cothread_cs.CothreadControlSystem', mock_travis):
         with pytest.raises(LatticeException):
             load('VMX')
 
