@@ -8,7 +8,7 @@ from pytac.exceptions import LatticeException
 def test_default_control_system_import():
     class CothreadControlSystem():
         pass
-    with patch.multiple('cothread.catools', caget=None, caput=None):  # For Travis CI compatability.
+    with patch.multiple('cothread.catools'):  # For Travis CI compatability.
         with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
             assert bool(load('VMX'))
             assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
@@ -18,7 +18,7 @@ def test_LatticeException_is_raised_when_import_fails():
     def CothreadControlSystem():
         # function not a class to stop it raising ImportError during compile.
         raise ImportError
-    with patch.multiple('cothread.catools', caget=None, caput=None):  # For Travis CI compatability.
+    with patch('cothread.catools'):  # For Travis CI compatability.
         with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
             with pytest.raises(LatticeException):
                 load('VMX')
