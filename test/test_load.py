@@ -39,14 +39,14 @@ def mock_ImportError():
 
 
 def test_default_control_system_import(Travis_CI_compatability, mock_control_system):
-    Travis_CI_compatability
+    #Travis_CI_compatability
     with patch('pytac.cothread_cs.CothreadControlSystem', mock_control_system):
         assert bool(load('VMX'))
         assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
 
 
 def test_LatticeException_is_raised_when_import_fails(Travis_CI_compatability, mock_ImportError):
-    Travis_CI_compatability
+    #Travis_CI_compatability
     with patch('pytac.cothread_cs.CothreadControlSystem', mock_ImportError):
         with pytest.raises(LatticeException):
             load('VMX')
