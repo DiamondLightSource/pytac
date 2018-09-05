@@ -7,8 +7,8 @@ from pytac.load_csv import load
 from pytac.exceptions import LatticeException
 
 
-@pytest.fixture
-def Travis_CI_compatability():
+@pytest.fixture(scope="session")
+def Travis_CI_compatibility():
     class catools(object):
         def caget():
             pass
@@ -22,7 +22,7 @@ def Travis_CI_compatability():
     sys.modules['cothread.catools'] = catools
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def mock_control_system():
     # Can't make class fixtures so have to hide class inside a function.
     class CothreadControlSystem():
@@ -30,7 +30,7 @@ def mock_control_system():
     return CothreadControlSystem
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def mock_ImportError():
     # function not a class to stop it raising ImportError during compile.
     def CothreadControlSystem():
@@ -38,15 +38,13 @@ def mock_ImportError():
     return CothreadControlSystem
 
 
-def test_default_control_system_import(Travis_CI_compatability, mock_control_system):
-    #Travis_CI_compatability
+def test_default_control_system_import(Travis_CI_compatibility, mock_control_system):
     with patch('pytac.cothread_cs.CothreadControlSystem', mock_control_system):
         assert bool(load('VMX'))
         assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
 
 
-def test_LatticeException_is_raised_when_import_fails(Travis_CI_compatability, mock_ImportError):
-    #Travis_CI_compatability
+def test_LatticeException_is_raised_when_import_fails(Travis_CI_compatibility, mock_ImportError):
     with patch('pytac.cothread_cs.CothreadControlSystem', mock_ImportError):
         with pytest.raises(LatticeException):
             load('VMX')
