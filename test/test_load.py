@@ -27,31 +27,19 @@ def Travis_CI_compatibility():
 
 
 @pytest.fixture(scope="session")
-def mock_cs_empty():
+def mock_cs_raises_ImportError():
     """We create a mock control system to replace CothreadControlSystem, to
         allow the lattice to load
     """
-    # Can't make class fixtures so have to hide class inside a function.
-    class CothreadControlSystem():
-        pass
-    return CothreadControlSystem
-
-
-@pytest.fixture(scope="session")
-def mock_cs_raises_ImportError():
     # function not a class to stop it raising ImportError during compile.
     def CothreadControlSystem():
         raise ImportError
     return CothreadControlSystem
 
 
-def test_default_control_system_import(Travis_CI_compatibility, mock_cs_empty):
+def test_default_control_system_import(Travis_CI_compatibility):
     assert bool(load('VMX'))
     assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
-    """with patch('pytac.cothread_cs.CothreadControlSystem', mock_cs_empty):
-        assert bool(load('VMX'))
-        assert isinstance(load('VMX')._cs,
-                          pytac.cothread_cs.CothreadControlSystem)"""
 
 
 def test_import_fail_raises_LatticeException(Travis_CI_compatibility,
