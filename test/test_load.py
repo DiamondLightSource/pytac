@@ -1,6 +1,5 @@
 import os
 import sys
-import mock
 import pytac
 import pytest
 from pytac.load_csv import load
@@ -22,7 +21,10 @@ def test_control_system_is_None_import():
     os.remove("pytac/cothread_cs.py")
     os.rename(os.path.join(os.path.realpath('.'), 'pytac/placeholder.py'),
               "pytac/cothread_cs.py")
-    # Check LatticeException is correctly raised when import fails.
+
+
+def test_LatticeException_is_raised_when_import_fails():
+    # Temporarily edit cothread_cs to always raise an ImportError.
     os.rename(os.path.join(os.path.realpath('.'), 'pytac/cothread_cs.py'),
               "pytac/placeholder.py")
     f = open("pytac/cothread_cs.py", "w+")
@@ -30,10 +32,11 @@ def test_control_system_is_None_import():
     f.close()
     # Check LatticeException is correctly raised when import fails.
     cothread = getattr(pytac, "cothread_cs")
+    delattr(pytac, "cothread_cs")
+    del sys.modules['pytac.cothread_cs']
     with pytest.raises(LatticeException):
-        delattr(pytac, "cothread_cs")
         load('VMX')
-        setattr(pytac, "cothread_cs", cothread)
+    setattr(pytac, "cothread_cs", cothread)
     # Change Cothread_cs back to how it was before.
     os.remove("pytac/cothread_cs.py")
     os.rename(os.path.join(os.path.realpath('.'), 'pytac/placeholder.py'),
