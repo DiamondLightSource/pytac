@@ -5,20 +5,23 @@ from pytac.load_csv import load
 from pytac.exceptions import LatticeException
 
 
-def test_control_system_is_None_import():
+def test_default_control_system_import():
     class CothreadControlSystem():
         pass
-    with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
-        assert bool(load('VMX'))
-        assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
+    with patch.multiple('cothread.catools', caget=None, caput=None):  # For Travis CI compatability.
+        with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
+            assert bool(load('VMX'))
+            assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
 
 
 def test_LatticeException_is_raised_when_import_fails():
     def CothreadControlSystem():
+        # function not a class to stop it raising ImportError during compile.
         raise ImportError
-    with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
-        with pytest.raises(LatticeException):
-            load('VMX')
+    with patch.multiple('cothread.catools', caget=None, caput=None):  # For Travis CI compatability.
+        with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
+            with pytest.raises(LatticeException):
+                load('VMX')
 
 
 def test_elements_loaded(lattice):
