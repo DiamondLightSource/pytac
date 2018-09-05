@@ -1,46 +1,24 @@
-import os
-import sys
 import pytac
 import pytest
+from mock import patch
 from pytac.load_csv import load
 from pytac.exceptions import LatticeException
 
 
 def test_control_system_is_None_import():
-    # Temporarily edit cothread_cs to use a mock so this test works with Travis.
-    os.rename(os.path.join(os.path.realpath('.'), 'pytac/cothread_cs.py'),
-              "pytac/placeholder.py")
-    f = open("pytac/cothread_cs.py", "w+")
-    f.write("import mock\n\nclass CothreadControlSystem():\n    mock.MagicMock")
-    f.close()
-    # Assert lattice is loaded when LatticeException is not raised.
-    assert bool(load('VMX'))
-    # Assert that the default lattice control system is Cothread.
-    assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
-    # Change Cothread_cs back to how it was before.
-    os.remove("pytac/cothread_cs.py")
-    os.rename(os.path.join(os.path.realpath('.'), 'pytac/placeholder.py'),
-              "pytac/cothread_cs.py")
+    class CothreadControlSystem():
+        pass
+    with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
+        assert bool(load('VMX'))
+        assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
 
 
 def test_LatticeException_is_raised_when_import_fails():
-    # Temporarily edit cothread_cs to always raise an ImportError.
-    os.rename(os.path.join(os.path.realpath('.'), 'pytac/cothread_cs.py'),
-              "pytac/placeholder.py")
-    f = open("pytac/cothread_cs.py", "w+")
-    f.write("import not_a_module\n\nclass CothreadControlSystem():\n   pass")
-    f.close()
-    # Check LatticeException is correctly raised when import fails.
-    cothread = getattr(pytac, "cothread_cs")
-    delattr(pytac, "cothread_cs")
-    del sys.modules['pytac.cothread_cs']
-    with pytest.raises(LatticeException):
-        load('VMX')
-    setattr(pytac, "cothread_cs", cothread)
-    # Change Cothread_cs back to how it was before.
-    os.remove("pytac/cothread_cs.py")
-    os.rename(os.path.join(os.path.realpath('.'), 'pytac/placeholder.py'),
-              "pytac/cothread_cs.py")
+    def CothreadControlSystem():
+        raise ImportError
+    with patch('pytac.cothread_cs.CothreadControlSystem', CothreadControlSystem):
+        with pytest.raises(LatticeException):
+            load('VMX')
 
 
 def test_elements_loaded(lattice):
