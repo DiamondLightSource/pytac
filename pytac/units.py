@@ -266,7 +266,7 @@ class PchipUnitConv(UnitConv):
 
         solution_within_bounds = False
         for root in roots:
-            if root <= self.x[-1] and root >= self.x[0]:
+            if self.x[0] <= root <= self.x[-1]:
                 if not solution_within_bounds:
                     solution_within_bounds = True
                     correct_root = root
