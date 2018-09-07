@@ -20,13 +20,13 @@ def get_lattice(ring_mode):
 
 def test_load_lattice_using_default_dir():
     lat = pytac.load_csv.load('VMX', mock.MagicMock())
-    assert len(lat) == 2143
+    assert len(lat) == 2142
 
 
 @pytest.mark.parametrize('lattice, name, n_elements, length',
-                         [(pytest.lazy_fixture('vmx_ring'), 'VMX', 2143,
+                         [(pytest.lazy_fixture('vmx_ring'), 'VMX', 2142,
                            561.571),
-                          (pytest.lazy_fixture('diad_ring'), 'DIAD', 2145,
+                          (pytest.lazy_fixture('diad_ring'), 'DIAD', 2144,
                            561.571)])
 def test_load_lattice(lattice, name, n_elements, length):
     assert len(lattice) == n_elements
