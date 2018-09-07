@@ -166,7 +166,7 @@ def load(mode, control_system=None, directory=None):
             control_system = cothread_cs.CothreadControlSystem()
     except ImportError:
         raise LatticeException('Please install cothread to load a lattice using'
-                               ' the default control system (in cothread_cs.py)')
+                               ' the default control system (in cothread_cs)')
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
@@ -198,8 +198,7 @@ def load(mode, control_system=None, directory=None):
             if item['id']==0:
                 lat.add_device(item['field'], d, UNIT_UC)
             else:
-                lat[int(item['id']) - 1].add_device(item['field'], d,
-                                                    UNIT_UC)
+                lat[int(item['id']) - 1].add_device(item['field'], d, UNIT_UC)
 
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)

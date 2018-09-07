@@ -48,7 +48,7 @@ function load_mml(ringmode)
     insertpvs(0, {s});
     s = pv_struct('dcct', 'SR-DI-DCCT-01:SIGNAL', '');
     insertpvs(0, {s});
-    s = pv_struct('emittance', '', '');
+    s = pv_struct('emittance', 'PLACEHOLDER_PV', '');
     insertpvs(0, {s});
     s = pv_struct('tune_x', 'SR23C-DI-TMBF-01:X:TUNE:TUNE', '');
     insertpvs(0, {s});
