@@ -83,12 +83,16 @@ def test_pp_conversion_to_machine_2_points():
     assert pchip_uc.phys_to_eng(1.5) == 1.5
 
 
-def test_pp_not_monotonically_increasing_error():
+def test_PchipInterpolator_raises_ValueError_if_x_not_monotonically_increasing():
     with pytest.raises(ValueError):
-        PchipUnitConv([1, 2, 3], [1, 3, 2])
-
+        PchipUnitConv([1, 3, 2], [1, 2, 3])
     with pytest.raises(ValueError):
         PchipUnitConv([-1, -2, -3], [-1, -2, -3])
+
+
+def test_PchipInterpolator_raises_ValueError_if_y_not_monotonic():
+    with pytest.raises(ValueError):
+        PchipUnitConv([1, 2, 3], [1, 3, 2])
 
 
 def test_PchipUnitConv_with_solution_outside_bounds_raises_UnitsException():

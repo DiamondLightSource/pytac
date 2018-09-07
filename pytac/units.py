@@ -221,18 +221,18 @@ class PchipUnitConv(UnitConv):
                        is raised.
 
         Raises:
-            ValueError: An error occured when the given y coefficients are
-                         neither in increasing or decreasing order.
+            ValueError: if coefficients are not appropriately monotonic.
         """
         super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng)
         self.x = x
         self.y = y
         self.pp = PchipInterpolator(x, y)
-
-        diff = numpy.diff(y)
-        if not ((numpy.all(diff > 0)) or (numpy.all((diff < 0)))):
-            raise ValueError("Given coefficients must be monotonically"
-                             "decreasing.")
+        # Note that the x coefficients are checked by the PchipInterpolator
+        # constructor.
+        y_diff = numpy.diff(y)
+        if not ((numpy.all(y_diff > 0)) or (numpy.all((y_diff < 0)))):
+            raise ValueError("y coefficients must be monotonically"
+                             "increasing or decreasing.")
 
     def _raw_eng_to_phys(self, eng_value):
         """Convert between engineering and physics units.
@@ -249,6 +249,9 @@ class PchipUnitConv(UnitConv):
     def _raw_phys_to_eng(self, physics_value):
         """Convert between physics and engineering units.
 
+        This expects there to be exactly one solution for x within the
+        range of the x values in self.x, otherwise a UnitsException is raised.
+
         Args:
             physics_value (float): The engineering value to be converted to the
                                     engineering value.
@@ -258,20 +261,23 @@ class PchipUnitConv(UnitConv):
                     value.
 
         Raises:
-            UnitsException: If there are no roots or more than one root.
+            UnitsException: if there is not exactly one solution.
         """
         y = [val - physics_value for val in self.y]
         new_pp = PchipInterpolator(self.x, y)
         roots = new_pp.roots()
 
-        solution_within_bounds = False
+        unique_root = None
         for root in roots:
             if self.x[0] <= root <= self.x[-1]:
-                if not solution_within_bounds:
-                    solution_within_bounds = True
-                    correct_root = root
-        if solution_within_bounds:
-            return correct_root
-        else:
-            raise UnitsException("The function {} does not have a solution "
-                                 "within bounds.")
+                if unique_root is None:
+                    unique_root = root
+                else:
+                    # I believe this should not happen because of the
+                    # requirement for self.y to be monotonically increasing.
+                    raise UnitsException(
+                        "More than one solution within Pchip bounds"
+                    )
+        if unique_root is None:
+            raise UnitsException("No solution within Pchip bounds.")
+        return unique_root
