@@ -196,7 +196,7 @@ def load(mode, control_system=None, directory=None):
             pve = True
             d = epics.EpicsDevice(name, control_system, pve, get_pv, set_pv)
             # Devices on index 0 are attached to the lattice not elements.
-            if item['id']==0:
+            if int(item['id']) == 0:
                 lat.add_device(item['field'], d, UNIT_UC)
             else:
                 lat[int(item['id']) - 1].add_device(item['field'], d, UNIT_UC)
