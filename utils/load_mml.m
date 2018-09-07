@@ -46,9 +46,11 @@ function load_mml(ringmode)
     % the lattice, we therefore must insert them separately at index 0.
     s = pv_struct('field', 'pv', '');
     insertpvs(0, {s});
-    s = pv_struct('dcct', 'SR-DI-DCCT-01:SIGNAL', '');
+    s = pv_struct('beam_current', 'SR-DI-DCCT-01:SIGNAL', '');
     insertpvs(0, {s});
-    s = pv_struct('emittance', 'PLACEHOLDER_PV', '');
+    s = pv_struct('emittance_x', 'SR-DI-EMIT-01:HEMIT', '');
+    insertpvs(0, {s});
+    s = pv_struct('emittance_y', 'SR-DI-EMIT-01:VEMIT', '');
     insertpvs(0, {s});
     s = pv_struct('tune_x', 'SR23C-DI-TMBF-01:X:TUNE:TUNE', '');
     insertpvs(0, {s});
