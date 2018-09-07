@@ -91,6 +91,14 @@ def test_pp_not_monotonically_increasing_error():
         PchipUnitConv([-1, -2, -3], [-1, -2, -3])
 
 
+def test_PchipUnitConv_with_solution_outside_bounds_raises_UnitsException():
+    # This is a linear relationship, but the root is 0, outside of the
+    # range of measurements.
+    pchip_uc = PchipUnitConv((1, 2, 3), (1, 2, 3))
+    with pytest.raises(UnitsException):
+        pchip_uc.phys_to_eng(0)
+
+
 def test_PchipUnitConv_with_additional_function():
     pchip_uc = PchipUnitConv([2, 4], [2, 4], f1, f2)
     assert pchip_uc.eng_to_phys(2) == 4.0

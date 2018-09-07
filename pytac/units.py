@@ -258,8 +258,7 @@ class PchipUnitConv(UnitConv):
                     value.
 
         Raises:
-            UnitsException: An error occured when there exist no or more than
-                             one roots.
+            UnitsException: If there are no roots or more than one root.
         """
         y = [val - physics_value for val in self.y]
         new_pp = PchipInterpolator(self.x, y)
@@ -271,9 +270,6 @@ class PchipUnitConv(UnitConv):
                 if not solution_within_bounds:
                     solution_within_bounds = True
                     correct_root = root
-                else:
-                    raise UnitsException('The function {} is not invertible.'
-                                         .format(new_pp))
         if solution_within_bounds:
             return correct_root
         else:
