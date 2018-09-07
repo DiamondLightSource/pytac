@@ -194,8 +194,12 @@ def load(mode, control_system=None, directory=None):
             set_pv = item['set_pv'] if item['set_pv'] else None
             pve = True
             d = epics.EpicsDevice(name, control_system, pve, get_pv, set_pv)
-            lat[int(item['id']) - 1].add_device(item['field'], d,
-                                                UNIT_UC)
+            # Devices on index 0 are attached to the lattice not elements.
+            if item['id']==0:
+                lat.add_device(item['field'], d, UNIT_UC)
+            else:
+                lat[int(item['id']) - 1].add_device(item['field'], d,
+                                                    UNIT_UC)
 
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)
