@@ -171,6 +171,7 @@ def load(mode, control_system=None, directory=None):
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
     lat = epics.EpicsLattice(mode, 3000, control_system)
+    lat.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
     s = 0.0
     index = 1
     with open(os.path.join(directory, mode, ELEMENTS_FILENAME)) as elements:
