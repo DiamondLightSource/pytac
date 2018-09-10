@@ -46,7 +46,7 @@ class BasicDevice(Device):
     """
     def __init__(self, value, enabled=True):
         """Args:
-            value (?): can be a number, string or a list of strings or numbers.
+            value (?): can be a number or a list of numbers.
             enabled (bool-like): Whether the device is enabled. May be a
                                   PvEnabler object.
         """

@@ -15,7 +15,7 @@ import os
 import csv
 import pytac
 import collections
-from pytac import epics, data_source, units, utils
+from pytac import epics, data_source, units, utils, device
 from pytac.exceptions import LatticeException
 
 
@@ -200,6 +200,12 @@ def load(mode, control_system=None, directory=None):
                 lat.add_device(item['field'], d, UNIT_UC)
             else:
                 lat[int(item['id']) - 1].add_device(item['field'], d, UNIT_UC)
+        # Add basic devices to the lattice.
+        positions = []
+        for elem in lat:
+            positions.append(elem.s)
+        lat.add_device('s_position', device.BasicDevice(positions), UNIT_UC)
+        lat.add_device('energy', device.BasicDevice(3), UNIT_UC)
 
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)
