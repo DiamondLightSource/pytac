@@ -69,7 +69,7 @@ class BasicDevice(Device):
         """
         self.value = value
 
-    def get_value(self):
+    def get_value(self, handle=None):
         """Read the value from the device.
 
         Returns:
