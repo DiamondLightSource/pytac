@@ -63,7 +63,7 @@ def simple_element(x_device, y_device, mock_sim_data_source, unit_uc,
 @pytest.fixture
 def simple_lattice(simple_element, x_device, y_device, mock_sim_data_source,
                    unit_uc, double_uc):
-    lattice = Lattice(LATTICE_NAME, 1)
+    lattice = Lattice(LATTICE_NAME)
     lattice.add_element(simple_element)
     lattice.set_data_source(DeviceDataSource(), pytac.LIVE)
     lattice.add_device('x', x_device, unit_uc)
@@ -121,6 +121,6 @@ def simple_epics_element(mock_cs, unit_uc):
 
 @pytest.fixture
 def simple_epics_lattice(simple_epics_element, mock_cs):
-    lat = EpicsLattice('lattice', 1, mock_cs)
+    lat = EpicsLattice('lattice', mock_cs)
     lat.add_element(simple_epics_element)
     return lat

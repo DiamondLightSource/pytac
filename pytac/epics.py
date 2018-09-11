@@ -15,17 +15,16 @@ class EpicsLattice(Lattice):
 
     """
 
-    def __init__(self, name, energy, epics_cs):
+    def __init__(self, name, epics_cs):
         """
         Args:
             name (str): The name of the epics lattice.
-            energy (int): The total energy of the epics lattice.
             epics_cs (ControlSystem): The control system used to store the
                                        values on a PV.
 
         **Methods:**
         """
-        super(EpicsLattice, self).__init__(name, energy)
+        super(EpicsLattice, self).__init__(name)
         self._cs = epics_cs
 
     def get_pv_names(self, family, field, handle):

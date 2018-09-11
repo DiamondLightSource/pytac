@@ -136,10 +136,8 @@ def load_unitconv(directory, mode, lattice):
             # For certain magnet types, we need an additional rigidity
             # conversion factor as well as the raw conversion.
             if element.families.intersection(('HSTR', 'VSTR', 'QUAD', 'SEXT')):
-                (unitconvs[int(item['uc_id'])]
-                 ._post_eng_to_phys) = get_div_rigidity(lattice.get_energy())
-                (unitconvs[int(item['uc_id'])]
-                 ._pre_phys_to_eng) = get_mult_rigidity(lattice.get_energy())
+                unitconvs[int(item['uc_id'])]._post_eng_to_phys = get_div_rigidity(lattice.get_value('energy'))
+                unitconvs[int(item['uc_id'])]._pre_phys_to_eng = get_mult_rigidity(lattice.get_value('energy'))
             element._data_source_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
 
 
@@ -170,7 +168,7 @@ def load(mode, control_system=None, directory=None):
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
-    lat = epics.EpicsLattice(mode, 3000, control_system)
+    lat = epics.EpicsLattice(mode, control_system)
     lat.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
     s = 0.0
     index = 1
@@ -205,7 +203,7 @@ def load(mode, control_system=None, directory=None):
         for elem in lat:
             positions.append(elem.s)
         lat.add_device('s_position', device.BasicDevice(positions), UNIT_UC)
-        lat.add_device('energy', device.BasicDevice(3), UNIT_UC)
+        lat.add_device('energy', device.BasicDevice(3000), UNIT_UC)
 
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)
