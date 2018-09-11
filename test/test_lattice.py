@@ -7,9 +7,8 @@ from constants import DUMMY_ARRAY, LATTICE_NAME
 
 
 def test_create_lattice():
-    lat = Lattice(LATTICE_NAME, 1)
+    lat = Lattice(LATTICE_NAME)
     assert(len(lat)) == 0
-    assert lat.get_energy() == 1
     assert lat.name == LATTICE_NAME
 
 
@@ -30,8 +29,7 @@ def test_get_element_devices_returns_empty_list_if_field_not_matched(simple_latt
 
 
 def test_get_element_device_names(simple_lattice):
-    assert simple_lattice.get_element_device_names('family',
-                                                   'x') == ['x_device']
+    assert simple_lattice.get_element_device_names('family', 'x') == ['x_device']
 
 
 def test_lattice_with_n_elements(simple_lattice):
@@ -104,7 +102,7 @@ def test_s_position(simple_lattice):
 
 
 def test_get_s_throws_exception_if_element_not_in_lattice():
-    lat = Lattice(LATTICE_NAME, 1)
+    lat = Lattice(LATTICE_NAME)
     element = Element(1, 1.0, 'Quad')
     with pytest.raises(pytac.exceptions.LatticeException):
         lat.get_s(element)

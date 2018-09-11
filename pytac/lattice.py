@@ -26,16 +26,14 @@ class Lattice(object):
                                                       data sources associated
                                                       with this lattice.
     """
-    def __init__(self, name, energy):
+    def __init__(self, name):
         """Args:
             name (str): The name of the lattice.
-            energy (int): The total energy of the lattice.
 
         **Methods:**
         """
         self.name = name
         self._lattice = []
-        self._energy = energy
         self._data_source_manager = DataSourceManager()
 
     def set_data_source(self, data_source, data_source_type):
@@ -151,14 +149,6 @@ class Lattice(object):
         """
         self._data_source_manager.set_value(field, value, handle, units,
                                             data_source)
-
-    def get_energy(self):
-        """Function to get the total energy of the lattice.
-
-        Returns:
-            int: energy of the lattice.
-        """
-        return self._energy
 
     def __getitem__(self, n):
         """Get the (n + 1)th element of the lattice - i.e. index 0 represents

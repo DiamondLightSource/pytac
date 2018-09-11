@@ -15,7 +15,7 @@ import os
 import csv
 import pytac
 import collections
-from pytac import epics, data_source, units, utils
+from pytac import epics, data_source, units, utils, device
 from pytac.exceptions import LatticeException
 
 
@@ -136,10 +136,8 @@ def load_unitconv(directory, mode, lattice):
             # For certain magnet types, we need an additional rigidity
             # conversion factor as well as the raw conversion.
             if element.families.intersection(('HSTR', 'VSTR', 'QUAD', 'SEXT')):
-                (unitconvs[int(item['uc_id'])]
-                 ._post_eng_to_phys) = get_div_rigidity(lattice.get_energy())
-                (unitconvs[int(item['uc_id'])]
-                 ._pre_phys_to_eng) = get_mult_rigidity(lattice.get_energy())
+                unitconvs[int(item['uc_id'])]._post_eng_to_phys = get_div_rigidity(lattice.get_value('energy'))
+                unitconvs[int(item['uc_id'])]._pre_phys_to_eng = get_mult_rigidity(lattice.get_value('energy'))
             element._data_source_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
 
 
@@ -166,11 +164,12 @@ def load(mode, control_system=None, directory=None):
             control_system = cothread_cs.CothreadControlSystem()
     except ImportError:
         raise LatticeException('Please install cothread to load a lattice using'
-                               ' the default control system (in cothread_cs.py)')
+                               ' the default control system (in cothread_cs)')
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
-    lat = epics.EpicsLattice(mode, 3000, control_system)
+    lat = epics.EpicsLattice(mode, control_system)
+    lat.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
     s = 0.0
     index = 1
     with open(os.path.join(directory, mode, ELEMENTS_FILENAME)) as elements:
@@ -194,8 +193,17 @@ def load(mode, control_system=None, directory=None):
             set_pv = item['set_pv'] if item['set_pv'] else None
             pve = True
             d = epics.EpicsDevice(name, control_system, pve, get_pv, set_pv)
-            lat[int(item['id']) - 1].add_device(item['field'], d,
-                                                UNIT_UC)
+            # Devices on index 0 are attached to the lattice not elements.
+            if int(item['id']) == 0:
+                lat.add_device(item['field'], d, UNIT_UC)
+            else:
+                lat[int(item['id']) - 1].add_device(item['field'], d, UNIT_UC)
+        # Add basic devices to the lattice.
+        positions = []
+        for elem in lat:
+            positions.append(elem.s)
+        lat.add_device('s_position', device.BasicDevice(positions), UNIT_UC)
+        lat.add_device('energy', device.BasicDevice(3000), UNIT_UC)
 
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)

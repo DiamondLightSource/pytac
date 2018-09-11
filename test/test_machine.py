@@ -20,13 +20,13 @@ def get_lattice(ring_mode):
 
 def test_load_lattice_using_default_dir():
     lat = pytac.load_csv.load('VMX', mock.MagicMock())
-    assert len(lat) == 2143
+    assert len(lat) == 2142
 
 
 @pytest.mark.parametrize('lattice, name, n_elements, length',
-                         [(pytest.lazy_fixture('vmx_ring'), 'VMX', 2143,
+                         [(pytest.lazy_fixture('vmx_ring'), 'VMX', 2142,
                            561.571),
-                          (pytest.lazy_fixture('diad_ring'), 'DIAD', 2145,
+                          (pytest.lazy_fixture('diad_ring'), 'DIAD', 2144,
                            561.571)])
 def test_load_lattice(lattice, name, n_elements, length):
     assert len(lattice) == n_elements
@@ -151,7 +151,7 @@ def test_bpm_unitconv(lattice, field):
 def test_quad_unitconv(vmx_ring):
     # From MML: hw2physics('Q1D', 'Monitor', 70, [1])
     q1d = vmx_ring.get_elements('Q1D')
-    vmx_ring._energy = 3000
+    # This test depends on the lattice having an energy of 3000Mev.
     for q in q1d:
         uc = q._data_source_manager._uc['b1']
         numpy.testing.assert_allclose(uc.eng_to_phys(70), -0.691334652255027)

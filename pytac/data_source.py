@@ -43,7 +43,7 @@ class DataSource(object):
 
         Args:
             field (str): field to set.
-            value (str): value to set.
+            value (float): value to set.
         """
         raise NotImplementedError()
 

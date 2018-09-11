@@ -1,51 +1,91 @@
-import pytest
 import mock
+import pytac
+import pytest
+from pytac.device import BasicDevice
 from pytac.epics import EpicsDevice, PvEnabler
 from pytac.exceptions import HandleException
 from constants import PREFIX, RB_PV, SP_PV
 
 
-def create_device(prefix=PREFIX, rb_pv=RB_PV, sp_pv=SP_PV, enabled=True):
+# Not a test - epics device creation function used in tests.
+def create_epics_device(prefix=PREFIX, rb_pv=RB_PV, sp_pv=SP_PV, enabled=True):
     mock_cs = mock.MagicMock()
-    mock_cs.get.return_value = '1.0'
-    device = EpicsDevice(prefix, mock.MagicMock(), enabled=enabled, rb_pv=rb_pv,
+    mock_cs.get.return_value = 1.0
+    device = EpicsDevice(prefix, mock_cs, enabled=enabled, rb_pv=rb_pv,
                          sp_pv=sp_pv)
     return device
 
 
-def test_set_device_value():
-    device = create_device()
+# Not a test - basic device creation function used in tests.
+def create_basic_device(value=1.0, enabled=True):
+    device = BasicDevice(value, enabled)
+    return device
+
+
+# Epics device specific tests.
+def test_set_epics_device_value():
+    device = create_epics_device()
     device.set_value(40)
     device._cs.put.assert_called_with(SP_PV, 40)
 
 
-def test_device_invalid_sp_raise_exception():
-    device2 = create_device(PREFIX, RB_PV, None)
+def test_get_epics_device_value():
+    device = create_epics_device()
+    assert device.get_value(pytac.SP) == 1.0
+
+
+def test_epics_device_invalid_sp_raises_exception():
+    device2 = create_epics_device(PREFIX, RB_PV, None)
     with pytest.raises(HandleException):
         device2.set_value(40)
 
 
-def test_get_device_value():
-    device = create_device()
+def test_get_epics_device_value_invalid_handle_raises_exception():
+    device = create_epics_device()
     with pytest.raises(HandleException):
         device.get_value('non_existent')
 
 
-def test_device_is_enabled_by_default():
-    device = create_device()
+# Basic device specific tests.
+def test_set_basic_device_value():
+    device = create_basic_device()
+    device.set_value(40)
+    assert device.value == 40
+
+
+def test_get_basic_device_value_without_handle():
+    device = create_basic_device()
+    assert device.get_value() == 1.0
+
+
+def test_get_basic_device_value_with_handle():
+    device = create_basic_device()
+    assert device.get_value(handle=pytac.RB) == 1.0
+
+
+# Generalised device tests.
+@pytest.mark.parametrize('device_creation_function', [create_epics_device,
+                         create_basic_device])
+def test_device_is_enabled_by_default(device_creation_function):
+    device = device_creation_function()
     assert device.is_enabled()
 
 
-def test_device_is_disabled_if_False_enabler():
-    device = create_device(enabled=False)
+@pytest.mark.parametrize('device_creation_function', [create_epics_device,
+                         create_basic_device])
+def test_device_is_disabled_if_False_enabler(device_creation_function):
+    device = device_creation_function(enabled=False)
     assert not device.is_enabled()
 
 
-def test_device_is_enabled_returns_bool_value():
-    device = create_device(enabled=mock.MagicMock())
+@pytest.mark.parametrize('device_creation_function', [create_epics_device,
+                         create_basic_device])
+def test_device_is_enabled_returns_bool_value(device_creation_function):
+    device = device_creation_function(enabled=1)
     assert device.is_enabled() is True
 
 
+# PvEnabler test.
 def test_PvEnabler():
     mock_cs = mock.MagicMock()
     mock_cs.get.return_value = '40'

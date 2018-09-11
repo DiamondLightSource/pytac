@@ -42,6 +42,19 @@ function load_mml(ringmode)
     used_elements = containers.Map();
     renamed_indexes = containers.Map('KeyType', 'int32', 'ValueType', 'int32');
 
+    % These fields are not associated with an element as they are attached to
+    % the lattice, we therefore must insert them separately at index 0.
+    s = pv_struct('beam_current', 'SR-DI-DCCT-01:SIGNAL', '');
+    insertpvs(0, {s});
+    s = pv_struct('emittance_x', 'SR-DI-EMIT-01:HEMIT', '');
+    insertpvs(0, {s});
+    s = pv_struct('emittance_y', 'SR-DI-EMIT-01:VEMIT', '');
+    insertpvs(0, {s});
+    s = pv_struct('tune_x', 'SR23C-DI-TMBF-01:X:TUNE:TUNE', '');
+    insertpvs(0, {s});
+    s = pv_struct('tune_y', 'SR23C-DI-TMBF-01:Y:TUNE:TUNE', '');
+    insertpvs(0, {s});
+
     new_index = 0;
 
     for old_index = 1:length(THERING)
@@ -75,14 +88,6 @@ function load_mml(ringmode)
     insertextrapvs('SQUAD', 'a1');
     insertextrapvs('BBVMXS', 'db0');
     insertextrapvs('BBVMXL', 'db0');
-
-    % DCCT not in THERING.
-    dcct = struct ('FamName', 'DCCT', 'Length', 0);
-    new_index = new_index + 1;
-    old_index = old_index + 1;
-    insertelement(new_index, old_index, dcct);
-    s = pv_struct('I', 'SR-DI-DCCT-01:SIGNAL', '');
-    insertpvs(new_index, {s});
 
     renamed_indexes(old_index) = new_index;
     fclose(f_elements);
