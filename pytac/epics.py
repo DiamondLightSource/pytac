@@ -104,10 +104,11 @@ class EpicsElement(Element):
             DeviceException: if there is no device for this field.
         """
         try:
-            return self._data_source_manager._data_sources[pytac.LIVE].get_device(field).get_pv_name(handle)
+            return (self._data_source_manager._data_sources[pytac.LIVE]
+                    .get_device(field).get_pv_name(handle))
         except KeyError:
-            raise DeviceException('{} has no device for field {}'.format(self,
-                                                                         field))
+            raise DeviceException('{} has no device for field {}'
+                                  .format(self, field))
 
 
 class EpicsDevice(Device):
@@ -167,9 +168,8 @@ class EpicsDevice(Device):
             HandleException: if no setpoint PV exists.
         """
         if self.sp_pv is None:
-            raise HandleException(
-                "Device {0} has no setpoint PV.".format(self.name)
-            )
+            raise HandleException("Device {0} has no setpoint PV."
+                                  .format(self.name))
         self._cs.put(self.sp_pv, value)
 
     def get_value(self, handle):
@@ -189,9 +189,8 @@ class EpicsDevice(Device):
         elif handle == pytac.SP and self.sp_pv:
             return self._cs.get(self.sp_pv)
 
-        raise HandleException(
-            "Device {0} has no {1} PV." .format(self.name, handle)
-        )
+        raise HandleException("Device {0} has no {1} PV."
+                              .format(self.name, handle))
 
     def get_pv_name(self, handle):
         """Get the PV name for the specified handle.
@@ -210,8 +209,8 @@ class EpicsDevice(Device):
         elif handle == pytac.SP and self.sp_pv:
             return self.sp_pv
 
-        raise HandleException("Device {0} has no {1} PV.".format(self.name,
-                                                                 handle))
+        raise HandleException("Device {0} has no {1} PV."
+                              .format(self.name, handle))
 
 
 class PvEnabler(object):
