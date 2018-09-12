@@ -59,7 +59,7 @@ for i = 1:length(hcor.DeviceList)
         hcor_index = hcor_index + 1;
     end
     id = write_linear_data(data.field(2) / data.current(2), 0);
-    fprintf(f_units, '%d,%s,poly,%d\n', renamedIndexes(hcor_index), 'b0', id); 
+    fprintf(f_units, '%d,%s,poly,%d\n', renamedIndexes(hcor_index), 'x_kick', id); 
 end
 
 vcor = getfamilydata('VCM');
@@ -70,7 +70,7 @@ for i = 1:length(vcor.DeviceList)
         vcor_index = vcor_index + 1;
     end
     id = write_linear_data(data.field(2) / data.current(2), 0);
-    fprintf(f_units, '%d,%s,poly,%d\n', renamedIndexes(vcor_index), 'a0', id);
+    fprintf(f_units, '%d,%s,poly,%d\n', renamedIndexes(vcor_index), 'y_kick', id);
 end
 
 

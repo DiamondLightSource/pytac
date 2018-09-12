@@ -165,13 +165,13 @@ function load_mml(ringmode)
             elseif strcmp(type, 'BEND')
                 field = 'b0';
             elseif strcmp(type, 'VSTR')
-                field = 'a0';
+                field = 'y_kick';
                 alt_prefix = strrep(strrep(get_pv, 'DI', 'PC'), ':I', '');
                 alt_template = strcat(alt_prefix, ':%s:DISABLED');
                 alt_pv1 = pv_struct('v_fofb_disabled', sprintf(alt_template, 'FAST'), '');
                 alt_pv2 = pv_struct('v_sofb_disabled', sprintf(alt_template, 'SLOW'), '');
             elseif strcmp(type, 'HSTR')
-                field = 'b0';
+                field = 'x_kick';
                 alt_prefix = strrep(strrep(get_pv, 'DI', 'PC'), ':I', '');
                 alt_template = strcat(alt_prefix, ':%s:DISABLED');
                 alt_pv1 = pv_struct('h_fofb_disabled', sprintf(alt_template,'FAST'), '');
