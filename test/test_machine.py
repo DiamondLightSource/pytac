@@ -106,12 +106,12 @@ def test_load_correctors(lattice, n_correctors):
     assert len(hcm) == n_correctors
     assert len(vcm) == n_correctors
     for element in hcm:
-        # each one has b0, h_fofb_disabled and h_sofb_disabled fields.
-        assert {'b0', 'h_sofb_disabled',
+        # each one has x_kick, h_fofb_disabled and h_sofb_disabled fields.
+        assert {'x_kick', 'h_sofb_disabled',
                 'h_fofb_disabled'}.issubset(element.get_fields()[pytac.LIVE])
     for element in vcm:
-        # each one has a0, v_fofb_disabled and v_sofb_disabled fields.
-        assert {'a0', 'v_sofb_disabled',
+        # each one has y_kick, v_fofb_disabled and v_sofb_disabled fields.
+        assert {'y_kick', 'v_sofb_disabled',
                 'v_fofb_disabled'}.issubset(element.get_fields()[pytac.LIVE])
 
 
