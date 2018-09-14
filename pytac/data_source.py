@@ -13,6 +13,9 @@ class DataSource(object):
 
     Attributes:
         units (str): pytac.PHYS or pytac.ENG.
+        default_handle (str): pytac.RB or pytac.SP.
+        default_units (str): pytac.PHYS or pytac.ENG.
+        default_data_source (str): pytac.LIVE or pytac.SIM.
 
     **Methods:**
     """
@@ -65,6 +68,9 @@ class DataSourceManager(object):
     def __init__(self):
         self._data_sources = {}
         self._uc = {}
+        self.default_handle = pytac.RB
+        self.default_units = pytac.ENG
+        self.default_data_source = pytac.LIVE
 
     def set_data_source(self, data_source, data_source_type):
         """Add a data source to the manager.
@@ -139,7 +145,8 @@ class DataSourceManager(object):
         """
         return self._uc[field]
 
-    def get_value(self, field, handle, units, data_source):
+    def get_value(self, field, handle=pytac.default, units=pytac.default,
+                  data_source=pytac.default):
         """Get the value for a field.
 
         Returns the value of a field on the manager. This value is uniquely
@@ -160,6 +167,12 @@ class DataSourceManager(object):
             DeviceException: if there is no device on the given field.
             FieldException: if the manager does not have the specified field.
         """
+        if handle is pytac.default:
+            handle = self.default_handle
+        if units is pytac.default:
+            units = self.default_units
+        if data_source is pytac.default:
+            data_source = self.default_data_source
         try:
             data_source = self._data_sources[data_source]
             value = data_source.get_value(field, handle)
@@ -172,7 +185,8 @@ class DataSourceManager(object):
             raise FieldException('No field {} on manager {}'.format(field,
                                                                     self))
 
-    def set_value(self, field, value, handle, units, data_source):
+    def set_value(self, field, value, handle=pytac.default, units=pytac.default,
+                  data_source=pytac.default):
         """Set the value for a field.
 
         This value can be set on the machine or the simulation.
@@ -188,6 +202,12 @@ class DataSourceManager(object):
             DeviceException: if arguments are incorrect.
             FieldException: if the manager does not have the specified field.
         """
+        if handle is pytac.default:
+            handle = self.default_handle
+        if units is pytac.default:
+            units = self.default_units
+        if data_source is pytac.default:
+            data_source = self.default_data_source
         if handle != pytac.SP:
             raise HandleException('Must write using {}'.format(pytac.SP))
         try:

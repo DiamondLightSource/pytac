@@ -105,8 +105,8 @@ class Lattice(object):
         """
         return self._data_source_manager.get_unitconv(field)
 
-    def get_value(self, field, handle=pytac.RB, units=pytac.ENG,
-                  data_source=pytac.LIVE):
+    def get_value(self, field, handle=pytac.default, units=pytac.default,
+                  data_source=pytac.default):
         """Get the value for a field on the lattice.
 
         Returns the value of a field on the lattice. This value is uniquely
@@ -130,8 +130,8 @@ class Lattice(object):
         return self._data_source_manager.get_value(field, handle, units,
                                                    data_source)
 
-    def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
-                  data_source=pytac.LIVE):
+    def set_value(self, field, value, handle=pytac.default, units=pytac.default,
+                  data_source=pytac.default):
         """Set the value for a field.
 
         This value can be set on the machine or the simulation.
@@ -349,6 +349,39 @@ class Lattice(object):
         if len(elements) != len(values):
             raise LatticeException("Number of elements in given array must be"
                                    " equal to the number of elements in the "
-                                   "family")
+                                   "family.")
         for element, value in zip(elements, values):
             element.set_value(field, value)
+
+    def set_default_arguments(default_handle=None, default_units=None,
+                              default_data_source=None)
+        if (default_handle and default_units and default_data_source) is None:
+            raise LatticeException('Please set at least one default argument, '
+                                   'for handle, units or data_source.')
+        if default_handle is pytac.RB or pytac.SP:
+            self._data_source_manager.default_handle = default_handle
+            elems = self.get_elements()
+            for elem in elems:
+                elem._data_source_manager.default_handle = default_handle
+        else:
+            raise LatticeException('Please enter a valid value for {0} from: '
+                                   '{1} {2}'.format(default_handle, pytac.RB,
+                                                    pytac.SP))
+        if default_units is pytac.ENG or pytac.PHYS:
+            self._data_source_manager.default_units = default_units
+            elems = self.get_elements()
+            for elem in elems:
+                elem._data_source_manager.default_units = default_units
+        else:
+            raise LatticeException('Please enter a valid value for {0} from: '
+                                   '{1} {2}'.format(default_units, pytac.ENG,
+                                               pytac.PHYS))
+        if default_data_source is pytac.LIVE or pytac.SIM:
+            self._data_source_manager.default_data_source = default_data_source
+            elems = self.get_elements()
+            for elem in elems:
+                elem._data_source_manager.default_data_source = default_data_source
+        else:
+            raise LatticeException('Please enter a valid value for {0} from: '
+                                   '{1} {2}'.format(default_data_source,
+                                                    pytac.LIVE, pytac.SIM))

@@ -138,8 +138,8 @@ class Element(object):
         """
         self.families.add(family)
 
-    def get_value(self, field, handle=pytac.RB, units=pytac.ENG,
-                  data_source=pytac.LIVE):
+    def get_value(self, field, handle=pytac.default, units=pytac.default,
+                  data_source=pytac.default):
         """Get the value for a field.
 
         Returns the value of a field on the element. This value is uniquely
@@ -163,8 +163,8 @@ class Element(object):
         return self._data_source_manager.get_value(field, handle, units,
                                                    data_source)
 
-    def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
-                  data_source=pytac.LIVE):
+    def set_value(self, field, value, handle=pytac.default, units=pytac.default,
+                  data_source=pytac.default):
         """Set the value for a field.
 
         This value can be set on the machine or the simulation.
