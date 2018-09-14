@@ -125,3 +125,27 @@ def test_get_family_s(simple_lattice):
     element4.add_to_family('family')
     simple_lattice.add_element(element4)
     assert simple_lattice.get_family_s('family') == [0, 0, 1.0, 2.5]
+
+
+def test_get_default_arguments(simple_lattice):
+    assert simple_lattice.get_default_handle() == pytac.RB
+    assert simple_lattice.get_default_units() == pytac.ENG
+    assert simple_lattice.get_default_data_source() == pytac.LIVE
+
+
+def test_set_default_arguments(simple_lattice):
+    simple_lattice.set_default_arguments(pytac.SP, pytac.PHYS, pytac.SIM)
+    assert simple_lattice._data_source_manager._default_handle == pytac.SP
+    assert simple_lattice._data_source_manager._default_units == pytac.PHYS
+    assert simple_lattice._data_source_manager._default_data_source == pytac.SIM
+
+
+def test_set_default_arguments_exceptions(simple_lattice):
+    with pytest.raises(pytac.exceptions.LatticeException):
+        simple_lattice.set_default_arguments()
+    with pytest.raises(pytac.exceptions.HandleException):
+        simple_lattice.set_default_arguments(default_handle='invalid_handle')
+    with pytest.raises(pytac.exceptions.UnitsException):
+        simple_lattice.set_default_arguments(default_units='invalid_units')
+    with pytest.raises(pytac.exceptions.DeviceException):
+        simple_lattice.set_default_arguments(default_data_source='invalid_data_source')
