@@ -4,7 +4,7 @@
 import numpy
 import pytac
 from pytac.data_source import DataSourceManager
-from pytac.exceptions import LatticeException
+from pytac.exceptions import LatticeException, HandleException, UnitsException, DeviceException
 
 
 class Lattice(object):
@@ -355,36 +355,35 @@ class Lattice(object):
 
     def set_default_arguments(self, default_handle=None, default_units=None,
                               default_data_source=None):
-        if (default_handle and default_units and default_data_source) is None:
+        if not any([default_handle, default_units, default_data_source]):
             raise LatticeException('Please set at least one default argument, '
                                    'for handle, units or data_source.')
-        if default_handle is pytac.RB or pytac.SP:
+        if default_handle is pytac.RB or default_handle is pytac.SP:
             self._data_source_manager._default_handle = default_handle
             elems = self.get_elements()
             for elem in elems:
                 elem._data_source_manager._default_handle = default_handle
-        else:
-            raise LatticeException('Please enter a valid value for {0} from: '
-                                   '{1} {2}'.format(default_handle, pytac.RB,
-                                                    pytac.SP))
-        if default_units is pytac.ENG or pytac.PHYS:
+        elif default_handle is not None:
+            raise HandleException('{0} is not a handle. Please enter {1} or {2}'
+                                  .format(default_handle, pytac.RB, pytac.SP))
+        if default_units is pytac.ENG or default_units is pytac.PHYS:
             self._data_source_manager._default_units = default_units
             elems = self.get_elements()
             for elem in elems:
                 elem._data_source_manager._default_units = default_units
-        else:
-            raise LatticeException('Please enter a valid value for {0} from: '
-                                   '{1} {2}'.format(default_units, pytac.ENG,
-                                                    pytac.PHYS))
-        if default_data_source is pytac.LIVE or pytac.SIM:
+        elif default_units is not None:
+            raise UnitsException('{0} is not a unit type. Please enter {1} or '
+                                 '{2}'.format(default_units, pytac.ENG,
+                                              pytac.PHYS))
+        if default_data_source is pytac.LIVE or default_data_source is pytac.SIM:
             self._data_source_manager._default_data_source = default_data_source
             elems = self.get_elements()
             for elem in elems:
                 elem._data_source_manager._default_data_source = default_data_source
-        else:
-            raise LatticeException('Please enter a valid value for {0} from: '
-                                   '{1} {2}'.format(default_data_source,
-                                                    pytac.LIVE, pytac.SIM))
+        elif default_data_source is not None:
+            raise DeviceException('{0} is not a data source. Please enter {1} '
+                                  'or {2}'.format(default_data_source,
+                                                  pytac.LIVE, pytac.SIM))
 
     def get_default_handle(self):
         return self._data_source_manager._default_handle
