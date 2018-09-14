@@ -351,7 +351,7 @@ class Lattice(object):
                                    " equal to the number of elements in the "
                                    "family.")
         for element, value in zip(elements, values):
-            element.set_value(field, value)
+            element.set_value(field, value, handle=pytac.SP)
 
     def set_default_arguments(self, default_handle=None, default_units=None,
                               default_data_source=None):
