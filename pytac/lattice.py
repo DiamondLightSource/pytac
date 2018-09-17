@@ -230,29 +230,6 @@ class Lattice(object):
 
         return families
 
-    def get_s(self, elem):
-        """Find the s position of an element in the lattice.
-
-        Note that the given element must exist in the lattice.
-
-        Args:
-            elem (Element): The element that the position is being asked for.
-
-        Returns:
-            float: The position of the given element.
-
-        Raises:
-            LatticeException: if element doesn't exist in the lattice.
-        """
-        s_pos = 0
-        for e in self._lattice:
-            if e is not elem:
-                s_pos += e.length
-            else:
-                return s_pos
-        raise LatticeException('Element {} not in lattice {}'.format(elem,
-                                                                     self))
-
     def get_family_s(self, family):
         """Get s positions for all elements from the same family.
 
@@ -265,7 +242,7 @@ class Lattice(object):
         elements = self.get_elements(family)
         s_positions = []
         for element in elements:
-            s_positions.append(self.get_s(element))
+            s_positions.append(element.s)
         return s_positions
 
     def get_element_devices(self, family, field):

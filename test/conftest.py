@@ -51,7 +51,7 @@ def double_uc():
 def simple_element(x_device, y_device, mock_sim_data_source, unit_uc,
                    double_uc):
     # A unit conversion object that returns the same as the input.
-    element = Element('element1', 0, 'BPM', cell=1)
+    element = Element('element1', 0, 'BPM', 0.0, cell=1)
     element.add_to_family('family')
     element.set_data_source(DeviceDataSource(), pytac.LIVE)
     element.add_device('x', x_device, unit_uc)
@@ -109,7 +109,7 @@ def mock_cs():
 
 @pytest.fixture
 def simple_epics_element(mock_cs, unit_uc):
-    element = EpicsElement(1, 0, 'BPM', cell=1)
+    element = EpicsElement(1, 0, 'BPM', 0.0, cell=1)
     x_device = EpicsDevice('x_device', mock_cs, True, RB_PV, SP_PV)
     y_device = EpicsDevice('y_device', mock_cs, True, SP_PV, RB_PV)
     element.add_to_family('family')

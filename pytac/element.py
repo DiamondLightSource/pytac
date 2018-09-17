@@ -25,8 +25,7 @@ class Element(object):
                                                       data sources associated
                                                       with this element.
     """
-    def __init__(self, name, length, element_type, s=None, index=None,
-                 cell=None):
+    def __init__(self, name, length, element_type, s, index=None, cell=None):
         """
         Args:
             name (int): The unique identifier for the element in the ring.

@@ -6,14 +6,14 @@ from constants import DUMMY_VALUE_1, DUMMY_VALUE_2
 
 
 def test_create_element():
-    e = pytac.element.Element('bpm1', 6.0, 'bpm')
+    e = pytac.element.Element('bpm1', 6.0, 'bpm', 0.0)
     e.add_to_family('BPM')
     assert 'BPM' in e.families
     assert e.length == 6.0
 
 
 def test_add_element_to_family():
-    e = pytac.element.Element('dummy', 6.0, 'Quad')
+    e = pytac.element.Element('dummy', 6.0, 'Quad', 0.0)
     e.add_to_family('fam')
     assert 'fam' in e.families
 
