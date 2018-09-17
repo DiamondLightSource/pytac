@@ -355,8 +355,28 @@ class Lattice(object):
 
     def set_default_arguments(self, default_handle=None, default_units=None,
                               default_data_source=None):
+        """Sets the default handle, units and data_source values for the lattice
+        and all its elements.
+
+        Args:
+            default_handle (str): The default handle to be set across the entire
+                                   lattice, pytac.RB or pytac.SP.
+            default_units (str): The default unit type to be set across the
+                                  entire lattice, pytac.ENG or pytac.PHYS.
+            default_data_source (str): The default data source to be set across
+                                        the entire lattice, pytac.LIVE or
+                                        pytac.SIM.
+
+        Raises:
+            LatticeException: if no default arguments are given.
+            HandleException: if specified default handle is not a vaild handle.
+            UnitsException: if specified default unit type is not a valid unit
+                             type.
+            DeviceException: if specified default data source is not a valid
+                              data source.
+        """
         if not any([default_handle, default_units, default_data_source]):
-            raise LatticeException('Please set at least one default argument, '
+            raise LatticeException('Please set at least one default argument '
                                    'for handle, units or data_source.')
         if default_handle is pytac.RB or default_handle is pytac.SP:
             self._data_source_manager._default_handle = default_handle
@@ -386,10 +406,25 @@ class Lattice(object):
                                                   pytac.LIVE, pytac.SIM))
 
     def get_default_handle(self):
+        """Get the default handle, pytac.RB or pytac.SP.
+
+        Returns:
+            str: the default handle for the entire lattice.
+        """
         return self._data_source_manager._default_handle
 
     def get_default_units(self):
+        """Get the default unit type, pytac.RB or pytac.SP.
+
+        Returns:
+            str: the default unit type for the entire lattice.
+        """
         return self._data_source_manager._default_units
 
     def get_default_data_source(self):
+        """Get the default data source, pytac.RB or pytac.SP.
+
+        Returns:
+            str: the default data source for the entire lattice.
+        """
         return self._data_source_manager._default_data_source

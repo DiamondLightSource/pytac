@@ -59,9 +59,13 @@ class DataSourceManager(object):
            _data_sources (dict): A dictionary of the data sources held.
            _uc (dict): A dictionary of the unit conversion objects for each
                         key(field).
-           _default_handle (str): pytac.RB or pytac.SP.
-           _default_units (str): pytac.PHYS or pytac.ENG.
-           _default_data_source (str): pytac.LIVE or pytac.SIM.
+           _default_handle (str): Holds the current default handle, pytac.RB or
+                                    pytac.SP, for an element or lattice.
+           _default_units (str): Holds the current default unit type, pytac.PHYS
+                                  or pytac.ENG, for an element or lattice.
+           _default_data_source (str): Holds the current default data source,
+                                        pytac.LIVE or pytac.SIM, for an element
+                                        or lattice.
 
     **Methods:**
     """
@@ -152,7 +156,8 @@ class DataSourceManager(object):
         Returns the value of a field on the manager. This value is uniquely
         identified by a field and a handle. The returned value is either
         in engineering or physics units. The data_source flag returns either
-        real or simulated values.
+        real or simulated values. If handle, units or data_source are not given
+        then the lattice default values are used.
 
         Args:
             field (str): The requested field.
@@ -189,7 +194,8 @@ class DataSourceManager(object):
                   data_source=pytac.default):
         """Set the value for a field.
 
-        This value can be set on the machine or the simulation.
+        This value can be set on the machine or the simulation. If handle, units
+        or data_source are not given then the lattice default values are used.
 
         Args:
             field (str): The requested field.
