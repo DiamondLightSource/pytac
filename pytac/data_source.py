@@ -59,8 +59,6 @@ class DataSourceManager(object):
            _data_sources (dict): A dictionary of the data sources held.
            _uc (dict): A dictionary of the unit conversion objects for each
                         key(field).
-           _default_handle (str): Holds the current default handle, pytac.RB or
-                                    pytac.SP, for an element or lattice.
            _default_units (str): Holds the current default unit type, pytac.PHYS
                                   or pytac.ENG, for an element or lattice.
            _default_data_source (str): Holds the current default data source,
@@ -72,7 +70,6 @@ class DataSourceManager(object):
     def __init__(self):
         self._data_sources = {}
         self._uc = {}
-        self._default_handle = pytac.RB
         self._default_units = pytac.ENG
         self._default_data_source = pytac.LIVE
 
@@ -149,7 +146,7 @@ class DataSourceManager(object):
         """
         return self._uc[field]
 
-    def get_value(self, field, handle=pytac.DEFAULT, units=pytac.DEFAULT,
+    def get_value(self, field, handle=pytac.RB, units=pytac.DEFAULT,
                   data_source=pytac.DEFAULT):
         """Get the value for a field.
 
@@ -172,8 +169,6 @@ class DataSourceManager(object):
             DeviceException: if there is no device on the given field.
             FieldException: if the manager does not have the specified field.
         """
-        if handle is pytac.DEFAULT:
-            handle = self._default_handle
         if units is pytac.DEFAULT:
             units = self._default_units
         if data_source is pytac.DEFAULT:
@@ -190,7 +185,7 @@ class DataSourceManager(object):
             raise FieldException('No field {} on manager {}'.format(field,
                                                                     self))
 
-    def set_value(self, field, value, handle=pytac.DEFAULT, units=pytac.DEFAULT,
+    def set_value(self, field, value, handle=pytac.SP, units=pytac.DEFAULT,
                   data_source=pytac.DEFAULT):
         """Set the value for a field.
 
@@ -208,8 +203,6 @@ class DataSourceManager(object):
             DeviceException: if arguments are incorrect.
             FieldException: if the manager does not have the specified field.
         """
-        if handle is pytac.DEFAULT:
-            handle = self._default_handle
         if units is pytac.DEFAULT:
             units = self._default_units
         if data_source is pytac.DEFAULT:

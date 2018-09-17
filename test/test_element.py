@@ -65,9 +65,7 @@ def test_set_exceptions(simple_element, unit_uc):
     with pytest.raises(pytac.exceptions.FieldException):
         simple_element.set_value('unknown_field', 40.0, 'setpoint')
     with pytest.raises(pytac.exceptions.HandleException):
-        # No need for 'unknown_handle' as default handle is pytac.RB which will
-        # raise HandleException anyway as you cannot write on a readback pv.
-        simple_element.set_value('y', 40.0)
+        simple_element.set_value('y', 40.0, 'unknown_handle')
     with pytest.raises(pytac.exceptions.DeviceException):
         simple_element.set_value('y', 40.0, 'setpoint',
                                  data_source='unknown_data_source')

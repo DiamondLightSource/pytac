@@ -4,7 +4,7 @@
 import numpy
 import pytac
 from pytac.data_source import DataSourceManager
-from pytac.exceptions import LatticeException, HandleException, UnitsException, DeviceException
+from pytac.exceptions import LatticeException, UnitsException, DeviceException
 
 
 class Lattice(object):
@@ -105,7 +105,7 @@ class Lattice(object):
         """
         return self._data_source_manager.get_unitconv(field)
 
-    def get_value(self, field, handle=pytac.DEFAULT, units=pytac.DEFAULT,
+    def get_value(self, field, handle=pytac.RB, units=pytac.DEFAULT,
                   data_source=pytac.DEFAULT):
         """Get the value for a field on the lattice.
 
@@ -130,7 +130,7 @@ class Lattice(object):
         return self._data_source_manager.get_value(field, handle, units,
                                                    data_source)
 
-    def set_value(self, field, value, handle=pytac.DEFAULT, units=pytac.DEFAULT,
+    def set_value(self, field, value, handle=pytac.SP, units=pytac.DEFAULT,
                   data_source=pytac.DEFAULT):
         """Set the value for a field.
 
@@ -353,7 +353,7 @@ class Lattice(object):
         for element, value in zip(elements, values):
             element.set_value(field, value, handle=pytac.SP)
 
-    def set_default_arguments(self, default_handle=None, default_units=None,
+    def set_default_arguments(self, default_units=None,
                               default_data_source=None):
         """Sets the default handle, units and data_source values for the lattice
         and all its elements.
@@ -369,23 +369,14 @@ class Lattice(object):
 
         Raises:
             LatticeException: if no default arguments are given.
-            HandleException: if specified default handle is not a vaild handle.
             UnitsException: if specified default unit type is not a valid unit
                              type.
             DeviceException: if specified default data source is not a valid
                               data source.
         """
-        if not any([default_handle, default_units, default_data_source]):
+        if not any([default_units, default_data_source]):
             raise LatticeException('Please set at least one default argument '
-                                   'for handle, units or data_source.')
-        if default_handle is pytac.RB or default_handle is pytac.SP:
-            self._data_source_manager._default_handle = default_handle
-            elems = self.get_elements()
-            for elem in elems:
-                elem._data_source_manager._default_handle = default_handle
-        elif default_handle is not None:
-            raise HandleException('{0} is not a handle. Please enter {1} or {2}'
-                                  .format(default_handle, pytac.RB, pytac.SP))
+                                   'for units or data_source.')
         if default_units is pytac.ENG or default_units is pytac.PHYS:
             self._data_source_manager._default_units = default_units
             elems = self.get_elements()
@@ -404,14 +395,6 @@ class Lattice(object):
             raise DeviceException('{0} is not a data source. Please enter {1} '
                                   'or {2}'.format(default_data_source,
                                                   pytac.LIVE, pytac.SIM))
-
-    def get_default_handle(self):
-        """Get the default handle, pytac.RB or pytac.SP.
-
-        Returns:
-            str: the default handle for the entire lattice.
-        """
-        return self._data_source_manager._default_handle
 
     def get_default_units(self):
         """Get the default unit type, pytac.RB or pytac.SP.

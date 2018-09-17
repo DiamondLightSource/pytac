@@ -138,7 +138,7 @@ class Element(object):
         """
         self.families.add(family)
 
-    def get_value(self, field, handle=pytac.DEFAULT, units=pytac.DEFAULT,
+    def get_value(self, field, handle=pytac.RB, units=pytac.DEFAULT,
                   data_source=pytac.DEFAULT):
         """Get the value for a field.
 
@@ -163,7 +163,7 @@ class Element(object):
         return self._data_source_manager.get_value(field, handle, units,
                                                    data_source)
 
-    def set_value(self, field, value, handle=pytac.DEFAULT, units=pytac.DEFAULT,
+    def set_value(self, field, value, handle=pytac.SP, units=pytac.DEFAULT,
                   data_source=pytac.DEFAULT):
         """Set the value for a field.
 
