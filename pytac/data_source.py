@@ -169,9 +169,9 @@ class DataSourceManager(object):
             DeviceException: if there is no device on the given field.
             FieldException: if the manager does not have the specified field.
         """
-        if units is pytac.DEFAULT:
+        if units == pytac.DEFAULT:
             units = self._default_units
-        if data_source is pytac.DEFAULT:
+        if data_source == pytac.DEFAULT:
             data_source = self._default_data_source
         try:
             data_source = self._data_sources[data_source]
@@ -203,9 +203,9 @@ class DataSourceManager(object):
             DeviceException: if arguments are incorrect.
             FieldException: if the manager does not have the specified field.
         """
-        if units is pytac.DEFAULT:
+        if units == pytac.DEFAULT:
             units = self._default_units
-        if data_source is pytac.DEFAULT:
+        if data_source == pytac.DEFAULT:
             data_source = self._default_data_source
         if handle != pytac.SP:
             raise HandleException('Must write using {}'.format(pytac.SP))

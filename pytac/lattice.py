@@ -354,7 +354,7 @@ class Lattice(object):
         if not any([default_units, default_data_source]):
             raise LatticeException('Please set at least one default argument '
                                    'for units or data_source.')
-        if default_units is pytac.ENG or default_units is pytac.PHYS:
+        if default_units == pytac.ENG or default_units == pytac.PHYS:
             self._data_source_manager._default_units = default_units
             elems = self.get_elements()
             for elem in elems:
@@ -363,7 +363,7 @@ class Lattice(object):
             raise UnitsException('{0} is not a unit type. Please enter {1} or '
                                  '{2}'.format(default_units, pytac.ENG,
                                               pytac.PHYS))
-        if default_data_source is pytac.LIVE or default_data_source is pytac.SIM:
+        if default_data_source == pytac.LIVE or default_data_source == pytac.SIM:
             self._data_source_manager._default_data_source = default_data_source
             elems = self.get_elements()
             for elem in elems:
