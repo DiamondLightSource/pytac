@@ -12,6 +12,8 @@ class Device(object):
 
     Typically a control system will be used to set and get values on a
     device.
+
+    **Methods:**
     """
     def is_enabled(self):
         """Whether the device is enabled.

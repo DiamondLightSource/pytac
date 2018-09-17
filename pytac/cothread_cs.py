@@ -7,6 +7,8 @@ class CothreadControlSystem(ControlSystem):
 
     It is used to communicate over channel access with the hardware
     in the ring.
+
+    **Methods:**
     """
     def __init__(self):
         pass
