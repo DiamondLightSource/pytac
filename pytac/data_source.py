@@ -149,8 +149,8 @@ class DataSourceManager(object):
         """
         return self._uc[field]
 
-    def get_value(self, field, handle=pytac.default, units=pytac.default,
-                  data_source=pytac.default):
+    def get_value(self, field, handle=pytac.DEFAULT, units=pytac.DEFAULT,
+                  data_source=pytac.DEFAULT):
         """Get the value for a field.
 
         Returns the value of a field on the manager. This value is uniquely
@@ -172,11 +172,11 @@ class DataSourceManager(object):
             DeviceException: if there is no device on the given field.
             FieldException: if the manager does not have the specified field.
         """
-        if handle is pytac.default:
+        if handle is pytac.DEFAULT:
             handle = self._default_handle
-        if units is pytac.default:
+        if units is pytac.DEFAULT:
             units = self._default_units
-        if data_source is pytac.default:
+        if data_source is pytac.DEFAULT:
             data_source = self._default_data_source
         try:
             data_source = self._data_sources[data_source]
@@ -190,8 +190,8 @@ class DataSourceManager(object):
             raise FieldException('No field {} on manager {}'.format(field,
                                                                     self))
 
-    def set_value(self, field, value, handle=pytac.default, units=pytac.default,
-                  data_source=pytac.default):
+    def set_value(self, field, value, handle=pytac.DEFAULT, units=pytac.DEFAULT,
+                  data_source=pytac.DEFAULT):
         """Set the value for a field.
 
         This value can be set on the machine or the simulation. If handle, units
@@ -208,11 +208,11 @@ class DataSourceManager(object):
             DeviceException: if arguments are incorrect.
             FieldException: if the manager does not have the specified field.
         """
-        if handle is pytac.default:
+        if handle is pytac.DEFAULT:
             handle = self._default_handle
-        if units is pytac.default:
+        if units is pytac.DEFAULT:
             units = self._default_units
-        if data_source is pytac.default:
+        if data_source is pytac.DEFAULT:
             data_source = self._default_data_source
         if handle != pytac.SP:
             raise HandleException('Must write using {}'.format(pytac.SP))

@@ -10,7 +10,7 @@ PHYS = 'physics'
 SIM = 'simulation'
 LIVE = 'live'
 # Default argument flag.
-default = 'default'
+DEFAULT = 'default'
 
 from . import data_source, element, epics, exceptions, lattice, load_csv, units, utils  # noqa: E402
 """Error 402 is suppressed as we cannot import these modules at the top of the
