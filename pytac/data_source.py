@@ -233,7 +233,7 @@ class DataSourceManager(object):
                                                                     self))
 
 
-class DeviceDataSource(object):
+class DeviceDataSource(DataSource):
     """Data source containing control system devices.
 
     **Attributes:**
