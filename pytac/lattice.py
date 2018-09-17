@@ -330,44 +330,44 @@ class Lattice(object):
         for element, value in zip(elements, values):
             element.set_value(field, value, handle=pytac.SP)
 
-    def set_default_arguments(self, default_units=None,
-                              default_data_source=None):
-        """Sets the default handle, units and data_source values for the lattice
-        and all its elements.
+    def set_default_units(self, default_units):
+        """Sets the default unit type for the lattice and all its elements.
 
         Args:
-            default_handle (str): The default handle to be set across the entire
-                                   lattice, pytac.RB or pytac.SP.
             default_units (str): The default unit type to be set across the
                                   entire lattice, pytac.ENG or pytac.PHYS.
+
+        Raises:
+            UnitsException: if specified default unit type is not a valid unit
+                             type.
+        """
+        if default_units == pytac.ENG or default_units == pytac.PHYS:
+            self._data_source_manager.default_units = default_units
+            elems = self.get_elements()
+            for elem in elems:
+                elem._data_source_manager.default_units = default_units
+        elif default_units is not None:
+            raise UnitsException('{0} is not a unit type. Please enter {1} or '
+                                 '{2}'.format(default_units, pytac.ENG,
+                                              pytac.PHYS))
+
+    def set_default_data_source(self, default_data_source):
+        """Sets the default data source for the lattice and all its elements.
+
+        Args:
             default_data_source (str): The default data source to be set across
                                         the entire lattice, pytac.LIVE or
                                         pytac.SIM.
 
         Raises:
-            LatticeException: if no default arguments are given.
-            UnitsException: if specified default unit type is not a valid unit
-                             type.
             DeviceException: if specified default data source is not a valid
                               data source.
         """
-        if not any([default_units, default_data_source]):
-            raise LatticeException('Please set at least one default argument '
-                                   'for units or data_source.')
-        if default_units == pytac.ENG or default_units == pytac.PHYS:
-            self._data_source_manager._default_units = default_units
-            elems = self.get_elements()
-            for elem in elems:
-                elem._data_source_manager._default_units = default_units
-        elif default_units is not None:
-            raise UnitsException('{0} is not a unit type. Please enter {1} or '
-                                 '{2}'.format(default_units, pytac.ENG,
-                                              pytac.PHYS))
         if default_data_source == pytac.LIVE or default_data_source == pytac.SIM:
-            self._data_source_manager._default_data_source = default_data_source
+            self._data_source_manager.default_data_source = default_data_source
             elems = self.get_elements()
             for elem in elems:
-                elem._data_source_manager._default_data_source = default_data_source
+                elem._data_source_manager.default_data_source = default_data_source
         elif default_data_source is not None:
             raise DeviceException('{0} is not a data source. Please enter {1} '
                                   'or {2}'.format(default_data_source,
@@ -379,7 +379,7 @@ class Lattice(object):
         Returns:
             str: the default unit type for the entire lattice.
         """
-        return self._data_source_manager._default_units
+        return self._data_source_manager.default_units
 
     def get_default_data_source(self):
         """Get the default data source, pytac.RB or pytac.SP.
@@ -387,4 +387,4 @@ class Lattice(object):
         Returns:
             str: the default data source for the entire lattice.
         """
-        return self._data_source_manager._default_data_source
+        return self._data_source_manager.default_data_source

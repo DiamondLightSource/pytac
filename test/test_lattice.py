@@ -113,15 +113,14 @@ def test_get_default_arguments(simple_lattice):
 
 
 def test_set_default_arguments(simple_lattice):
-    simple_lattice.set_default_arguments(pytac.PHYS, pytac.SIM)
-    assert simple_lattice._data_source_manager._default_units == pytac.PHYS
-    assert simple_lattice._data_source_manager._default_data_source == pytac.SIM
+    simple_lattice.set_default_units(pytac.PHYS)
+    simple_lattice.set_default_data_source(pytac.SIM)
+    assert simple_lattice._data_source_manager.default_units == pytac.PHYS
+    assert simple_lattice._data_source_manager.default_data_source == pytac.SIM
 
 
 def test_set_default_arguments_exceptions(simple_lattice):
-    with pytest.raises(pytac.exceptions.LatticeException):
-        simple_lattice.set_default_arguments()
     with pytest.raises(pytac.exceptions.UnitsException):
-        simple_lattice.set_default_arguments(default_units='invalid_units')
+        simple_lattice.set_default_units('invalid_units')
     with pytest.raises(pytac.exceptions.DeviceException):
-        simple_lattice.set_default_arguments(default_data_source='invalid_data_source')
+        simple_lattice.set_default_data_source('invalid_data_source')

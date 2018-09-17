@@ -55,23 +55,25 @@ class DataSourceManager(object):
     the correct data source. The unit conversion objects for all fields are also
     held here.
 
+    Attributes:
+        default_units (str): Holds the current default unit type, pytac.PHYS or
+                              pytac.ENG, for an element or lattice.
+        default_data_source (str): Holds the current default data source,
+                                    pytac.LIVE or pytac.SIM, for an element or
+                                    lattice.
+
     .. Private Attributes:
            _data_sources (dict): A dictionary of the data sources held.
            _uc (dict): A dictionary of the unit conversion objects for each
                         key(field).
-           _default_units (str): Holds the current default unit type, pytac.PHYS
-                                  or pytac.ENG, for an element or lattice.
-           _default_data_source (str): Holds the current default data source,
-                                        pytac.LIVE or pytac.SIM, for an element
-                                        or lattice.
 
     **Methods:**
     """
     def __init__(self):
         self._data_sources = {}
         self._uc = {}
-        self._default_units = pytac.ENG
-        self._default_data_source = pytac.LIVE
+        self.default_units = pytac.ENG
+        self.default_data_source = pytac.LIVE
 
     def set_data_source(self, data_source, data_source_type):
         """Add a data source to the manager.
@@ -170,9 +172,9 @@ class DataSourceManager(object):
             FieldException: if the manager does not have the specified field.
         """
         if units == pytac.DEFAULT:
-            units = self._default_units
+            units = self.default_units
         if data_source == pytac.DEFAULT:
-            data_source = self._default_data_source
+            data_source = self.default_data_source
         try:
             data_source = self._data_sources[data_source]
             value = data_source.get_value(field, handle)
@@ -204,9 +206,9 @@ class DataSourceManager(object):
             FieldException: if the manager does not have the specified field.
         """
         if units == pytac.DEFAULT:
-            units = self._default_units
+            units = self.default_units
         if data_source == pytac.DEFAULT:
-            data_source = self._default_data_source
+            data_source = self.default_data_source
         if handle != pytac.SP:
             raise HandleException('Must write using {}'.format(pytac.SP))
         try:
