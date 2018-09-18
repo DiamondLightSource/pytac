@@ -374,7 +374,7 @@ class Lattice(object):
                                                   pytac.LIVE, pytac.SIM))
 
     def get_default_units(self):
-        """Get the default unit type, pytac.RB or pytac.SP.
+        """Get the default unit type, pytac.ENG or pytac.PHYS.
 
         Returns:
             str: the default unit type for the entire lattice.
@@ -382,7 +382,7 @@ class Lattice(object):
         return self._data_source_manager.default_units
 
     def get_default_data_source(self):
-        """Get the default data source, pytac.RB or pytac.SP.
+        """Get the default data source, pytac.LIVE or pytac.SIM.
 
         Returns:
             str: the default data source for the entire lattice.
