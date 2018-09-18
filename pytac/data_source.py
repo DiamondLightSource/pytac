@@ -55,6 +55,13 @@ class DataSourceManager(object):
     the correct data source. The unit conversion objects for all fields are also
     held here.
 
+    Attributes:
+        default_units (str): Holds the current default unit type, pytac.PHYS or
+                              pytac.ENG, for an element or lattice.
+        default_data_source (str): Holds the current default data source,
+                                    pytac.LIVE or pytac.SIM, for an element or
+                                    lattice.
+
     .. Private Attributes:
            _data_sources (dict): A dictionary of the data sources held.
            _uc (dict): A dictionary of the unit conversion objects for each
@@ -65,6 +72,8 @@ class DataSourceManager(object):
     def __init__(self):
         self._data_sources = {}
         self._uc = {}
+        self.default_units = pytac.ENG
+        self.default_data_source = pytac.LIVE
 
     def set_data_source(self, data_source, data_source_type):
         """Add a data source to the manager.
@@ -139,13 +148,15 @@ class DataSourceManager(object):
         """
         return self._uc[field]
 
-    def get_value(self, field, handle, units, data_source):
+    def get_value(self, field, handle=pytac.RB, units=pytac.DEFAULT,
+                  data_source=pytac.DEFAULT):
         """Get the value for a field.
 
         Returns the value of a field on the manager. This value is uniquely
         identified by a field and a handle. The returned value is either
         in engineering or physics units. The data_source flag returns either
-        real or simulated values.
+        real or simulated values. If handle, units or data_source are not given
+        then the lattice default values are used.
 
         Args:
             field (str): The requested field.
@@ -160,6 +171,10 @@ class DataSourceManager(object):
             DeviceException: if there is no device on the given field.
             FieldException: if the manager does not have the specified field.
         """
+        if units == pytac.DEFAULT:
+            units = self.default_units
+        if data_source == pytac.DEFAULT:
+            data_source = self.default_data_source
         try:
             data_source = self._data_sources[data_source]
             value = data_source.get_value(field, handle)
@@ -172,10 +187,12 @@ class DataSourceManager(object):
             raise FieldException('No field {} on manager {}'.format(field,
                                                                     self))
 
-    def set_value(self, field, value, handle, units, data_source):
+    def set_value(self, field, value, handle=pytac.SP, units=pytac.DEFAULT,
+                  data_source=pytac.DEFAULT):
         """Set the value for a field.
 
-        This value can be set on the machine or the simulation.
+        This value can be set on the machine or the simulation. If handle, units
+        or data_source are not given then the lattice default values are used.
 
         Args:
             field (str): The requested field.
@@ -188,6 +205,10 @@ class DataSourceManager(object):
             DeviceException: if arguments are incorrect.
             FieldException: if the manager does not have the specified field.
         """
+        if units == pytac.DEFAULT:
+            units = self.default_units
+        if data_source == pytac.DEFAULT:
+            data_source = self.default_data_source
         if handle != pytac.SP:
             raise HandleException('Must write using {}'.format(pytac.SP))
         try:
@@ -207,7 +228,7 @@ class DataSourceManager(object):
                                                                     self))
 
 
-class DeviceDataSource(object):
+class DeviceDataSource(DataSource):
     """Data source containing control system devices.
 
     **Attributes:**

@@ -3,10 +3,9 @@
 
 class ControlSystem(object):
     """ Abstract base class representing a control system.
-    """
-    def __init__(self):
-        raise NotImplementedError()
 
+    **Methods:**
+    """
     def get(self, pv):
         """ Get the value of the given PV.
 

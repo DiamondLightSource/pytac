@@ -88,40 +88,39 @@ def test_set_element_values_raise_exception_if_number_of_values_does_not_match(s
         simple_lattice.set_element_values('family', 'x', [1, 2])
 
 
-def test_s_position(simple_lattice):
-    element1 = simple_lattice[0]
-    assert simple_lattice.get_s(element1) == 0.0
-
-    element2 = Element(2, 1.0, 'Quad')
-    simple_lattice.add_element(element2)
-    assert simple_lattice.get_s(element2) == 0.0
-
-    element3 = Element(3, 2.0, 'Quad')
-    simple_lattice.add_element(element3)
-    assert simple_lattice.get_s(element3) == 1.0
-
-
-def test_get_s_throws_exception_if_element_not_in_lattice():
-    lat = Lattice(LATTICE_NAME)
-    element = Element(1, 1.0, 'Quad')
-    with pytest.raises(pytac.exceptions.LatticeException):
-        lat.get_s(element)
-
-
 def test_get_family_s(simple_lattice):
     assert simple_lattice.get_family_s('family') == [0]
 
-    element2 = Element(2, 1.0, 'family')
+    element2 = Element(2, 1.0, 'family', 0.0)
     element2.add_to_family('family')
     simple_lattice.add_element(element2)
     assert simple_lattice.get_family_s('family') == [0, 0]
 
-    element3 = Element(3, 1.5, 'family')
+    element3 = Element(3, 1.5, 'family', 1.0)
     element3.add_to_family('family')
     simple_lattice.add_element(element3)
     assert simple_lattice.get_family_s('family') == [0, 0, 1.0]
 
-    element4 = Element(3, 1.5, 'family')
+    element4 = Element(3, 1.5, 'family', 2.5)
     element4.add_to_family('family')
     simple_lattice.add_element(element4)
     assert simple_lattice.get_family_s('family') == [0, 0, 1.0, 2.5]
+
+
+def test_get_default_arguments(simple_lattice):
+    assert simple_lattice.get_default_units() == pytac.ENG
+    assert simple_lattice.get_default_data_source() == pytac.LIVE
+
+
+def test_set_default_arguments(simple_lattice):
+    simple_lattice.set_default_units(pytac.PHYS)
+    simple_lattice.set_default_data_source(pytac.SIM)
+    assert simple_lattice._data_source_manager.default_units == pytac.PHYS
+    assert simple_lattice._data_source_manager.default_data_source == pytac.SIM
+
+
+def test_set_default_arguments_exceptions(simple_lattice):
+    with pytest.raises(pytac.exceptions.UnitsException):
+        simple_lattice.set_default_units('invalid_units')
+    with pytest.raises(pytac.exceptions.DeviceException):
+        simple_lattice.set_default_data_source('invalid_data_source')

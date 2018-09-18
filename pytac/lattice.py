@@ -4,7 +4,7 @@
 import numpy
 import pytac
 from pytac.data_source import DataSourceManager
-from pytac.exceptions import LatticeException
+from pytac.exceptions import LatticeException, UnitsException, DeviceException
 
 
 class Lattice(object):
@@ -105,8 +105,8 @@ class Lattice(object):
         """
         return self._data_source_manager.get_unitconv(field)
 
-    def get_value(self, field, handle=pytac.RB, units=pytac.ENG,
-                  data_source=pytac.LIVE):
+    def get_value(self, field, handle=pytac.RB, units=pytac.DEFAULT,
+                  data_source=pytac.DEFAULT):
         """Get the value for a field on the lattice.
 
         Returns the value of a field on the lattice. This value is uniquely
@@ -130,8 +130,8 @@ class Lattice(object):
         return self._data_source_manager.get_value(field, handle, units,
                                                    data_source)
 
-    def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
-                  data_source=pytac.LIVE):
+    def set_value(self, field, value, handle=pytac.SP, units=pytac.DEFAULT,
+                  data_source=pytac.DEFAULT):
         """Set the value for a field.
 
         This value can be set on the machine or the simulation.
@@ -230,29 +230,6 @@ class Lattice(object):
 
         return families
 
-    def get_s(self, elem):
-        """Find the s position of an element in the lattice.
-
-        Note that the given element must exist in the lattice.
-
-        Args:
-            elem (Element): The element that the position is being asked for.
-
-        Returns:
-            float: The position of the given element.
-
-        Raises:
-            LatticeException: if element doesn't exist in the lattice.
-        """
-        s_pos = 0
-        for e in self._lattice:
-            if e is not elem:
-                s_pos += e.length
-            else:
-                return s_pos
-        raise LatticeException('Element {} not in lattice {}'.format(elem,
-                                                                     self))
-
     def get_family_s(self, family):
         """Get s positions for all elements from the same family.
 
@@ -265,7 +242,7 @@ class Lattice(object):
         elements = self.get_elements(family)
         s_positions = []
         for element in elements:
-            s_positions.append(self.get_s(element))
+            s_positions.append(element.s)
         return s_positions
 
     def get_element_devices(self, family, field):
@@ -349,6 +326,65 @@ class Lattice(object):
         if len(elements) != len(values):
             raise LatticeException("Number of elements in given array must be"
                                    " equal to the number of elements in the "
-                                   "family")
+                                   "family.")
         for element, value in zip(elements, values):
-            element.set_value(field, value)
+            element.set_value(field, value, handle=pytac.SP)
+
+    def set_default_units(self, default_units):
+        """Sets the default unit type for the lattice and all its elements.
+
+        Args:
+            default_units (str): The default unit type to be set across the
+                                  entire lattice, pytac.ENG or pytac.PHYS.
+
+        Raises:
+            UnitsException: if specified default unit type is not a valid unit
+                             type.
+        """
+        if default_units == pytac.ENG or default_units == pytac.PHYS:
+            self._data_source_manager.default_units = default_units
+            elems = self.get_elements()
+            for elem in elems:
+                elem._data_source_manager.default_units = default_units
+        elif default_units is not None:
+            raise UnitsException('{0} is not a unit type. Please enter {1} or '
+                                 '{2}'.format(default_units, pytac.ENG,
+                                              pytac.PHYS))
+
+    def set_default_data_source(self, default_data_source):
+        """Sets the default data source for the lattice and all its elements.
+
+        Args:
+            default_data_source (str): The default data source to be set across
+                                        the entire lattice, pytac.LIVE or
+                                        pytac.SIM.
+
+        Raises:
+            DeviceException: if specified default data source is not a valid
+                              data source.
+        """
+        if default_data_source == pytac.LIVE or default_data_source == pytac.SIM:
+            self._data_source_manager.default_data_source = default_data_source
+            elems = self.get_elements()
+            for elem in elems:
+                elem._data_source_manager.default_data_source = default_data_source
+        elif default_data_source is not None:
+            raise DeviceException('{0} is not a data source. Please enter {1} '
+                                  'or {2}'.format(default_data_source,
+                                                  pytac.LIVE, pytac.SIM))
+
+    def get_default_units(self):
+        """Get the default unit type, pytac.ENG or pytac.PHYS.
+
+        Returns:
+            str: the default unit type for the entire lattice.
+        """
+        return self._data_source_manager.default_units
+
+    def get_default_data_source(self):
+        """Get the default data source, pytac.LIVE or pytac.SIM.
+
+        Returns:
+            str: the default data source for the entire lattice.
+        """
+        return self._data_source_manager.default_data_source

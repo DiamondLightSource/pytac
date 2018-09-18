@@ -6,14 +6,14 @@ from constants import DUMMY_VALUE_1, DUMMY_VALUE_2
 
 
 def test_create_element():
-    e = pytac.element.Element('bpm1', 6.0, 'bpm')
+    e = pytac.element.Element('bpm1', 6.0, 'bpm', 0.0)
     e.add_to_family('BPM')
     assert 'BPM' in e.families
     assert e.length == 6.0
 
 
 def test_add_element_to_family():
-    e = pytac.element.Element('dummy', 6.0, 'Quad')
+    e = pytac.element.Element('dummy', 6.0, 'Quad', 0.0)
     e.add_to_family('fam')
     assert 'fam' in e.families
 
@@ -48,14 +48,15 @@ def test_get_value_uses_uc_if_necessary_for_sim_call(simple_element, double_uc):
 
 
 def test_set_value_eng(simple_element):
-    simple_element.set_value('x', DUMMY_VALUE_2)
+    simple_element.set_value('x', DUMMY_VALUE_2, handle=pytac.SP)
     # No conversion needed
     simple_element.get_device('x').set_value.assert_called_with(DUMMY_VALUE_2)
 
 
 def test_set_value_phys(simple_element, double_uc):
     simple_element._data_source_manager._uc['x'] = double_uc
-    simple_element.set_value('x', DUMMY_VALUE_2, units=pytac.PHYS)
+    simple_element.set_value('x', DUMMY_VALUE_2, handle=pytac.SP,
+                             units=pytac.PHYS)
     # Conversion fron physics to engineering units
     simple_element.get_device('x').set_value.assert_called_with((DUMMY_VALUE_2 / 2))
 

@@ -25,8 +25,7 @@ class Element(object):
                                                       data sources associated
                                                       with this element.
     """
-    def __init__(self, name, length, element_type, s=None, index=None,
-                 cell=None):
+    def __init__(self, name, length, element_type, s, index=None, cell=None):
         """
         Args:
             name (int): The unique identifier for the element in the ring.
@@ -138,8 +137,8 @@ class Element(object):
         """
         self.families.add(family)
 
-    def get_value(self, field, handle=pytac.RB, units=pytac.ENG,
-                  data_source=pytac.LIVE):
+    def get_value(self, field, handle=pytac.RB, units=pytac.DEFAULT,
+                  data_source=pytac.DEFAULT):
         """Get the value for a field.
 
         Returns the value of a field on the element. This value is uniquely
@@ -163,8 +162,8 @@ class Element(object):
         return self._data_source_manager.get_value(field, handle, units,
                                                    data_source)
 
-    def set_value(self, field, value, handle=pytac.SP, units=pytac.ENG,
-                  data_source=pytac.LIVE):
+    def set_value(self, field, value, handle=pytac.SP, units=pytac.DEFAULT,
+                  data_source=pytac.DEFAULT):
         """Set the value for a field.
 
         This value can be set on the machine or the simulation.
