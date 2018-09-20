@@ -10,7 +10,7 @@ from constants import PREFIX, RB_PV, SP_PV
 # Not a test - epics device creation function used in tests.
 def create_epics_device(prefix=PREFIX, rb_pv=RB_PV, sp_pv=SP_PV, enabled=True):
     mock_cs = mock.MagicMock()
-    mock_cs.get.return_value = 1.0
+    mock_cs.get_single.return_value = 40.0
     device = EpicsDevice(prefix, mock_cs, enabled=enabled, rb_pv=rb_pv,
                          sp_pv=sp_pv)
     return device
@@ -26,12 +26,12 @@ def create_basic_device(value=1.0, enabled=True):
 def test_set_epics_device_value():
     device = create_epics_device()
     device.set_value(40)
-    device._cs.put.assert_called_with(SP_PV, 40)
+    device._cs.set_single.assert_called_with(SP_PV, 40)
 
 
 def test_get_epics_device_value():
     device = create_epics_device()
-    assert device.get_value(pytac.SP) == 1.0
+    assert device.get_value(pytac.SP) == 40.0
 
 
 def test_epics_device_invalid_sp_raises_exception():
@@ -88,8 +88,8 @@ def test_device_is_enabled_returns_bool_value(device_creation_function):
 # PvEnabler test.
 def test_PvEnabler():
     mock_cs = mock.MagicMock()
-    mock_cs.get.return_value = '40'
-    pve = PvEnabler('enable-pv', '40', mock_cs)
+    mock_cs.get_single.return_value = 40.0
+    pve = PvEnabler('enable-pv', 40, mock_cs)
     assert pve
-    mock_cs.get.return_value = 50
+    mock_cs.get_single.return_value = 50
     assert not pve

@@ -5,9 +5,13 @@ from pytac import cs, data_source, device
 def test_ControlSystem_throws_NotImplementedError():
     test_cs = cs.ControlSystem()
     with pytest.raises(NotImplementedError):
-        test_cs.get('dummy')
+        test_cs.get_single('dummy')
     with pytest.raises(NotImplementedError):
-        test_cs.put('dummy', 1)
+        test_cs.get_multiple(['dummy1', 'dummy_2'])
+    with pytest.raises(NotImplementedError):
+        test_cs.set_single('dummy', 1)
+    with pytest.raises(NotImplementedError):
+        test_cs.set_multiple(['dummy_1', 'dummy_2'], [1, 2])
 
 
 def test_DataSource_throws_NotImplementedError():
