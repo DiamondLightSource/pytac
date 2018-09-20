@@ -1,3 +1,4 @@
+import logging
 from pytac.cs import ControlSystem
 from caproto.threading.client import Context, Batch
 
@@ -5,6 +6,7 @@ from caproto.threading.client import Context, Batch
 class CaprotoControlSystem(ControlSystem):
     def __init__(self):
         self._results = []
+        logging.disable(logging.WARNING)
 
     def _append_result(self, response):
         """Append a result to the current list of results.
