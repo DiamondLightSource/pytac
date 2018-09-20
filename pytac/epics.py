@@ -259,7 +259,7 @@ class PvEnabler(object):
         Returns:
             bool: True if the device should be considered enabled.
         """
-        pv_value = self._cs.get(self._pv)
+        pv_value = self._cs.get_single(self._pv)
         return self._enabled_value == str(int(float(pv_value)))
 
     def __bool__(self):
