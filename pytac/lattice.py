@@ -323,10 +323,6 @@ class Lattice(object):
                                number of elements in the family.
         """
         elements = self.get_elements(family)
-        if len(elements) != len(values):
-            raise LatticeException("Number of elements in given array must be"
-                                   " equal to the number of elements in the "
-                                   "family.")
         for element, value in zip(elements, values):
             element.set_value(field, value, handle=pytac.SP)
 

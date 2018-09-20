@@ -27,7 +27,7 @@ class EpicsLattice(Lattice):
         super(EpicsLattice, self).__init__(name)
         self._cs = epics_cs
 
-    def get_pv_names(self, field, handle):
+    def get_pv_name(self, field, handle):
         """Get the PV name for a specific field, and handle.
 
         Args:
