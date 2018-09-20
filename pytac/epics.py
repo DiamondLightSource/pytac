@@ -27,19 +27,36 @@ class EpicsLattice(Lattice):
         super(EpicsLattice, self).__init__(name)
         self._cs = epics_cs
 
-    def get_pv_names(self, family, field, handle):
+    def get_pv_names(self, field, handle):
+        """Get the PV name for a specific field, and handle.
+
+        Args:
+            field (str): The requested field.
+            handle (str): pytac.RB or pytac.SP.
+
+        Returns:
+            str: The readback or setpoint PV for the specified field.
+        """
+        try:
+            return (self._data_source_manager._data_sources[pytac.LIVE]
+                    .get_device(field).get_pv_name(handle))
+        except KeyError:
+            raise DeviceException('{} has no device for field {}'
+                                  .format(self, field))
+
+    def get_element_pv_names(self, family, field, handle):
         """Get all PV names for a specific family, field, and handle.
 
         Assume that the elements are EpicsElements that have the get_pv_name()
         method.
 
         Args:
-            family (str): requested family.
-            field (str): requested field.
+            family (str): The requested family.
+            field (str): The requested field.
             handle (str): pytac.RB or pytac.SP.
 
         Returns:
-            list: list of PV names.
+            list: A list of PV names, strings.
         """
         elements = self.get_elements(family)
         pv_names = []
@@ -47,7 +64,7 @@ class EpicsLattice(Lattice):
             pv_names.append(element.get_pv_name(field, handle))
         return pv_names
 
-    def get_values(self, family, field, handle, dtype=None):
+    def get_element_values(self, family, field, handle, dtype=None):
         """Get the value for a family and field for all elements in the lattice.
 
         Args:
@@ -60,13 +77,13 @@ class EpicsLattice(Lattice):
         Returns:
             list or array: The requested values.
         """
-        pv_names = self.get_pv_names(family, field, handle)
-        values = self._cs.get(pv_names)
+        pv_names = self.get_element_pv_names(family, field, handle)
+        values = self._cs.get_multiple(pv_names)
         if dtype is not None:
             values = numpy.array(values, dtype=dtype)
         return values
 
-    def set_values(self, family, field, values):
+    def set_element_values(self, family, field, values):
         """Set the value for a family and field for all elements in the lattice.
 
         Args:
@@ -74,12 +91,8 @@ class EpicsLattice(Lattice):
             field (str): requested field.
             values (sequence): values to be set.
         """
-        pv_names = self.get_pv_names(family, field, 'setpoint')
-        if len(pv_names) != len(values):
-            raise LatticeException("Number of elements in given array must be"
-                                   " equal to the number of elements in the "
-                                   "family")
-        self._cs.put(pv_names, values)
+        pv_names = self.get_element_pv_names(family, field, 'setpoint')
+        self._cs.set_multiple(pv_names, values)
 
 
 class EpicsElement(Element):
@@ -169,7 +182,7 @@ class EpicsDevice(Device):
         if self.sp_pv is None:
             raise HandleException("Device {0} has no setpoint PV."
                                   .format(self.name))
-        self._cs.put(self.sp_pv, value)
+        self._cs.set_single(self.sp_pv, value)
 
     def get_value(self, handle):
         """Read the value of a readback or setpoint PV.
@@ -184,9 +197,9 @@ class EpicsDevice(Device):
             HandleException: if the requested PV doesn't exist.
         """
         if handle == pytac.RB and self.rb_pv:
-            return self._cs.get(self.rb_pv)
+            return self._cs.get_single(self.rb_pv)
         elif handle == pytac.SP and self.sp_pv:
-            return self._cs.get(self.sp_pv)
+            return self._cs.get_single(self.sp_pv)
 
         raise HandleException("Device {0} has no {1} PV."
                               .format(self.name, handle))
