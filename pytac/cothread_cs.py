@@ -63,7 +63,7 @@ class CothreadControlSystem(ControlSystem):
             ValueError: if the PVs or values are not passed in as a list, or if
                          the lists of values and PVs are diffent lengths.
         """
-        if not isinstance(pvs, list) and not isinstance(values, list):
+        if not isinstance(pvs, list) or not isinstance(values, list):
             raise ValueError('Please enter PVs and values as a list.')
         elif len(pvs) != len(values):
             raise ValueError('Please enter the same number of values as PVs.')

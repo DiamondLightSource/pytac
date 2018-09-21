@@ -1,4 +1,5 @@
 import logging
+from types import NoneType
 from pytac.cs import ControlSystem
 from caproto.threading.client import Context, Batch
 
@@ -49,7 +50,7 @@ class CaprotoControlSystem(ControlSystem):
         pv_objects = Context().get_pvs(*pvs)
         with Batch() as b:
             for pv_object in pv_objects:
-                while isinstance(pv_object.channel, type(None)):
+                while isinstance(pv_object.channel, NoneType):
                     pass  # Wait until pv object is fully initialised.
                 b.read(pv_object, self._append_result)
         while len(self._results) is not len(pvs):
@@ -78,13 +79,13 @@ class CaprotoControlSystem(ControlSystem):
             ValueError: if the PVs or values are not passed in as a list, or if
                          the lists of values and PVs are diffent lengths.
         """
-        if not isinstance(pvs, list) and not isinstance(values, list):
+        if not isinstance(pvs, list) or not isinstance(values, list):
             raise ValueError('Please enter PVs and values as a list.')
         elif len(pvs) != len(values):
             raise ValueError('Please enter the same number of values as PVs.')
         pv_objects = Context().get_pvs(*pvs)
         with Batch() as b:
             for pv_object, value in zip(pv_objects, values):
-                while isinstance(pv_object.channel, type(None)):
+                while isinstance(pv_object.channel, NoneType):
                     pass  # Wait until pv object is fully initialised.
             b.write(pv_object, value)
