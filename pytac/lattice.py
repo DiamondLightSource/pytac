@@ -4,7 +4,7 @@
 import numpy
 import pytac
 from pytac.data_source import DataSourceManager
-from pytac.exceptions import LatticeException, UnitsException, DeviceException
+from pytac.exceptions import UnitsException, DeviceException
 
 
 class Lattice(object):

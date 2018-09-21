@@ -3,7 +3,7 @@ import numpy
 import pytac
 from pytac.device import Device
 from pytac.element import Element
-from pytac.exceptions import DeviceException, HandleException, LatticeException
+from pytac.exceptions import DeviceException, HandleException
 from pytac.lattice import Lattice
 
 

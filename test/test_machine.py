@@ -43,7 +43,7 @@ def test_get_pv_names(lattice, n_bpms):
     for pv in bpm_x_pvs:
         assert re.match('SR.*BPM.*X', pv)
     x_sofb_enabled_pvs = lattice.get_element_pv_names('BPM', 'x_sofb_disabled',
-                                              handle='readback')
+                                                      handle='readback')
     assert len(bpm_x_pvs) == n_bpms
     for pv in x_sofb_enabled_pvs:
         assert re.match('SR.*HBPM.*SLOW:DISABLED', pv)

@@ -25,7 +25,7 @@ def test_set_values(simple_epics_lattice):
 def test_get_values_returns_numpy_array_if_requested(simple_epics_lattice,
                                                      dtype, expected):
     values = simple_epics_lattice.get_element_values('family', 'x', pytac.RB,
-                                             dtype=dtype)
+                                                     dtype=dtype)
     numpy.testing.assert_equal(values, expected)
     simple_epics_lattice._cs.get_multiple.assert_called_with([RB_PV])
 

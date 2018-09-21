@@ -104,6 +104,7 @@ def set_func(pvs, values):
     if len(pvs) is not len(values):
         raise ValueError
 
+
 @pytest.fixture
 def mock_cs():
     cs = mock.MagicMock()
