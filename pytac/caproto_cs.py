@@ -1,5 +1,4 @@
 import logging
-from types import NoneType
 from pytac.cs import ControlSystem
 from caproto.threading.client import Context, Batch
 
@@ -50,7 +49,7 @@ class CaprotoControlSystem(ControlSystem):
         pv_objects = Context().get_pvs(*pvs)
         with Batch() as b:
             for pv_object in pv_objects:
-                while isinstance(pv_object.channel, NoneType):
+                while isinstance(pv_object.channel, type(None)):
                     pass  # Wait until pv object is fully initialised.
                 b.read(pv_object, self._append_result)
         while len(self._results) is not len(pvs):
@@ -86,6 +85,6 @@ class CaprotoControlSystem(ControlSystem):
         pv_objects = Context().get_pvs(*pvs)
         with Batch() as b:
             for pv_object, value in zip(pv_objects, values):
-                while isinstance(pv_object.channel, NoneType):
+                while isinstance(pv_object.channel, type(None)):
                     pass  # Wait until pv object is fully initialised.
             b.write(pv_object, value)
