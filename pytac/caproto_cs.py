@@ -4,9 +4,20 @@ from caproto.threading.client import Context, Batch
 
 
 class CaprotoControlSystem(ControlSystem):
+    """A control system using caproto to communicate with EPICS.
+
+    It is used to communicate over channel access with the hardware
+    in the ring.
+
+    **Methods:**
+    """
     def __init__(self):
+        """Create a _results attribute so all methods can access it, and disable
+            logging to temporarily prevent caproto version response warnings
+            being incorrectly and excessively raised.
+        """
         self._results = []
-        logging.disable(logging.WARNING)
+        logging.disable(logging.WARNING)  # Temporary.
 
     def _append_result(self, response):
         """Append a result to the current list of results.

@@ -3,7 +3,8 @@ from cothread.catools import caget, caput
 
 
 class CothreadControlSystem(ControlSystem):
-    """The EPICS control system.
+    """A control system using cothread to communicate with EPICS. N.B. this is
+        the default control system.
 
     It is used to communicate over channel access with the hardware
     in the ring.
