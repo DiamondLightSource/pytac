@@ -34,12 +34,16 @@ def test_get_values_returns_numpy_array_if_requested(simple_epics_lattice,
 def test_get_element_pv_name(pv_type, simple_epics_element):
     assert isinstance(simple_epics_element.get_pv_name('x', pv_type), str)
     assert isinstance(simple_epics_element.get_pv_name('y', pv_type), str)
+    with pytest.raises(pytac.exceptions.DeviceException):
+        simple_epics_element.get_pv_name('not_a_field', pv_type)
 
 
 @pytest.mark.parametrize('pv_type', ['readback', 'setpoint'])
 def test_get_pv_name(pv_type, simple_epics_lattice):
     assert isinstance(simple_epics_lattice.get_pv_name('x', pv_type), str)
     assert isinstance(simple_epics_lattice.get_pv_name('y', pv_type), str)
+    with pytest.raises(pytac.exceptions.DeviceException):
+        simple_epics_lattice.get_pv_name('not_a_field', pv_type)
 
 
 def test_get_value_uses_cs_if_data_source_live(simple_epics_element):
