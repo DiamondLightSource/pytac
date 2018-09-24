@@ -24,7 +24,7 @@ class PyEpicsControlSystem(ControlSystem):
         Returns:
             float: Represents the current value of the given PV.
         """
-        return caget(pv, timeout='a_suitable_value')
+        return caget(pv, timeout=1.0)
 
     def get_multiple(self, pvs):
         """Get the value for given PVs.
@@ -50,7 +50,7 @@ class PyEpicsControlSystem(ControlSystem):
             pv (string): The PV to set the value of. It must be a setpoint PV.
             value (Number): The value to set the PV to.
         """
-        caput(pv, value, wait=True, timeout='a_suitable_value')
+        caput(pv, value, wait=True, timeout=1.0)
 
     def set_multiple(self, pvs, values):
         """Set the values for given PVs.
@@ -69,4 +69,4 @@ class PyEpicsControlSystem(ControlSystem):
         elif len(pvs) != len(values):
             raise ValueError('Please enter the same number of values as PVs.')
         for pv, value in zip(pvs, values):
-            caput(pv, value, wait=False, timeout='a_suitable_value')
+            caput(pv, value, wait=False, timeout=1.0)
