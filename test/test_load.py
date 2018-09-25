@@ -21,7 +21,7 @@ def Travis_CI_compatibility():
         into it. Finally, we edit sys.modules to ensure our new mocked code is
         called in the place of the original.
     """
-    def return_func(pvs):
+    def return_func(pvs, timeout, throw):
         if type(pvs) is list:
             return [DUMMY_VALUE_1, DUMMY_VALUE_2]
         else:
