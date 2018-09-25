@@ -1,5 +1,5 @@
 from pytac.cs import ControlSystem
-from epics import caget, caput
+from epics import ca, caget, caput
 
 
 class PyEpicsControlSystem(ControlSystem):
@@ -41,7 +41,26 @@ class PyEpicsControlSystem(ControlSystem):
         """
         if not isinstance(pvs, list):
             raise ValueError('Please enter PVs as a list.')
-        pass
+        pv_data = {}  # values in format: [channel_status, channel_id, pv_value]
+        results = []
+        for pv in pvs:  # create channel
+            pv_data[pv] = [False, ca.create_channel(pv, auto_cb=False), None]
+        ca.poll()  # wait
+        for pv, data in pv_data.items():  # connect to channel
+            data[0] = ca.connect_channel(data[1], timeout=1.0)
+            if data[0]:  # if connected, send get request
+                ca.get(data[1], wait=False)
+            else:
+                print('cannot connect to {}'.format(pv))
+        ca.poll()  # wait
+        for pv, data in pv_data.items():
+            if data[0]:  # if connected, read get request
+                data[2] = ca.get_complete(data[1])
+            else:
+                data[2] = None
+        for pv in pvs:  # support for repeated PVs
+            results.append(pv_data[pv][2])
+        return results
 
     def set_single(self, pv, value):
         """Set the value of a given PV.
