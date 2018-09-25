@@ -24,7 +24,11 @@ class CothreadControlSystem(ControlSystem):
         Returns:
             float: Represents the current value of the given PV.
         """
-        return caget(pv)
+        try:
+            return float(caget(pv, timeout=1.0, throw=False))
+        except TypeError:
+            print('cannot connect to {}'.format(pv))
+            return None
 
     def get_multiple(self, pvs):
         """Get the value for given PVs.
@@ -41,7 +45,14 @@ class CothreadControlSystem(ControlSystem):
         """
         if not isinstance(pvs, list):
             raise ValueError('Please enter PVs as a list.')
-        return caget(pvs)
+        results = caget(pvs, timeout=1.0, throw=False)
+        for i in range(len(results)):
+            try:
+                results[i] = float(results[i])
+            except TypeError:
+                print('cannot connect to {}'.format(pvs[i]))
+                results[i] = None
+        return results
 
     def set_single(self, pv, value):
         """Set the value of a given PV.
@@ -50,7 +61,10 @@ class CothreadControlSystem(ControlSystem):
             pv (string): The PV to set the value of. It must be a setpoint PV.
             value (Number): The value to set the PV to.
         """
-        caput(pv, value)
+        try:
+            caput(pv, value, timeout=1.0, throw=True)
+        except Exception:
+            print('cannot connect to {}'.format(pv))
 
     def set_multiple(self, pvs, values):
         """Set the values for given PVs.
@@ -68,4 +82,7 @@ class CothreadControlSystem(ControlSystem):
             raise ValueError('Please enter PVs and values as a list.')
         elif len(pvs) != len(values):
             raise ValueError('Please enter the same number of values as PVs.')
-        caput(pvs, values)
+        try:
+            caput(pvs, values, timeout=1.0, throw=True)
+        except Exception:
+            print('cannot connect to one or more PV(s).')
