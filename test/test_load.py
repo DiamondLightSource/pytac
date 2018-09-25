@@ -15,20 +15,38 @@ def Travis_CI_compatibility():
         catools (the module that pytac imports from cothread), including the
         functions that pytac explicitly imports (caget and caput).
        First we create a return function that depending on it's input specifies
-        what our new caget will return. Then we make a MagicMock for the catools
-        class and assign our return function to the caget method on our catools.
-        Next we create a blank cothread module and then put our catools class
-        into it. Finally, we edit sys.modules to ensure our new mocked code is
-        called in the place of the original.
+        what our new caget will return. we also create a set function, to
+        replace caset, that raises exceptions in the same manner as the original
+        Then we make a MagicMock for the catools class and assign our return
+        function to the caget method on our catools. Next we create a blank
+        cothread module, and put our catools class into it. Finally, we edit
+        sys.modules to ensure our new mocked code is called instead of the
+        original.
     """
     def return_func(pvs, timeout, throw):
         if type(pvs) is list:
+            for pv in pvs:
+                if pv.count('not') is not 0:
+                    return [None, None]
             return [DUMMY_VALUE_1, DUMMY_VALUE_2]
         else:
-            return DUMMY_VALUE_1
+            if pvs.count('not') is 0:
+                return DUMMY_VALUE_1
+            else:
+                return None
+
+    def set_func(pvs, values, timeout, throw):
+        if type(pvs) is list:
+            for pv in pvs:
+                if pv.count('not') is not 0:
+                    raise Exception
+        else:
+            if pvs.count('not') is 0:
+                raise Exception
 
     catools = MagicMock()
     catools.caget = return_func
+    catools.caput = set_func
     cothread = ModuleType('cothread')
     cothread.catools = catools
     sys.modules['cothread'] = cothread
@@ -36,9 +54,9 @@ def Travis_CI_compatibility():
     # Caproto
     """Travis also can't import caproto, but more importantly caproto requires a
         python version of 3.6 or greater. So in order to make sure the tests
-        always run correctly we must mock caproto. N.B. this is significantly
-        more complicated than mocking cothread as the process of getting values
-        from PVs is significantly more complex in caproto.
+        always run correctly we must mock caproto. N.B. this is  more
+        complicated than mocking cothread as the process of getting values from
+        multiple PVs is significantly more complex in caproto.
        First we create a fixture that returns our response object, with the data
         as an attribute, in the correct manner. Next we create a new mock client
         class with sub-classes Context and Batch, these sub-classes have the
@@ -89,6 +107,63 @@ def Travis_CI_compatibility():
     sys.modules['caproto'] = caproto
     sys.modules['caproto.threading'] = caproto.threading
     sys.modules['caproto.threading.client'] = client
+    # Pyepics
+    """Travis also can't import pyepics, and pyepics requires a glibc version of
+        2.14 or greater. So in order to make sure the tests always run correctly
+        we must mock pyepics. N.B. this is more complicated than mocking
+        cothread as the process of getting values from multiple PVs is
+        significantly more complex in pyepics.
+       First we mock the ca module, complete with the functions we use. N.B. we
+        add a little bit of logic in there to change the behaviour if the PV
+        doesn't exist. Next we create a get_function that specifies what caget
+        returns. Then we create a blank epics module, and put our ca class as
+        well as our caget and caset functions into it. Finally we edit
+        sys.modules to ensure that our mocked pyepics code is called instead of
+        the original.
+    """
+    class ca(object):
+        def __init__(self):
+            self.calls = 0
+
+        def poll(self):
+            pass
+
+        def create_channel(self, pv, auto_cb):
+            if pv.count('not') is 0:
+                return 12345678
+            else:
+                return 0
+
+        def connect_channel(self, chid, timeout):
+            if chid is 0:
+                return False
+            else:
+                return True
+
+        def get(self, chid, wait):
+            pass
+
+        def get_complete(self, chid):
+            self.calls += 1
+            if self.calls % 2:
+                return DUMMY_VALUE_2
+            else:
+                return DUMMY_VALUE_1
+
+    def get_func(pv, timeout):
+        if pv.count('not') is 0:
+            return DUMMY_VALUE_1
+        else:
+            return None
+
+    epics = ModuleType('epics')
+    epics.ca = ca()
+    epics.caget = get_func
+    epics.caput = MagicMock()
+    sys.modules['epics'] = epics
+    sys.modules['epics.ca'] = ca()
+    sys.modules['epics.caget'] = get_func
+    sys.modules['epics.caput'] = epics.caput
 
 
 @pytest.fixture(scope="session")
@@ -119,12 +194,22 @@ def make_control_system(cs):
     elif cs == 'caproto':
         from pytac import caproto_cs
         return caproto_cs.CaprotoControlSystem()
+    elif cs == 'pyepics':
+        from pytac import pyepics_cs
+        return pyepics_cs.PyepicsControlSystem()
 
 
 def test_import_caproto_cs(Travis_CI_compatibility):
     """Test that the caproto control system sucessfully loads.
     """
     cs = make_control_system('caproto')
+    assert bool(load('VMX', cs))
+
+
+def test_import_pyepics_cs(Travis_CI_compatibility):
+    """Test that the pyepics control system sucessfully loads.
+    """
+    cs = make_control_system('pyepics')
     assert bool(load('VMX', cs))
 
 
@@ -151,7 +236,27 @@ def test_import_fail_raises_LatticeException(Travis_CI_compatibility,
             load('VMX')
 
 
-@pytest.mark.parametrize('cs', ['cothread', 'caproto'])
+def test_cothread_nonexistent_pv(Travis_CI_compatibility):
+    """Use the logic we built into our mock cothread control system to test that
+        the control system acts correctly if the PV does not exist.
+    """
+    cs = make_control_system('cothread')
+    assert cs.get_single('not_a_PV') is None
+    assert cs.get_multiple(['not_a_PV_1', 'not_a_PV_2']) == [None, None]
+    cs.set_single('not_a_PV', 0)
+    cs.set_multiple(['not_a_PV_1', 'not_a_PV_2'], [0, 0])
+
+
+def test_pyepics_failed_connect(Travis_CI_compatibility):
+    """Use the logic we built into our mock pyepics control system to test that
+        the control system acts correctly if the PV does not exist.
+    """
+    cs = make_control_system('pyepics')
+    assert cs.get_single('not_a_PV') is None
+    assert cs.get_multiple(['not_a_PV_1', 'not_a_PV_2']) == [None, None]
+
+
+@pytest.mark.parametrize('cs', ['cothread', 'caproto', 'pyepics'])
 def test_control_system_raises_ValueError(Travis_CI_compatibility, cs):
     """Test that all the control systems raise errors correctly.
     """
@@ -161,21 +266,21 @@ def test_control_system_raises_ValueError(Travis_CI_compatibility, cs):
     with pytest.raises(ValueError):
         control_system.set_multiple('not_a_list', [DUMMY_VALUE_1])
     with pytest.raises(ValueError):
-        control_system.set_multiple(['pv_1'], [])
+        control_system.set_multiple(['PV_1'], [])
     with pytest.raises(ValueError):
-        control_system.set_multiple(['pv_1'], [DUMMY_VALUE_1, DUMMY_VALUE_2])
+        control_system.set_multiple(['PV_1'], [DUMMY_VALUE_1, DUMMY_VALUE_2])
 
 
-@pytest.mark.parametrize('cs', ['cothread', 'caproto'])
+@pytest.mark.parametrize('cs', ['cothread', 'caproto', 'pyepics'])
 def test_cothread_control_system_methods(Travis_CI_compatibility, cs):
     """Test that all control systems call all of their methods correctly.
     """
     control_system = make_control_system(cs)
-    assert control_system.get_single('pv_1') == DUMMY_VALUE_1
-    assert control_system.get_multiple(['pv_1', 'pv_2']) == [DUMMY_VALUE_1,
+    assert control_system.get_single('PV_1') == DUMMY_VALUE_1
+    assert control_system.get_multiple(['PV_1', 'PV_2']) == [DUMMY_VALUE_1,
                                                              DUMMY_VALUE_2]
-    control_system.set_single('pv_1', DUMMY_VALUE_1)
-    control_system.set_multiple(['pv_1', 'pv_2'], [DUMMY_VALUE_1,
+    control_system.set_single('PV_1', DUMMY_VALUE_1)
+    control_system.set_multiple(['PV_1', 'PV_2'], [DUMMY_VALUE_1,
                                                    DUMMY_VALUE_2])
 
 
