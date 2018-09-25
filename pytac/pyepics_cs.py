@@ -24,7 +24,10 @@ class PyEpicsControlSystem(ControlSystem):
         Returns:
             float: Represents the current value of the given PV.
         """
-        return caget(pv, timeout=1.0)
+        try:
+            return float(caget(pv, timeout=1.0))
+        except TypeError:
+            return None
 
     def get_multiple(self, pvs):
         """Get the value for given PVs.
@@ -55,7 +58,7 @@ class PyEpicsControlSystem(ControlSystem):
         ca.poll()  # wait
         for pv, data in pv_data.items():
             if data[0]:  # if connected, read get request
-                data[2] = ca.get_complete(data[1])
+                data[2] = float(ca.get_complete(data[1]))
             else:
                 data[2] = None
         for pv in pvs:  # support for repeated PVs
