@@ -1,4 +1,5 @@
 import logging
+import time as t
 from pytac.cs import ControlSystem
 from caproto.threading.client import Context, Batch
 
@@ -17,6 +18,7 @@ class CaprotoControlSystem(ControlSystem):
             being incorrectly and excessively raised.
         """
         self._results = []
+        self.time = 0
         logging.disable(logging.WARNING)  # Temporary.
 
     def _append_result(self, response):
@@ -39,7 +41,11 @@ class CaprotoControlSystem(ControlSystem):
             float: Represents the current value of the given PV.
         """
         pv_object = Context().get_pvs(pv)[0]
-        return pv_object.read().data[0]
+        try:
+            return pv_object.read().data[0]
+        except TimeoutError:  # Only exists in python 3.3+ though caproto requires 3.6+
+            print('cannot connect to {}'.format(pv))
+            return None
 
     def get_multiple(self, pvs):
         """Get the value for given PVs.
@@ -60,9 +66,17 @@ class CaprotoControlSystem(ControlSystem):
         pv_objects = Context().get_pvs(*pvs)
         with Batch() as b:
             for pv_object in pv_objects:
-                while isinstance(pv_object.channel, type(None)):
-                    pass  # Wait until pv object is fully initialised.
-                b.read(pv_object, self._append_result)
+                try:
+                    self.time = t.time()
+                    while isinstance(pv_object.channel, type(None)):
+                        if (t.time() - self.time) > 1.0:
+                            raise TimeoutError
+                        else:
+                            pass  # Wait until pv object is fully initialised.
+                    b.read(pv_object, self._append_result)
+                except TimeoutError:
+                    self._results.append(None)
+                    print('cannot connect to {}'.format(pvs[pv_objects.index(pv_object)]))
         while len(self._results) is not len(pvs):
             pass  # Wait for results to be returned.
         return self._results
@@ -75,7 +89,10 @@ class CaprotoControlSystem(ControlSystem):
             value (Number): The value to set the PV to.
         """
         pv_object = Context().get_pvs(pv)[0]
-        pv_object.write(value, wait=False)
+        try:
+            pv_object.write(value, wait=False)
+        except TimeoutError:
+            print('cannot connect to {}'.format(pv))
 
     def set_multiple(self, pvs, values):
         """Set the values for given PVs.
@@ -96,6 +113,13 @@ class CaprotoControlSystem(ControlSystem):
         pv_objects = Context().get_pvs(*pvs)
         with Batch() as b:
             for pv_object, value in zip(pv_objects, values):
-                while isinstance(pv_object.channel, type(None)):
-                    pass  # Wait until pv object is fully initialised.
-            b.write(pv_object, value)
+                try:
+                    self.time = t.time()
+                    while isinstance(pv_object.channel, type(None)):
+                        if (t.time() - self.time) > 1.0:
+                            raise TimeoutError
+                        else:
+                            pass  # Wait until pv object is fully initialised.
+                    b.write(pv_object, value)
+                except TimeoutError:
+                    print('cannot connect to {}'.format(pvs[pv_objects.index(pv_object)]))
