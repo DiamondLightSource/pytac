@@ -1,8 +1,9 @@
 from pytac.cs import ControlSystem
 from epics import ca, caget, caput
+from collections import OrderedDict
 
 
-class PyEpicsControlSystem(ControlSystem):
+class PyepicsControlSystem(ControlSystem):
     """A control system using pyepics to communicate with EPICS. N.B. this is
         currently entirely theoretical and has not yet been tested.
 
@@ -44,7 +45,7 @@ class PyEpicsControlSystem(ControlSystem):
         """
         if not isinstance(pvs, list):
             raise ValueError('Please enter PVs as a list.')
-        pv_data = {}  # values in format: [channel_status, channel_id, pv_value]
+        pv_data = OrderedDict()  # values in format: [channel_status, channel_id, pv_value]
         results = []
         for pv in pvs:  # create channel
             pv_data[pv] = [False, ca.create_channel(pv, auto_cb=False), None]
