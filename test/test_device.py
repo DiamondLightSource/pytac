@@ -1,8 +1,7 @@
 import mock
 import pytac
 import pytest
-from pytac.device import BasicDevice
-from pytac.epics import EpicsDevice, PvEnabler
+from pytac.device import BasicDevice, EpicsDevice, PvEnabler
 from pytac.exceptions import HandleException
 from constants import PREFIX, RB_PV, SP_PV
 

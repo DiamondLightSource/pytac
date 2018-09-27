@@ -15,7 +15,7 @@ import os
 import csv
 import pytac
 import collections
-from pytac import epics, data_source, units, utils, device
+from pytac import lattice, element, data_source, units, utils, device
 from pytac.exceptions import LatticeException
 
 
@@ -168,7 +168,7 @@ def load(mode, control_system=None, directory=None):
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
-    lat = epics.EpicsLattice(mode, control_system)
+    lat = lattice.EpicsLattice(mode, control_system)
     lat.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
     s = 0.0
     index = 1
@@ -177,8 +177,8 @@ def load(mode, control_system=None, directory=None):
         for item in csv_reader:
             length = float(item['length'])
             cell = int(item['cell']) if item['cell'] else None
-            e = epics.EpicsElement(item['name'], length, item['type'], s, index,
-                                   cell)
+            e = element.EpicsElement(item['name'], length, item['type'], s, index,
+                                     cell)
             e.add_to_family(item['type'])
             e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)
@@ -192,7 +192,7 @@ def load(mode, control_system=None, directory=None):
             get_pv = item['get_pv'] if item['get_pv'] else None
             set_pv = item['set_pv'] if item['set_pv'] else None
             pve = True
-            d = epics.EpicsDevice(name, control_system, pve, get_pv, set_pv)
+            d = device.EpicsDevice(name, control_system, pve, get_pv, set_pv)
             # Devices on index 0 are attached to the lattice not elements.
             if int(item['id']) == 0:
                 lat.add_device(item['field'], d, UNIT_UC)

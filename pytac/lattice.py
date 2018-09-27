@@ -384,3 +384,91 @@ class Lattice(object):
             str: the default data source for the entire lattice.
         """
         return self._data_source_manager.default_data_source
+
+
+class EpicsLattice(Lattice):
+    """EPICS-aware lattice class.
+
+    Allows efficient get_values() and set_values() methods, and adds
+    get_pv_names() method.
+
+    """
+
+    def __init__(self, name, epics_cs):
+        """
+        Args:
+            name (str): The name of the epics lattice.
+            epics_cs (ControlSystem): The control system used to store the
+                                       values on a PV.
+
+        **Methods:**
+        """
+        super(EpicsLattice, self).__init__(name)
+        self._cs = epics_cs
+
+    def get_pv_name(self, field, handle):
+        """Get the PV name for a specific field, and handle.
+
+        Args:
+            field (str): The requested field.
+            handle (str): pytac.RB or pytac.SP.
+
+        Returns:
+            str: The readback or setpoint PV for the specified field.
+        """
+        try:
+            return (self._data_source_manager._data_sources[pytac.LIVE]
+                    .get_device(field).get_pv_name(handle))
+        except KeyError:
+            raise DeviceException('{} has no device for field {}'
+                                  .format(self, field))
+
+    def get_element_pv_names(self, family, field, handle):
+        """Get all PV names for a specific family, field, and handle.
+
+        Assume that the elements are EpicsElements that have the get_pv_name()
+        method.
+
+        Args:
+            family (str): The requested family.
+            field (str): The requested field.
+            handle (str): pytac.RB or pytac.SP.
+
+        Returns:
+            list: A list of PV names, strings.
+        """
+        elements = self.get_elements(family)
+        pv_names = []
+        for element in elements:
+            pv_names.append(element.get_pv_name(field, handle))
+        return pv_names
+
+    def get_element_values(self, family, field, handle, dtype=None):
+        """Get the value for a family and field for all elements in the lattice.
+
+        Args:
+            family (str): requested family.
+            field (str): requested field.
+            handle (str): pytac.RB or pytac.SP.
+            dtype (numpy.dtype): if set it specifies the data type of the values
+                                  in the output array.
+
+        Returns:
+            list or array: The requested values.
+        """
+        pv_names = self.get_element_pv_names(family, field, handle)
+        values = self._cs.get_multiple(pv_names)
+        if dtype is not None:
+            values = numpy.array(values, dtype=dtype)
+        return values
+
+    def set_element_values(self, family, field, values):
+        """Set the value for a family and field for all elements in the lattice.
+
+        Args:
+            family (str): requested family.
+            field (str): requested field.
+            values (sequence): values to be set.
+        """
+        pv_names = self.get_element_pv_names(family, field, 'setpoint')
+        self._cs.set_multiple(pv_names, values)
