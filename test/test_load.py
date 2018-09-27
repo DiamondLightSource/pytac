@@ -6,6 +6,8 @@ from types import ModuleType
 from pytac.load_csv import load
 from pytac.exceptions import LatticeException
 from constants import DUMMY_VALUE_1, DUMMY_VALUE_2
+if float(sys.version[:3]) < 3.3:
+    from pytac.exceptions import TimeoutError
 
 
 @pytest.fixture(scope="session")
@@ -66,12 +68,11 @@ def Travis_CI_compatibility():
         latter. Finally we edit sys.modules to ensure that our mocked caproto
         code is called instead of the original.
     """
-    @pytest.fixture(scope='session')
-    def r(values):
+    def r(value):
         class response(object):
-            def __init__(self, values):
-                self.data = [values]
-        res = response(values)
+            def __init__(self, value):
+                self.data = [value]
+        res = response(value)
         return res
 
     class client(object):
@@ -79,13 +80,25 @@ def Travis_CI_compatibility():
             def get_pvs(self, *pvs):
                 if len(pvs) > 1:
                     pv_obj_1 = MagicMock()
-                    pv_obj_1.read.return_value = r(DUMMY_VALUE_1)
                     pv_obj_2 = MagicMock()
-                    pv_obj_2.read.return_value = r(DUMMY_VALUE_2)
+                    if pvs[0].count('not') is 0:
+                        pv_obj_1.read.return_value = r(DUMMY_VALUE_1)
+                    else:
+                        pv_obj_1.read = MagicMock()
+                        pv_obj_1.read.side_effect = TimeoutError
+                    if pvs[1].count('not') is 0:
+                        pv_obj_2.read.return_value = r(DUMMY_VALUE_2)
+                    else:
+                        pv_obj_2.read = MagicMock()
+                        pv_obj_2.read.side_effect = TimeoutError
                     return [pv_obj_1, pv_obj_2]
                 else:
                     pv_obj = MagicMock()
-                    pv_obj.read.return_value = r(DUMMY_VALUE_1)
+                    if pvs[0].count('not') is 0:
+                        pv_obj.read.return_value = r(DUMMY_VALUE_1)
+                    else:
+                        pv_obj.read = MagicMock()
+                        pv_obj.read.side_effect = TimeoutError
                     return [pv_obj]
 
         class Batch(object):
@@ -146,9 +159,9 @@ def Travis_CI_compatibility():
         def get_complete(self, chid):
             self.calls += 1
             if self.calls % 2:
-                return DUMMY_VALUE_2
-            else:
                 return DUMMY_VALUE_1
+            else:
+                return DUMMY_VALUE_2
 
     def get_func(pv, timeout):
         if pv.count('not') is 0:
@@ -182,7 +195,6 @@ def mock_cs_raises_ImportError():
     return CothreadControlSystem
 
 
-@pytest.fixture(scope='session')
 def make_control_system(cs):
     """This function depending upon it's input creates either a cothread or
         caproto control system and returns it. This is used to enable the use of
@@ -247,6 +259,14 @@ def test_cothread_nonexistent_pv(Travis_CI_compatibility):
     cs.set_multiple(['not_a_PV_1', 'not_a_PV_2'], [0, 0])
 
 
+def test_caproto_nonexistent_pv(Travis_CI_compatibility):
+    cs = make_control_system('caproto')
+    assert cs.get_single('not_a_PV') is None
+    assert cs.get_multiple(['not_a_PV_1', 'not_a_PV_2']) == [None, None]
+    cs.set_single('not_a_PV', 0)
+    cs.set_multiple(['not_a_PV_1', 'not_a_PV_2'], [0, 0])
+
+
 def test_pyepics_failed_connect(Travis_CI_compatibility):
     """Use the logic we built into our mock pyepics control system to test that
         the control system acts correctly if the PV does not exist.
@@ -254,6 +274,8 @@ def test_pyepics_failed_connect(Travis_CI_compatibility):
     cs = make_control_system('pyepics')
     assert cs.get_single('not_a_PV') is None
     assert cs.get_multiple(['not_a_PV_1', 'not_a_PV_2']) == [None, None]
+    cs.set_single('not_a_PV', 0)
+    cs.set_multiple(['not_a_PV_1', 'not_a_PV_2'], [0, 0])
 
 
 @pytest.mark.parametrize('cs', ['cothread', 'caproto', 'pyepics'])
@@ -272,7 +294,7 @@ def test_control_system_raises_ValueError(Travis_CI_compatibility, cs):
 
 
 @pytest.mark.parametrize('cs', ['cothread', 'caproto', 'pyepics'])
-def test_cothread_control_system_methods(Travis_CI_compatibility, cs):
+def test_all_control_system_methods(Travis_CI_compatibility, cs):
     """Test that all control systems call all of their methods correctly.
     """
     control_system = make_control_system(cs)
