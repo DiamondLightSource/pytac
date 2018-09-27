@@ -86,11 +86,15 @@ def Travis_CI_compatibility():
                     else:
                         pv_obj_1.read = MagicMock()
                         pv_obj_1.read.side_effect = TimeoutError
+                        pv_obj_2.write = MagicMock()
+                        pv_obj_2.write.side_effect = TimeoutError
                     if pvs[1].count('not') is 0:
                         pv_obj_2.read.return_value = r(DUMMY_VALUE_2)
                     else:
                         pv_obj_2.read = MagicMock()
                         pv_obj_2.read.side_effect = TimeoutError
+                        pv_obj_2.write = MagicMock()
+                        pv_obj_2.write.side_effect = TimeoutError
                     return [pv_obj_1, pv_obj_2]
                 else:
                     pv_obj = MagicMock()
@@ -99,6 +103,8 @@ def Travis_CI_compatibility():
                     else:
                         pv_obj.read = MagicMock()
                         pv_obj.read.side_effect = TimeoutError
+                        pv_obj.write = MagicMock()
+                        pv_obj.write.side_effect = TimeoutError
                     return [pv_obj]
 
         class Batch(object):
@@ -109,7 +115,7 @@ def Travis_CI_compatibility():
                 callback(pv_obj.read())
 
             def write(self, pv_obj, value):
-                pass
+                pv_obj.write()
 
             def __exit__(self, exc_type, exc_val, exc_tb):
                 pass

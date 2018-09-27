@@ -28,6 +28,7 @@ class UnitsException(Exception):
 class LatticeException(Exception):
     pass
 
+
 class TimeoutError(Exception):
     """Manual TimeoutException for python versions > 3.3
     """

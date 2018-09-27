@@ -3,8 +3,8 @@ import logging
 import time as t
 from pytac.cs import ControlSystem
 from caproto.threading.client import Context, Batch
-if float(sys.version[:3]) <  3.3:
-    from pytac.exceptions import TimeoutError
+if float(sys.version[:3]) < 3.3:  # TimoutError only exists in python >= 3.3.
+    from pytac.exceptions import TimeoutError  # Otherwise we define it manually
 
 
 class CaprotoControlSystem(ControlSystem):
