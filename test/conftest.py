@@ -3,11 +3,11 @@ import mock
 import pytest
 import pytac
 from pytac import load_csv
-from pytac.element import Element
-from pytac.lattice import Lattice
+from pytac.element import Element, EpicsElement
+from pytac.lattice import Lattice, EpicsLattice
 from pytac.data_source import DataSourceManager, DeviceDataSource
 from pytac.units import PolyUnitConv
-from pytac.epics import EpicsLattice, EpicsElement, EpicsDevice
+from pytac.device import EpicsDevice
 from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, RB_PV, SP_PV, LATTICE_NAME, CURRENT_DIR, DUMMY_ARRAY
 
 
@@ -32,8 +32,8 @@ def y_device():
 @pytest.fixture
 def mock_sim_data_source():
     mock_sim_data_source = mock.MagicMock()
-    mock_sim_data_source.get_value.return_value = DUMMY_VALUE_2
     mock_sim_data_source.units = pytac.PHYS
+    mock_sim_data_source.get_value.return_value = DUMMY_VALUE_2
     return mock_sim_data_source
 
 
@@ -100,10 +100,17 @@ def lattice():
     return lat
 
 
+def set_func(pvs, values):
+    if len(pvs) is not len(values):
+        raise ValueError
+
+
 @pytest.fixture
 def mock_cs():
     cs = mock.MagicMock()
-    cs.get.return_value = DUMMY_ARRAY
+    cs.get_single.return_value = DUMMY_VALUE_1
+    cs.get_multiple.return_value = DUMMY_ARRAY
+    cs.set_multiple.side_effect = set_func
     return cs
 
 
@@ -123,4 +130,9 @@ def simple_epics_element(mock_cs, unit_uc):
 def simple_epics_lattice(simple_epics_element, mock_cs):
     lat = EpicsLattice('lattice', mock_cs)
     lat.add_element(simple_epics_element)
+    x_device = EpicsDevice('x_device', mock_cs, True, RB_PV, SP_PV)
+    y_device = EpicsDevice('y_device', mock_cs, True, SP_PV, RB_PV)
+    lat.set_data_source(DeviceDataSource(), pytac.LIVE)
+    lat.add_device('x', x_device, unit_uc)
+    lat.add_device('y', y_device, unit_uc)
     return lat

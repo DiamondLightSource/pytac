@@ -1,5 +1,6 @@
 """Module containing the element class."""
 import pytac
+from pytac.exceptions import DeviceException
 from pytac.data_source import DataSourceManager
 
 
@@ -181,3 +182,31 @@ class Element(object):
         """
         self._data_source_manager.set_value(field, value, handle, units,
                                             data_source)
+
+
+class EpicsElement(Element):
+    """EPICS-aware element.
+
+    Adds get_pv_name() method.
+
+    **Methods:**
+    """
+    def get_pv_name(self, field, handle):
+        """Get PV name for the specified field and handle.
+
+        Args:
+            field (str): The requested field.
+            handle (str): pytac.RB or pytac.SP.
+
+        Returns:
+            str: The readback or setpoint PV for the specified field.
+
+        Raises:
+            DeviceException: if there is no device for this field.
+        """
+        try:
+            return (self._data_source_manager._data_sources[pytac.LIVE]
+                    .get_device(field).get_pv_name(handle))
+        except KeyError:
+            raise DeviceException('{} has no device for field {}'
+                                  .format(self, field))

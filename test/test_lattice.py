@@ -83,11 +83,6 @@ def test_set_element_values(simple_lattice):
                                        'x')[0].set_value.assert_called_with(1)
 
 
-def test_set_element_values_raise_exception_if_number_of_values_does_not_match(simple_lattice):
-    with pytest.raises(pytac.exceptions.LatticeException):
-        simple_lattice.set_element_values('family', 'x', [1, 2])
-
-
 def test_get_family_s(simple_lattice):
     assert simple_lattice.get_family_s('family') == [0]
 

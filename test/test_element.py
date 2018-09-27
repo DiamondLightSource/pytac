@@ -1,4 +1,3 @@
-import pytac.epics
 import pytac.device
 import pytest
 import pytac

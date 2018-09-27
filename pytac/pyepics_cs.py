@@ -1,10 +1,11 @@
 from pytac.cs import ControlSystem
-from cothread.catools import caget, caput
+from epics import ca, caget, caput
+from collections import OrderedDict
 
 
-class CothreadControlSystem(ControlSystem):
-    """A control system using cothread to communicate with EPICS. N.B. this is
-        the default control system.
+class PyepicsControlSystem(ControlSystem):
+    """A control system using pyepics to communicate with EPICS. N.B. this is
+        currently entirely theoretical and has not yet been tested.
 
     It is used to communicate over channel access with the hardware
     in the ring.
@@ -25,9 +26,8 @@ class CothreadControlSystem(ControlSystem):
             float: Represents the current value of the given PV.
         """
         try:
-            return float(caget(pv, timeout=1.0, throw=False))
+            return float(caget(pv, timeout=1.0))
         except TypeError:
-            print('cannot connect to {}'.format(pv))
             return None
 
     def get_multiple(self, pvs):
@@ -45,13 +45,25 @@ class CothreadControlSystem(ControlSystem):
         """
         if not isinstance(pvs, list):
             raise ValueError('Please enter PVs as a list.')
-        results = caget(pvs, timeout=1.0, throw=False)
-        for i in range(len(results)):
-            try:
-                results[i] = float(results[i])
-            except TypeError:
-                print('cannot connect to {}'.format(pvs[i]))
-                results[i] = None
+        pv_data = OrderedDict()  # values in format: [channel_status, channel_id, pv_value]
+        results = []
+        for pv in pvs:  # create channel
+            pv_data[pv] = [False, ca.create_channel(pv, auto_cb=False), None]
+        ca.poll()  # wait
+        for pv, data in pv_data.items():  # connect to channel
+            data[0] = ca.connect_channel(data[1], timeout=1.0)
+            if data[0]:  # if connected, send get request
+                ca.get(data[1], wait=False)
+            else:
+                print('cannot connect to {}'.format(pv))
+        ca.poll()  # wait
+        for pv, data in pv_data.items():
+            if data[0]:  # if connected, read get request
+                data[2] = float(ca.get_complete(data[1]))
+            else:
+                data[2] = None
+        for pv in pvs:  # support for repeated PVs
+            results.append(pv_data[pv][2])
         return results
 
     def set_single(self, pv, value):
@@ -61,10 +73,7 @@ class CothreadControlSystem(ControlSystem):
             pv (string): The PV to set the value of. It must be a setpoint PV.
             value (Number): The value to set the PV to.
         """
-        try:
-            caput(pv, value, timeout=1.0, throw=True)
-        except Exception:
-            print('cannot connect to {}'.format(pv))
+        caput(pv, value, wait=True, timeout=1.0)
 
     def set_multiple(self, pvs, values):
         """Set the values for given PVs.
@@ -82,7 +91,5 @@ class CothreadControlSystem(ControlSystem):
             raise ValueError('Please enter PVs and values as a list.')
         elif len(pvs) != len(values):
             raise ValueError('Please enter the same number of values as PVs.')
-        try:
-            caput(pvs, values, timeout=1.0, throw=True)
-        except Exception:
-            print('cannot connect to one or more PV(s).')
+        for pv, value in zip(pvs, values):
+            caput(pv, value, wait=False, timeout=1.0)
