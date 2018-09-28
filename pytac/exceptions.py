@@ -27,3 +27,7 @@ class UnitsException(Exception):
 
 class LatticeException(Exception):
     pass
+
+
+class ControlSystemException(Exception):
+    pass

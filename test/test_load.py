@@ -20,6 +20,9 @@ def Travis_CI_compatibility():
         def caput():
             pass
 
+        def ca_nothing():
+            pass
+
     cothread = ModuleType('cothread')
     cothread.catools = catools
     sys.modules['cothread'] = cothread

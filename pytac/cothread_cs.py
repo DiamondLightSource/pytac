@@ -1,5 +1,6 @@
 from pytac.cs import ControlSystem
-from cothread.catools import caget, caput
+from pytac.exceptions import ControlSystemException
+from cothread.catools import caget, caput, ca_nothing
 
 
 class CothreadControlSystem(ControlSystem):
@@ -14,7 +15,7 @@ class CothreadControlSystem(ControlSystem):
     def __init__(self):
         pass
 
-    def get_single(self, pv):
+    def get_single(self, pv, throw=True):
         """Get the value of a given PV.
 
         Args:
@@ -22,15 +23,21 @@ class CothreadControlSystem(ControlSystem):
                          readback or a setpoint PV.
 
         Returns:
-            float: Represents the current value of the given PV.
+            scalar: Represents the current value of the given PV.
+
+        Raises:
+            ControlSystemException: if it cannot connect to the specified PV.
         """
         try:
-            return float(caget(pv, timeout=1.0, throw=False))
-        except TypeError:
-            print('cannot connect to {}'.format(pv))
-            return None
+            return caget(pv, timeout=1.0, throw=True)
+        except ca_nothing:
+            if throw:
+                raise ControlSystemException('cannot connect to {}'.format(pv))
+            else:
+                print('cannot connect to {}'.format(pv))
+                return None
 
-    def get_multiple(self, pvs):
+    def get_multiple(self, pvs, throw=True):
         """Get the value for given PVs.
 
         Args:
@@ -38,51 +45,57 @@ class CothreadControlSystem(ControlSystem):
                          can be a readback or setpoint PVs.
 
         Returns:
-            list: of floats, representing the current values of the PVs.
+            list: of scalars, representing the current values of the PVs.
 
         Raises:
-            ValueError: if the PVs are not passed in as a list.
+            ControlSystemException: if it cannot connect to one or more PVs.
         """
-        if not isinstance(pvs, list):
-            raise ValueError('Please enter PVs as a list.')
         results = caget(pvs, timeout=1.0, throw=False)
-        for i in range(len(results)):
-            try:
-                results[i] = float(results[i])
-            except TypeError:
-                print('cannot connect to {}'.format(pvs[i]))
-                results[i] = None
+        for result in results:
+            if isinstance(result, ca_nothing):
+                if throw:
+                    raise ControlSystemException('cannot connect to {}'.format(result.name))
+                else:
+                    print('cannot connect to {}'.format(result.name))
+                    result = None
         return results
 
-    def set_single(self, pv, value):
+    def set_single(self, pv, value, throw=True):
         """Set the value of a given PV.
 
         Args:
             pv (string): The PV to set the value of. It must be a setpoint PV.
             value (Number): The value to set the PV to.
+
+        Raises:
+            ControlSystemException: if it cannot connect to the specified PV.
         """
         try:
             caput(pv, value, timeout=1.0, throw=True)
-        except Exception:
-            print('cannot connect to {}'.format(pv))
+        except ca_nothing:
+            if throw:
+                raise ControlSystemException('cannot connect to {}'.format(pv))
+            else:
+                print('cannot connect to {}'.format(pv))
 
-    def set_multiple(self, pvs, values):
+    def set_multiple(self, pvs, values, throw=True):
         """Set the values for given PVs.
 
         Args:
             pvs (list): A list of PVs to set the values of. It must be a
                          setpoint PV.
-            values (list): A list of the numbers to set no the PVs.
+            values (sequence): A list of the numbers to set no the PVs.
 
         Raises:
-            ValueError: if the PVs or values are not passed in as a list, or if
-                         the lists of values and PVs are diffent lengths.
+            ValueError: if the lists of values and PVs are diffent lengths.
+            ControlSystemException: if it cannot connect to one or more PVs.
         """
-        if not isinstance(pvs, list) or not isinstance(values, list):
-            raise ValueError('Please enter PVs and values as a list.')
-        elif len(pvs) != len(values):
+        if len(pvs) != len(values):
             raise ValueError('Please enter the same number of values as PVs.')
-        try:
-            caput(pvs, values, timeout=1.0, throw=True)
-        except Exception:
-            print('cannot connect to one or more PV(s).')
+        status = caput(pvs, values, timeout=1.0, throw=False)
+        for stat in status:
+            if not stat.ok:
+                if throw:
+                    raise ControlSystemException('cannot connect to {}'.format(stat.name))
+                else:
+                    print('cannot connect to {}'.format(stat.name))
