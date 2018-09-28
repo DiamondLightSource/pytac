@@ -38,12 +38,12 @@ def test_load_lattice(lattice, name, n_elements, length):
                          [(pytest.lazy_fixture('vmx_ring'), 173),
                           (pytest.lazy_fixture('diad_ring'), 173)])
 def test_get_pv_names(lattice, n_bpms):
-    bpm_x_pvs = lattice.get_pv_names('BPM', 'x', handle='readback')
+    bpm_x_pvs = lattice.get_element_pv_names('BPM', 'x', handle='readback')
     assert len(bpm_x_pvs) == n_bpms
     for pv in bpm_x_pvs:
         assert re.match('SR.*BPM.*X', pv)
-    x_sofb_enabled_pvs = lattice.get_pv_names('BPM', 'x_sofb_disabled',
-                                              handle='readback')
+    x_sofb_enabled_pvs = lattice.get_element_pv_names('BPM', 'x_sofb_disabled',
+                                                      handle='readback')
     assert len(bpm_x_pvs) == n_bpms
     for pv in x_sofb_enabled_pvs:
         assert re.match('SR.*HBPM.*SLOW:DISABLED', pv)
