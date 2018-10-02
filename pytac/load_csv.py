@@ -20,7 +20,7 @@ from pytac.exceptions import LatticeException
 
 
 # Create a default unit conversion object that returns the input unchanged.
-UNIT_UC = units.PolyUnitConv([1, 0])
+DEFAULT_UC = units.NullUnitConv()
 
 ELEMENTS_FILENAME = 'elements.csv'
 DEVICES_FILENAME = 'devices.csv'
@@ -195,15 +195,16 @@ def load(mode, control_system=None, directory=None):
             d = epics.EpicsDevice(name, control_system, pve, get_pv, set_pv)
             # Devices on index 0 are attached to the lattice not elements.
             if int(item['id']) == 0:
-                lat.add_device(item['field'], d, UNIT_UC)
+                lat.add_device(item['field'], d, DEFAULT_UC)
             else:
-                lat[int(item['id']) - 1].add_device(item['field'], d, UNIT_UC)
+                lat[int(item['id']) - 1].add_device(item['field'], d,
+                                                    DEFAULT_UC)
         # Add basic devices to the lattice.
         positions = []
         for elem in lat:
             positions.append(elem.s)
-        lat.add_device('s_position', device.BasicDevice(positions), UNIT_UC)
-        lat.add_device('energy', device.BasicDevice(3000), UNIT_UC)
+        lat.add_device('s_position', device.BasicDevice(positions), DEFAULT_UC)
+        lat.add_device('energy', device.BasicDevice(3000), DEFAULT_UC)
 
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)
