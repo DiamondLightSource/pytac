@@ -282,7 +282,7 @@ class PchipUnitConv(UnitConv):
 
 
 class NullUnitConv(UnitConv):
-    """Returns inupt value without performing any conversions.
+    """Returns input value without performing any conversions.
 
     .. Private Attributes:
            _post_eng_to_phys (function): Always unit_function as no conversion
@@ -297,7 +297,7 @@ class NullUnitConv(UnitConv):
         """Doesn't convert between engineering and physics units.
 
         Maintains the same syntax as the other UnitConv classes for
-        compatability, but does not perform any conversion.
+        compatibility, but does not perform any conversion.
 
         Args:
             eng_value (float): The engineering value to be returned unchanged.
@@ -310,7 +310,7 @@ class NullUnitConv(UnitConv):
         """Doesn't convert between physics and engineering units.
 
         Maintains the same syntax as the other UnitConv classes for
-        compatability, but does not perform any conversion.
+        compatibility, but does not perform any conversion.
 
         Args:
             physics_value (float): The physics value to be returned unchanged.
