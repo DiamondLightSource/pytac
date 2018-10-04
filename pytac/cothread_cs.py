@@ -32,9 +32,10 @@ class CothreadControlSystem(ControlSystem):
             return caget(pv, timeout=1.0, throw=True)
         except ca_nothing:
             if throw:
-                raise ControlSystemException('cannot connect to {}'.format(pv))
+                raise ControlSystemException("Cannot connect to {0}."
+                                             .format(pv))
             else:
-                print('cannot connect to {}'.format(pv))
+                print('Cannot connect to {0}.'.format(pv))
                 return None
 
     def get_multiple(self, pvs, throw=True):
@@ -54,9 +55,10 @@ class CothreadControlSystem(ControlSystem):
         for result in results:
             if isinstance(result, ca_nothing):
                 if throw:
-                    raise ControlSystemException('cannot connect to {}'.format(result.name))
+                    raise ControlSystemException("Cannot connect to {0}."
+                                                 .format(result.name))
                 else:
-                    print('cannot connect to {}'.format(result.name))
+                    print('Cannot connect to {0}.'.format(result.name))
                     result = None
         return results
 
@@ -74,9 +76,10 @@ class CothreadControlSystem(ControlSystem):
             caput(pv, value, timeout=1.0, throw=True)
         except ca_nothing:
             if throw:
-                raise ControlSystemException('cannot connect to {}'.format(pv))
+                raise ControlSystemException("Cannot connect to {0}."
+                                             .format(pv))
             else:
-                print('cannot connect to {}'.format(pv))
+                print('Cannot connect to {0}.'.format(pv))
 
     def set_multiple(self, pvs, values, throw=True):
         """Set the values for given PVs.
@@ -91,11 +94,12 @@ class CothreadControlSystem(ControlSystem):
             ControlSystemException: if it cannot connect to one or more PVs.
         """
         if len(pvs) != len(values):
-            raise ValueError('Please enter the same number of values as PVs.')
+            raise ValueError("Please enter the same number of values as PVs.")
         status = caput(pvs, values, timeout=1.0, throw=False)
         for stat in status:
             if not stat.ok:
                 if throw:
-                    raise ControlSystemException('cannot connect to {}'.format(stat.name))
+                    raise ControlSystemException("Cannot connect to {0}."
+                                                 .format(stat.name))
                 else:
-                    print('cannot connect to {}'.format(stat.name))
+                    print('Cannot connect to {0}.'.format(stat.name))

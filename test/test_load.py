@@ -4,7 +4,6 @@ import pytest
 from mock import patch
 from types import ModuleType
 from pytac.load_csv import load
-from pytac.exceptions import LatticeException
 
 
 @pytest.fixture(scope="session")
@@ -33,7 +32,7 @@ def Travis_CI_compatibility():
 def mock_cs_raises_ImportError():
     """We create a mock control system to replace CothreadControlSystem, so that
         we can check that when it raises an ImportError load_csv.load catches it
-        and raises a LatticeException instead.
+        and raises a ControlSystemException instead.
     N.B. Our new CothreadControlSystem is nested inside a fixture so it can be
      patched into pytac.cothread_cs to replace the existing
      CothreadControlSystem class. The new CothreadControlSystem created here is
@@ -55,23 +54,22 @@ def test_default_control_system_import(Travis_CI_compatibility):
     assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
 
 
-def test_import_fail_raises_LatticeException(Travis_CI_compatibility,
-                                             mock_cs_raises_ImportError):
+def test_import_fail_raises_ControlSystemException(Travis_CI_compatibility,
+                                                   mock_cs_raises_ImportError):
     """In this test we:
         - check that load corectly fails if cothread cannot be imported.
         - check that when the import of the CothreadControlSystem fails the
-           ImportError raised is replaced with a LatticeException.
+           ImportError raised is replaced with a ControlSystemException.
     """
     with patch('pytac.cothread_cs.CothreadControlSystem',
                mock_cs_raises_ImportError):
-        with pytest.raises(LatticeException):
+        with pytest.raises(pytac.exceptions.ControlSystemException):
             load('VMX')
 
 
 def test_elements_loaded(lattice):
     assert len(lattice) == 4
     assert len(lattice.get_elements('drift')) == 2
-    assert len(lattice.get_elements('no_family')) == 0
     assert lattice.get_length() == 2.6
 
 

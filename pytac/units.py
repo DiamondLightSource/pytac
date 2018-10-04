@@ -35,7 +35,6 @@ class UnitConv(object):
            _pre_phys_to_eng (function): Function to be applied before the
                                          initial conversion.
     """
-
     def __init__(self, post_eng_to_phys=unit_function,
                  pre_phys_to_eng=unit_function):
         """
@@ -54,7 +53,7 @@ class UnitConv(object):
         """Function to be implemented by child classes.
 
         Args:
-            value (float): Value to be converted from engineering to physics
+            value (float): The engineering value to be converted to physics
                             units.
         """
         raise NotImplementedError('No eng-to-phys conversion provided')
@@ -80,7 +79,7 @@ class UnitConv(object):
         """Function to be implemented by child classes.
 
         Args:
-            value (float): Value to be converted from physics to engineering
+            value (float): The physics value to be converted to engineering
                             units.
         """
         raise NotImplementedError('No phys-to-eng conversion provided')
@@ -121,8 +120,8 @@ class UnitConv(object):
             return self.phys_to_eng(value)
         if origin == pytac.ENG and target == pytac.PHYS:
             return self.eng_to_phys(value)
-        raise UnitsException(
-            'Conversion {} to {} not understood'.format(origin, target))
+        raise UnitsException("Conversion from {0} to {1} not understood."
+                             .format(origin, target))
 
 
 class PolyUnitConv(UnitConv):
@@ -157,11 +156,11 @@ class PolyUnitConv(UnitConv):
         """Convert between engineering and physics units.
 
         Args:
-            eng_value (float): The engineering value to be converted to the
-                                engineering unit.
+            eng_value (float): The engineering value to be converted to physics
+                                units.
 
         Returns:
-            float: The physics value determined using the engineering value.
+            float: The converted physics value from the given engineering value.
         """
         return self.p(eng_value)
 
@@ -169,24 +168,23 @@ class PolyUnitConv(UnitConv):
         """Convert between physics and engineering units.
 
         Args:
-            physics_value (float): The physics value to be converted to the
-                engineering value.
+            physics_value (float): The physics value to be converted to
+                                    engineering units.
 
         Returns:
-            float: The converted engineering value from the given physics
-                    value.
+            float: The converted engineering value from the given physics value.
 
         Raises:
-            ValueError: An error occurred when there exist no or more than one
-                         roots.
+            UnitsException: An error occurred when there exist no roots or more
+                             than one root.
         """
         roots = (self.p - physics_value).roots
         if len(roots) == 1:
             x = roots[0]
             return x
         else:
-            raise ValueError("There doesn't exist a corresponding engineering "
-                             "value or they are not unique:", roots)
+            raise UnitsException("A corresponding engineering value does not "
+                                 "exist, or there are multiple:", roots)
 
 
 class PchipUnitConv(UnitConv):
@@ -238,11 +236,10 @@ class PchipUnitConv(UnitConv):
         """Convert between engineering and physics units.
 
         Args:
-            eng_value (float): The engineering value to be converted to the
-                                engineering unit.
+            eng_value (float): The engineering value to be converted to physics
+                                units.
         Returns:
-            float: The converted engineering value from the given engineering
-                    value.
+            float: The converted physics value from the given engineering value.
         """
         return self.pp(eng_value)
 
@@ -253,8 +250,8 @@ class PchipUnitConv(UnitConv):
         range of the x values in self.x, otherwise a UnitsException is raised.
 
         Args:
-            physics_value (float): The engineering value to be converted to the
-                                    engineering value.
+            physics_value (float): The physics value to be converted to
+                                    engineering units.
 
         Returns:
             float: The converted engineering value from the given physics
@@ -266,18 +263,56 @@ class PchipUnitConv(UnitConv):
         y = [val - physics_value for val in self.y]
         new_pp = PchipInterpolator(self.x, y)
         roots = new_pp.roots()
-
         unique_root = None
         for root in roots:
             if self.x[0] <= root <= self.x[-1]:
                 if unique_root is None:
                     unique_root = root
                 else:
-                    # I believe this should not happen because of the
+                    # I believe this should never happen because of the
                     # requirement for self.y to be monotonically increasing.
-                    raise UnitsException(
-                        "More than one solution within Pchip bounds"
-                    )
+                    raise UnitsException("More than one solution within Pchip"
+                                         " bounds.")
         if unique_root is None:
             raise UnitsException("No solution within Pchip bounds.")
         return unique_root
+
+
+class NullUnitConv(UnitConv):
+    """Returns input value without performing any conversions.
+
+    .. Private Attributes:
+           _post_eng_to_phys (function): Always unit_function as no conversion
+                                          is performed.
+           _pre_phys_to_eng (function): Always unit_function as no conversion
+                                          is performed.
+    """
+    def __init__(self):
+        super(self.__class__, self).__init__(unit_function, unit_function)
+
+    def _raw_eng_to_phys(self, eng_value):
+        """Doesn't convert between engineering and physics units.
+
+        Maintains the same syntax as the other UnitConv classes for
+        compatibility, but does not perform any conversion.
+
+        Args:
+            eng_value (float): The engineering value to be returned unchanged.
+        Returns:
+            float: The unconverted given engineering value.
+        """
+        return eng_value
+
+    def _raw_phys_to_eng(self, phys_value):
+        """Doesn't convert between physics and engineering units.
+
+        Maintains the same syntax as the other UnitConv classes for
+        compatibility, but does not perform any conversion.
+
+        Args:
+            physics_value (float): The physics value to be returned unchanged.
+
+        Returns:
+            float: The unconverted given physics value.
+        """
+        return phys_value

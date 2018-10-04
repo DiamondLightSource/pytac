@@ -6,7 +6,7 @@ DLS is a sextupole magnet that contains also horizontal and vertical corrector
 magnets and a skew quadrupole.
 """
 import pytac
-from pytac.exceptions import HandleException
+from pytac.exceptions import HandleException, DataSourceException
 
 
 class Device(object):
@@ -85,9 +85,9 @@ class BasicDevice(Device):
 class EpicsDevice(Device):
     """An EPICS-aware device.
 
-    Contains a control system, readback and setpoint PVs. A readback
-    or setpoint PV is required when creating a device otherwise a
-    DeviceException is raised. The device is enabled by default.
+    Contains a control system, readback and setpoint PVs. A readback or setpoint
+    PV is required when creating an epics device otherwise a DataSourceException
+    is raised. The device is enabled by default.
 
     **Attributes:**
 
@@ -113,8 +113,15 @@ class EpicsDevice(Device):
             rb_pv (str): The EPICS readback PV.
             sp_pv (str): The EPICS setpoint PV.
 
+        Raises:
+            DataSourceException: if no PVs are provided.
+
         **Methods:**
         """
+        if rb_pv is None and sp_pv is None:
+            raise DataSourceException("At least one PV, either {0} or {1} is "
+                                      "required when creating an EpicsDevice."
+                                      .format(pytac.RB, pytac.SP))
         self.name = name
         self._cs = cs
         self.rb_pv = rb_pv
@@ -141,7 +148,8 @@ class EpicsDevice(Device):
         if self.sp_pv is None:
             raise HandleException("Device {0} has no setpoint PV."
                                   .format(self.name))
-        self._cs.set_single(self.sp_pv, value)
+        else:
+            self._cs.set_single(self.sp_pv, value)
 
     def get_value(self, handle):
         """Read the value of a readback or setpoint PV.
@@ -159,9 +167,9 @@ class EpicsDevice(Device):
             return self._cs.get_single(self.rb_pv)
         elif handle == pytac.SP and self.sp_pv:
             return self._cs.get_single(self.sp_pv)
-
-        raise HandleException("Device {0} has no {1} PV."
-                              .format(self.name, handle))
+        else:
+            raise HandleException("Device {0} has no {1} PV."
+                                  .format(self.name, handle))
 
     def get_pv_name(self, handle):
         """Get the PV name for the specified handle.
@@ -179,9 +187,9 @@ class EpicsDevice(Device):
             return self.rb_pv
         elif handle == pytac.SP and self.sp_pv:
             return self.sp_pv
-
-        raise HandleException("Device {0} has no {1} PV."
-                              .format(self.name, handle))
+        else:
+            raise HandleException("Device {0} has no {1} PV."
+                                  .format(self.name, handle))
 
 
 class PvEnabler(object):

@@ -1,8 +1,8 @@
 import pytest
 import pytac
 import numpy
-from pytac.units import UnitConv, PolyUnitConv, PchipUnitConv
-from pytac.exceptions import UnitsException
+from pytac.units import UnitConv, PolyUnitConv, PchipUnitConv, NullUnitConv
+from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, DUMMY_VALUE_3
 
 
 def f1(value):
@@ -25,7 +25,7 @@ def test_UnitConv_not_implemented():
                                             (pytac.PHYS, pytac.SP), ('a', 'b')])
 def test_UnitConv_requires_correct_arguments(origin, target):
     uc = UnitConv()
-    with pytest.raises(UnitsException):
+    with pytest.raises(pytac.exceptions.UnitsException):
         uc.convert(10, origin, target)
 
 
@@ -57,7 +57,7 @@ def test_quadratic_conversion():
     quadratic_conversion = PolyUnitConv([1, 2, 3])
     physics_value = quadratic_conversion.eng_to_phys(4)
     assert physics_value == 27
-    with pytest.raises(ValueError):
+    with pytest.raises(pytac.exceptions.UnitsException):
         quadratic_conversion.phys_to_eng(2.5)
 
 
@@ -99,7 +99,7 @@ def test_PchipUnitConv_with_solution_outside_bounds_raises_UnitsException():
     # This is a linear relationship, but the root is 0, outside of the
     # range of measurements.
     pchip_uc = PchipUnitConv((1, 2, 3), (1, 2, 3))
-    with pytest.raises(UnitsException):
+    with pytest.raises(pytac.exceptions.UnitsException):
         pchip_uc.phys_to_eng(0)
 
 
@@ -112,10 +112,20 @@ def test_PchipUnitConv_with_additional_function():
 
 
 def test_PolyUnitConv_with_additional_function():
-    ucpoly_uc = PolyUnitConv([2, 3], f1, f2)
-    assert ucpoly_uc.eng_to_phys(4) == 22.0
-    assert ucpoly_uc.eng_to_phys(5) == 26.0
-    assert ucpoly_uc.eng_to_phys(3) == 18.0
-    assert ucpoly_uc.phys_to_eng(22.0) == 4
-    assert ucpoly_uc.phys_to_eng(26.0) == 5
-    assert ucpoly_uc.phys_to_eng(18.0) == 3
+    poly_uc = PolyUnitConv([2, 3], f1, f2)
+    assert poly_uc.eng_to_phys(4) == 22.0
+    assert poly_uc.eng_to_phys(5) == 26.0
+    assert poly_uc.eng_to_phys(3) == 18.0
+    assert poly_uc.phys_to_eng(22.0) == 4
+    assert poly_uc.phys_to_eng(26.0) == 5
+    assert poly_uc.phys_to_eng(18.0) == 3
+
+
+def test_NullUnitConv():
+    null_uc = NullUnitConv()
+    assert null_uc.eng_to_phys(DUMMY_VALUE_1) == DUMMY_VALUE_1
+    assert null_uc.eng_to_phys(DUMMY_VALUE_2) == DUMMY_VALUE_2
+    assert null_uc.eng_to_phys(DUMMY_VALUE_3) == DUMMY_VALUE_3
+    assert null_uc.phys_to_eng(DUMMY_VALUE_1) == DUMMY_VALUE_1
+    assert null_uc.phys_to_eng(DUMMY_VALUE_2) == DUMMY_VALUE_2
+    assert null_uc.phys_to_eng(DUMMY_VALUE_3) == DUMMY_VALUE_3

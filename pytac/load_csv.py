@@ -16,11 +16,11 @@ import csv
 import pytac
 import collections
 from pytac import lattice, element, data_source, units, utils, device
-from pytac.exceptions import LatticeException
+from pytac.exceptions import ControlSystemException
 
 
 # Create a default unit conversion object that returns the input unchanged.
-UNIT_UC = units.PolyUnitConv([1, 0])
+DEFAULT_UC = units.NullUnitConv()
 
 ELEMENTS_FILENAME = 'elements.csv'
 DEVICES_FILENAME = 'devices.csv'
@@ -41,7 +41,6 @@ def get_div_rigidity(energy):
 
     def div_rigidity(input):
         return input / rigidity
-
     return div_rigidity
 
 
@@ -56,7 +55,6 @@ def get_mult_rigidity(energy):
 
     def mult_rigidity(input):
         return input * rigidity
-
     return mult_rigidity
 
 
@@ -77,7 +75,6 @@ def load_poly_unitconv(filename):
         for item in csv_reader:
             data[(int(item['uc_id']))].append((int(item['coeff']),
                                                float(item['val'])))
-
     # Create PolyUnitConv for each item and put in the dict
     for uc_id in data:
         u = units.PolyUnitConv([x[1] for x in reversed(sorted(data[uc_id]))])
@@ -102,7 +99,6 @@ def load_pchip_unitconv(filename):
         for item in csv_reader:
             data[(int(item['uc_id']))].append((float(item['eng']),
                                                float(item['phy'])))
-
     # Create PchipUnitConv for each item and put in the dict
     for uc_id in data:
         eng = [x[0] for x in sorted(data[uc_id])]
@@ -127,7 +123,6 @@ def load_unitconv(directory, mode, lattice):
     # Assemble datasets from the pchip file
     pchip_file = os.path.join(directory, mode, PCHIP_FILENAME)
     unitconvs.update(load_pchip_unitconv(pchip_file))
-
     # Add the unitconv objects to the elements
     with open(os.path.join(directory, mode, UNITCONV_FILENAME)) as unitconv:
         csv_reader = csv.DictReader(unitconv)
@@ -155,6 +150,10 @@ def load(mode, control_system=None, directory=None):
 
     Returns:
         Lattice: The lattice containing all elements.
+
+    Raises:
+        ControlSystemException: if the default control system, cothread, is not
+                                 installed.
     """
     try:
         if control_system is None:
@@ -163,8 +162,9 @@ def load(mode, control_system=None, directory=None):
             from pytac import cothread_cs
             control_system = cothread_cs.CothreadControlSystem()
     except ImportError:
-        raise LatticeException('Please install cothread to load a lattice using'
-                               ' the default control system (in cothread_cs)')
+        raise ControlSystemException("Please install cothread to load a lattice"
+                                     "using the default control system (found "
+                                     "in cothread_cs.py).")
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
@@ -184,7 +184,6 @@ def load(mode, control_system=None, directory=None):
             lat.add_element(e)
             s += length
             index += 1
-
     with open(os.path.join(directory, mode, DEVICES_FILENAME)) as devices:
         csv_reader = csv.DictReader(devices)
         for item in csv_reader:
@@ -195,22 +194,20 @@ def load(mode, control_system=None, directory=None):
             d = device.EpicsDevice(name, control_system, pve, get_pv, set_pv)
             # Devices on index 0 are attached to the lattice not elements.
             if int(item['id']) == 0:
-                lat.add_device(item['field'], d, UNIT_UC)
+                lat.add_device(item['field'], d, DEFAULT_UC)
             else:
-                lat[int(item['id']) - 1].add_device(item['field'], d, UNIT_UC)
+                lat[int(item['id']) - 1].add_device(item['field'], d,
+                                                    DEFAULT_UC)
         # Add basic devices to the lattice.
         positions = []
         for elem in lat:
             positions.append(elem.s)
-        lat.add_device('s_position', device.BasicDevice(positions), UNIT_UC)
-        lat.add_device('energy', device.BasicDevice(3000), UNIT_UC)
-
+        lat.add_device('s_position', device.BasicDevice(positions), DEFAULT_UC)
+        lat.add_device('energy', device.BasicDevice(3000), DEFAULT_UC)
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)
         for item in csv_reader:
             lat[int(item['id']) - 1].add_to_family(item['family'])
-
     if os.path.exists(os.path.join(directory, mode, UNITCONV_FILENAME)):
         load_unitconv(directory, mode, lat)
-
     return lat
