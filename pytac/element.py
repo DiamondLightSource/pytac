@@ -1,6 +1,7 @@
 """Module containing the element class."""
 import pytac
 from pytac.data_source import DataSourceManager
+from pytac.exceptions import DataSourceException, FieldException
 
 
 class Element(object):
@@ -55,8 +56,8 @@ class Element(object):
             str: A representation of an element.
         """
         repn = '<Element {0}, length {1} m, families {2}>'
-        return repn.format(self.name, self.length,
-                           ', '.join(f for f in self.families))
+        return repn.format(self.name, self.length, ', '.join(f for f in
+                                                             self.families))
 
     __repr__ = __str__
 
@@ -94,9 +95,13 @@ class Element(object):
             uc (UnitConv): The unit conversion object used for this field.
 
         Raises:
-            KeyError: if no DeviceDataSource is set.
+            DataSourceException: if no DeviceDataSource is set.
         """
-        self._data_source_manager.add_device(field, device, uc)
+        try:
+            self._data_source_manager.add_device(field, device, uc)
+        except DataSourceException:
+            raise DataSourceException("No device data source for field {0} on "
+                                      "element {1}.".format(field, self))
 
     def get_device(self, field):
         """Get the device for the given field.
@@ -111,9 +116,13 @@ class Element(object):
             Device: The device on the given field.
 
         Raises:
-            KeyError: if no DeviceDataSource is set.
+            DataSourceException: if no DeviceDataSource is set.
         """
-        return self._data_source_manager.get_device(field)
+        try:
+            return self._data_source_manager.get_device(field)
+        except DataSourceException:
+            raise DataSourceException("No device data source for field {0} on "
+                                      "element {1}.".format(field, self))
 
     def get_unitconv(self, field):
         """Get the unit conversion option for the specified field.
@@ -125,9 +134,13 @@ class Element(object):
             UnitConv: The object associated with the specified field.
 
         Raises:
-            KeyError: if no unit conversion object is present.
+            FieldException: if no unit conversion object is present.
         """
-        return self._data_source_manager.get_unitconv(field)
+        try:
+            return self._data_source_manager.get_unitconv(field)
+        except FieldException:
+            raise FieldException("No unit conversion option for field {0} on "
+                                 "element {1}.".format(field, self))
 
     def add_to_family(self, family):
         """Add the element to the specified family.
@@ -156,11 +169,18 @@ class Element(object):
             float: The value of the requested field
 
         Raises:
-            DeviceException: if there is no device on the given field.
+            DataSourceException: if there is no data source on the given field.
             FieldException: if the element does not have the specified field.
         """
-        return self._data_source_manager.get_value(field, handle, units,
-                                                   data_source)
+        try:
+            return self._data_source_manager.get_value(field, handle, units,
+                                                       data_source)
+        except DataSourceException:
+            raise DataSourceException("No data source {0} on element {1}."
+                                      .format(data_source, self))
+        except FieldException:
+            raise FieldException("Element {0} does not have field {1}."
+                                 .format(self, field))
 
     def set_value(self, field, value, handle=pytac.SP, units=pytac.DEFAULT,
                   data_source=pytac.DEFAULT):
@@ -176,8 +196,15 @@ class Element(object):
             data_source (str): pytac.LIVE or pytac.SIM.
 
         Raises:
-            DeviceException: if arguments are incorrect.
+            DataSourceException: if arguments are incorrect.
             FieldException: if the element does not have the specified field.
         """
-        self._data_source_manager.set_value(field, value, handle, units,
-                                            data_source)
+        try:
+            self._data_source_manager.set_value(field, value, handle, units,
+                                                data_source)
+        except DataSourceException:
+            raise DataSourceException("No data source {0} on element {1}."
+                                      .format(data_source, self))
+        except FieldException:
+            raise FieldException("Element {0} does not have field {1}."
+                                 .format(self, field))

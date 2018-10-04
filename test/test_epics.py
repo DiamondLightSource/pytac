@@ -48,13 +48,25 @@ def test_get_value_raises_HandleExceptions(simple_epics_element):
         simple_epics_element.get_value('y', 'unknown_handle')
 
 
-def test_get_pv_name_raises_DeviceException(simple_epics_element):
-    with pytest.raises(pytac.exceptions.DeviceException):
+def test_get_pv_name_raises_exceptions(simple_epics_element):
+    with pytest.raises(pytac.exceptions.FieldException):
         simple_epics_element.get_pv_name('unknown_field', 'setpoint')
 
 
-def test_set_values_raises_LatticeException(simple_epics_lattice):
-    with pytest.raises(pytac.exceptions.LatticeException):
+def test_set_values_length_mismatch_raises_IndexError(simple_epics_lattice):
+    with pytest.raises(IndexError):
         simple_epics_lattice.set_values('family', 'x', [1, 2])
-    with pytest.raises(pytac.exceptions.LatticeException):
+    with pytest.raises(IndexError):
         simple_epics_lattice.set_values('family', 'x', [])
+
+
+def test_get_pv_name_raises_DataSourceException_if_no_live_data_source(simple_epics_element):
+    basic_epics_element = simple_epics_element
+    del basic_epics_element._data_source_manager._data_sources[pytac.LIVE]
+    with pytest.raises(pytac.exceptions.DataSourceException):
+        basic_epics_element.get_pv_name('x', pytac.RB)
+
+
+def test_create_EpicsDevice_raises_DataSourceException_if_no_PVs_are_given():
+    with pytest.raises(pytac.exceptions.DataSourceException):
+        pytac.epics.EpicsDevice('device_1', 'a_control_system')

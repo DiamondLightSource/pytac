@@ -2,7 +2,6 @@ import pytest
 import pytac
 import numpy
 from pytac.units import UnitConv, PolyUnitConv, PchipUnitConv, NullUnitConv
-from pytac.exceptions import UnitsException
 from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, DUMMY_VALUE_3
 
 
@@ -26,7 +25,7 @@ def test_UnitConv_not_implemented():
                                             (pytac.PHYS, pytac.SP), ('a', 'b')])
 def test_UnitConv_requires_correct_arguments(origin, target):
     uc = UnitConv()
-    with pytest.raises(UnitsException):
+    with pytest.raises(pytac.exceptions.UnitsException):
         uc.convert(10, origin, target)
 
 
@@ -58,7 +57,7 @@ def test_quadratic_conversion():
     quadratic_conversion = PolyUnitConv([1, 2, 3])
     physics_value = quadratic_conversion.eng_to_phys(4)
     assert physics_value == 27
-    with pytest.raises(ValueError):
+    with pytest.raises(pytac.exceptions.UnitsException):
         quadratic_conversion.phys_to_eng(2.5)
 
 
@@ -100,7 +99,7 @@ def test_PchipUnitConv_with_solution_outside_bounds_raises_UnitsException():
     # This is a linear relationship, but the root is 0, outside of the
     # range of measurements.
     pchip_uc = PchipUnitConv((1, 2, 3), (1, 2, 3))
-    with pytest.raises(UnitsException):
+    with pytest.raises(pytac.exceptions.UnitsException):
         pchip_uc.phys_to_eng(0)
 
 
