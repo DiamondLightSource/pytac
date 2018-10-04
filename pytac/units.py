@@ -35,7 +35,6 @@ class UnitConv(object):
            _pre_phys_to_eng (function): Function to be applied before the
                                          initial conversion.
     """
-
     def __init__(self, post_eng_to_phys=unit_function,
                  pre_phys_to_eng=unit_function):
         """
@@ -121,8 +120,8 @@ class UnitConv(object):
             return self.phys_to_eng(value)
         if origin == pytac.ENG and target == pytac.PHYS:
             return self.eng_to_phys(value)
-        raise UnitsException(
-            'Conversion {} to {} not understood'.format(origin, target))
+        raise UnitsException("Conversion from {0} to {1} not understood."
+                             .format(origin, target))
 
 
 class PolyUnitConv(UnitConv):
@@ -176,16 +175,16 @@ class PolyUnitConv(UnitConv):
             float: The converted engineering value from the given physics value.
 
         Raises:
-            ValueError: An error occurred when there exist no or more than one
-                         roots.
+            UnitsException: An error occurred when there exist no roots or more
+                             than one root.
         """
         roots = (self.p - physics_value).roots
         if len(roots) == 1:
             x = roots[0]
             return x
         else:
-            raise ValueError("There doesn't exist a corresponding engineering "
-                             "value or they are not unique:", roots)
+            raise UnitsException("A corresponding engineering value does not "
+                                 "exist, or there are multiple:", roots)
 
 
 class PchipUnitConv(UnitConv):
@@ -264,18 +263,16 @@ class PchipUnitConv(UnitConv):
         y = [val - physics_value for val in self.y]
         new_pp = PchipInterpolator(self.x, y)
         roots = new_pp.roots()
-
         unique_root = None
         for root in roots:
             if self.x[0] <= root <= self.x[-1]:
                 if unique_root is None:
                     unique_root = root
                 else:
-                    # I believe this should not happen because of the
+                    # I believe this should never happen because of the
                     # requirement for self.y to be monotonically increasing.
-                    raise UnitsException(
-                        "More than one solution within Pchip bounds"
-                    )
+                    raise UnitsException("More than one solution within Pchip"
+                                         " bounds.")
         if unique_root is None:
             raise UnitsException("No solution within Pchip bounds.")
         return unique_root

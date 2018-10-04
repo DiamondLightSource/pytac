@@ -18,8 +18,19 @@ def test_add_element_to_family():
     assert 'fam' in e.families
 
 
+def test_device_methods_raise_DataSourceException_if_no_device_data_sorce(simple_element):
+    basic_element = simple_element
+    del basic_element._data_source_manager._data_sources[pytac.LIVE]
+    d = pytac.device.BasicDevice(0)
+    uc = pytac.units.NullUnitConv()
+    with pytest.raises(pytac.exceptions.DataSourceException):
+        basic_element.add_device('x', d, uc)
+    with pytest.raises(pytac.exceptions.DataSourceException):
+        basic_element.get_device('x')
+
+
 def test_get_device_raises_KeyError_if_device_not_present(simple_element):
-    with pytest.raises(KeyError):
+    with pytest.raises(pytac.exceptions.FieldException):
         simple_element.get_device('not-a-device')
 
 
@@ -29,8 +40,8 @@ def test_get_unitconv_returns_unitconv_object(simple_element, unit_uc,
     assert simple_element.get_unitconv('y') == double_uc
 
 
-def test_get_unitconv_raises_KeyError_if_device_not_present(simple_element):
-    with pytest.raises(KeyError):
+def test_get_unitconv_raises_FieldException_if_device_not_present(simple_element):
+    with pytest.raises(pytac.exceptions.FieldException):
         simple_element.get_unitconv('not-a-device')
 
 
@@ -66,7 +77,7 @@ def test_set_exceptions(simple_element, unit_uc):
         simple_element.set_value('unknown_field', 40.0, 'setpoint')
     with pytest.raises(pytac.exceptions.HandleException):
         simple_element.set_value('y', 40.0, 'unknown_handle')
-    with pytest.raises(pytac.exceptions.DeviceException):
+    with pytest.raises(pytac.exceptions.DataSourceException):
         simple_element.set_value('y', 40.0, 'setpoint',
                                  data_source='unknown_data_source')
     simple_element._data_source_manager._uc['uc_but_not_data_source_field'] = unit_uc
@@ -78,7 +89,7 @@ def test_set_exceptions(simple_element, unit_uc):
 def test_get_exceptions(simple_element):
     with pytest.raises(pytac.exceptions.FieldException):
         simple_element.get_value('unknown_field', 'setpoint')
-    with pytest.raises(pytac.exceptions.DeviceException):
+    with pytest.raises(pytac.exceptions.DataSourceException):
         simple_element.get_value('y', 'setpoint',
                                  data_source='unknown_data_source')
 

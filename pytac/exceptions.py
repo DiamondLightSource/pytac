@@ -13,17 +13,20 @@ class HandleException(Exception):
     pass
 
 
-class DeviceException(Exception):
-    """Exception associated with Device misconfiguration or invalid requests.
+class DataSourceException(Exception):
+    """Exception associated with Device misconfiguration or invalid requests to
+        a data source.
     """
     pass
 
 
 class UnitsException(Exception):
-    """Conversion not understood
+    """Conversion not understood.
     """
     pass
 
 
-class LatticeException(Exception):
+class ControlSystemException(Exception):
+    """Exception associated with control system misconfiguration.
+    """
     pass
