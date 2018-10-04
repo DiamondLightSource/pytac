@@ -29,6 +29,12 @@ class UnitConv(object):
     applied to the result of the initial conversion. One happens after
     the conversion, the other happens before the conversion back.
 
+    **Attributes:**
+
+    Attributes:
+        eng_units (str): The unit type of the post conversion engineering value.
+        phys_units (str): The unit type of the post conversion physics value.
+
     .. Private Attributes:
            _post_eng_to_phys (function): Function to be applied after the
                                          initial conversion.
@@ -37,18 +43,25 @@ class UnitConv(object):
     """
 
     def __init__(self, post_eng_to_phys=unit_function,
-                 pre_phys_to_eng=unit_function):
+                 pre_phys_to_eng=unit_function, engineering_units=None,
+                 physics_units=None):
         """
         Args:
             post_eng_to_phys (function): Function to be applied after the
                                           initial conversion.
             pre_phys_to_eng (function): Function to be applied before the
                                          initial conversion.
+            engineering_units (str): The unit type of the post conversion
+                                      engineering value.
+            physics_units (str): The unit type of the post conversion physics
+                                  value.
 
         **Methods:**
         """
         self._post_eng_to_phys = post_eng_to_phys
         self._pre_phys_to_eng = pre_phys_to_eng
+        self.eng_units = engineering_units
+        self.phys_units = physics_units
 
     def _raw_eng_to_phys(self, value):
         """Function to be implemented by child classes.
@@ -133,6 +146,8 @@ class PolyUnitConv(UnitConv):
 
     Attributes:
         p (poly1d): A one-dimensional polynomial of coefficients.
+        eng_units (str): The unit type of the post conversion engineering value.
+        phys_units (str): The unit type of the post conversion physics value.
 
     .. Private Attributes:
            _post_eng_to_phys (function): Function to be applied after the
@@ -141,7 +156,8 @@ class PolyUnitConv(UnitConv):
                                          initial conversion.
     """
     def __init__(self, coef, post_eng_to_phys=unit_function,
-                 pre_phys_to_eng=unit_function):
+                 pre_phys_to_eng=unit_function, engineering_units=None,
+                 physics_units=None):
         """
         Args:
             coef (array-like): The polynomial's coefficients, in decreasing
@@ -149,8 +165,13 @@ class PolyUnitConv(UnitConv):
             post_eng_to_phys (float): The value after conversion between ENG
                                        and PHYS.
             pre_eng_to_phys (float): The value before conversion.
+            engineering_units (str): The unit type of the post conversion
+                                      engineering value.
+            physics_units (str): The unit type of the post conversion physics
+                                  value.
         """
-        super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng)
+        super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng,
+                                             engineering_units, physics_units)
         self.p = numpy.poly1d(coef)
 
     def _raw_eng_to_phys(self, eng_value):
@@ -201,6 +222,8 @@ class PchipUnitConv(UnitConv):
                    or decreasing order. Otherwise, a ValueError is raised.
         pp (PchipInterpolator): A pchip one-dimensional monotonic cubic
                                  interpolation of points on both x and y axes.
+        eng_units (str): The unit type of the post conversion engineering value.
+        phys_units (str): The unit type of the post conversion physics value.
 
     .. Private Attributes:
            _post_eng_to_phys (function): Function to be applied after the
@@ -209,7 +232,8 @@ class PchipUnitConv(UnitConv):
                                          initial conversion.
     """
     def __init__(self, x, y, post_eng_to_phys=unit_function,
-                 pre_phys_to_eng=unit_function):
+                 pre_phys_to_eng=unit_function, engineering_units=None,
+                 physics_units=None):
         """
         Args:
             x (list): A list of points on the x axis. These must be in
@@ -218,11 +242,16 @@ class PchipUnitConv(UnitConv):
             y (list): A list of points on the y axis. These must be in
                        increasing or decreasing order. Otherwise, a ValueError
                        is raised.
+            engineering_units (str): The unit type of the post conversion
+                                      engineering value.
+            physics_units (str): The unit type of the post conversion physics
+                                  value.
 
         Raises:
             ValueError: if coefficients are not appropriately monotonic.
         """
-        super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng)
+        super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng,
+                                             engineering_units, physics_units)
         self.x = x
         self.y = y
         self.pp = PchipInterpolator(x, y)
@@ -284,14 +313,28 @@ class PchipUnitConv(UnitConv):
 class NullUnitConv(UnitConv):
     """Returns input value without performing any conversions.
 
+    **Attributes:**
+
+    Attributes:
+        eng_units (str): The unit type of the post conversion engineering value.
+        phys_units (str): The unit type of the post conversion physics value.
+
     .. Private Attributes:
            _post_eng_to_phys (function): Always unit_function as no conversion
                                           is performed.
            _pre_phys_to_eng (function): Always unit_function as no conversion
                                           is performed.
     """
-    def __init__(self):
-        super(self.__class__, self).__init__(unit_function, unit_function)
+    def __init__(self, engineering_units=None, physics_units=None):
+        """
+        Args:
+            engineering_units (str): The unit type of the post conversion
+                                      engineering value.
+            physics_units (str): The unit type of the post conversion physics
+                                  value.
+        """
+        super(self.__class__, self).__init__(unit_function, unit_function,
+                                             engineering_units, physics_units)
 
     def _raw_eng_to_phys(self, eng_value):
         """Doesn't convert between engineering and physics units.
