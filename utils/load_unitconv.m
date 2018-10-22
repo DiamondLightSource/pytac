@@ -1,4 +1,3 @@
-
 function load_unitconv(ringmode, renamedIndexes)
 dir = fileparts(mfilename('fullpath'));
 cd(dir);
@@ -20,6 +19,11 @@ fprintf(f_pchip, 'uc_id,eng,phy\n');
 
 quad_families = findmemberof('QUAD');
 sext_families = findmemberof('SEXT');
+
+% Unit conversions for lattice fields
+fprintf(f_units, '%d,%s,poly,%d\n', 0, 'energy', 0);
+fprintf(f_poly, '%d,%d,%f\n', 0, 0, 0);
+fprintf(f_poly, '%d,%d,%f\n', 0, 1, 1e-6);
 
 for i = 1:length(quad_families)
     write_multipole_section(quad_families{i}, 'b1');
