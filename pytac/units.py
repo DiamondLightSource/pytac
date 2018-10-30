@@ -43,8 +43,8 @@ class UnitConv(object):
     """
 
     def __init__(self, post_eng_to_phys=unit_function,
-                 pre_phys_to_eng=unit_function, engineering_units=None,
-                 physics_units=None):
+                 pre_phys_to_eng=unit_function, engineering_units='',
+                 physics_units=''):
         """
         Args:
             post_eng_to_phys (function): Function to be applied after the
@@ -156,8 +156,8 @@ class PolyUnitConv(UnitConv):
                                          initial conversion.
     """
     def __init__(self, coef, post_eng_to_phys=unit_function,
-                 pre_phys_to_eng=unit_function, engineering_units=None,
-                 physics_units=None):
+                 pre_phys_to_eng=unit_function, engineering_units='',
+                 physics_units=''):
         """
         Args:
             coef (array-like): The polynomial's coefficients, in decreasing
@@ -232,8 +232,8 @@ class PchipUnitConv(UnitConv):
                                          initial conversion.
     """
     def __init__(self, x, y, post_eng_to_phys=unit_function,
-                 pre_phys_to_eng=unit_function, engineering_units=None,
-                 physics_units=None):
+                 pre_phys_to_eng=unit_function, engineering_units='',
+                 physics_units=''):
         """
         Args:
             x (list): A list of points on the x axis. These must be in
@@ -325,7 +325,7 @@ class NullUnitConv(UnitConv):
            _pre_phys_to_eng (function): Always unit_function as no conversion
                                           is performed.
     """
-    def __init__(self, engineering_units=None, physics_units=None):
+    def __init__(self, engineering_units='', physics_units=''):
         """
         Args:
             engineering_units (str): The unit type of the post conversion
