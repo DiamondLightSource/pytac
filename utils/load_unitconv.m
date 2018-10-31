@@ -41,6 +41,13 @@ fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'emittance_y', 0, 'pm', 'pm');
 fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'beam_current', 0, 'A', 'A');
 
 % Element null unit conversions
+s_data = getfamilydata('BBVMXS');
+l_data = getfamilydata('BBVMXL');
+db_indexes = [s_data.AT.ATIndex, l_data.AT.ATIndex];
+db_indexes = db_indexes(:);
+for i = 1:length(db_indexes)
+    fprintf(f_units, '%d,%s,null,%d,%s,%s\n', renamedIndexes(db_indexes(i)), 'db0', 0, 'm^-1', 'A');
+end
 rfs = getfamilydata('RF');
 if length(rfs.ElementList) > 1
     for i = 1:length(rfs.AT.ATIndex)
