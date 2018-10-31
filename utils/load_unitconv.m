@@ -21,7 +21,7 @@ quad_families = findmemberof('QUAD');
 sext_families = findmemberof('SEXT');
 
 % Unit conversions for lattice fields
-fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', 0, 'energy', 0, 'Mev', 'Mev');
+fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', 0, 'energy', 0, 'Gev', 'Mev');
 fprintf(f_poly, '%d,%d,%f\n', 0, 0, 0);
 fprintf(f_poly, '%d,%d,%f\n', 0, 1, 1e-6);
 
@@ -88,7 +88,7 @@ for i = 1:length(hcor.DeviceList)
         hcor_index = hcor_index + 1;
     end
     id = write_linear_data(data.field(2) / data.current(2), 0);
-    fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(hcor_index), 'x_kick', id, 'rads^-2', 'A'); 
+    fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(hcor_index), 'x_kick', id, '', 'A'); 
 end
 
 vcor = getfamilydata('VCM');
@@ -99,7 +99,7 @@ for i = 1:length(vcor.DeviceList)
         vcor_index = vcor_index + 1;
     end
     id = write_linear_data(data.field(2) / data.current(2), 0);
-    fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(vcor_index), 'y_kick', id, 'rads^-2', 'A');
+    fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(vcor_index), 'y_kick', id, '', 'A');
 end
 
 
