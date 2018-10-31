@@ -1,15 +1,8 @@
 el_id,field,uc_type,uc_id,phys_units,eng_units
 0,energy,poly,0,Mev,Mev
-0,m44,null,0,,
 0,s_position,null,0,m,m
-0,alpha,null,0,,
 0,beta,null,0,m,m
-0,mu,null,0,,
 0,dispersion,null,0,m,m
-0,tune_x,null,0,,
-0,tune_y,null,0,,
-0,chromaticity_x,null,0,,
-0,chromaticity_y,null,0,,
 0,emittance_x,null,0,nm,nm
 0,emittance_y,null,0,pm,pm
 0,beam_current,null,0,A,A

@@ -26,16 +26,9 @@ fprintf(f_poly, '%d,%d,%f\n', 0, 0, 0);
 fprintf(f_poly, '%d,%d,%f\n', 0, 1, 1e-6);
 
 % Lattice null unit conversions
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'm44', 0, '', '');
 fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 's_position', 0, 'm', 'm');
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'alpha', 0, '', '');
 fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'beta', 0, 'm', 'm');
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'mu', 0, '', '');
 fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'dispersion', 0, 'm', 'm');
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'tune_x', 0, '', '');
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'tune_y', 0, '', '');
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'chromaticity_x', 0, '', '');
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'chromaticity_y', 0, '', '');
 fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'emittance_x', 0, 'nm', 'nm');
 fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'emittance_y', 0, 'pm', 'pm');
 fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'beam_current', 0, 'A', 'A');
