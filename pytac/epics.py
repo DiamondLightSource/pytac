@@ -46,14 +46,15 @@ class EpicsLattice(Lattice):
         return pv_names
 
     def get_values(self, family, field, handle, dtype=None):
-        """Get the value for a family and field for all elements in the lattice.
+        """Get the value for a family and field for all applicable elements in
+            the lattice.
 
         Args:
             family (str): requested family.
             field (str): requested field.
             handle (str): pytac.RB or pytac.SP.
-            dtype (numpy.dtype): if set it specifies the data type of the values
-                                  in the output array.
+            dtype (numpy.dtype): if set it specifies the data type of the
+                                  values in the output array.
 
         Returns:
             list or array: The requested values.
@@ -65,7 +66,8 @@ class EpicsLattice(Lattice):
         return values
 
     def set_values(self, family, field, values):
-        """Set the value for a family and field for all elements in the lattice.
+        """Set the value for a family and field for all applicable elements in
+            the lattice.
 
         Args:
             family (str): requested family.
@@ -118,9 +120,9 @@ class EpicsElement(Element):
 class EpicsDevice(Device):
     """An EPICS-aware device.
 
-    Contains a control system, readback and setpoint PVs. A readback or setpoint
-    PV is required when creating an epics device otherwise a DataSourceException
-    is raised. The device is enabled by default.
+    Contains a control system, readback and setpoint PVs. A readback or
+    setpoint PV is required when creating an epics device otherwise a
+    DataSourceException is raised. The device is enabled by default.
 
     **Attributes:**
 

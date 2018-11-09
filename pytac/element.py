@@ -69,7 +69,8 @@ class Element(object):
             data_source_type (str): the type of the data source being set
                                      pytac.LIVE or pytac.SIM.
         """
-        self._data_source_manager.set_data_source(data_source, data_source_type)
+        self._data_source_manager.set_data_source(data_source,
+                                                  data_source_type)
 
     def get_fields(self):
         """Get the all fields defined on an element.
@@ -85,8 +86,9 @@ class Element(object):
     def add_device(self, field, device, uc):
         """Add device and unit conversion objects to a given field.
 
-        A DeviceDataSource must be set before calling this method, this defaults
-        to pytac.LIVE as that is the only DeviceDataSource currently.
+        A DeviceDataSource must be set before calling this method, this
+        defaults to pytac.LIVE as that is the only data source that currently
+        uses devices.
 
         Args:
             field (str): The key to store the unit conversion and device
@@ -106,8 +108,9 @@ class Element(object):
     def get_device(self, field):
         """Get the device for the given field.
 
-        A DeviceDataSource must be set before calling this method, this defaults
-        to pytac.LIVE as that is the only DeviceDataSource currently.
+        A DeviceDataSource must be set before calling this method, this
+        defaults to pytac.LIVE as that is the only data source that currently
+        uses devices.
 
         Args:
             field (str): The lookup key to find the device on an element.

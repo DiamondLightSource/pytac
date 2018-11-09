@@ -81,7 +81,7 @@ def test_load_quadrupoles(lattice, n_quads):
     quads = lattice.get_elements('QUAD')
     assert len(quads) == n_quads
     for quad in quads:
-        assert set(quad.get_fields()[pytac.LIVE]) == set(('b1',))
+        assert set(quad.get_fields()[pytac.LIVE]) == set(['b1'])
         device = quad.get_device('b1')
         assert re.match('SR.*Q.*:I', device.rb_pv)
         assert re.match('SR.*Q.*:SETI', device.sp_pv)
@@ -159,7 +159,8 @@ def test_quad_unitconv(vmx_ring):
 
 
 def test_quad_unitconv_raise_exception():
-    uc = pytac.units.PchipUnitConv([50.0, 100.0, 180.0], [-4.95, -9.85, -17.56])
+    uc = pytac.units.PchipUnitConv([50.0, 100.0, 180.0],
+                                   [-4.95, -9.85, -17.56])
     with pytest.raises(pytac.exceptions.UnitsException):
         uc.phys_to_eng(-0.7)
 
@@ -167,7 +168,8 @@ def test_quad_unitconv_raise_exception():
 def test_quad_unitconv_known_failing_test():
     LAT_ENERGY = 3000
 
-    uc = pytac.units.PchipUnitConv([50.0, 100.0, 180.0], [-4.95, -9.85, -17.56])
+    uc = pytac.units.PchipUnitConv([50.0, 100.0, 180.0],
+                                   [-4.95, -9.85, -17.56])
     uc._post_eng_to_phys = pytac.load_csv.get_div_rigidity(LAT_ENERGY)
     uc._pre_phys_to_eng = pytac.load_csv.get_mult_rigidity(LAT_ENERGY)
     numpy.testing.assert_allclose(uc.eng_to_phys(70), -0.69133465)
