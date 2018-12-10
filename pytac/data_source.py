@@ -86,7 +86,7 @@ class DataSourceManager(object):
         self._data_sources[data_source_type] = data_source
 
     def get_fields(self):
-        """Get the all fields defined on the manager.
+        """Get all the fields defined on the manager.
 
         Includes all fields defined by all data sources.
 

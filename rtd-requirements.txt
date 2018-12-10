@@ -7,5 +7,5 @@ pytest
 pytest-cov
 flake8
 mock
-python-coveralls
+coveralls
 sphinx_rtd_theme
