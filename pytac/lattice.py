@@ -60,8 +60,8 @@ class Lattice(object):
     def add_device(self, field, device, uc):
         """Add device and unit conversion objects to a given field.
 
-        A DeviceDataSource must be set before calling this method, this defaults
-        to pytac.LIVE as that is the only DeviceDataSource currently.
+        A DeviceDataSource must be set before calling this method, this
+        defaults to pytac.LIVE as that is the only DeviceDataSource currently.
 
         Args:
             field (str): The key to store the unit conversion and device
@@ -81,8 +81,8 @@ class Lattice(object):
     def get_device(self, field):
         """Get the device for the given field.
 
-        A DeviceDataSource must be set before calling this method, this defaults
-        to pytac.LIVE as that is the only DeviceDataSource currently.
+        A DeviceDataSource must be set before calling this method, this
+        defaults to pytac.LIVE as that is the only DeviceDataSource currently.
 
         Args:
             field (str): The lookup key to find the device on the lattice.
