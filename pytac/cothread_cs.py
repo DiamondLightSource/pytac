@@ -12,8 +12,8 @@ class CothreadControlSystem(ControlSystem):
 
     **Methods:**
     """
-    def __init__(self):
-        pass
+    def __init__(self, timeout=1.0):
+        self._timeout = timeout
 
     def get_single(self, pv, throw=True):
         """Get the value of a given PV.
@@ -31,7 +31,7 @@ class CothreadControlSystem(ControlSystem):
             ControlSystemException: if it cannot connect to the specified PV.
         """
         try:
-            return caget(pv, timeout=1.0, throw=True)
+            return caget(pv, timeout=self._timeout, throw=True)
         except ca_nothing:
             if throw:
                 raise ControlSystemException("Cannot connect to {0}."
@@ -54,7 +54,7 @@ class CothreadControlSystem(ControlSystem):
         Raises:
             ControlSystemException: if it cannot connect to one or more PVs.
         """
-        results = caget(pvs, timeout=1.0, throw=False)
+        results = caget(pvs, timeout=self._timeout, throw=False)
         for result in results:
             if isinstance(result, ca_nothing):
                 if throw:
@@ -78,7 +78,7 @@ class CothreadControlSystem(ControlSystem):
             ControlSystemException: if it cannot connect to the specified PV.
         """
         try:
-            caput(pv, value, timeout=1.0, throw=True)
+            caput(pv, value, timeout=self._timeout, throw=True)
         except ca_nothing:
             if throw:
                 raise ControlSystemException("Cannot connect to {0}."
@@ -104,7 +104,7 @@ class CothreadControlSystem(ControlSystem):
         """
         if len(pvs) != len(values):
             raise ValueError("Please enter the same number of values as PVs.")
-        status = caput(pvs, values, timeout=1.0, throw=False)
+        status = caput(pvs, values, timeout=self._timeout, throw=False)
         for stat in status:
             if not stat.ok:
                 if throw:
