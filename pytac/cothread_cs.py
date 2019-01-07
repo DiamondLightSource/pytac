@@ -21,9 +21,11 @@ class CothreadControlSystem(ControlSystem):
         Args:
             pv (string): The process variable given as a string. It can be a
                          readback or a setpoint PV.
+            throw (bool): if True, ControlSystemException will be raised on
+                          failure
 
         Returns:
-            scalar: Represents the current value of the given PV.
+            object: the current value of the given PV.
 
         Raises:
             ControlSystemException: if it cannot connect to the specified PV.
@@ -42,11 +44,12 @@ class CothreadControlSystem(ControlSystem):
         """Get the value for given PVs.
 
         Args:
-            pvs (list): A list of process variables, given as a strings. They
-                         can be a readback or setpoint PVs.
+            pvs (sequence): PVs to get values of.
+            throw (bool): if True, ControlSystemException will be raised on
+                          failure
 
         Returns:
-            list: of scalars, representing the current values of the PVs.
+            sequence: the current values of the PVs.
 
         Raises:
             ControlSystemException: if it cannot connect to one or more PVs.
@@ -66,8 +69,10 @@ class CothreadControlSystem(ControlSystem):
         """Set the value of a given PV.
 
         Args:
-            pv (string): The PV to set the value of. It must be a setpoint PV.
-            value (Number): The value to set the PV to.
+            pv (string): PV to set the value of.
+            value (object): The value to set the PV to.
+            throw (bool): if True, ControlSystemException will be raised on
+                          failure
 
         Raises:
             ControlSystemException: if it cannot connect to the specified PV.
@@ -85,9 +90,13 @@ class CothreadControlSystem(ControlSystem):
         """Set the values for given PVs.
 
         Args:
-            pvs (list): A list of PVs to set the values of. It must be a
-                         setpoint PV.
-            values (sequence): A list of the numbers to set no the PVs.
+            pvs (sequence): PVs to set the values of.
+            values (sequence): values to set to the PVs.
+            throw (bool): if True, ControlSystemException will be raised on
+                          failure
+
+        Returns:
+            list(bool): True for success, False for failure
 
         Raises:
             ValueError: if the lists of values and PVs are diffent lengths.

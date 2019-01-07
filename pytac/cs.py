@@ -9,30 +9,36 @@ class ControlSystem(object):
 
     **Methods:**
     """
-    def get_single(self, pv):
+    def get_single(self, pv, throw=True):
         """Get the value of a given PV.
 
         Args:
-            pv (string): The process variable given as a string. It can be a
+            pv (string): PV to get the value of.
                          readback or a setpoint PV.
+            throw (bool): if True, ControlSystemException will be raised on
+                          failure
 
         Returns:
-            float: Represents the current value of the given PV.
+            object: the current value of the given PV.
+
+        Raises:
+            ControlSystemException: if it cannot connect to the specified PVs.
         """
         raise NotImplementedError()
 
-    def get_multiple(self, pvs):
+    def get_multiple(self, pvs, throw=True):
         """Get the value for given PVs.
 
         Args:
-            pvs (list): A list of process variables, given as a strings. They
-                         can be a readback or setpoint PVs.
+            pvs (sequence): PVs to get values of.
+            throw (bool): if True, ControlSystemException will be raised on
+                          failure
 
         Returns:
-            list: of floats, representing the current values of the PVs.
+            list(object): the current values of the PVs.
 
         Raises:
-            ValueError: if the PVs are not passed in as a list.
+            ControlSystemException: if it cannot connect to the specified PV.
         """
         raise NotImplementedError()
 
@@ -40,8 +46,13 @@ class ControlSystem(object):
         """Set the value of a given PV.
 
         Args:
-            pv (string): The PV to set the value of. It must be a setpoint PV.
-            value (Number): The value to set the PV to.
+            pv (string): The PV to set the value of.
+            value (object): The value to set the PV to.
+            throw (bool): if True, ControlSystemException will be raised on
+                          failure
+
+        Raises:
+            ControlSystemException: if it cannot connect to the specified PV.
         """
         raise NotImplementedError()
 
@@ -49,12 +60,14 @@ class ControlSystem(object):
         """Set the values for given PVs.
 
         Args:
-            pvs (list): A list of PVs to set the values of. It must be a
-                         setpoint PV.
-            values (list): A list of the numbers to set no the PVs.
+            pvs (sequence): PVs to set the values of.
+            values (sequence): values to set no the PVs.
+            throw (bool): if True, ControlSystemException will be raised on
+                          failure
 
         Raises:
-            ValueError: if the PVs or values are not passed in as a list, or if
-                         the lists of values and PVs are diffent lengths.
+            ValueError: if the PVs or values are not passed in as sequences
+                        or if they have different lengths
+            ControlSystemException: if it cannot connect to one or more PVs.
         """
         raise NotImplementedError()

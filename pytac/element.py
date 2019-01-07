@@ -48,9 +48,7 @@ class Element(object):
         self._data_source_manager = DataSourceManager()
 
     def __str__(self):
-        """Auxiliary function to print out an element.
-
-        Return a representation of an element, as a string.
+        """Return a representation of an element, as a string.
 
         Returns:
             str: A representation of an element.
