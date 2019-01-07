@@ -1,3 +1,4 @@
+import logging
 from pytac.cs import ControlSystem
 from pytac.exceptions import ControlSystemException
 from cothread.catools import caget, caput, ca_nothing
@@ -33,11 +34,11 @@ class CothreadControlSystem(ControlSystem):
         try:
             return caget(pv, timeout=self._timeout, throw=True)
         except ca_nothing:
+            error_msg = 'Cannot connect to {}.'.format(pv)
             if throw:
-                raise ControlSystemException("Cannot connect to {0}."
-                                             .format(pv))
+                raise ControlSystemException(error_msg)
             else:
-                print('Cannot connect to {0}.'.format(pv))
+                logging.warn(error_msg)
                 return None
 
     def get_multiple(self, pvs, throw=True):
@@ -46,7 +47,8 @@ class CothreadControlSystem(ControlSystem):
         Args:
             pvs (sequence): PVs to get values of.
             throw (bool): if True, ControlSystemException will be raised on
-                          failure
+                          failure. If False, None will be returned for any PV
+                          for which the get fails.
 
         Returns:
             sequence: the current values of the PVs.
@@ -55,15 +57,21 @@ class CothreadControlSystem(ControlSystem):
             ControlSystemException: if it cannot connect to one or more PVs.
         """
         results = caget(pvs, timeout=self._timeout, throw=False)
+        return_values = []
+        failures = []
         for result in results:
             if isinstance(result, ca_nothing):
+                logging.warn('Cannot connect to {}.'.format(result.name))
                 if throw:
-                    raise ControlSystemException("Cannot connect to {0}."
-                                                 .format(result.name))
+                    failures.append(result)
                 else:
-                    print('Cannot connect to {0}.'.format(result.name))
-                    result = None
-        return results
+                    return_values.append(None)
+            else:
+                return_values.append(result)
+        if throw and failures:
+            error_msg = '{} caget calls failed'.format(len(failures))
+            raise ControlSystemException(error_msg)
+        return return_values
 
     def set_single(self, pv, value, throw=True):
         """Set the value of a given PV.
@@ -74,17 +82,22 @@ class CothreadControlSystem(ControlSystem):
             throw (bool): if True, ControlSystemException will be raised on
                           failure
 
+        Returns:
+            bool: True for success, False for failure
+
         Raises:
             ControlSystemException: if it cannot connect to the specified PV.
         """
         try:
             caput(pv, value, timeout=self._timeout, throw=True)
+            return True
         except ca_nothing:
+            error_msg = 'Cannot connect to {}.'.format(pv)
             if throw:
-                raise ControlSystemException("Cannot connect to {0}."
-                                             .format(pv))
+                raise ControlSystemException(error_msg)
             else:
-                print('Cannot connect to {0}.'.format(pv))
+                logging.warn(error_msg)
+                return False
 
     def set_multiple(self, pvs, values, throw=True):
         """Set the values for given PVs.
@@ -93,7 +106,9 @@ class CothreadControlSystem(ControlSystem):
             pvs (sequence): PVs to set the values of.
             values (sequence): values to set to the PVs.
             throw (bool): if True, ControlSystemException will be raised on
-                          failure
+                          failure. If False, a list of True and False values
+                          will be returned corresponding to successes and
+                          failures.
 
         Returns:
             list(bool): True for success, False for failure
@@ -105,10 +120,17 @@ class CothreadControlSystem(ControlSystem):
         if len(pvs) != len(values):
             raise ValueError("Please enter the same number of values as PVs.")
         status = caput(pvs, values, timeout=self._timeout, throw=False)
+        return_values = []
+        failures = []
         for stat in status:
             if not stat.ok:
-                if throw:
-                    raise ControlSystemException("Cannot connect to {0}."
-                                                 .format(stat.name))
-                else:
-                    print('Cannot connect to {0}.'.format(stat.name))
+                return_values.append(True)
+                failures.append(stat)
+                logging.warn('Cannot connect to {}'.format(stat.name))
+            else:
+                return_values.append(False)
+        if throw and failures:
+            error_msg = '{} caput calls failed'.format(len(failures))
+            raise ControlSystemException(error_msg)
+
+        return return_values
