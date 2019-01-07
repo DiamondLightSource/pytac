@@ -10,7 +10,6 @@ The csv files are stored in one directory with specified names:
  * uc_pchip_data.csv
 
 """
-from __future__ import print_function
 import os
 import csv
 import pytac

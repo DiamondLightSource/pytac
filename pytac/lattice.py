@@ -1,6 +1,7 @@
 """Representation of a lattice object which contains all the elements of the
     machine.
 """
+import logging
 import numpy
 import pytac
 from pytac.data_source import DataSourceManager
@@ -296,7 +297,7 @@ class Lattice(object):
             try:
                 devices.append(element.get_device(field))
             except DataSourceException:
-                print("No device for field {0} on element {1}.".format(field,
+                logging.warn("No device for field {0} on element {1}.".format(field,
                                                                        element))
         return devices
 
