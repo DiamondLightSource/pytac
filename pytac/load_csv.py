@@ -126,13 +126,26 @@ def load_unitconv(directory, mode, lattice):
     with open(os.path.join(directory, mode, UNITCONV_FILENAME)) as unitconv:
         csv_reader = csv.DictReader(unitconv)
         for item in csv_reader:
-            element = lattice[int(item['el_id']) - 1]
-            # For certain magnet types, we need an additional rigidity
-            # conversion factor as well as the raw conversion.
-            if element.families.intersection(('HSTR', 'VSTR', 'QUAD', 'SEXT')):
-                unitconvs[int(item['uc_id'])]._post_eng_to_phys = get_div_rigidity(lattice.get_value('energy'))
-                unitconvs[int(item['uc_id'])]._pre_phys_to_eng = get_mult_rigidity(lattice.get_value('energy'))
-            element._data_source_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
+            if int(item['el_id']) is 0:
+                if item['uc_type'] != 'null':
+                    lattice._data_source_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
+                    lattice._data_source_manager._uc[item['field']].phys_units = item['phys_units']
+                    lattice._data_source_manager._uc[item['field']].eng_units = item['eng_units']
+                else:
+                    lattice._data_source_manager._uc[item['field']] = units.NullUnitConv(item['eng_units'], item['phys_units'])
+            else:
+                element = lattice[int(item['el_id']) - 1]
+                # For certain magnet types, we need an additional rigidity
+                # conversion factor as well as the raw conversion.
+                if item['uc_type'] == 'null':
+                    element._data_source_manager._uc[item['field']] = units.NullUnitConv(item['eng_units'], item['phys_units'])
+                else:
+                    if element.families.intersection(('HSTR', 'VSTR', 'QUAD', 'SEXT')):
+                        unitconvs[int(item['uc_id'])]._post_eng_to_phys = get_div_rigidity(lattice.get_value('energy', units=pytac.PHYS))
+                        unitconvs[int(item['uc_id'])]._pre_phys_to_eng = get_mult_rigidity(lattice.get_value('energy', units=pytac.PHYS))
+                    element._data_source_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
+                    element._data_source_manager._uc[item['field']].phys_units = item['phys_units']
+                    element._data_source_manager._uc[item['field']].eng_units = item['eng_units']
 
 
 def load(mode, control_system=None, directory=None):
@@ -202,7 +215,7 @@ def load(mode, control_system=None, directory=None):
         for elem in lat:
             positions.append(elem.s)
         lat.add_device('s_position', device.BasicDevice(positions), DEFAULT_UC)
-        lat.add_device('energy', device.BasicDevice(3000), DEFAULT_UC)
+        lat.add_device('energy', device.BasicDevice(3.e+09), DEFAULT_UC)
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)
         for item in csv_reader:

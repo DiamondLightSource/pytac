@@ -1,6 +1,9 @@
 import os
 import mock
 import pytest
+import sys
+import types
+
 import pytac
 from pytac import load_csv
 from pytac.element import Element, EpicsElement
@@ -9,6 +12,27 @@ from pytac.data_source import DataSourceManager, DeviceDataSource
 from pytac.units import PolyUnitConv
 from pytac.device import EpicsDevice
 from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, RB_PV, SP_PV, LATTICE_NAME, CURRENT_DIR, DUMMY_ARRAY
+
+
+def pytest_sessionstart():
+    """Create a dummy cothread module.
+
+    cothread is not trivial to import, so it is better to mock it before any
+    tests run. In particular, we need catools (the module that pytac imports
+    from cothread), including the functions that pytac explicitly imports
+    (caget and caput).
+    """
+    cothread = types.ModuleType('cothread')
+
+    catools = types.ModuleType('catools')
+    catools.caget = mock.MagicMock()
+    catools.caput = mock.MagicMock()
+    catools.ca_nothing = mock.MagicMock()
+
+    cothread.catools = catools
+
+    sys.modules['cothread'] = cothread
+    sys.modules['cothread.catools'] = catools
 
 
 # Create mock devices and attach them to the element
