@@ -22,9 +22,9 @@ def mock_cs_raises_ImportError():
 
 def test_default_control_system_import():
     """In this test we:
-        - assert that the lattice is indeed loaded if no execeptions are raised.
+        - assert that the lattice is indeed loaded if no execeptions are raised
         - assert that the default control system is indeed cothread and that it
-           is loaded onto the lattice correctly.
+           is loaded onto the lattice correctly
     """
     assert bool(load('VMX'))
     assert isinstance(load('VMX')._cs, pytac.cothread_cs.CothreadControlSystem)
@@ -32,9 +32,9 @@ def test_default_control_system_import():
 
 def test_import_fail_raises_ControlSystemException(mock_cs_raises_ImportError):
     """In this test we:
-        - check that load corectly fails if cothread cannot be imported.
+        - check that load corectly fails if cothread cannot be imported
         - check that when the import of the CothreadControlSystem fails the
-           ImportError raised is replaced with a ControlSystemException.
+           ImportError raised is replaced with a ControlSystemException
     """
     with patch('pytac.cothread_cs.CothreadControlSystem',
                mock_cs_raises_ImportError):
@@ -63,6 +63,7 @@ def test_devices_loaded(lattice):
 
 
 def test_families_loaded(lattice):
-    assert lattice.get_all_families() == set(['drift', 'sext', 'quad',
-                                              'ds', 'qf', 'qs', 'sd'])
-    assert lattice.get_elements('quad')[0].families == set(('quad', 'qf', 'qs'))
+    assert lattice.get_all_families() == set(['drift', 'sext', 'quad', 'ds',
+                                              'qf', 'qs', 'sd'])
+    assert lattice.get_elements('quad')[0].families == set(['quad', 'qf',
+                                                            'qs'])

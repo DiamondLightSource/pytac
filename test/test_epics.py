@@ -47,9 +47,11 @@ def test_get_lattice_pv_name(pv_type, simple_epics_lattice):
 
 
 def test_get_value_uses_cs_if_data_source_live(simple_epics_element):
-    simple_epics_element.get_value('x', handle=pytac.SP, data_source=pytac.LIVE)
+    simple_epics_element.get_value('x', handle=pytac.SP,
+                                   data_source=pytac.LIVE)
     simple_epics_element.get_device('x')._cs.get_single.assert_called_with(SP_PV)
-    simple_epics_element.get_value('x', handle=pytac.RB, data_source=pytac.LIVE)
+    simple_epics_element.get_value('x', handle=pytac.RB,
+                                   data_source=pytac.LIVE)
     simple_epics_element.get_device('x')._cs.get_single.assert_called_with(RB_PV)
 
 

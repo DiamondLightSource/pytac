@@ -38,8 +38,8 @@ def get_div_rigidity(energy):
     """
     rigidity = utils.rigidity(energy)
 
-    def div_rigidity(input):
-        return input / rigidity
+    def div_rigidity(value):
+        return value / rigidity
     return div_rigidity
 
 
@@ -52,8 +52,8 @@ def get_mult_rigidity(energy):
     """
     rigidity = utils.rigidity(energy)
 
-    def mult_rigidity(input):
-        return input * rigidity
+    def mult_rigidity(value):
+        return value * rigidity
     return mult_rigidity
 
 
@@ -174,9 +174,9 @@ def load(mode, control_system=None, directory=None):
             from pytac import cothread_cs
             control_system = cothread_cs.CothreadControlSystem()
     except ImportError:
-        raise ControlSystemException("Please install cothread to load a lattice"
-                                     "using the default control system (found "
-                                     "in cothread_cs.py).")
+        raise ControlSystemException("Please install cothread to load a "
+                                     "lattice using the default control system"
+                                     " (found in cothread_cs.py).")
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
@@ -189,8 +189,8 @@ def load(mode, control_system=None, directory=None):
         for item in csv_reader:
             length = float(item['length'])
             cell = int(item['cell']) if item['cell'] else None
-            e = element.EpicsElement(item['name'], length, item['type'], s, index,
-                                     cell)
+            e = element.EpicsElement(item['name'], length, item['type'], s,
+                                     index, cell)
             e.add_to_family(item['type'])
             e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)

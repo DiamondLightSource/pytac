@@ -45,7 +45,8 @@ class Lattice(object):
             data_source_type (str): the type of the data source being set
                                      pytac.LIVE or pytac.SIM.
         """
-        self._data_source_manager.set_data_source(data_source, data_source_type)
+        self._data_source_manager.set_data_source(data_source,
+                                                  data_source_type)
 
     def get_fields(self):
         """Get the fields defined on the lattice.
@@ -61,8 +62,9 @@ class Lattice(object):
     def add_device(self, field, device, uc):
         """Add device and unit conversion objects to a given field.
 
-        A DeviceDataSource must be set before calling this method, this defaults
-        to pytac.LIVE as that is the only DeviceDataSource currently.
+        A DeviceDataSource must be set before calling this method, this
+        defaults to pytac.LIVE as that is the only data source that currently
+        uses devices.
 
         Args:
             field (str): The key to store the unit conversion and device
@@ -82,8 +84,9 @@ class Lattice(object):
     def get_device(self, field):
         """Get the device for the given field.
 
-        A DeviceDataSource must be set before calling this method, this defaults
-        to pytac.LIVE as that is the only DeviceDataSource currently.
+        A DeviceDataSource must be set before calling this method, this
+        defaults to pytac.LIVE as that is the only data source that currently
+        uses devices.
 
         Args:
             field (str): The lookup key to find the device on the lattice.
@@ -201,10 +204,10 @@ class Lattice(object):
         return len(self._lattice)
 
     def get_length(self):
-        """Returns the length of the lattice.
+        """Returns the length of the lattice, in meters.
 
         Returns:
-            float: The length of the lattice.
+            float: The length of the lattice (m).
         """
         total_length = 0
         for e in self._lattice:
@@ -297,8 +300,8 @@ class Lattice(object):
             try:
                 devices.append(element.get_device(field))
             except DataSourceException:
-                logging.warn("No device for field {0} on element {1}.".format(field,
-                                                                       element))
+                logging.warn("No device for field {0} on element {1}."
+                             .format(field, element))
         return devices
 
     def get_element_device_names(self, family, field):
@@ -355,8 +358,9 @@ class Lattice(object):
         """
         elements = self.get_elements(family)
         if len(elements) != len(values):
-            raise IndexError("Number of elements in given array must be equal "
-                             "to the number of elements in the family.")
+            raise IndexError("Number of elements({0}) in given array must be "
+                             "equal to the number of elements in the "
+                             "family({1}).".format(len(elements), len(values)))
         for element, value in zip(elements, values):
             element.set_value(field, value, handle=pytac.SP)
 
@@ -390,10 +394,11 @@ class Lattice(object):
                                         pytac.SIM.
 
         Raises:
-            DataSourceException: if specified default data source is not a valid
-                                  data source.
+            DataSourceException: if specified default data source is not a
+                                  valid data source.
         """
-        if default_data_source == pytac.LIVE or default_data_source == pytac.SIM:
+        if (default_data_source == pytac.LIVE) or (default_data_source ==
+                                                   pytac.SIM):
             self._data_source_manager.default_data_source = default_data_source
             elems = self.get_elements()
             for elem in elems:
