@@ -58,8 +58,8 @@ def test_element_details_loaded(lattice):
 def test_devices_loaded(lattice):
     quads = lattice.get_elements('quad')
     assert len(quads) == 1
-    assert quads[0].get_pv_name(field='b1', handle='readback') == 'Q1:RB'
-    assert quads[0].get_pv_name(field='b1', handle='setpoint') == 'Q1:SP'
+    assert quads[0].get_pv_name(field='b1', handle=pytac.RB) == 'Q1:RB'
+    assert quads[0].get_pv_name(field='b1', handle=pytac.SP) == 'Q1:SP'
 
 
 def test_families_loaded(lattice):

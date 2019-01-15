@@ -22,13 +22,18 @@ def pytest_sessionstart():
     from cothread), including the functions that pytac explicitly imports
     (caget and caput).
     """
-    cothread = types.ModuleType('cothread')
+    class ca_nothing(Exception):
+        """A minimal mock of the cothread ca_nothing exception class.
+        """
+        def __init__(self, name, errorcode=True):
+            self.ok = errorcode
+            self.name = name
 
+    cothread = types.ModuleType('cothread')
     catools = types.ModuleType('catools')
     catools.caget = mock.MagicMock()
     catools.caput = mock.MagicMock()
-    catools.ca_nothing = mock.MagicMock()
-
+    catools.ca_nothing = ca_nothing
     cothread.catools = catools
 
     sys.modules['cothread'] = cothread

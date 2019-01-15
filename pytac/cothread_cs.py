@@ -69,7 +69,7 @@ class CothreadControlSystem(ControlSystem):
             else:
                 return_values.append(result)
         if throw and failures:
-            error_msg = '{} caget calls failed'.format(len(failures))
+            error_msg = '{} caget calls failed.'.format(len(failures))
             raise ControlSystemException(error_msg)
         return return_values
 
@@ -124,13 +124,12 @@ class CothreadControlSystem(ControlSystem):
         failures = []
         for stat in status:
             if not stat.ok:
-                return_values.append(True)
-                failures.append(stat)
-                logging.warn('Cannot connect to {}'.format(stat.name))
-            else:
                 return_values.append(False)
+                failures.append(stat)
+                logging.warn('Cannot connect to {}.'.format(stat.name))
+            else:
+                return_values.append(True)
         if throw and failures:
-            error_msg = '{} caput calls failed'.format(len(failures))
+            error_msg = '{} caput calls failed.'.format(len(failures))
             raise ControlSystemException(error_msg)
-
         return return_values
