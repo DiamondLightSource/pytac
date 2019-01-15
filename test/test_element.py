@@ -48,8 +48,7 @@ def test_get_unitconv_raises_FieldException_if_device_not_present(simple_element
 def test_get_value_uses_uc_if_necessary_for_cs_call(simple_element, double_uc):
     simple_element._data_source_manager._uc['x'] = double_uc
     assert simple_element.get_value('x', handle=pytac.SP, units=pytac.PHYS,
-                                    data_source=pytac.LIVE) == (DUMMY_VALUE_1 *
-                                                                2)
+                                    data_source=pytac.LIVE) == (DUMMY_VALUE_1 * 2)
 
 
 def test_get_value_uses_uc_if_necessary_for_sim_call(simple_element, double_uc):
@@ -70,8 +69,7 @@ def test_set_value_phys(simple_element, double_uc):
     simple_element.set_value('x', DUMMY_VALUE_2, handle=pytac.SP,
                              units=pytac.PHYS)
     # Conversion fron physics to engineering units
-    simple_element.get_device('x').set_value.assert_called_with(DUMMY_VALUE_2 /
-                                                                2)
+    simple_element.get_device('x').set_value.assert_called_with(DUMMY_VALUE_2 / 2)
 
 
 def test_set_exceptions(simple_element, unit_uc):

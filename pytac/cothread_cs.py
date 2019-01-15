@@ -40,7 +40,7 @@ class CothreadControlSystem(ControlSystem):
             if throw:
                 raise ControlSystemException(error_msg)
             else:
-                logging.warn(error_msg)
+                logging.warning(error_msg)
                 return None
 
     def get_multiple(self, pvs, throw=True):
@@ -63,7 +63,7 @@ class CothreadControlSystem(ControlSystem):
         failures = []
         for result in results:
             if isinstance(result, ca_nothing):
-                logging.warn('Cannot connect to {}.'.format(result.name))
+                logging.warning('Cannot connect to {}.'.format(result.name))
                 if throw:
                     failures.append(result)
                 else:
@@ -98,7 +98,7 @@ class CothreadControlSystem(ControlSystem):
             if throw:
                 raise ControlSystemException(error_msg)
             else:
-                logging.warn(error_msg)
+                logging.warning(error_msg)
                 return False
 
     def set_multiple(self, pvs, values, throw=True):
@@ -128,7 +128,7 @@ class CothreadControlSystem(ControlSystem):
             if not stat.ok:
                 return_values.append(False)
                 failures.append(stat)
-                logging.warn('Cannot connect to {}.'.format(stat.name))
+                logging.warning('Cannot connect to {}.'.format(stat.name))
             else:
                 return_values.append(True)
         if throw and failures:

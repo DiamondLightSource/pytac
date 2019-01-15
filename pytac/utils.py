@@ -15,7 +15,7 @@ def rigidity(energy_mev):
         energy_mev (int):
 
     Returns:
-        float?: p devided by the elementary charge.
+        float: p devided by the elementary charge.
     """
     gamma = energy_mev / electron_mass_mev
     beta = math.sqrt(1 - gamma ** (-2))

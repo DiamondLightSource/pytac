@@ -302,8 +302,8 @@ class Lattice(object):
             try:
                 devices.append(element.get_device(field))
             except DataSourceException:
-                logging.warn("No device for field {0} on element {1}."
-                             .format(field, element))
+                logging.warning("No device for field {0} on element {1}."
+                                .format(field, element))
         return devices
 
     def get_element_device_names(self, family, field):
@@ -399,8 +399,7 @@ class Lattice(object):
             DataSourceException: if specified default data source is not a
                                   valid data source.
         """
-        if (default_data_source == pytac.LIVE) or (default_data_source ==
-                                                   pytac.SIM):
+        if (default_data_source == pytac.LIVE) or (default_data_source == pytac.SIM):
             self._data_source_manager.default_data_source = default_data_source
             elems = self.get_elements()
             for elem in elems:
