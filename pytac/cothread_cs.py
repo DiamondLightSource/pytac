@@ -1,7 +1,9 @@
 import logging
+
+from cothread.catools import caget, caput, ca_nothing
+
 from pytac.cs import ControlSystem
 from pytac.exceptions import ControlSystemException
-from cothread.catools import caget, caput, ca_nothing
 
 
 class CothreadControlSystem(ControlSystem):

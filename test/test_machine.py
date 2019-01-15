@@ -2,11 +2,13 @@
     files in the data directory. These are more like integration tests,
     and allows us to check that the pytac setup is working correctly.
 """
-import pytac
-import pytest
 import re
+
 import mock
 import numpy
+import pytest
+
+import pytac
 
 
 EPS = 1e-8

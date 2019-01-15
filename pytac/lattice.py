@@ -2,10 +2,12 @@
     machine.
 """
 import logging
+
 import numpy
+
 import pytac
 from pytac.data_source import DataSourceManager
-from pytac.exceptions import UnitsException, DataSourceException, FieldException
+from pytac.exceptions import DataSourceException, FieldException, UnitsException
 
 
 class Lattice(object):

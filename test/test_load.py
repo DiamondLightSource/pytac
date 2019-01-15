@@ -1,6 +1,7 @@
-import pytac
-import pytest
 from mock import patch
+import pytest
+
+import pytac
 from pytac.load_csv import load
 
 

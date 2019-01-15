@@ -1,6 +1,7 @@
 import pytest
-import pytac
+
 from constants import DUMMY_VALUE_2
+import pytac
 
 
 @pytest.mark.parametrize('simple_object',

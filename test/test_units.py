@@ -1,8 +1,9 @@
-import pytest
-import pytac
 import numpy
-from pytac.units import UnitConv, PolyUnitConv, PchipUnitConv, NullUnitConv
+import pytest
+
 from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, DUMMY_VALUE_3
+import pytac
+from pytac.units import NullUnitConv, PchipUnitConv, PolyUnitConv, UnitConv
 
 
 def f1(value):

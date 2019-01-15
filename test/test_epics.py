@@ -1,7 +1,8 @@
 import numpy
 import pytest
-import pytac
+
 from constants import DUMMY_ARRAY, RB_PV, SP_PV
+import pytac
 
 
 def test_get_values(simple_epics_lattice):

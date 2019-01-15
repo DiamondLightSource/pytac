@@ -1,8 +1,9 @@
 import mock
-import pytac
 import pytest
-from pytac.device import BasicDevice, EpicsDevice, PvEnabler
+
 from constants import PREFIX, RB_PV, SP_PV
+import pytac
+from pytac.device import BasicDevice, EpicsDevice, PvEnabler
 
 
 # Not a test - epics device creation function used in tests.

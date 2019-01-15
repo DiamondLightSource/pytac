@@ -8,13 +8,13 @@ The csv files are stored in one directory with specified names:
  * unitconv.csv
  * uc_poly_data.csv
  * uc_pchip_data.csv
-
 """
-import os
-import csv
-import pytac
 import collections
-from pytac import lattice, element, data_source, units, utils, device
+import csv
+import os
+
+import pytac
+from pytac import data_source, device, element, lattice, units, utils
 from pytac.exceptions import ControlSystemException
 
 

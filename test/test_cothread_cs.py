@@ -4,11 +4,12 @@ This module depends on the cothread module being mocked.
 
 See pytest_sessionstart() in conftest.py for more.
 """
-import pytac
-import pytest
-from constants import RB_PV, SP_PV
-from testfixtures import LogCapture
 from cothread.catools import caget, caput, ca_nothing
+import pytest
+from testfixtures import LogCapture
+
+from constants import RB_PV, SP_PV
+import pytac
 from pytac.cothread_cs import CothreadControlSystem
 
 

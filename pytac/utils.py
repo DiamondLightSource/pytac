@@ -1,5 +1,6 @@
 """Utility functions."""
 import math
+
 import scipy.constants
 
 

@@ -1,17 +1,18 @@
 import os
-import mock
-import pytest
 import sys
 import types
 
+import mock
+import pytest
+
+from constants import CURRENT_DIR, DUMMY_ARRAY, DUMMY_VALUE_1, DUMMY_VALUE_2, LATTICE_NAME, RB_PV, SP_PV
 import pytac
 from pytac import load_csv
-from pytac.element import Element, EpicsElement
-from pytac.lattice import Lattice, EpicsLattice
 from pytac.data_source import DataSourceManager, DeviceDataSource
-from pytac.units import PolyUnitConv
 from pytac.device import EpicsDevice
-from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, RB_PV, SP_PV, LATTICE_NAME, CURRENT_DIR, DUMMY_ARRAY
+from pytac.element import Element, EpicsElement
+from pytac.lattice import EpicsLattice, Lattice
+from pytac.units import PolyUnitConv
 
 
 def pytest_sessionstart():

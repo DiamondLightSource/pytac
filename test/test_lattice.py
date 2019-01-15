@@ -1,9 +1,10 @@
 import numpy
 import pytest
+
+from constants import DUMMY_ARRAY, LATTICE_NAME
 import pytac
 from pytac.element import Element
 from pytac.lattice import Lattice
-from constants import DUMMY_ARRAY, LATTICE_NAME
 
 
 def test_create_lattice():

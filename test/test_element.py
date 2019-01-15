@@ -1,7 +1,8 @@
-import pytac.device
 import pytest
-import pytac
+
 from constants import DUMMY_VALUE_1, DUMMY_VALUE_2
+import pytac
+import pytac.device
 
 
 def test_create_element():
