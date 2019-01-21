@@ -9,8 +9,7 @@ bin
 lib
 include
 share
-venv
-venv3
+venv*
 pip-selfcheck.json
 
 # build artifacts

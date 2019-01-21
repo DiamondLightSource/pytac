@@ -1,8 +1,8 @@
-import pytac.epics
-import pytac.device
 import pytest
-import pytac
+
 from constants import DUMMY_VALUE_1, DUMMY_VALUE_2
+import pytac
+import pytac.device
 
 
 def test_create_element():
@@ -69,7 +69,7 @@ def test_set_value_phys(simple_element, double_uc):
     simple_element.set_value('x', DUMMY_VALUE_2, handle=pytac.SP,
                              units=pytac.PHYS)
     # Conversion fron physics to engineering units
-    simple_element.get_device('x').set_value.assert_called_with((DUMMY_VALUE_2 / 2))
+    simple_element.get_device('x').set_value.assert_called_with(DUMMY_VALUE_2 / 2)
 
 
 def test_set_exceptions(simple_element, unit_uc):

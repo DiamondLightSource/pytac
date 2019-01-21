@@ -1,6 +1,6 @@
 """Module containing pytac data source classes."""
 import pytac
-from pytac.exceptions import FieldException, DataSourceException, HandleException
+from pytac.exceptions import DataSourceException, FieldException, HandleException
 
 
 class DataSource(object):
@@ -49,11 +49,12 @@ class DataSource(object):
 
 
 class DataSourceManager(object):
-    """Class that manages the data sources associated with a lattice or element.
+    """Class that manages all the data sources and UnitConv objects associated
+        with a lattice or element.
 
     It recieves requests from a lattice or element object and directs them to
-    the correct data source. The unit conversion objects for all fields are also
-    held here.
+    the correct data source. The unit conversion objects for all fields are
+    also held here.
 
     Attributes:
         default_units (str): Holds the current default unit type, pytac.PHYS or
@@ -86,7 +87,7 @@ class DataSourceManager(object):
         self._data_sources[data_source_type] = data_source
 
     def get_fields(self):
-        """Get the all fields defined on the manager.
+        """Get all the fields defined on the manager.
 
         Includes all fields defined by all data sources.
 
@@ -102,8 +103,9 @@ class DataSourceManager(object):
     def add_device(self, field, device, uc):
         """Add device and unit conversion objects to a given field.
 
-        A DeviceDataSource must be set before calling this method, this defaults
-        to pytac.LIVE as that is the only DeviceDataSource currently.
+        A DeviceDataSource must be set before calling this method, this
+        defaults to pytac.LIVE as that is the only data source that currently
+        uses devices.
 
         Args:
             field (str): The key to store the unit conversion and device
@@ -124,8 +126,9 @@ class DataSourceManager(object):
     def get_device(self, field):
         """Get the device for the given field.
 
-        A DeviceDataSource must be set before calling this method, this defaults
-        to pytac.LIVE as that is the only DeviceDataSource currently.
+        A DeviceDataSource must be set before calling this method, this
+        defaults to pytac.LIVE as that is the only data source that currently
+        uses devices.
 
         Args:
             field (str): The lookup key to find the device on the manager.
@@ -203,8 +206,8 @@ class DataSourceManager(object):
                   data_source=pytac.DEFAULT):
         """Set the value for a field.
 
-        This value can be set on the machine or the simulation. If handle, units
-        or data_source are not given then the lattice default values are used.
+        This sets a value on the machine or the simulation. If handle,units or
+        data_source are not given then the lattice default values are used.
 
         Args:
             field (str): The requested field.

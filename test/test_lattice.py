@@ -1,9 +1,10 @@
 import numpy
 import pytest
+
+from constants import DUMMY_ARRAY, LATTICE_NAME
 import pytac
 from pytac.element import Element
 from pytac.lattice import Lattice
-from constants import DUMMY_ARRAY, LATTICE_NAME
 
 
 def test_create_lattice():
@@ -65,7 +66,8 @@ def test_get_element_devices_raises_FieldException_if_field_not_matched(simple_l
 
 
 def test_get_element_device_names(simple_lattice):
-    assert simple_lattice.get_element_device_names('family', 'x') == ['x_device']
+    assert simple_lattice.get_element_device_names('family',
+                                                   'x') == ['x_device']
 
 
 def test_lattice_with_n_elements(simple_lattice):

@@ -8,14 +8,13 @@ The csv files are stored in one directory with specified names:
  * unitconv.csv
  * uc_poly_data.csv
  * uc_pchip_data.csv
-
 """
-from __future__ import print_function
-import os
-import csv
-import pytac
 import collections
-from pytac import epics, data_source, units, utils, device
+import csv
+import os
+
+import pytac
+from pytac import data_source, device, element, lattice, units, utils
 from pytac.exceptions import ControlSystemException
 
 
@@ -39,8 +38,8 @@ def get_div_rigidity(energy):
     """
     rigidity = utils.rigidity(energy)
 
-    def div_rigidity(input):
-        return input / rigidity
+    def div_rigidity(value):
+        return value / rigidity
     return div_rigidity
 
 
@@ -53,8 +52,8 @@ def get_mult_rigidity(energy):
     """
     rigidity = utils.rigidity(energy)
 
-    def mult_rigidity(input):
-        return input * rigidity
+    def mult_rigidity(value):
+        return value * rigidity
     return mult_rigidity
 
 
@@ -175,13 +174,13 @@ def load(mode, control_system=None, directory=None):
             from pytac import cothread_cs
             control_system = cothread_cs.CothreadControlSystem()
     except ImportError:
-        raise ControlSystemException("Please install cothread to load a lattice"
-                                     "using the default control system (found "
-                                     "in cothread_cs.py).")
+        raise ControlSystemException("Please install cothread to load a "
+                                     "lattice using the default control system"
+                                     " (found in cothread_cs.py).")
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
-    lat = epics.EpicsLattice(mode, control_system)
+    lat = lattice.EpicsLattice(mode, control_system)
     lat.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
     s = 0.0
     index = 1
@@ -190,8 +189,8 @@ def load(mode, control_system=None, directory=None):
         for item in csv_reader:
             length = float(item['length'])
             cell = int(item['cell']) if item['cell'] else None
-            e = epics.EpicsElement(item['name'], length, item['type'], s, index,
-                                   cell)
+            e = element.EpicsElement(item['name'], length, item['type'], s,
+                                     index, cell)
             e.add_to_family(item['type'])
             e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)
@@ -204,7 +203,7 @@ def load(mode, control_system=None, directory=None):
             get_pv = item['get_pv'] if item['get_pv'] else None
             set_pv = item['set_pv'] if item['set_pv'] else None
             pve = True
-            d = epics.EpicsDevice(name, control_system, pve, get_pv, set_pv)
+            d = device.EpicsDevice(name, control_system, pve, get_pv, set_pv)
             # Devices on index 0 are attached to the lattice not elements.
             if int(item['id']) == 0:
                 lat.add_device(item['field'], d, DEFAULT_UC)

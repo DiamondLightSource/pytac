@@ -1,8 +1,9 @@
 """Classes for use in unit conversion."""
-import pytac
 import numpy
-from pytac.exceptions import UnitsException
 from scipy.interpolate import PchipInterpolator
+
+import pytac
+from pytac.exceptions import UnitsException
 
 
 def unit_function(value):
@@ -32,7 +33,8 @@ class UnitConv(object):
     **Attributes:**
 
     Attributes:
-        eng_units (str): The unit type of the post conversion engineering value.
+        eng_units (str): The unit type of the post conversion engineering
+                          value.
         phys_units (str): The unit type of the post conversion physics value.
 
     .. Private Attributes:
@@ -145,7 +147,8 @@ class PolyUnitConv(UnitConv):
 
     Attributes:
         p (poly1d): A one-dimensional polynomial of coefficients.
-        eng_units (str): The unit type of the post conversion engineering value.
+        eng_units (str): The unit type of the post conversion engineering
+                          value.
         phys_units (str): The unit type of the post conversion physics value.
 
     .. Private Attributes:
@@ -181,7 +184,8 @@ class PolyUnitConv(UnitConv):
                                 units.
 
         Returns:
-            float: The converted physics value from the given engineering value.
+            float: The converted physics value from the given engineering
+                    value.
         """
         return self.p(eng_value)
 
@@ -193,7 +197,8 @@ class PolyUnitConv(UnitConv):
                                     engineering units.
 
         Returns:
-            float: The converted engineering value from the given physics value.
+            float: The converted engineering value from the given physics
+                    value.
 
         Raises:
             UnitsException: An error occurred when there exist no roots or more
@@ -221,7 +226,8 @@ class PchipUnitConv(UnitConv):
                    or decreasing order. Otherwise, a ValueError is raised.
         pp (PchipInterpolator): A pchip one-dimensional monotonic cubic
                                  interpolation of points on both x and y axes.
-        eng_units (str): The unit type of the post conversion engineering value.
+        eng_units (str): The unit type of the post conversion engineering
+                          value.
         phys_units (str): The unit type of the post conversion physics value.
 
     .. Private Attributes:
@@ -268,7 +274,8 @@ class PchipUnitConv(UnitConv):
             eng_value (float): The engineering value to be converted to physics
                                 units.
         Returns:
-            float: The converted physics value from the given engineering value.
+            float: The converted physics value from the given engineering
+                    value.
         """
         return self.pp(eng_value)
 
@@ -313,7 +320,8 @@ class NullUnitConv(UnitConv):
     **Attributes:**
 
     Attributes:
-        eng_units (str): The unit type of the post conversion engineering value.
+        eng_units (str): The unit type of the post conversion engineering
+                          value.
         phys_units (str): The unit type of the post conversion physics value.
 
     .. Private Attributes:

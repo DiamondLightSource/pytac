@@ -8,11 +8,12 @@ pytest = "*"
 pytest-cov = "*"
 coveralls = "*"
 mock = "*"
-"flake8" = "*"
+flake8 = "*"
 bpython = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
 pytest-lazy-fixture = "*"
+testfixtures = "*"
 
 [packages]
 numpy = "*"

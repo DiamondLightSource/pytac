@@ -48,9 +48,7 @@ class Element(object):
         self._data_source_manager = DataSourceManager()
 
     def __str__(self):
-        """Auxiliary function to print out an element.
-
-        Return a representation of an element, as a string.
+        """Return a representation of an element, as a string.
 
         Returns:
             str: A representation of an element.
@@ -69,7 +67,8 @@ class Element(object):
             data_source_type (str): the type of the data source being set
                                      pytac.LIVE or pytac.SIM.
         """
-        self._data_source_manager.set_data_source(data_source, data_source_type)
+        self._data_source_manager.set_data_source(data_source,
+                                                  data_source_type)
 
     def get_fields(self):
         """Get the all fields defined on an element.
@@ -85,8 +84,9 @@ class Element(object):
     def add_device(self, field, device, uc):
         """Add device and unit conversion objects to a given field.
 
-        A DeviceDataSource must be set before calling this method, this defaults
-        to pytac.LIVE as that is the only DeviceDataSource currently.
+        A DeviceDataSource must be set before calling this method, this
+        defaults to pytac.LIVE as that is the only data source that currently
+        uses devices.
 
         Args:
             field (str): The key to store the unit conversion and device
@@ -106,8 +106,9 @@ class Element(object):
     def get_device(self, field):
         """Get the device for the given field.
 
-        A DeviceDataSource must be set before calling this method, this defaults
-        to pytac.LIVE as that is the only DeviceDataSource currently.
+        A DeviceDataSource must be set before calling this method, this
+        defaults to pytac.LIVE as that is the only data source that currently
+        uses devices.
 
         Args:
             field (str): The lookup key to find the device on an element.
@@ -208,3 +209,35 @@ class Element(object):
         except FieldException:
             raise FieldException("Element {0} does not have field {1}."
                                  .format(self, field))
+
+
+class EpicsElement(Element):
+    """EPICS-aware element.
+
+    Adds get_pv_name() method.
+
+    **Methods:**
+    """
+    def get_pv_name(self, field, handle):
+        """Get PV name for the specified field and handle.
+
+        Args:
+            field (str): The requested field.
+            handle (str): pytac.RB or pytac.SP.
+
+        Returns:
+            str: The readback or setpoint PV for the specified field.
+
+        Raises:
+            DataSourceException: if there is no data source for this field.
+            FieldException: if the specified field doesn't exist.
+        """
+        try:
+            return (self._data_source_manager._data_sources[pytac.LIVE]
+                    .get_device(field).get_pv_name(handle))
+        except KeyError:
+            raise DataSourceException("No data source for field {0} on element"
+                                      " {1}.".format(field, self))
+        except FieldException:
+            raise FieldException("No field {0} on element {1}.".format(field,
+                                                                       self))

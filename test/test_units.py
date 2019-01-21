@@ -1,8 +1,9 @@
-import pytest
-import pytac
 import numpy
-from pytac.units import UnitConv, PolyUnitConv, PchipUnitConv, NullUnitConv
+import pytest
+
 from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, DUMMY_VALUE_3
+import pytac
+from pytac.units import NullUnitConv, PchipUnitConv, PolyUnitConv, UnitConv
 
 
 def f1(value):
@@ -22,7 +23,8 @@ def test_UnitConv_not_implemented():
 
 
 @pytest.mark.parametrize('origin, target', [(pytac.LIVE, pytac.ENG),
-                                            (pytac.PHYS, pytac.SP), ('a', 'b')])
+                                            (pytac.PHYS, pytac.SP),
+                                            ('a', 'b')])
 def test_UnitConv_requires_correct_arguments(origin, target):
     uc = UnitConv()
     with pytest.raises(pytac.exceptions.UnitsException):
