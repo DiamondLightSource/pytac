@@ -238,6 +238,10 @@ class EpicsElement(Element):
         except KeyError:
             raise DataSourceException("No data source for field {0} on element"
                                       " {1}.".format(field, self))
+        except AttributeError:
+            raise DataSourceException("Cannot get PV for field {0} on element"
+                                      " {1}, as basic devices do not have "
+                                      "associated PV's.".format(field, self))
         except FieldException:
             raise FieldException("No field {0} on element {1}.".format(field,
                                                                        self))

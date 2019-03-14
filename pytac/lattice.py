@@ -459,8 +459,12 @@ class EpicsLattice(Lattice):
             return (self._data_source_manager._data_sources[pytac.LIVE]
                     .get_device(field).get_pv_name(handle))
         except KeyError:
-            raise DataSourceException('Lattice {0} has no device for field {1}.'
-                                      .format(self, field))
+            raise DataSourceException("Lattice {0} has no device for field"
+                                      " {1}.".format(self, field))
+        except AttributeError:
+            raise DataSourceException("Cannot get PV for field {0} on lattice"
+                                      " {1}, as basic devices do not have "
+                                      "associated PV's.".format(field, self))
 
     def get_element_pv_names(self, family, field, handle):
         """Get all PV names for a specific family, field, and handle.

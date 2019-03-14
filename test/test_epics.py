@@ -63,6 +63,8 @@ def test_get_value_raises_HandleExceptions(simple_epics_element):
 
 def test_lattice_get_pv_name_raises_DataSourceException(simple_epics_lattice):
     basic_epics_lattice = simple_epics_lattice
+    with pytest.raises(pytac.exceptions.DataSourceException):
+        basic_epics_lattice.get_pv_name('basic', pytac.RB)
     del basic_epics_lattice._data_source_manager._data_sources[pytac.LIVE]
     with pytest.raises(pytac.exceptions.DataSourceException):
         basic_epics_lattice.get_pv_name('x', pytac.RB)
@@ -79,6 +81,8 @@ def test_element_get_pv_name_raises_exceptions(simple_epics_element):
     with pytest.raises(pytac.exceptions.FieldException):
         simple_epics_element.get_pv_name('unknown_field', 'setpoint')
     basic_epics_element = simple_epics_element
+    with pytest.raises(pytac.exceptions.DataSourceException):
+        basic_epics_element.get_pv_name('basic', pytac.RB)
     del basic_epics_element._data_source_manager._data_sources[pytac.LIVE]
     with pytest.raises(pytac.exceptions.DataSourceException):
         basic_epics_element.get_pv_name('x', pytac.RB)
