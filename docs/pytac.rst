@@ -6,10 +6,18 @@ API Documentation
     :undoc-members:
     :show-inheritance:
 
-pytac.cs module
+pytac.cothread_cs module
 ---------------
 
-.. automodule:: pytac.cs
+.. automodule:: pytac.cothread_cs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pytac.data_source module
+-------------------
+
+.. automodule:: pytac.data_source
     :members:
     :undoc-members:
     :show-inheritance:
@@ -30,6 +38,14 @@ pytac.element module
     :undoc-members:
     :show-inheritance:
 
+pytac.exceptions module
+--------------------
+
+.. automodule:: pytac.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pytac.lattice module
 --------------------
 
@@ -42,14 +58,6 @@ pytac.load_csv module
 ---------------------
 
 .. automodule:: pytac.load_csv
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pytac.model module
----------------------
-
-.. automodule:: pytac.model
     :members:
     :undoc-members:
     :show-inheritance:

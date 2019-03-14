@@ -67,9 +67,9 @@ Print BPM PV names along with s position
     ...
     >>> lattice.get_family_s('BPM')
     [4.38,
-     8.806500000000002,
-     11.374000000000002,
-     ...
+    8.806500000000002,
+    11.374000000000002,
+    ...
 
 Get the value of the 'b1' field of the quad elements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -90,6 +90,6 @@ Get the value of the 'b1' field of the quad elements
 
     >>> lattice.get_values('QUAD', 'b1', pytac.RB)
     [71.32496643066406,
-     129.35191345214844,
-     98.25287628173828,
+    129.35191345214844,
+    98.25287628173828,
     ...

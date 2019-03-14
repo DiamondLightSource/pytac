@@ -2,7 +2,7 @@ Developers
 ==========
 
 The installation and initialisation steps are slightly different if you want to work on pytac.
-N.B. This guide uses pipenv but a normal venv will also work.
+N.B. This guide uses pipenv but a virtualenv will also work.
 
 
 Installation
