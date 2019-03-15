@@ -10,7 +10,7 @@ el_id,field,uc_type,uc_id,phys_units,eng_units
 189,db0,null,0,m^-1,A
 136,db0,null,0,m^-1,A
 164,db0,null,0,m^-1,A
-1490,f,null,0,Hz,Hz
+1492,f,null,0,Hz,Hz
 5,b1,pchip,1,m^-2,A
 404,b1,pchip,1,m^-2,A
 425,b1,pchip,1,m^-2,A
