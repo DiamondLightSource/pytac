@@ -85,9 +85,9 @@ class BasicDevice(Device):
 class EpicsDevice(Device):
     """An EPICS-aware device.
 
-    Contains a control system, readback and setpoint PVs. A readback or setpoint
-    PV is required when creating an epics device otherwise a DataSourceException
-    is raised. The device is enabled by default.
+    Contains a control system, readback and setpoint PVs. A readback or
+    setpoint PV is required when creating an epics device otherwise a
+    DataSourceException is raised. The device is enabled by default.
 
     **Attributes:**
 

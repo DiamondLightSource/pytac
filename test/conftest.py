@@ -5,7 +5,8 @@ import types
 import mock
 import pytest
 
-from constants import CURRENT_DIR, DUMMY_ARRAY, DUMMY_VALUE_1, DUMMY_VALUE_2, LATTICE_NAME, RB_PV, SP_PV
+from constants import (CURRENT_DIR, DUMMY_ARRAY, DUMMY_VALUE_1, DUMMY_VALUE_2,
+                       LATTICE_NAME, RB_PV, SP_PV)
 import pytac
 from pytac import load_csv
 from pytac.data_source import DataSourceManager, DeviceDataSource

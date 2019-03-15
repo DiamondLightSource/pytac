@@ -18,7 +18,7 @@ def test_add_element_to_family():
     assert 'fam' in e.families
 
 
-def test_device_methods_raise_DataSourceException_if_no_device_data_sorce(simple_element):
+def test_device_methods_raise_DataSourceException_if_no_live_data_source(simple_element):
     basic_element = simple_element
     del basic_element._data_source_manager._data_sources[pytac.LIVE]
     d = pytac.device.BasicDevice(0)
@@ -53,8 +53,9 @@ def test_get_value_uses_uc_if_necessary_for_cs_call(simple_element, double_uc):
 
 def test_get_value_uses_uc_if_necessary_for_sim_call(simple_element, double_uc):
     simple_element._data_source_manager._uc['x'] = double_uc
-    assert simple_element.get_value('x', handle=pytac.SP, data_source=pytac.SIM,
-                                    units=pytac.ENG) == (DUMMY_VALUE_2 / 2)
+    assert simple_element.get_value('x', handle=pytac.SP, units=pytac.ENG,
+                                    data_source=pytac.SIM) == (DUMMY_VALUE_2 /
+                                                               2)
     simple_element._data_source_manager._data_sources[pytac.SIM].get_value.assert_called_with('x', pytac.SP)
 
 
@@ -69,7 +70,8 @@ def test_set_value_phys(simple_element, double_uc):
     simple_element.set_value('x', DUMMY_VALUE_2, handle=pytac.SP,
                              units=pytac.PHYS)
     # Conversion fron physics to engineering units
-    simple_element.get_device('x').set_value.assert_called_with(DUMMY_VALUE_2 / 2)
+    simple_element.get_device('x').set_value.assert_called_with(DUMMY_VALUE_2 /
+                                                                2)
 
 
 def test_set_exceptions(simple_element, unit_uc):
@@ -80,10 +82,9 @@ def test_set_exceptions(simple_element, unit_uc):
     with pytest.raises(pytac.exceptions.DataSourceException):
         simple_element.set_value('y', 40.0, 'setpoint',
                                  data_source='unknown_data_source')
-    simple_element._data_source_manager._uc['uc_but_not_data_source_field'] = unit_uc
+    simple_element._data_source_manager._uc['uc_but_no_data_source'] = unit_uc
     with pytest.raises(pytac.exceptions.FieldException):
-        simple_element.set_value('uc_but_not_data_source_field', 40.0,
-                                 'setpoint')
+        simple_element.set_value('uc_but_no_data_source', 40.0, 'setpoint')
 
 
 def test_get_exceptions(simple_element):

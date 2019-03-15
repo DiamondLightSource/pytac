@@ -4,8 +4,8 @@
 class ControlSystem(object):
     """Abstract base class representing a control system.
 
-    A specialised implementation of this class would be used to communicate over
-     channel access with the hardware in the ring.
+    A specialised implementation of this class would be used to communicate
+     over channel access with the hardware in the ring.
 
     **Methods:**
     """

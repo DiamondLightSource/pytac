@@ -1,6 +1,7 @@
 """Module containing pytac data source classes."""
 import pytac
-from pytac.exceptions import DataSourceException, FieldException, HandleException
+from pytac.exceptions import (DataSourceException, FieldException,
+                              HandleException)
 
 
 class DataSource(object):
