@@ -172,7 +172,7 @@ def test_quad_unitconv_known_failing_test():
 
     uc = pytac.units.PchipUnitConv([50.0, 100.0, 180.0],
                                    [-4.95, -9.85, -17.56])
-    uc._post_eng_to_phys = pytac.load_csv.get_div_rigidity(LAT_ENERGY)
-    uc._pre_phys_to_eng = pytac.load_csv.get_mult_rigidity(LAT_ENERGY)
+    uc._post_eng_to_phys = pytac.utils.get_div_rigidity(LAT_ENERGY)
+    uc._pre_phys_to_eng = pytac.utils.get_mult_rigidity(LAT_ENERGY)
     numpy.testing.assert_allclose(uc.eng_to_phys(70), -0.69133465)
     numpy.testing.assert_allclose(uc.phys_to_eng(-0.7), 70.8834284954)
