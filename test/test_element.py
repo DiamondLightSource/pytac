@@ -55,13 +55,16 @@ def test_get_value_uses_uc_if_necessary_for_sim_call(simple_element, double_uc):
     simple_element._data_source_manager._uc['x'] = double_uc
     assert simple_element.get_value('x', handle=pytac.SP, units=pytac.ENG,
                                     data_source=pytac.SIM) == (DUMMY_VALUE_2 / 2)
-    simple_element._data_source_manager._data_sources[pytac.SIM].get_value.assert_called_with('x', pytac.SP)
+    simple_element._data_source_manager._data_sources[pytac.SIM].get_value.assert_called_with('x',
+                                                                                              pytac.SP,
+                                                                                              True)
 
 
 def test_set_value_eng(simple_element):
     simple_element.set_value('x', DUMMY_VALUE_2, handle=pytac.SP)
     # No conversion needed
-    simple_element.get_device('x').set_value.assert_called_with(DUMMY_VALUE_2)
+    simple_element.get_device('x').set_value.assert_called_with(DUMMY_VALUE_2,
+                                                                True)
 
 
 def test_set_value_phys(simple_element, double_uc):
@@ -69,7 +72,8 @@ def test_set_value_phys(simple_element, double_uc):
     simple_element.set_value('x', DUMMY_VALUE_2, handle=pytac.SP,
                              units=pytac.PHYS)
     # Conversion fron physics to engineering units
-    simple_element.get_device('x').set_value.assert_called_with(DUMMY_VALUE_2 / 2)
+    simple_element.get_device('x').set_value.assert_called_with(DUMMY_VALUE_2 / 2,
+                                                                True)
 
 
 def test_set_exceptions(simple_element, unit_uc):

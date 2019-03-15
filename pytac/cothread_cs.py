@@ -25,7 +25,7 @@ class CothreadControlSystem(ControlSystem):
             pv (string): The process variable given as a string. It can be a
                          readback or a setpoint PV.
             throw (bool): if True, ControlSystemException will be raised on
-                          failure
+                          failure instead of warning.
 
         Returns:
             object: the current value of the given PV.
@@ -82,7 +82,7 @@ class CothreadControlSystem(ControlSystem):
             pv (string): PV to set the value of.
             value (object): The value to set the PV to.
             throw (bool): if True, ControlSystemException will be raised on
-                          failure
+                          failure instead of warning.
 
         Returns:
             bool: True for success, False for failure

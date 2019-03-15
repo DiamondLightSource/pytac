@@ -103,7 +103,7 @@ def test_get_all_families(simple_lattice):
 
 def test_get_element_values(simple_lattice):
     simple_lattice.get_element_values('family', 'x', pytac.RB)
-    simple_lattice.get_element_devices('family', 'x')[0].get_value.assert_called_with(pytac.RB)
+    simple_lattice.get_element_devices('family', 'x')[0].get_value.assert_called_with(pytac.RB, True)
 
 
 @pytest.mark.parametrize('dtype, expected',
@@ -123,8 +123,7 @@ def test_get_element_values_returns_numpy_array_if_requested(simple_lattice,
 
 def test_set_element_values(simple_lattice):
     simple_lattice.set_element_values('family', 'x', [1])
-    simple_lattice.get_element_devices('family',
-                                       'x')[0].set_value.assert_called_with(1)
+    simple_lattice.get_element_devices('family', 'x')[0].set_value.assert_called_with(1, True)
 
 
 def test_set_element_values_length_mismatch_raises_IndexError(simple_lattice):

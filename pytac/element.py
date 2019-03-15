@@ -152,7 +152,7 @@ class Element(object):
         self.families.add(family)
 
     def get_value(self, field, handle=pytac.RB, units=pytac.DEFAULT,
-                  data_source=pytac.DEFAULT):
+                  data_source=pytac.DEFAULT, throw=True):
         """Get the value for a field.
 
         Returns the value of a field on the element. This value is uniquely
@@ -165,6 +165,8 @@ class Element(object):
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS returned.
             data_source (str): pytac.LIVE or pytac.SIM.
+            throw (bool): if True, ControlSystemException will be raised on
+                          failure instead of warning.
 
         Returns:
             float: The value of the requested field
@@ -175,7 +177,7 @@ class Element(object):
         """
         try:
             return self._data_source_manager.get_value(field, handle, units,
-                                                       data_source)
+                                                       data_source, throw)
         except DataSourceException:
             raise DataSourceException("No data source {0} on element {1}."
                                       .format(data_source, self))
@@ -184,7 +186,7 @@ class Element(object):
                                  .format(self, field))
 
     def set_value(self, field, value, handle=pytac.SP, units=pytac.DEFAULT,
-                  data_source=pytac.DEFAULT):
+                  data_source=pytac.DEFAULT, throw=True):
         """Set the value for a field.
 
         This value can be set on the machine or the simulation.
@@ -195,6 +197,8 @@ class Element(object):
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
+            throw (bool): if True, ControlSystemException will be raised on
+                          failure instead of warning.
 
         Raises:
             DataSourceException: if arguments are incorrect.
@@ -202,7 +206,7 @@ class Element(object):
         """
         try:
             self._data_source_manager.set_value(field, value, handle, units,
-                                                data_source)
+                                                data_source, throw)
         except DataSourceException:
             raise DataSourceException("No data source {0} on element {1}."
                                       .format(data_source, self))

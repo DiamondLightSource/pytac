@@ -25,16 +25,23 @@ class Device(object):
         """
         raise NotImplementedError()
 
-    def set_value(self, value):
+    def set_value(self, value, throw):
         """Set the value on the device.
 
         Args:
             value (float): the value to set.
+            throw (bool): if True, ControlSystemException will be raised on
+                          failure instead of warning.
         """
         raise NotImplementedError()
 
-    def get_value(self):
+    def get_value(self, handle, throw):
         """Read the value from the device.
+
+        Args:
+            handle (str): pytac.SP or pytac.RB.
+            throw (bool): if True, ControlSystemException will be raised on
+                          failure instead of warning.
 
         Returns:
             float: the value of the PV.
@@ -50,7 +57,7 @@ class BasicDevice(Device):
     """
     def __init__(self, value, enabled=True):
         """Args:
-            value (?): can be a number or a list of numbers.
+            value (numeric): can be a number or a list of numbers.
             enabled (bool-like): Whether the device is enabled. May be a
                                   PvEnabler object.
         """
@@ -65,19 +72,27 @@ class BasicDevice(Device):
         """
         return bool(self._enabled)
 
-    def set_value(self, value):
+    def set_value(self, value, throw=None):
         """Set the value on the device.
 
         Args:
-            value (?): the value to set.
+            value (numeric): the value to set.
+            throw (bool): Irrelevant in this case as a control system is not
+                           used, only supported to conform with the base class.
         """
         self.value = value
 
-    def get_value(self, handle=None):
+    def get_value(self, handle=None, throw=None):
         """Read the value from the device.
 
+        Args:
+            handle (str): Irrelevant in this case as a control system is not
+                           used, only supported to conform with the base class.
+            throw (bool): Irrelevant in this case as a control system is not
+                           used, only supported to conform with the base class.
+
         Returns:
-            ?: the value of the PV.
+            numeric: the value of the device.
         """
         return self.value
 
@@ -136,11 +151,13 @@ class EpicsDevice(Device):
         """
         return bool(self._enabled)
 
-    def set_value(self, value):
+    def set_value(self, value, throw=True):
         """Set the device value.
 
         Args:
             value (float): The value to set.
+            throw (bool): if True, ControlSystemException will be raised on
+                          failure instead of warning.
 
         Raises:
             HandleException: if no setpoint PV exists.
@@ -149,13 +166,15 @@ class EpicsDevice(Device):
             raise HandleException("Device {0} has no setpoint PV."
                                   .format(self.name))
         else:
-            self._cs.set_single(self.sp_pv, value)
+            self._cs.set_single(self.sp_pv, value, throw)
 
-    def get_value(self, handle):
+    def get_value(self, handle, throw=True):
         """Read the value of a readback or setpoint PV.
 
         Args:
             handle (str): pytac.SP or pytac.RB.
+            throw (bool): if True, ControlSystemException will be raised on
+                          failure instead of warning.
 
         Returns:
             float: The value of the PV.
@@ -164,9 +183,9 @@ class EpicsDevice(Device):
             HandleException: if the requested PV doesn't exist.
         """
         if handle == pytac.RB and self.rb_pv:
-            return self._cs.get_single(self.rb_pv)
+            return self._cs.get_single(self.rb_pv, throw)
         elif handle == pytac.SP and self.sp_pv:
-            return self._cs.get_single(self.sp_pv)
+            return self._cs.get_single(self.sp_pv, throw)
         else:
             raise HandleException("Device {0} has no {1} PV."
                                   .format(self.name, handle))

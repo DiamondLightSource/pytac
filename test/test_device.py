@@ -25,7 +25,7 @@ def create_basic_device(value=1.0, enabled=True):
 def test_set_epics_device_value():
     device = create_epics_device()
     device.set_value(40)
-    device._cs.set_single.assert_called_with(SP_PV, 40)
+    device._cs.set_single.assert_called_with(SP_PV, 40, True)
 
 
 def test_get_epics_device_value():
