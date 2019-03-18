@@ -25,16 +25,6 @@ class Device(object):
         """
         raise NotImplementedError()
 
-    def set_value(self, value, throw):
-        """Set the value on the device.
-
-        Args:
-            value (float): the value to set.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False log a warning.
-        """
-        raise NotImplementedError()
-
     def get_value(self, handle, throw):
         """Read the value from the device.
 
@@ -46,6 +36,16 @@ class Device(object):
 
         Returns:
             float: the value of the PV.
+        """
+        raise NotImplementedError()
+
+    def set_value(self, value, throw):
+        """Set the value on the device.
+
+        Args:
+            value (float): the value to set.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False log a warning.
         """
         raise NotImplementedError()
 
@@ -73,16 +73,6 @@ class BasicDevice(Device):
         """
         return bool(self._enabled)
 
-    def set_value(self, value, throw=None):
-        """Set the value on the device.
-
-        Args:
-            value (numeric): the value to set.
-            throw (bool): Irrelevant in this case as a control system is not
-                           used, only supported to conform with the base class.
-        """
-        self.value = value
-
     def get_value(self, handle=None, throw=None):
         """Read the value from the device.
 
@@ -96,6 +86,16 @@ class BasicDevice(Device):
             numeric: the value of the device.
         """
         return self.value
+
+    def set_value(self, value, throw=None):
+        """Set the value on the device.
+
+        Args:
+            value (numeric): the value to set.
+            throw (bool): Irrelevant in this case as a control system is not
+                           used, only supported to conform with the base class.
+        """
+        self.value = value
 
 
 class EpicsDevice(Device):
@@ -152,23 +152,6 @@ class EpicsDevice(Device):
         """
         return bool(self._enabled)
 
-    def set_value(self, value, throw=True):
-        """Set the device value.
-
-        Args:
-            value (float): The value to set.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False log a warning.
-
-        Raises:
-            HandleException: if no setpoint PV exists.
-        """
-        if self.sp_pv is None:
-            raise HandleException("Device {0} has no setpoint PV."
-                                  .format(self.name))
-        else:
-            self._cs.set_single(self.sp_pv, value, throw)
-
     def get_value(self, handle, throw=True):
         """Read the value of a readback or setpoint PV.
 
@@ -191,6 +174,23 @@ class EpicsDevice(Device):
         else:
             raise HandleException("Device {0} has no {1} PV."
                                   .format(self.name, handle))
+
+    def set_value(self, value, throw=True):
+        """Set the device value.
+
+        Args:
+            value (float): The value to set.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False log a warning.
+
+        Raises:
+            HandleException: if no setpoint PV exists.
+        """
+        if self.sp_pv is None:
+            raise HandleException("Device {0} has no setpoint PV."
+                                  .format(self.name))
+        else:
+            self._cs.set_single(self.sp_pv, value, throw)
 
     def get_pv_name(self, handle):
         """Get the PV name for the specified handle.
