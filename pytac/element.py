@@ -165,8 +165,9 @@ class Element(object):
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS returned.
             data_source (str): pytac.LIVE or pytac.SIM.
-            throw (bool): if True, ControlSystemException will be raised on
-                          failure instead of warning.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False None will be returned for any PV that fails
+                           and log a warning.
 
         Returns:
             float: The value of the requested field
@@ -197,8 +198,8 @@ class Element(object):
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
-            throw (bool): if True, ControlSystemException will be raised on
-                          failure instead of warning.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False log a warning.
 
         Raises:
             DataSourceException: if arguments are incorrect.

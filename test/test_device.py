@@ -85,9 +85,7 @@ def test_device_is_enabled_returns_bool_value(device_creation_function):
 
 
 # PvEnabler test.
-def test_PvEnabler():
-    mock_cs = mock.MagicMock()
-    mock_cs.get_single.return_value = 40.0
+def test_PvEnabler(mock_cs):
     pve = PvEnabler('enable-pv', 40, mock_cs)
     assert pve
     mock_cs.get_single.return_value = 50

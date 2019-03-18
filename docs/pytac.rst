@@ -9,7 +9,7 @@ API Documentation
 pytac.cothread_cs module
 ---------------
 
-.. automodule:: pytac.cothread_cs
+.. automodule:: pytac.cs
     :members:
     :undoc-members:
     :show-inheritance:

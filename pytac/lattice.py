@@ -23,7 +23,7 @@ class Lattice(object):
         name (str): The name of the lattice.
 
     .. Private Attributes:
-           _lattice (list): The list of all the element objects in the lattice.
+           _elements (list): The list of all the element objects in the lattice
            _cs (ControlSystem): The control system used to store the values on
                                  a PV.
            _data_source_manager (DataSourceManager): A class that manages the
@@ -37,12 +37,13 @@ class Lattice(object):
         **Methods:**
         """
         self.name = name
-        self._lattice = []
+        self._elements = []
         self._data_source_manager = DataSourceManager()
 
     def __getitem__(self, n):
-        """Get the (n + 1)th element of the lattice - i.e. index 0 represents
-        the first element in the lattice.
+        """Get the (n + 1)th element of the lattice.
+
+        i.e. index 0 represents the first element in the lattice.
 
         Args:
             n (int): index.
@@ -50,18 +51,15 @@ class Lattice(object):
         Returns:
             Element: indexed element.
         """
-        return self._lattice[n]
+        return self._elements[n]
 
     def __len__(self):
         """The number of elements in the lattice.
 
-        When using the len function returns the number of elements in
-        the lattice.
-
         Returns:
             int: The number of elements in the lattice.
         """
-        return len(self._lattice)
+        return len(self._elements)
 
     def set_data_source(self, data_source, data_source_type):
         """Add a data source to the lattice.
@@ -161,8 +159,9 @@ class Lattice(object):
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS returned.
             data_source (str): pytac.LIVE or pytac.SIM.
-            throw (bool): if True, ControlSystemException will be raised on
-                          failure instead of warning.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False None will be returned for any PV that fails
+                           and log a warning.
 
         Returns:
             float: The value of the requested field
@@ -193,8 +192,8 @@ class Lattice(object):
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
-            throw (bool): if True, ControlSystemException will be raised on
-                          failure instead of warning.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False log a warning.
 
         Raises:
             DataSourceException: if arguments are incorrect.
@@ -217,7 +216,7 @@ class Lattice(object):
             float: The length of the lattice (m).
         """
         total_length = 0
-        for e in self._lattice:
+        for e in self._elements:
             total_length += e.length
         return total_length
 
@@ -227,7 +226,7 @@ class Lattice(object):
         Args:
             element (Element): element to append.
         """
-        self._lattice.append(element)
+        self._elements.append(element)
 
     def get_elements(self, family=None, cell=None):
         """Get the elements of a family from the lattice.
@@ -247,11 +246,11 @@ class Lattice(object):
                          family.
         """
         if family is None:
-            elements = self._lattice
+            elements = self._elements[:]
             if len(elements) == 0:
                 raise ValueError("No elements in lattice {0}.".format(self))
         else:
-            elements = [e for e in self._lattice if family in e.families]
+            elements = [e for e in self._elements if family in e.families]
             if len(elements) == 0:
                 raise ValueError("No elements in family {0}.".format(family))
         if cell is not None:
@@ -267,7 +266,7 @@ class Lattice(object):
             set: all defined families.
         """
         families = set()
-        for element in self._lattice:
+        for element in self._elements:
             families.update(element.families)
         return families
 

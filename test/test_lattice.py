@@ -75,7 +75,7 @@ def test_lattice_get_elements_with_n_elements(simple_lattice):
     simple_lattice.add_element(elem)
     assert simple_lattice[1] == elem
     assert simple_lattice.get_elements() == [elem, elem]
-    simple_lattice._lattice = []
+    simple_lattice._elements = []
     assert len(simple_lattice) == 0
     with pytest.raises(ValueError):
         simple_lattice.get_elements()

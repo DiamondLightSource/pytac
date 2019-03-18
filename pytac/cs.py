@@ -15,8 +15,9 @@ class ControlSystem(object):
         Args:
             pv (string): PV to get the value of.
                          readback or a setpoint PV.
-            throw (bool): if True, ControlSystemException will be raised on
-                          failure instead of warning.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False None will be returned for any PV that fails
+                           and log a warning.
 
         Returns:
             object: the current value of the given PV.
@@ -31,9 +32,9 @@ class ControlSystem(object):
 
         Args:
             pvs (sequence): PVs to get values of.
-            throw (bool): if True, ControlSystemException will be raised on
-                          failure. If False, None will be returned for any PV
-                          for which the get fails.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False None will be returned for any PV that fails
+                           and log a warning.
 
         Returns:
             list(object): the current values of the PVs.
@@ -49,8 +50,8 @@ class ControlSystem(object):
         Args:
             pv (string): The PV to set the value of.
             value (object): The value to set the PV to.
-            throw (bool): if True, ControlSystemException will be raised on
-                          failure instead of warning.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False log a warning.
 
         Raises:
             ControlSystemException: if it cannot connect to the specified PV.
@@ -63,10 +64,10 @@ class ControlSystem(object):
         Args:
             pvs (sequence): PVs to set the values of.
             values (sequence): values to set no the PVs.
-            throw (bool): if True, ControlSystemException will be raised on
-                          failure. If False, a list of True and False values
-                          will be returned corresponding to successes and
-                          failures.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False return a list of True and False values
+                           corresponding to successes and failures and log a
+                           warning.
 
         Raises:
             ValueError: if the PVs or values are not passed in as sequences
