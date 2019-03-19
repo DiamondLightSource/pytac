@@ -20,7 +20,7 @@ def cs():
 
 def test_get_single_calls_caget_correctly(cs):
     caget.return_value = 42
-    assert cs.get_single(RB_PV) is 42
+    assert cs.get_single(RB_PV) == 42
     caget.assert_called_with(RB_PV, throw=True, timeout=1.0)
 
 

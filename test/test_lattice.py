@@ -30,7 +30,7 @@ def test_device_methods_raise_DataSourceException_if_no_live_data_source(simple_
         basic_lattice.get_device('x')
 
 
-def test_get_unitconv_raises_FieldException_if_no_uc_for_that_field(simple_lattice):
+def test_get_unitconv_raises_FieldException_if_no_uc_for_field(simple_lattice):
     with pytest.raises(pytac.exceptions.FieldException):
         simple_lattice.get_unitconv('not_a_field')
 
@@ -49,7 +49,7 @@ def test_set_value_raises_exceptions_correctly(simple_lattice):
         simple_lattice.set_value('not_a_field', 0)
 
 
-def test_get_element_devices_raises_exceptions_correctly_for_mismatched_family(simple_lattice):
+def test_get_element_devices_raises_ValueError_for_mismatched_family(simple_lattice):
     with pytest.raises(ValueError):
         devices = simple_lattice.get_element_devices('not-a-family', 'x')
     basic_element = simple_lattice.get_elements('family')[0]
@@ -70,14 +70,18 @@ def test_get_element_device_names(simple_lattice):
                                                    'x') == ['x_device']
 
 
-def test_lattice_with_n_elements(simple_lattice):
+def test_lattice_get_elements_with_n_elements(simple_lattice):
     elem = simple_lattice[0]
     simple_lattice.add_element(elem)
     assert simple_lattice[1] == elem
     assert simple_lattice.get_elements() == [elem, elem]
+    simple_lattice._elements = []
+    assert len(simple_lattice) == 0
+    with pytest.raises(ValueError):
+        simple_lattice.get_elements()
 
 
-def test_lattice_get_element_with_family(simple_lattice):
+def test_lattice_get_elements_with_family(simple_lattice):
     elem = simple_lattice[0]
     elem.add_to_family('fam')
     assert simple_lattice.get_elements('fam') == [elem]
@@ -99,7 +103,7 @@ def test_get_all_families(simple_lattice):
 
 def test_get_element_values(simple_lattice):
     simple_lattice.get_element_values('family', 'x', pytac.RB)
-    simple_lattice.get_element_devices('family', 'x')[0].get_value.assert_called_with(pytac.RB)
+    simple_lattice.get_element_devices('family', 'x')[0].get_value.assert_called_with(pytac.RB, True)
 
 
 @pytest.mark.parametrize('dtype, expected',
@@ -119,8 +123,7 @@ def test_get_element_values_returns_numpy_array_if_requested(simple_lattice,
 
 def test_set_element_values(simple_lattice):
     simple_lattice.set_element_values('family', 'x', [1])
-    simple_lattice.get_element_devices('family',
-                                       'x')[0].set_value.assert_called_with(1)
+    simple_lattice.get_element_devices('family', 'x')[0].set_value.assert_called_with(1, True)
 
 
 def test_set_element_values_length_mismatch_raises_IndexError(simple_lattice):

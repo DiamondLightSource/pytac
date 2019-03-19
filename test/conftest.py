@@ -5,11 +5,12 @@ import types
 import mock
 import pytest
 
-from constants import CURRENT_DIR, DUMMY_ARRAY, DUMMY_VALUE_1, DUMMY_VALUE_2, LATTICE_NAME, RB_PV, SP_PV
+from constants import (CURRENT_DIR, DUMMY_ARRAY, DUMMY_VALUE_1, DUMMY_VALUE_2,
+                       LATTICE_NAME, RB_PV, SP_PV)
 import pytac
 from pytac import load_csv
 from pytac.data_source import DataSourceManager, DeviceDataSource
-from pytac.device import EpicsDevice
+from pytac.device import EpicsDevice, BasicDevice
 from pytac.element import Element, EpicsElement
 from pytac.lattice import EpicsLattice, Lattice
 from pytac.units import PolyUnitConv
@@ -147,22 +148,26 @@ def mock_cs():
 @pytest.fixture
 def simple_epics_element(mock_cs, unit_uc):
     element = EpicsElement(1, 0, 'BPM', 0.0, cell=1)
+    basic_device = BasicDevice(0)
     x_device = EpicsDevice('x_device', mock_cs, True, RB_PV, SP_PV)
     y_device = EpicsDevice('y_device', mock_cs, True, SP_PV, RB_PV)
     element.add_to_family('family')
     element.set_data_source(DeviceDataSource(), pytac.LIVE)
+    element.add_device('basic', basic_device, unit_uc)
     element.add_device('x', x_device, unit_uc)
     element.add_device('y', y_device, unit_uc)
     return element
 
 
 @pytest.fixture
-def simple_epics_lattice(simple_epics_element, mock_cs):
+def simple_epics_lattice(simple_epics_element, mock_cs, unit_uc):
     lat = EpicsLattice('lattice', mock_cs)
     lat.add_element(simple_epics_element)
+    basic_device = BasicDevice(0)
     x_device = EpicsDevice('x_device', mock_cs, True, RB_PV, SP_PV)
     y_device = EpicsDevice('y_device', mock_cs, True, SP_PV, RB_PV)
     lat.set_data_source(DeviceDataSource(), pytac.LIVE)
+    lat.add_device('basic', basic_device, unit_uc)
     lat.add_device('x', x_device, unit_uc)
     lat.add_device('y', y_device, unit_uc)
     return lat

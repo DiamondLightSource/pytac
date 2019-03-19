@@ -29,34 +29,6 @@ POLY_FILENAME = 'uc_poly_data.csv'
 PCHIP_FILENAME = 'uc_pchip_data.csv'
 
 
-def get_div_rigidity(energy):
-    """
-    Args:
-        energy (int):
-    Returns:
-        function: div rigidity.
-    """
-    rigidity = utils.rigidity(energy)
-
-    def div_rigidity(value):
-        return value / rigidity
-    return div_rigidity
-
-
-def get_mult_rigidity(energy):
-    """
-    Args:
-        energy (int):
-    Returns:
-        function: mult rigidity.
-    """
-    rigidity = utils.rigidity(energy)
-
-    def mult_rigidity(value):
-        return value * rigidity
-    return mult_rigidity
-
-
 def load_poly_unitconv(filename):
     """Load polynomial unit conversions from a csv file.
 
@@ -126,7 +98,7 @@ def load_unitconv(directory, mode, lattice):
     with open(os.path.join(directory, mode, UNITCONV_FILENAME)) as unitconv:
         csv_reader = csv.DictReader(unitconv)
         for item in csv_reader:
-            if int(item['el_id']) is 0:
+            if int(item['el_id']) == 0:
                 if item['uc_type'] != 'null':
                     lattice._data_source_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
                     lattice._data_source_manager._uc[item['field']].phys_units = item['phys_units']
@@ -140,9 +112,10 @@ def load_unitconv(directory, mode, lattice):
                 if item['uc_type'] == 'null':
                     element._data_source_manager._uc[item['field']] = units.NullUnitConv(item['eng_units'], item['phys_units'])
                 else:
-                    if element.families.intersection(('HSTR', 'VSTR', 'QUAD', 'SEXT')):
-                        unitconvs[int(item['uc_id'])]._post_eng_to_phys = get_div_rigidity(lattice.get_value('energy', units=pytac.PHYS))
-                        unitconvs[int(item['uc_id'])]._pre_phys_to_eng = get_mult_rigidity(lattice.get_value('energy', units=pytac.PHYS))
+                    if element.families.intersection(('HSTR', 'VSTR', 'QUAD',
+                                                      'SEXT')):
+                        unitconvs[int(item['uc_id'])]._post_eng_to_phys = utils.get_div_rigidity(lattice.get_value('energy', units=pytac.PHYS))
+                        unitconvs[int(item['uc_id'])]._pre_phys_to_eng = utils.get_mult_rigidity(lattice.get_value('energy', units=pytac.PHYS))
                     element._data_source_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
                     element._data_source_manager._uc[item['field']].phys_units = item['phys_units']
                     element._data_source_manager._uc[item['field']].eng_units = item['eng_units']

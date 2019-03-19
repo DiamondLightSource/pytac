@@ -25,7 +25,7 @@ def create_basic_device(value=1.0, enabled=True):
 def test_set_epics_device_value():
     device = create_epics_device()
     device.set_value(40)
-    device._cs.set_single.assert_called_with(SP_PV, 40)
+    device._cs.set_single.assert_called_with(SP_PV, 40, True)
 
 
 def test_get_epics_device_value():
@@ -85,9 +85,7 @@ def test_device_is_enabled_returns_bool_value(device_creation_function):
 
 
 # PvEnabler test.
-def test_PvEnabler():
-    mock_cs = mock.MagicMock()
-    mock_cs.get_single.return_value = 40.0
+def test_PvEnabler(mock_cs):
     pve = PvEnabler('enable-pv', 40, mock_cs)
     assert pve
     mock_cs.get_single.return_value = 50

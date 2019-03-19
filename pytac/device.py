@@ -25,19 +25,27 @@ class Device(object):
         """
         raise NotImplementedError()
 
-    def set_value(self, value):
+    def get_value(self, handle, throw):
+        """Read the value from the device.
+
+        Args:
+            handle (str): pytac.SP or pytac.RB.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False None will be returned for any PV that fails
+                           and log a warning.
+
+        Returns:
+            float: the value of the PV.
+        """
+        raise NotImplementedError()
+
+    def set_value(self, value, throw):
         """Set the value on the device.
 
         Args:
             value (float): the value to set.
-        """
-        raise NotImplementedError()
-
-    def get_value(self):
-        """Read the value from the device.
-
-        Returns:
-            float: the value of the PV.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False log a warning.
         """
         raise NotImplementedError()
 
@@ -50,7 +58,7 @@ class BasicDevice(Device):
     """
     def __init__(self, value, enabled=True):
         """Args:
-            value (?): can be a number or a list of numbers.
+            value (numeric): can be a number or a list of numbers.
             enabled (bool-like): Whether the device is enabled. May be a
                                   PvEnabler object.
         """
@@ -65,29 +73,37 @@ class BasicDevice(Device):
         """
         return bool(self._enabled)
 
-    def set_value(self, value):
+    def get_value(self, handle=None, throw=None):
+        """Read the value from the device.
+
+        Args:
+            handle (str): Irrelevant in this case as a control system is not
+                           used, only supported to conform with the base class.
+            throw (bool): Irrelevant in this case as a control system is not
+                           used, only supported to conform with the base class.
+
+        Returns:
+            numeric: the value of the device.
+        """
+        return self.value
+
+    def set_value(self, value, throw=None):
         """Set the value on the device.
 
         Args:
-            value (?): the value to set.
+            value (numeric): the value to set.
+            throw (bool): Irrelevant in this case as a control system is not
+                           used, only supported to conform with the base class.
         """
         self.value = value
-
-    def get_value(self, handle=None):
-        """Read the value from the device.
-
-        Returns:
-            ?: the value of the PV.
-        """
-        return self.value
 
 
 class EpicsDevice(Device):
     """An EPICS-aware device.
 
-    Contains a control system, readback and setpoint PVs. A readback or setpoint
-    PV is required when creating an epics device otherwise a DataSourceException
-    is raised. The device is enabled by default.
+    Contains a control system, readback and setpoint PVs. A readback or
+    setpoint PV is required when creating an epics device otherwise a
+    DataSourceException is raised. The device is enabled by default.
 
     **Attributes:**
 
@@ -136,26 +152,14 @@ class EpicsDevice(Device):
         """
         return bool(self._enabled)
 
-    def set_value(self, value):
-        """Set the device value.
-
-        Args:
-            value (float): The value to set.
-
-        Raises:
-            HandleException: if no setpoint PV exists.
-        """
-        if self.sp_pv is None:
-            raise HandleException("Device {0} has no setpoint PV."
-                                  .format(self.name))
-        else:
-            self._cs.set_single(self.sp_pv, value)
-
-    def get_value(self, handle):
+    def get_value(self, handle, throw=True):
         """Read the value of a readback or setpoint PV.
 
         Args:
             handle (str): pytac.SP or pytac.RB.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False None will be returned for any PV that fails
+                           and log a warning.
 
         Returns:
             float: The value of the PV.
@@ -164,12 +168,29 @@ class EpicsDevice(Device):
             HandleException: if the requested PV doesn't exist.
         """
         if handle == pytac.RB and self.rb_pv:
-            return self._cs.get_single(self.rb_pv)
+            return self._cs.get_single(self.rb_pv, throw)
         elif handle == pytac.SP and self.sp_pv:
-            return self._cs.get_single(self.sp_pv)
+            return self._cs.get_single(self.sp_pv, throw)
         else:
             raise HandleException("Device {0} has no {1} PV."
                                   .format(self.name, handle))
+
+    def set_value(self, value, throw=True):
+        """Set the device value.
+
+        Args:
+            value (float): The value to set.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False log a warning.
+
+        Raises:
+            HandleException: if no setpoint PV exists.
+        """
+        if self.sp_pv is None:
+            raise HandleException("Device {0} has no setpoint PV."
+                                  .format(self.name))
+        else:
+            self._cs.set_single(self.sp_pv, value, throw)
 
     def get_pv_name(self, handle):
         """Get the PV name for the specified handle.

@@ -24,8 +24,9 @@ class CothreadControlSystem(ControlSystem):
         Args:
             pv (string): The process variable given as a string. It can be a
                          readback or a setpoint PV.
-            throw (bool): if True, ControlSystemException will be raised on
-                          failure
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False None will be returned for any PV that fails
+                           and log a warning.
 
         Returns:
             object: the current value of the given PV.
@@ -48,9 +49,9 @@ class CothreadControlSystem(ControlSystem):
 
         Args:
             pvs (sequence): PVs to get values of.
-            throw (bool): if True, ControlSystemException will be raised on
-                          failure. If False, None will be returned for any PV
-                          for which the get fails.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False None will be returned for any PV that fails
+                           and log a warning.
 
         Returns:
             sequence: the current values of the PVs.
@@ -81,8 +82,8 @@ class CothreadControlSystem(ControlSystem):
         Args:
             pv (string): PV to set the value of.
             value (object): The value to set the PV to.
-            throw (bool): if True, ControlSystemException will be raised on
-                          failure
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False log a warning.
 
         Returns:
             bool: True for success, False for failure
@@ -107,10 +108,10 @@ class CothreadControlSystem(ControlSystem):
         Args:
             pvs (sequence): PVs to set the values of.
             values (sequence): values to set to the PVs.
-            throw (bool): if True, ControlSystemException will be raised on
-                          failure. If False, a list of True and False values
-                          will be returned corresponding to successes and
-                          failures.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False return a list of True and False values
+                           corresponding to successes and failures and log a
+                           warning.
 
         Returns:
             list(bool): True for success, False for failure

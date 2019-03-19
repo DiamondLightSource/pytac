@@ -1,6 +1,7 @@
 """Module containing pytac data source classes."""
 import pytac
-from pytac.exceptions import DataSourceException, FieldException, HandleException
+from pytac.exceptions import (DataSourceException, FieldException,
+                              HandleException)
 
 
 class DataSource(object):
@@ -24,19 +25,22 @@ class DataSource(object):
         """
         raise NotImplementedError()
 
-    def get_value(self, field, handle):
+    def get_value(self, field, handle, throw):
         """Get a value for a field.
 
         Args:
             field (str): field of the requested value.
             handle (str): pytac.RB or pytac.SP
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False None will be returned for any PV that fails
+                           and log a warning.
 
         Returns:
             float: value for specified field and handle.
         """
         raise NotImplementedError()
 
-    def set_value(self, field, value):
+    def set_value(self, field, value, throw):
         """Set a value for a field.
 
         This is always set to pytac.SP, never pytac.RB.
@@ -44,6 +48,8 @@ class DataSource(object):
         Args:
             field (str): field to set.
             value (float): value to set.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False log a warning.
         """
         raise NotImplementedError()
 
@@ -164,7 +170,7 @@ class DataSourceManager(object):
                                  "manager {1}.".format(field, self))
 
     def get_value(self, field, handle=pytac.RB, units=pytac.DEFAULT,
-                  data_source=pytac.DEFAULT):
+                  data_source=pytac.DEFAULT, throw=True):
         """Get the value for a field.
 
         Returns the value of a field on the manager. This value is uniquely
@@ -178,6 +184,9 @@ class DataSourceManager(object):
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS returned.
             data_source (str): pytac.LIVE or pytac.SIM.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False None will be returned for any PV that fails
+                           and log a warning.
 
         Returns:
             float: The value of the requested field
@@ -192,7 +201,7 @@ class DataSourceManager(object):
             data_source = self.default_data_source
         try:
             data_source = self._data_sources[data_source]
-            value = data_source.get_value(field, handle)
+            value = data_source.get_value(field, handle, throw)
             return self._uc[field].convert(value, origin=data_source.units,
                                            target=units)
         except KeyError:
@@ -203,7 +212,7 @@ class DataSourceManager(object):
                                                                        self))
 
     def set_value(self, field, value, handle=pytac.SP, units=pytac.DEFAULT,
-                  data_source=pytac.DEFAULT):
+                  data_source=pytac.DEFAULT, throw=True):
         """Set the value for a field.
 
         This sets a value on the machine or the simulation. If handle,units or
@@ -215,6 +224,8 @@ class DataSourceManager(object):
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False log a warning.
 
         Raises:
             HandleException: if the specified handle is not pytac.SP.
@@ -235,7 +246,7 @@ class DataSourceManager(object):
         try:
             value = self._uc[field].convert(value, origin=units,
                                             target=data_source.units)
-            data_source.set_value(field, value)
+            data_source.set_value(field, value, throw)
         except KeyError:
             raise FieldException("No field {0} on manager {1}.".format(field,
                                                                        self))
@@ -296,13 +307,16 @@ class DeviceDataSource(DataSource):
         """
         return self._devices.keys()
 
-    def get_value(self, field, handle):
+    def get_value(self, field, handle, throw=True):
         """Get the value of a readback or setpoint PV for a field from the
         data_source.
 
         Args:
             field (str): field of the requested value.
             handle (str): pytac.RB or pytac.SP.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False None will be returned for any PV that fails
+                           and log a warning.
 
         Returns:
             float: The value of the PV.
@@ -311,24 +325,26 @@ class DeviceDataSource(DataSource):
             FieldException: if the device does not have the specified field.
         """
         try:
-            return self._devices[field].get_value(handle)
+            return self._devices[field].get_value(handle, throw)
         except KeyError:
             raise FieldException("No field {0} on data source {1}."
                                  .format(field, self))
 
-    def set_value(self, field, value):
+    def set_value(self, field, value, throw=True):
         """Set the value of a readback or setpoint PV for a field from the
         data_source.
 
         Args:
             field (str): field for the requested value.
             value (float): The value to set on the PV.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False log a warning.
 
         Raises:
             FieldException: if the device does not have the specified field.
         """
         try:
-            self._devices[field].set_value(value)
+            self._devices[field].set_value(value, throw)
         except KeyError:
             raise FieldException("No field {0} on data source {1}."
                                  .format(field, self))

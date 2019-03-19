@@ -30,9 +30,9 @@ To run the tests::
 
  $ python -m pytest
 
-To see a coverage report, check pep8 and pyflakes::
+To see a coverage report, check pytest-cov::
 
- $ python -m pytest --cov=pytac --pep8 --flakes
+ $ python -m pytest --cov-report term-missing --cov=pytac
 
 To build the documentation::
 

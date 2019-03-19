@@ -5,14 +5,14 @@ from constants import DUMMY_ARRAY, RB_PV, SP_PV
 import pytac
 
 
-def test_get_values(simple_epics_lattice):
+def test_get_values(simple_epics_lattice, mock_cs):
     simple_epics_lattice.get_element_values('family', 'x', pytac.RB)
-    simple_epics_lattice._cs.get_multiple.assert_called_with([RB_PV])
+    mock_cs.get_multiple.assert_called_with([RB_PV])
 
 
-def test_set_element_values(simple_epics_lattice):
+def test_set_element_values(simple_epics_lattice, mock_cs):
     simple_epics_lattice.set_element_values('family', 'x', [1])
-    simple_epics_lattice._cs.set_multiple.assert_called_with([SP_PV], [1])
+    mock_cs.set_multiple.assert_called_with([SP_PV], [1])
 
 
 @pytest.mark.parametrize('dtype, expected',
@@ -24,11 +24,11 @@ def test_set_element_values(simple_epics_lattice):
                                                     dtype=numpy.bool_)),
                           (None, DUMMY_ARRAY)))
 def test_get_values_returns_numpy_array_if_requested(simple_epics_lattice,
-                                                     dtype, expected):
+                                                     dtype, expected, mock_cs):
     values = simple_epics_lattice.get_element_values('family', 'x', pytac.RB,
                                                      dtype=dtype)
     numpy.testing.assert_equal(values, expected)
-    simple_epics_lattice._cs.get_multiple.assert_called_with([RB_PV])
+    mock_cs.get_multiple.assert_called_with([RB_PV])
 
 
 @pytest.mark.parametrize('pv_type', ['readback', 'setpoint'])
@@ -47,13 +47,13 @@ def test_get_lattice_pv_name(pv_type, simple_epics_lattice):
         simple_epics_lattice.get_pv_name('not_a_field', pv_type)
 
 
-def test_get_value_uses_cs_if_data_source_live(simple_epics_element):
+def test_get_value_uses_cs_if_data_source_live(simple_epics_element, mock_cs):
     simple_epics_element.get_value('x', handle=pytac.SP,
                                    data_source=pytac.LIVE)
-    simple_epics_element.get_device('x')._cs.get_single.assert_called_with(SP_PV)
+    mock_cs.get_single.assert_called_with(SP_PV, True)
     simple_epics_element.get_value('x', handle=pytac.RB,
                                    data_source=pytac.LIVE)
-    simple_epics_element.get_device('x')._cs.get_single.assert_called_with(RB_PV)
+    mock_cs.get_single.assert_called_with(RB_PV, True)
 
 
 def test_get_value_raises_HandleExceptions(simple_epics_element):
@@ -63,6 +63,8 @@ def test_get_value_raises_HandleExceptions(simple_epics_element):
 
 def test_lattice_get_pv_name_raises_DataSourceException(simple_epics_lattice):
     basic_epics_lattice = simple_epics_lattice
+    with pytest.raises(pytac.exceptions.DataSourceException):
+        basic_epics_lattice.get_pv_name('basic', pytac.RB)
     del basic_epics_lattice._data_source_manager._data_sources[pytac.LIVE]
     with pytest.raises(pytac.exceptions.DataSourceException):
         basic_epics_lattice.get_pv_name('x', pytac.RB)
@@ -79,6 +81,8 @@ def test_element_get_pv_name_raises_exceptions(simple_epics_element):
     with pytest.raises(pytac.exceptions.FieldException):
         simple_epics_element.get_pv_name('unknown_field', 'setpoint')
     basic_epics_element = simple_epics_element
+    with pytest.raises(pytac.exceptions.DataSourceException):
+        basic_epics_element.get_pv_name('basic', pytac.RB)
     del basic_epics_element._data_source_manager._data_sources[pytac.LIVE]
     with pytest.raises(pytac.exceptions.DataSourceException):
         basic_epics_element.get_pv_name('x', pytac.RB)

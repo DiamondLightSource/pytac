@@ -42,12 +42,12 @@ for i = 1:length(db_indexes)
     fprintf(f_units, '%d,%s,null,%d,%s,%s\n', renamedIndexes(db_indexes(i)), 'db0', 0, 'm^-1', 'A');
 end
 rfs = getfamilydata('RF');
-if length(rfs.ElementList) > 1
+if length(rfs.ElementList) == 1
+    fprintf(f_units, '%d,%s,null,%d,%s,%s\n', renamedIndexes(family2atindex('RF')), 'f', 0, 'Hz', 'Hz');
+else
     for i = 1:length(rfs.AT.ATIndex)
         fprintf(f_units, '%d,%s,null,%d,%s,%s\n', renamedIndexes(rfs.AT.ATIndex(i)), 'f', 0, 'Hz', 'Hz');
     end
-else
-    fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 1490, 'f', 0, 'Hz', 'Hz');
 end
 
 for i = 1:length(quad_families)
