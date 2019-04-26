@@ -20,18 +20,11 @@ fprintf(f_pchip, 'uc_id,eng,phy\n');
 quad_families = findmemberof('QUAD');
 sext_families = findmemberof('SEXT');
 
-% Unit conversions for lattice fields
-fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', 0, 'energy', 0, 'Gev', 'Mev');
-fprintf(f_poly, '%d,%d,%f\n', 0, 0, 0);
-fprintf(f_poly, '%d,%d,%f\n', 0, 1, 1e-6);
-
 % Lattice null unit conversions
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 's_position', 0, 'm', 'm');
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'beta', 0, 'm', 'm');
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'dispersion', 0, 'm', 'm');
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'emittance_x', 0, 'nm', 'nm');
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'emittance_y', 0, 'pm', 'pm');
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'beam_current', 0, 'A', 'A');
+fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 's_position', uc_id, 'm', 'm');
+fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'beta', uc_id, 'm', 'm');
+fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'dispersion', uc_id, 'm', 'm');
+fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'beam_current', uc_id, 'A', 'A');
 
 % Element null unit conversions
 s_data = getfamilydata('BBVMXS');
@@ -50,6 +43,21 @@ else
     end
 end
 
+% Unit conversions for lattice fields
+uc_id = uc_id + 1;
+fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', 0, 'energy', uc_id, 'Gev', 'Mev');
+fprintf(f_poly, '%d,%d,%f\n', uc_id, 0, 0);
+fprintf(f_poly, '%d,%d,%g\n', uc_id, 1, 1e-6);
+uc_id = uc_id + 1;
+fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', 0, 'emittance_x', uc_id, 'm', 'nm');
+fprintf(f_poly, '%d,%d,%f\n', uc_id, 0, 0);
+fprintf(f_poly, '%d,%d,%g\n', uc_id, 1, 1e-9);
+uc_id = uc_id + 1;
+fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', 0, 'emittance_y', uc_id, 'm', 'pm');
+fprintf(f_poly, '%d,%d,%f\n', uc_id, 0, 0);
+fprintf(f_poly, '%d,%d,%g\n', uc_id, 1, 1e-12);
+
+% Unit conversions for element fields
 for i = 1:length(quad_families)
     write_multipole_section(quad_families{i}, 'b1', renamedIndexes, 'm^-2', 'A');
 end
