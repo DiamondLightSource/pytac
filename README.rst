@@ -34,6 +34,10 @@ To see a coverage report, check pytest-cov::
 
  $ python -m pytest --cov-report term-missing --cov=pytac
 
+To see style violations, use flake8::
+
+ $ flake8
+
 To build the documentation::
 
  $ cd docs

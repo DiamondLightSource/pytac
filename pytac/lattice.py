@@ -78,7 +78,7 @@ class Lattice(object):
         Includes all fields defined by all data sources.
 
         Returns:
-            dict: A dictionary of all the fields defined on the manager,
+            dict: A dictionary of all the fields defined on the lattice,
                    separated by data source(key).
         """
         return self._data_source_manager.get_fields()
@@ -503,8 +503,12 @@ class EpicsLattice(Lattice):
         Returns:
             list or array: The requested values.
         """
-        pv_names = self.get_element_pv_names(family, field, handle)
-        values = self._cs.get_multiple(pv_names)
+        if self.get_default_data_source() == pytac.LIVE:
+            pv_names = self.get_element_pv_names(family, field, handle)
+            values = self._cs.get_multiple(pv_names)
+        else:
+            elements = self.get_elements(family)
+            values = [element.get_value(field, handle) for element in elements]
         if dtype is not None:
             values = numpy.array(values, dtype=dtype)
         return values
@@ -522,9 +526,20 @@ class EpicsLattice(Lattice):
             IndexError: if the given list of values doesn't match the number of
                          elements in the family.
         """
-        pv_names = self.get_element_pv_names(family, field, pytac.SP)
-        if len(pv_names) != len(values):
-            raise IndexError("Number of elements in given array({0}) must be "
-                             "equal to the number of elements in the "
-                             "family({1}).".format(len(values), len(pv_names)))
-        self._cs.set_multiple(pv_names, values)
+        if self.get_default_data_source() == pytac.LIVE:
+            pv_names = self.get_element_pv_names(family, field, pytac.SP)
+            if len(pv_names) != len(values):
+                raise IndexError("Number of elements in given array({0}) must "
+                                 "be equal to the number of elements in the "
+                                 "family({1}).".format(len(values),
+                                                       len(pv_names)))
+            self._cs.set_multiple(pv_names, values)
+        else:
+            elements = self.get_elements(family)
+            if len(elements) != len(values):
+                raise IndexError("Number of elements in given array({0}) must "
+                                 "be equal to the number of elements in the "
+                                 "family({1}).".format(len(values),
+                                                       len(elements)))
+            for element, value in zip(elements, values):
+                element.set_value(field, value, handle=pytac.SP)

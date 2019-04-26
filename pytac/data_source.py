@@ -56,7 +56,7 @@ class DataSource(object):
 
 class DataSourceManager(object):
     """Class that manages all the data sources and UnitConv objects associated
-        with a lattice or element.
+    with a lattice or element.
 
     It recieves requests from a lattice or element object and directs them to
     the correct data source. The unit conversion objects for all fields are

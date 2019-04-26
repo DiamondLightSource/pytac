@@ -6,7 +6,7 @@ API Documentation
     :undoc-members:
     :show-inheritance:
 
-pytac.cothread_cs module
+pytac.cs module
 ---------------
 
 .. automodule:: pytac.cs
@@ -15,7 +15,7 @@ pytac.cothread_cs module
     :show-inheritance:
 
 pytac.data_source module
--------------------
+------------------------
 
 .. automodule:: pytac.data_source
     :members:
@@ -39,7 +39,7 @@ pytac.element module
     :show-inheritance:
 
 pytac.exceptions module
---------------------
+-----------------------
 
 .. automodule:: pytac.exceptions
     :members:

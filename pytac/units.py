@@ -208,9 +208,12 @@ class PolyUnitConv(UnitConv):
         if len(roots) == 1:
             x = roots[0]
             return x
-        else:
+        elif len(roots) == 0:
             raise UnitsException("A corresponding engineering value does not "
-                                 "exist, or there are multiple:", roots)
+                                 "exist.")
+        else:
+            raise UnitsException("There are multiple corresponding engineering"
+                                 " values: {0}".format(roots))
 
 
 class PchipUnitConv(UnitConv):

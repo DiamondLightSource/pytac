@@ -51,13 +51,16 @@ class Device(object):
 
 
 class BasicDevice(Device):
-    """A basic implementation of the device class. This device does not have a
-        pv associated with it, nor does it interact with a simulator. In short
-        this device acts as simple storage for data that rarely changes, as it
-        is not affected by changes to other aspects of the accelerator.
+    """A basic implementation of the device class.
+
+    This device does not have a PV associated with it, nor does it interact
+    with a simulator. In short this device acts as simple storage for data
+    that rarely changes, as it is not affected by changes to other aspects of
+    the accelerator.
     """
     def __init__(self, value, enabled=True):
-        """Args:
+        """
+        Args:
             value (numeric): can be a number or a list of numbers.
             enabled (bool-like): Whether the device is enabled. May be a
                                   PvEnabler object.
