@@ -215,6 +215,21 @@ class Element(object):
             raise FieldException("Element {0} does not have field {1}."
                                  .format(self, field))
 
+    def get_unit_conversion_object(self, field):
+        """Get the unit conversion object for the given field on this element.
+
+        Args:
+            field (str): The field for which to return the unit conv.
+
+        Returns:
+            obj: the unit conv object.
+        """
+        try:
+            return self._data_source_manager._uc[field]
+        except KeyError:
+            raise FieldException("Element {0} does not have field {1} on any "
+                                 "data source.".format(self, field))
+
 
 class EpicsElement(Element):
     """EPICS-aware element.
