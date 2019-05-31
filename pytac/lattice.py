@@ -21,24 +21,52 @@ class Lattice(object):
 
     Attributes:
         name (str): The name of the lattice.
+        symmetry (int): The symmetry of the lattice (the number of cells).
 
     .. Private Attributes:
            _elements (list): The list of all the element objects in the lattice
-           _cs (ControlSystem): The control system used to store the values on
-                                 a PV.
            _data_source_manager (DataSourceManager): A class that manages the
                                                       data sources associated
                                                       with this lattice.
     """
-    def __init__(self, name):
+    def __init__(self, name, symmetry=6):
         """Args:
             name (str): The name of the lattice.
+            symmetry (int): The symmetry of the lattice (the number of cells).
 
         **Methods:**
         """
         self.name = name
+        self.symmetry = symmetry
         self._elements = []
         self._data_source_manager = DataSourceManager()
+
+    @property
+    def cell_length(self):
+        """float: The average length of a cell in the lattice.
+        """
+        return self.get_length() / self.symmetry
+
+    @property
+    def cell_bounds(self):
+        """list (str): The indexes of elements in which a cell boundary occurs.
+
+        Examples:
+            A lattice of 3 equal length elements with 2 fold symmetry would
+            return [1, 2, 3]
+            1 - because it is the start of the first cell.
+            2 - because the boundary between the first and second cells occurs
+                halfway into its length.
+            3 - (len(lattice)) because it is the end of the second (last) cell.
+        """
+        bounds = [1]
+        for cell in range(2, self.symmetry + 1, 1):
+            for elem in self._elements[bounds[-1]:]:
+                if elem.cell == cell:
+                    bounds.append(elem.index)
+                    break
+        bounds.append(len(self._elements))
+        return bounds
 
     def __getitem__(self, n):
         """Get the (n + 1)th element of the lattice.
@@ -215,17 +243,18 @@ class Lattice(object):
         Returns:
             float: The length of the lattice (m).
         """
-        total_length = 0
+        total_length = 0.0
         for e in self._elements:
             total_length += e.length
         return total_length
 
     def add_element(self, element):
-        """Append an element to the lattice.
+        """Append an element to the lattice and update its lattice reference.
 
         Args:
             element (Element): element to append.
         """
+        element._lattice = self
         self._elements.append(element)
 
     def get_elements(self, family=None, cell=None):
@@ -450,17 +479,32 @@ class EpicsLattice(Lattice):
 
     Allows efficient get_values() and set_values() methods, and adds
     get_pv_names() method.
+
+    **Attributes:**
+
+    Attributes:
+        name (str): The name of the lattice.
+        symmetry (int): The symmetry of the lattice (the number of cells).
+
+    .. Private Attributes:
+           _elements (list): The list of all the element objects in the lattice
+           _cs (ControlSystem): The control system to use for the more
+                                 efficient batch getting and setting of PVs.
+           _data_source_manager (DataSourceManager): A class that manages the
+                                                      data sources associated
+                                                      with this lattice.
     """
-    def __init__(self, name, epics_cs):
+    def __init__(self, name, epics_cs, symmetry=6):
         """
         Args:
             name (str): The name of the epics lattice.
             epics_cs (ControlSystem): The control system used to store the
                                        values on a PV.
+            symmetry (int): The symmetry of the lattice (the number of cells).
 
         **Methods:**
         """
-        super(EpicsLattice, self).__init__(name)
+        super(EpicsLattice, self).__init__(name, symmetry)
         self._cs = epics_cs
 
     def get_pv_name(self, field, handle):
@@ -477,11 +521,11 @@ class EpicsLattice(Lattice):
             return (self._data_source_manager._data_sources[pytac.LIVE]
                     .get_device(field).get_pv_name(handle))
         except KeyError:
-            raise DataSourceException("Lattice {0} has no device for field"
-                                      " {1}.".format(self, field))
+            raise DataSourceException("Lattice {0} has no device for field "
+                                      "{1}.".format(self, field))
         except AttributeError:
-            raise DataSourceException("Cannot get PV for field {0} on lattice"
-                                      " {1}, as basic devices do not have "
+            raise DataSourceException("Cannot get PV for field {0} on lattice "
+                                      "{1}, as basic devices do not have "
                                       "associated PV's.".format(field, self))
 
     def get_element_pv_names(self, family, field, handle):

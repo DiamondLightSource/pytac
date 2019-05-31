@@ -148,27 +148,22 @@ def load(mode, control_system=None, directory=None):
             control_system = cothread_cs.CothreadControlSystem()
     except ImportError:
         raise ControlSystemException("Please install cothread to load a "
-                                     "lattice using the default control system"
-                                     " (found in cothread_cs.py).")
+                                     "lattice using the default control "
+                                     "system (found in cothread_cs.py).")
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
-    lat = lattice.EpicsLattice(mode, control_system)
+    lat = lattice.EpicsLattice(mode, control_system, symmetry=24)
     lat.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
-    s = 0.0
-    index = 1
     with open(os.path.join(directory, mode, ELEMENTS_FILENAME)) as elements:
         csv_reader = csv.DictReader(elements)
         for item in csv_reader:
             length = float(item['length'])
             cell = int(item['cell']) if item['cell'] else None
-            e = element.EpicsElement(item['name'], length, item['type'], s,
-                                     index, cell)
+            e = element.EpicsElement(item['name'], length, item['type'], lat)
             e.add_to_family(item['type'])
             e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)
-            s += length
-            index += 1
     with open(os.path.join(directory, mode, DEVICES_FILENAME)) as devices:
         csv_reader = csv.DictReader(devices)
         for item in csv_reader:

@@ -212,8 +212,8 @@ class PolyUnitConv(UnitConv):
             raise UnitsException("A corresponding engineering value does not "
                                  "exist.")
         else:
-            raise UnitsException("There are multiple corresponding engineering"
-                                 " values: {0}".format(roots))
+            raise UnitsException("There are multiple corresponding "
+                                 "engineering values: {0}".format(roots))
 
 
 class PchipUnitConv(UnitConv):
@@ -267,7 +267,7 @@ class PchipUnitConv(UnitConv):
         # constructor.
         y_diff = numpy.diff(y)
         if not ((numpy.all(y_diff > 0)) or (numpy.all((y_diff < 0)))):
-            raise ValueError("y coefficients must be monotonically"
+            raise ValueError("y coefficients must be monotonically "
                              "increasing or decreasing.")
 
     def _raw_eng_to_phys(self, eng_value):
@@ -310,8 +310,8 @@ class PchipUnitConv(UnitConv):
                 else:
                     # I believe this should never happen because of the
                     # requirement for self.y to be monotonically increasing.
-                    raise UnitsException("More than one solution within Pchip"
-                                         " bounds.")
+                    raise UnitsException("More than one solution within Pchip "
+                                         "bounds.")
         if unique_root is None:
             raise UnitsException("No solution within Pchip bounds.")
         return unique_root
