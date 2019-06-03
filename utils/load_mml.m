@@ -19,7 +19,7 @@ function load_mml(ringmode)
     cd(dir);
     elements_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'elements.csv');
     f_elements = fopen(elements_file, 'wt', 'n', 'utf-8');
-    fprintf(f_elements, 'id,name,type,length,cell\n');
+    fprintf(f_elements, 'id,name,type,length\n');
     devices_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'devices.csv');
     f_devices = fopen(devices_file, 'w');
     fprintf(f_devices, 'id,name,field,get_pv,set_pv\n');
@@ -229,7 +229,6 @@ function load_mml(ringmode)
     function insertelement(i, old_i, at_elem)
         type = gettype(at_elem);
         fprintf(f_families, '%i,%s\n', i, at_elem.FamName);
-        cell = getcell(old_i, at_elem.FamName);
 
         % Elements with additional PVs require an extra group added.
         % The ATIndex array lists the original indexes, so we need
@@ -244,20 +243,7 @@ function load_mml(ringmode)
             end
         end
 
-        fprintf(f_elements, '%d,%d,%s,%f,%d\n', i, i, type, at_elem.Length, cell);
-    end
-
-    function cell = getcell(old_i, family)
-        % Special case - the MML family is either BPMx or BPMy
-        if strcmp(family, 'BPM')
-            family = 'BPMx';
-        end
-        cell = '';
-        familydata = getfamilydata(family);
-        if ~isempty(familydata) && isfield(familydata, 'AT')
-            family_index = familydata.AT.ATIndex == old_i;
-            cell = floor(familydata.DeviceList(family_index, 1));
-        end
+        fprintf(f_elements, '%d,%d,%s,%f\n', i, i, type, at_elem.Length);
     end
 
 end
