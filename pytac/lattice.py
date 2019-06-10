@@ -479,6 +479,15 @@ class Lattice(object):
             raise FieldException("Lattice {0} does not have field {1} on any "
                                  "data source.".format(self, field))
 
+    def set_unit_conversion_object(self, field, unit_conv):
+        """Set the unit conversion object for the given field on this lattice.
+
+        Args:
+            field (str): The field on which to set the unit conv.
+            unit_conv (UnitConv): The unit conversion object to add.
+        """
+        self._data_source_manager._uc[field] = unit_conv
+
 
 class EpicsLattice(Lattice):
     """EPICS-aware lattice class.

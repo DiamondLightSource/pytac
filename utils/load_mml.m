@@ -19,13 +19,13 @@ function load_mml(ringmode)
     cd(dir);
     elements_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'elements.csv');
     f_elements = fopen(elements_file, 'wt', 'n', 'utf-8');
-    fprintf(f_elements, 'id,name,type,length\n');
+    fprintf(f_elements, 'name,type,length\n');
     devices_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'devices.csv');
     f_devices = fopen(devices_file, 'w');
-    fprintf(f_devices, 'id,name,field,get_pv,set_pv\n');
+    fprintf(f_devices, 'el_id,name,field,get_pv,set_pv\n');
     families_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'families.csv');
     f_families = fopen(families_file, 'w');
-    fprintf(f_families, 'id,family\n');
+    fprintf(f_families, 'el_id,family\n');
 
     global THERING;
     ao = getao();
@@ -243,7 +243,7 @@ function load_mml(ringmode)
             end
         end
 
-        fprintf(f_elements, '%d,%s,%s,%f\n', i, '', type, at_elem.Length);
+        fprintf(f_elements, '%s,%s,%f\n', '', type, at_elem.Length);
     end
 
 end

@@ -1,5 +1,5 @@
-id,name,type,length
-1,d1,drift,1
-2,q1,quad,0.5
-3,s1,sext,0.3
-4,d2,drift,0.8
+name,type,length
+d1,drift,1
+q1,quad,0.5
+s1,sext,0.3
+d2,drift,0.8

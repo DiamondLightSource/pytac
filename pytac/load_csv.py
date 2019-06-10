@@ -100,25 +100,30 @@ def load_unitconv(directory, mode, lattice):
         for item in csv_reader:
             if int(item['el_id']) == 0:
                 if item['uc_type'] != 'null':
-                    lattice._data_source_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
-                    lattice._data_source_manager._uc[item['field']].phys_units = item['phys_units']
-                    lattice._data_source_manager._uc[item['field']].eng_units = item['eng_units']
+                    uc = unitconvs[int(item['uc_id'])]
+                    uc.phys_units = item['phys_units']
+                    uc.eng_units = item['eng_units']
                 else:
-                    lattice._data_source_manager._uc[item['field']] = units.NullUnitConv(item['eng_units'], item['phys_units'])
+                    uc = units.NullUnitConv(item['eng_units'],
+                                            item['phys_units'])
+                lattice.set_unit_conversion_object(item['field'], uc)
             else:
                 element = lattice[int(item['el_id']) - 1]
                 # For certain magnet types, we need an additional rigidity
                 # conversion factor as well as the raw conversion.
                 if item['uc_type'] == 'null':
-                    element._data_source_manager._uc[item['field']] = units.NullUnitConv(item['eng_units'], item['phys_units'])
+                    uc = units.NullUnitConv(item['eng_units'],
+                                            item['phys_units'])
                 else:
+                    uc = unitconvs[int(item['uc_id'])]
                     if element.families.intersection(('HSTR', 'VSTR', 'QUAD',
                                                       'SEXT')):
-                        unitconvs[int(item['uc_id'])]._post_eng_to_phys = utils.get_div_rigidity(lattice.get_value('energy', units=pytac.PHYS))
-                        unitconvs[int(item['uc_id'])]._pre_phys_to_eng = utils.get_mult_rigidity(lattice.get_value('energy', units=pytac.PHYS))
-                    element._data_source_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
-                    element._data_source_manager._uc[item['field']].phys_units = item['phys_units']
-                    element._data_source_manager._uc[item['field']].eng_units = item['eng_units']
+                        energy = lattice.get_value('energy', units=pytac.PHYS)
+                        uc._post_eng_to_phys = utils.get_div_rigidity(energy)
+                        uc._pre_phys_to_eng = utils.get_mult_rigidity(energy)
+                    uc.phys_units = item['phys_units']
+                    uc.eng_units = item['eng_units']
+                element.set_unit_conversion_object(item['field'], uc)
 
 
 def load(mode, control_system=None, directory=None, symmetry=None):

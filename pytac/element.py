@@ -57,7 +57,7 @@ class Element(object):
         if self._lattice is None:
             return None
         else:
-            return sum([elem.length for elem in self._lattice[:self.index-1]])
+            return sum([el.length for el in self._lattice[:self.index - 1]])
 
     @property
     def cell(self):
@@ -262,6 +262,15 @@ class Element(object):
         except KeyError:
             raise FieldException("Element {0} does not have field {1} on any "
                                  "data source.".format(self, field))
+
+    def set_unit_conversion_object(self, field, unit_conv):
+        """Set the unit conversion object for the given field on this element.
+
+        Args:
+            field (str): The field on which to set the unit conv.
+            unit_conv (UnitConv): The unit conversion object to add.
+        """
+        self._data_source_manager._uc[field] = unit_conv
 
 
 class EpicsElement(Element):
