@@ -29,7 +29,7 @@ class Lattice(object):
                                                       data sources associated
                                                       with this lattice.
     """
-    def __init__(self, name, symmetry=6):
+    def __init__(self, name, symmetry=None):
         """Args:
             name (str): The name of the lattice.
             symmetry (int): The symmetry of the lattice (the number of cells).
@@ -45,7 +45,10 @@ class Lattice(object):
     def cell_length(self):
         """float: The average length of a cell in the lattice.
         """
-        return self.get_length() / self.symmetry
+        if (self.symmetry is None) or (self.get_length() == 0):
+            return None
+        else:
+            return self.get_length() / self.symmetry
 
     @property
     def cell_bounds(self):
@@ -59,14 +62,17 @@ class Lattice(object):
                 halfway into its length.
             3 - (len(lattice)) because it is the end of the second (last) cell.
         """
-        bounds = [1]
-        for cell in range(2, self.symmetry + 1, 1):
-            for elem in self._elements[bounds[-1]:]:
-                if elem.cell == cell:
-                    bounds.append(elem.index)
-                    break
-        bounds.append(len(self._elements))
-        return bounds
+        if self.symmetry is None:
+            return None
+        else:
+            bounds = [1]
+            for cell in range(2, self.symmetry + 1, 1):
+                for elem in self._elements[bounds[-1]:]:
+                    if elem.cell == cell:
+                        bounds.append(elem.index)
+                        break
+            bounds.append(len(self._elements))
+            return bounds
 
     def __getitem__(self, n):
         """Get the (n + 1)th element of the lattice.

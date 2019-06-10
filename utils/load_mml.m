@@ -243,7 +243,7 @@ function load_mml(ringmode)
             end
         end
 
-        fprintf(f_elements, '%d,%d,%s,%f\n', i, i, type, at_elem.Length);
+        fprintf(f_elements, '%d,%s,%s,%f\n', i, '', type, at_elem.Length);
     end
 
 end

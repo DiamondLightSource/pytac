@@ -121,7 +121,7 @@ def load_unitconv(directory, mode, lattice):
                     element._data_source_manager._uc[item['field']].eng_units = item['eng_units']
 
 
-def load(mode, control_system=None, directory=None):
+def load(mode, control_system=None, directory=None, symmetry=None):
     """Load the elements of a lattice from a directory.
 
     Args:
@@ -132,6 +132,7 @@ def load(mode, control_system=None, directory=None):
         directory (str): Directory where to load the files from. If no
                           directory is given the data directory at the root of
                           the repository is used.
+        symmetry (int): The symmetry of the lattice (the number of cells).
 
     Returns:
         Lattice: The lattice containing all elements.
@@ -153,14 +154,14 @@ def load(mode, control_system=None, directory=None):
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
-    lat = lattice.EpicsLattice(mode, control_system, symmetry=24)
+    lat = lattice.EpicsLattice(mode, control_system, symmetry=symmetry)
     lat.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
     with open(os.path.join(directory, mode, ELEMENTS_FILENAME)) as elements:
         csv_reader = csv.DictReader(elements)
         for item in csv_reader:
-            length = float(item['length'])
-            cell = int(item['cell']) if item['cell'] else None
-            e = element.EpicsElement(item['name'], length, item['type'], lat)
+            name = item['name'] if item['name'] != '' else None
+            e = element.EpicsElement(float(item['length']), item['type'],
+                                     name, lat)
             e.add_to_family(item['type'])
             e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)

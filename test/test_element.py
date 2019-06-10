@@ -6,14 +6,14 @@ import pytac.device
 
 
 def test_create_element():
-    e = pytac.element.Element('bpm1', 6.0, 'bpm', 0.0)
-    e.add_to_family('BPM')
-    assert 'BPM' in e.families
+    e = pytac.element.Element(6.0, 'BPM', 'bpm1')
     assert e.length == 6.0
+    assert e.type_ == 'BPM'
+    assert e.name == 'bpm1'
 
 
 def test_add_element_to_family():
-    e = pytac.element.Element('dummy', 6.0, 'Quad', 0.0)
+    e = pytac.element.Element(6.0, 'QUAD', 'dummy')
     e.add_to_family('fam')
     assert 'fam' in e.families
 

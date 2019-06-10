@@ -91,7 +91,9 @@ def test_lattice_get_elements_with_family(simple_lattice):
 
 def test_lattice_get_elements_by_cell(simple_lattice):
     elem = simple_lattice[0]
+    elem.length = 0.1  # length hacking as cells require a non-zero...
     assert simple_lattice.get_elements(cell=1) == [elem]
+    elem.length = 0.0  # ...length lattice to work.
     with pytest.raises(ValueError):
         simple_lattice.get_elements(cell=2)
 
@@ -136,20 +138,20 @@ def test_set_element_values_length_mismatch_raises_IndexError(simple_lattice):
 def test_get_family_s(simple_lattice):
     assert simple_lattice.get_family_s('family') == [0]
 
-    element2 = Element(2, 1.0, 'family', 0.0)
+    element2 = Element(1.0, 'family')
     element2.add_to_family('family')
     simple_lattice.add_element(element2)
     assert simple_lattice.get_family_s('family') == [0, 0]
 
-    element3 = Element(3, 1.5, 'family', 1.0)
+    element3 = Element(2.5, 'family')
     element3.add_to_family('family')
     simple_lattice.add_element(element3)
     assert simple_lattice.get_family_s('family') == [0, 0, 1.0]
 
-    element4 = Element(3, 1.5, 'family', 2.5)
+    element4 = Element(0.0, 'family')
     element4.add_to_family('family')
     simple_lattice.add_element(element4)
-    assert simple_lattice.get_family_s('family') == [0, 0, 1.0, 2.5]
+    assert simple_lattice.get_family_s('family') == [0, 0, 1.0, 3.5]
 
 
 def test_get_default_arguments(simple_lattice):

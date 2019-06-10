@@ -24,12 +24,12 @@ class Element(object):
                                                       data sources associated
                                                       with this element.
     """
-    def __init__(self, name, length, element_type, lattice=None):
+    def __init__(self, length, element_type, name=None, lattice=None):
         """
         Args:
-            name (int): The unique identifier for the element in the ring.
             length (float): The length of the element.
             element_type (str): The type of the element.
+            name (str): The unique identifier for the element in the ring.
             lattice (Lattice): The lattice to which the element belongs.
 
         **Methods:**
@@ -57,7 +57,7 @@ class Element(object):
         if self._lattice is None:
             return None
         else:
-            return sum([elem.length for elem in self._lattice[:self.index]])
+            return sum([elem.length for elem in self._lattice[:self.index-1]])
 
     @property
     def cell(self):
@@ -66,7 +66,9 @@ class Element(object):
         N.B. If the element spans multiple cells then the cell it begins in is
         returned (lowest cell number).
         """
-        if self._lattice is None:
+        if (self._lattice is None) or (self.s is None):
+            return None
+        elif self._lattice.cell_length is None:
             return None
         else:
             return int(self.s / self._lattice.cell_length) + 1
@@ -77,9 +79,16 @@ class Element(object):
         Returns:
             str: A representation of an element.
         """
-        repn = '<Element {0}, length {1} m, families {2}>'
-        return repn.format(self.name, self.length, ', '.join(f for f in
-                                                             self.families))
+        repn = "<Element "
+        if self.name is not None:
+            repn += "'{0}', ".format(self.name)
+        if self.index is not None:
+            repn += "index {0}, ".format(self.index)
+        repn += "length {0} m, ".format(self.length)
+        if self.cell is not None:
+            repn += "cell {0}, ".format(self.cell)
+        repn += "families {0}>".format(', '.join(f for f in self.families))
+        return repn
 
     __repr__ = __str__
 
