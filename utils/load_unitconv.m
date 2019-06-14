@@ -13,12 +13,11 @@ f_poly = fopen(poly_file, 'w');
 f_pchip = fopen(pchip_file, 'w');
 uc_id = 0;
 
+% Add title rows.
 fprintf(f_units, 'el_id,field,uc_type,uc_id,phys_units,eng_units\n');
 fprintf(f_poly, 'uc_id,coeff,val\n');
 fprintf(f_pchip, 'uc_id,eng,phy\n');
 
-quad_families = findmemberof('QUAD');
-sext_families = findmemberof('SEXT');
 
 % Lattice null unit conversions
 fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 's_position', uc_id, 'm', 'm');
@@ -58,10 +57,12 @@ fprintf(f_poly, '%d,%d,%f\n', uc_id, 0, 0);
 fprintf(f_poly, '%d,%d,%g\n', uc_id, 1, 1e-12);
 
 % Unit conversions for element fields
+quad_families = findmemberof('QUAD');
 for i = 1:length(quad_families)
     write_multipole_section(quad_families{i}, 'b1', renamedIndexes, 'm^-2', 'A');
 end
 
+sext_families = findmemberof('SEXT');
 for i = 1:length(sext_families)
     write_multipole_section(sext_families{i}, 'b2', renamedIndexes, 'm^-3', 'A');
 end
@@ -78,6 +79,20 @@ for i = 1:length(bpms.AT.ATIndex)
     fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(bpms.AT.ATIndex(i)), 'y', bpm_uc_id, 'mm', 'm'); 
 end
 
+htrim = getfamilydata('HTRIM');
+for i = 1:length(htrim.AT.ATIndex)
+    data = el_cal_data(htrim.Monitor.ChannelNames(i,:));
+    id = write_linear_data(data.field(2) / data.current(2), 0);
+    fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(htrim.AT.ATIndex(i)), 'x_kick', id, '', 'A');
+end
+
+vtrim = getfamilydata('VTRIM');
+for i = 1:length(vtrim.AT.ATIndex)
+    data = el_cal_data(vtrim.Monitor.ChannelNames(i,:));
+    id = write_linear_data(data.field(2) / data.current(2), 0);
+    fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(vtrim.AT.ATIndex(i)), 'x_kick', id, '', 'A');
+end
+
 % The skew quadrupoles are windings on the sextupoles, but there is no
 % separate element so this works correctly (see below).
 write_multipole_section('SQUAD', 'a1', renamedIndexes, 'm^-2', 'A');
@@ -89,18 +104,18 @@ sext_data = getfamilydata('SEXT_');
 sext_indices = sext_data.AT.ATIndex;
 
 hcor = getfamilydata('HCM');
-for i = 1:length(hcor.DeviceList)
+for i = 1:length(hcor.AT.ATIndex)
     data = el_cal_data(hcor.Monitor.ChannelNames(i,:));
     hcor_index = hcor.AT.ATIndex(i);
     if any(hcor_index == sext_indices)
         hcor_index = hcor_index + 1;
     end
     id = write_linear_data(data.field(2) / data.current(2), 0);
-    fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(hcor_index), 'x_kick', id, '', 'A'); 
+    fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(hcor_index), 'x_kick', id, '', 'A');
 end
 
 vcor = getfamilydata('VCM');
-for i = 1:length(vcor.DeviceList)
+for i = 1:length(vcor.AT.ATIndex)
     data = el_cal_data(vcor.Monitor.ChannelNames(i,:));
     vcor_index = vcor.AT.ATIndex(i);
     if any(vcor_index == sext_indices)

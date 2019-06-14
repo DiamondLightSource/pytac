@@ -35,8 +35,8 @@ function load_mml(ringmode)
 
     % Map from AT types to types in the accelerator object (ao).
     global TYPE_MAP;
-    keys = {'QUAD', 'SEXT', 'VSTR', 'HSTR', 'BEND'};
-    values = {'QUAD_', 'SEXT_', 'VCM', 'HCM', 'BB'};
+    keys = {'QUAD', 'SEXT', 'VSTR', 'HSTR', 'BEND', 'VTRIM', 'HTRIM'};
+    values = {'QUAD_', 'SEXT_', 'VCM', 'HCM', 'BB', 'VTRIM', 'HTRIM'};
     TYPE_MAP = containers.Map(keys, values);
 
     used_elements = containers.Map();
@@ -164,6 +164,10 @@ function load_mml(ringmode)
                 field = 'b2';
             elseif strcmp(type, 'BEND')
                 field = 'b0';
+            elseif strcmp(type, 'VTRIM')
+                field = 'y_kick';
+            elseif strcmp(type, 'HTRIM')
+                field = 'x_kick';
             elseif strcmp(type, 'VSTR')
                 field = 'y_kick';
                 alt_prefix = strrep(strrep(get_pv, 'DI', 'PC'), ':I', '');

@@ -179,10 +179,10 @@ def load(mode, control_system=None, directory=None, symmetry=None):
             pve = True
             d = device.EpicsDevice(name, control_system, pve, get_pv, set_pv)
             # Devices on index 0 are attached to the lattice not elements.
-            if int(item['id']) == 0:
+            if int(item['el_id']) == 0:
                 lat.add_device(item['field'], d, DEFAULT_UC)
             else:
-                lat[int(item['id']) - 1].add_device(item['field'], d,
+                lat[int(item['el_id']) - 1].add_device(item['field'], d,
                                                     DEFAULT_UC)
         # Add basic devices to the lattice.
         positions = []
@@ -193,7 +193,7 @@ def load(mode, control_system=None, directory=None, symmetry=None):
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)
         for item in csv_reader:
-            lat[int(item['id']) - 1].add_to_family(item['family'])
+            lat[int(item['el_id']) - 1].add_to_family(item['family'])
     if os.path.exists(os.path.join(directory, mode, UNITCONV_FILENAME)):
         load_unitconv(directory, mode, lat)
     return lat
