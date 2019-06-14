@@ -1,3 +1,4 @@
+import mock
 import numpy
 import pytest
 
@@ -5,14 +6,50 @@ from constants import DUMMY_ARRAY, RB_PV, SP_PV
 import pytac
 
 
-def test_get_values(simple_epics_lattice, mock_cs):
-    simple_epics_lattice.get_element_values('family', 'x', pytac.RB)
+def test_get_values_live(simple_epics_lattice, mock_cs):
+    simple_epics_lattice.get_element_values('family', 'x', pytac.RB,
+                                            pytac.PHYS)
     mock_cs.get_multiple.assert_called_with([RB_PV])
 
 
-def test_set_element_values(simple_epics_lattice, mock_cs):
-    simple_epics_lattice.set_element_values('family', 'x', [1])
+def test_get_values_sim(simple_epics_lattice):
+    mock_ds = mock.Mock(units=pytac.PHYS)
+    mock_uc = mock.Mock()
+    simple_epics_lattice[0].set_data_source(mock_ds, pytac.SIM)
+    simple_epics_lattice[0].set_unitconv('a_field', mock_uc)
+    simple_epics_lattice.get_element_values('family', 'a_field', pytac.RB,
+                                            pytac.ENG, pytac.SIM)
+    mock_ds.get_value.assert_called_with('a_field', pytac.RB, True)
+    mock_uc.convert.assert_called_once()
+
+
+def test_set_element_values_live(simple_epics_lattice, mock_cs):
+    simple_epics_lattice.set_element_values('family', 'x', [1],
+                                            units=pytac.PHYS)
     mock_cs.set_multiple.assert_called_with([SP_PV], [1])
+
+
+def test_set_element_values_sim(simple_epics_lattice):
+    mock_ds = mock.Mock(units=pytac.PHYS)
+    mock_uc = mock.Mock()
+    mock_uc.convert.return_value = 1
+    simple_epics_lattice[0].set_data_source(mock_ds, pytac.SIM)
+    simple_epics_lattice[0].set_unitconv('a_field', mock_uc)
+    simple_epics_lattice.set_element_values('family', 'a_field', [1], pytac.SP,
+                                            pytac.ENG, pytac.SIM)
+    mock_ds.set_value.assert_called_with('a_field', 1, True)
+    mock_uc.convert.assert_called_once_with(1, origin=pytac.ENG,
+                                            target=pytac.PHYS)
+
+
+def test_set_element_values_raises_correctly(simple_epics_lattice):
+    with pytest.raises(pytac.exceptions.HandleException):
+        simple_epics_lattice.set_element_values('family', 'x', [1], pytac.RB)
+    with pytest.raises(IndexError):
+        simple_epics_lattice.set_element_values('family', 'x', [1, 2])
+    with pytest.raises(IndexError):
+        simple_epics_lattice.set_element_values('family', 'x', [1, 2],
+                                                data_source=pytac.SIM)
 
 
 @pytest.mark.parametrize('dtype, expected',

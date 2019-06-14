@@ -106,7 +106,7 @@ def load_unitconv(directory, mode, lattice):
                 else:
                     uc = units.NullUnitConv(item['eng_units'],
                                             item['phys_units'])
-                lattice.set_unit_conversion_object(item['field'], uc)
+                lattice.set_unitconv(item['field'], uc)
             else:
                 element = lattice[int(item['el_id']) - 1]
                 # For certain magnet types, we need an additional rigidity
@@ -123,7 +123,7 @@ def load_unitconv(directory, mode, lattice):
                         uc._pre_phys_to_eng = utils.get_mult_rigidity(energy)
                     uc.phys_units = item['phys_units']
                     uc.eng_units = item['eng_units']
-                element.set_unit_conversion_object(item['field'], uc)
+                element.set_unitconv(item['field'], uc)
 
 
 def load(mode, control_system=None, directory=None, symmetry=None):
@@ -183,7 +183,7 @@ def load(mode, control_system=None, directory=None, symmetry=None):
                 lat.add_device(item['field'], d, DEFAULT_UC)
             else:
                 lat[int(item['el_id']) - 1].add_device(item['field'], d,
-                                                    DEFAULT_UC)
+                                                       DEFAULT_UC)
         # Add basic devices to the lattice.
         positions = []
         for elem in lat:

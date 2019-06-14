@@ -66,7 +66,7 @@ class Element(object):
         N.B. If the element spans multiple cells then the cell it begins in is
         returned (lowest cell number).
         """
-        if (self._lattice is None) or (self.s is None):
+        if self._lattice is None:
             return None
         elif self._lattice.cell_length is None:
             return None
@@ -176,6 +176,15 @@ class Element(object):
             raise FieldException("No unit conversion option for field {0} on "
                                  "element {1}.".format(field, self))
 
+    def set_unitconv(self, field, uc):
+        """Set the unit conversion option for the specified field.
+
+        Args:
+            field (str): The field associated with this conversion.
+            uc (UnitConv): The unit conversion object to be set.
+        """
+        self._data_source_manager.set_unitconv(field, uc)
+
     def add_to_family(self, family):
         """Add the element to the specified family.
 
@@ -247,30 +256,6 @@ class Element(object):
         except FieldException:
             raise FieldException("Element {0} does not have field {1}."
                                  .format(self, field))
-
-    def get_unit_conversion_object(self, field):
-        """Get the unit conversion object for the given field on this element.
-
-        Args:
-            field (str): The field for which to return the unit conv.
-
-        Returns:
-            obj: the unit conv object.
-        """
-        try:
-            return self._data_source_manager._uc[field]
-        except KeyError:
-            raise FieldException("Element {0} does not have field {1} on any "
-                                 "data source.".format(self, field))
-
-    def set_unit_conversion_object(self, field, unit_conv):
-        """Set the unit conversion object for the given field on this element.
-
-        Args:
-            field (str): The field on which to set the unit conv.
-            unit_conv (UnitConv): The unit conversion object to add.
-        """
-        self._data_source_manager._uc[field] = unit_conv
 
 
 class EpicsElement(Element):

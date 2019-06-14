@@ -169,6 +169,15 @@ class DataSourceManager(object):
             raise FieldException("No unit conversion option for field {0} on "
                                  "manager {1}.".format(field, self))
 
+    def set_unitconv(self, field, uc):
+        """set the unit conversion option for the specified field.
+
+        Args:
+            field (str): The field associated with this conversion.
+            uc (UnitConv): The unit conversion object to be set.
+        """
+        self._uc[field] = uc
+
     def get_value(self, field, handle=pytac.RB, units=pytac.DEFAULT,
                   data_source=pytac.DEFAULT, throw=True):
         """Get the value for a field.

@@ -55,14 +55,15 @@ class Lattice(object):
         """list (str): The indexes of elements in which a cell boundary occurs.
 
         Examples:
-            A lattice of 3 equal length elements with 2 fold symmetry would
-            return [1, 2, 3]
+            A lattice of 5 equal length elements with 2 fold symmetry would
+            return [1, 4, 5]
             1 - because it is the start of the first cell.
-            2 - because the boundary between the first and second cells occurs
-                halfway into its length.
-            3 - (len(lattice)) because it is the end of the second (last) cell.
+            4 - because it is the first element in the second cell as the
+                boundary between the first and second cells occurs halfway
+                into the length of element 3.
+            5 - (len(lattice)) because it is the end of the second (last) cell.
         """
-        if self.symmetry is None:
+        if (self.symmetry is None) or (len(self._elements) == 0):
             return None
         else:
             bounds = [1]
@@ -178,6 +179,15 @@ class Lattice(object):
         except FieldException:
             raise FieldException("No unit conversion option for field {0} on "
                                  "lattice {1}.".format(field, self))
+
+    def set_unitconv(self, field, uc):
+        """Set the unit conversion option for the specified field.
+
+        Args:
+            field (str): The field associated with this conversion.
+            uc (UnitConv): The unit conversion object to be set.
+        """
+        self._data_source_manager.set_unitconv(field, uc)
 
     def get_value(self, field, handle=pytac.RB, units=pytac.DEFAULT,
                   data_source=pytac.DEFAULT, throw=True):
@@ -464,30 +474,6 @@ class Lattice(object):
         """
         return self._data_source_manager.default_data_source
 
-    def get_unit_conversion_object(self, field):
-        """Get the unit conversion object for the given field on this lattice.
-
-        Args:
-            field (str): The field for which to return the unit conv.
-
-        Returns:
-            obj: the unit conv object.
-        """
-        try:
-            return self._data_source_manager._uc[field]
-        except KeyError:
-            raise FieldException("Lattice {0} does not have field {1} on any "
-                                 "data source.".format(self, field))
-
-    def set_unit_conversion_object(self, field, unit_conv):
-        """Set the unit conversion object for the given field on this lattice.
-
-        Args:
-            field (str): The field on which to set the unit conv.
-            unit_conv (UnitConv): The unit conversion object to add.
-        """
-        self._data_source_manager._uc[field] = unit_conv
-
 
 class EpicsLattice(Lattice):
     """EPICS-aware lattice class.
@@ -591,7 +577,7 @@ class EpicsLattice(Lattice):
             if units == pytac.PHYS:
                 converted_values = []
                 for elem, value in zip(self.get_elements(family), values):
-                    uc = elem.get_unit_conversion_object(field)
+                    uc = elem.get_unitconv(field)
                     converted_values.append(uc.convert(value, origin=pytac.ENG,
                                                        target=pytac.PHYS))
                 values = converted_values
@@ -599,14 +585,6 @@ class EpicsLattice(Lattice):
             elements = self.get_elements(family)
             values = [element.get_value(field, handle, units, data_source)
                       for element in elements]
-            if units == pytac.ENG:
-                converted_values = []
-                for elem, value in zip(elements, values):
-                    uc = elem.get_unit_conversion_object(field)
-                    converted_values.append(uc.convert(value,
-                                                       origin=pytac.PHYS,
-                                                       target=pytac.ENG))
-                values = converted_values
         if dtype is not None:
             values = numpy.array(values, dtype=dtype)
         return values
@@ -638,7 +616,7 @@ class EpicsLattice(Lattice):
             if units == pytac.PHYS:
                 converted_values = []
                 for elem, value in zip(self.get_elements(family), values):
-                    uc = elem.get_unit_conversion_object(field)
+                    uc = elem.get_unitconv(field)
                     converted_values.append(uc.convert(value,
                                                        origin=pytac.PHYS,
                                                        target=pytac.ENG))

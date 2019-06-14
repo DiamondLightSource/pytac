@@ -1,3 +1,4 @@
+import mock
 import numpy
 import pytest
 
@@ -11,6 +12,36 @@ def test_create_lattice():
     lat = Lattice(LATTICE_NAME)
     assert(len(lat)) == 0
     assert lat.name == LATTICE_NAME
+
+
+def test_add_element_to_lattice():
+    lat1 = Lattice('lat1')
+    elem = Element(0.5, 'DRIFT')
+    assert lat1._elements == []
+    assert elem._lattice is None
+    lat1.add_element(elem)
+    assert lat1._elements == [elem]
+    assert elem._lattice == lat1
+    lat2 = Lattice('lat2')
+    lat2.add_element(elem)
+    assert elem._lattice == lat2
+
+
+def test_lattice_without_symmetry():
+    lat = Lattice('')
+    assert lat.cell_length is None
+    assert lat.cell_bounds is None
+    lat = Lattice('', 6)
+    assert lat.cell_length is None
+    assert lat.cell_bounds is None
+
+
+def test_lattice_cell_properties():
+    lat = Lattice('', 2)
+    for i in range(5):
+        lat.add_element(Element(0.5, 'DRIFT'))
+    assert lat.cell_length == 1.25
+    assert lat.cell_bounds == [1, 4, 5]
 
 
 def test_get_element_devices(simple_lattice):
@@ -33,6 +64,16 @@ def test_device_methods_raise_DataSourceException_if_no_live_data_source(simple_
 def test_get_unitconv_raises_FieldException_if_no_uc_for_field(simple_lattice):
     with pytest.raises(pytac.exceptions.FieldException):
         simple_lattice.get_unitconv('not_a_field')
+
+
+def test_get_and_set_unitconv():
+    lat = Lattice('')
+    with pytest.raises(KeyError):
+        lat._data_source_manager._uc['field1']
+    uc = mock.Mock()
+    lat.set_unitconv('field1', uc)
+    assert lat._data_source_manager._uc['field1'] == uc
+    assert lat.get_unitconv('field1') == uc
 
 
 def test_get_value_raises_exceptions_correctly(simple_lattice):

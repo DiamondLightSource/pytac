@@ -1,19 +1,49 @@
+import mock
 import pytest
 
 from constants import DUMMY_VALUE_1, DUMMY_VALUE_2
 import pytac
-import pytac.device
+from pytac.device import BasicDevice
+from pytac.element import Element
+from pytac.lattice import Lattice
 
 
 def test_create_element():
-    e = pytac.element.Element(6.0, 'BPM', 'bpm1')
+    lat = Lattice('')
+    e = Element(6.0, 'BPM', 'bpm1', lat)
     assert e.length == 6.0
     assert e.type_ == 'BPM'
     assert e.name == 'bpm1'
+    assert e._lattice == lat
+
+
+def test_element_properties_are_None_without_lattice():
+    e = Element(1.2, 'SEXT')
+    assert e.index is None
+    assert e.s is None
+    assert e.cell is None
+    lat = mock.Mock()
+    lat.cell_length is None
+    e._lattice = lat
+    assert e.cell is None
+
+
+def test_element_properties_with_lattice():
+    e1 = Element(3.1, 'DRFIT', 'd1')
+    e2 = Element(1.3, 'DRFIT', 'd2')
+    lat = Lattice('', symmetry=2)
+    lat.add_element(e1)
+    lat.add_element(e2)
+    assert e1.index == 1
+    assert e2.index == 2
+    assert e1.s == 0.0
+    assert e2.s == 3.1
+    assert e1.cell == 1
+    assert e2.cell == 2
 
 
 def test_add_element_to_family():
-    e = pytac.element.Element(6.0, 'QUAD', 'dummy')
+    e = Element(6.0, 'QUAD', 'dummy')
     e.add_to_family('fam')
     assert 'fam' in e.families
 
@@ -21,7 +51,7 @@ def test_add_element_to_family():
 def test_device_methods_raise_DataSourceException_if_no_live_data_source(simple_element):
     basic_element = simple_element
     del basic_element._data_source_manager._data_sources[pytac.LIVE]
-    d = pytac.device.BasicDevice(0)
+    d = BasicDevice(0)
     uc = pytac.units.NullUnitConv()
     with pytest.raises(pytac.exceptions.DataSourceException):
         basic_element.add_device('x', d, uc)
@@ -38,6 +68,14 @@ def test_get_unitconv_returns_unitconv_object(simple_element, unit_uc,
                                               double_uc):
     assert simple_element.get_unitconv('x') == unit_uc
     assert simple_element.get_unitconv('y') == double_uc
+
+
+def tes_set_unit_conv(simple_element):
+    with pytest.raises(KeyError):
+        simple_element._data_source_manager._uc['field1']
+    uc = mock.Mock()
+    simple_element.set_unitConv('field1', uc)
+    assert simple_element._data_source_manager._uc['field1'] == uc
 
 
 def test_get_unitconv_raises_FieldException_if_device_not_present(simple_element):
@@ -108,9 +146,21 @@ def test_get_fields(simple_element):
     assert set(simple_element.get_fields()[pytac.LIVE]) == set(['y', 'x'])
 
 
-def test_element_representation(simple_element):
-    s = str(simple_element)
-    assert simple_element.name in s
-    assert str(simple_element.length) in s
-    for f in simple_element.families:
-        assert f in s
+def test_element_representation():
+    elem = Element(0.1, 'BPM')
+    assert str(elem) == "<Element length 0.1 m, families >"
+    elem.add_to_family('fam1')
+    elem.add_to_family('fam2')
+    assert str(elem) == "<Element length 0.1 m, families fam1, fam2>"
+    elem.name = 'bpm1'
+    assert str(elem) == "<Element 'bpm1', length 0.1 m, families fam1, fam2>"
+    lat = Lattice('')
+    lat.add_element(elem)
+    assert str(elem) == ("<Element 'bpm1', index 1, length 0.1 m, families "
+                         "fam1, fam2>")
+    lat.symmetry = 2
+    assert str(elem) == ("<Element 'bpm1', index 1, length 0.1 m, cell 1, "
+                         "families fam1, fam2>")
+    elem.name = None
+    assert str(elem) == ("<Element index 1, length 0.1 m, cell 1, families "
+                         "fam1, fam2>")
