@@ -23,7 +23,7 @@ def test_element_properties_are_None_without_lattice():
     assert e.s is None
     assert e.cell is None
     lat = mock.Mock()
-    lat.cell_length is None
+    lat.cell_length = None
     e._lattice = lat
     assert e.cell is None
 
@@ -150,17 +150,16 @@ def test_element_representation():
     elem = Element(0.1, 'BPM')
     assert str(elem) == "<Element length 0.1 m, families >"
     elem.add_to_family('fam1')
-    elem.add_to_family('fam2')
-    assert str(elem) == "<Element length 0.1 m, families fam1, fam2>"
+    assert str(elem) == "<Element length 0.1 m, families fam1>"
     elem.name = 'bpm1'
-    assert str(elem) == "<Element 'bpm1', length 0.1 m, families fam1, fam2>"
+    assert str(elem) == "<Element 'bpm1', length 0.1 m, families fam1>"
     lat = Lattice('')
     lat.add_element(elem)
     assert str(elem) == ("<Element 'bpm1', index 1, length 0.1 m, families "
-                         "fam1, fam2>")
+                         "fam1>")
     lat.symmetry = 2
     assert str(elem) == ("<Element 'bpm1', index 1, length 0.1 m, cell 1, "
-                         "families fam1, fam2>")
+                         "families fam1>")
     elem.name = None
     assert str(elem) == ("<Element index 1, length 0.1 m, cell 1, families "
-                         "fam1, fam2>")
+                         "fam1>")

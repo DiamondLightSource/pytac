@@ -6,18 +6,19 @@ Installation
 
 This is only required on your first use.
 
-- Ensure you have Pip, then install pytac and cothread::
+- Ensure you have Pip, then install Pytac and Cothread::
 
     $ pip install pytac
-    $ pip install cothread	# cothread is required for EPICS functionality, but pytac can run without it.
+    $ pip install cothread
+    $ # Cothread is required for EPICS functionality, but Pytac can run without it.
 
 
 Initialisation
 ~~~~~~~~~~~~~~
 
-This is required each time you want to start up pytac.
+This is required each time you want to start up Pytac.
 
-- Navigate to your pytac directory and start Python::
+- Navigate to your Pytac directory and start Python::
 
     $ cd <directory-path>
     $ python
@@ -27,7 +28,7 @@ This is required each time you want to start up pytac.
     >>>
 
 
-- Import pytac and initialise the lattice from the ``VMX`` directory::
+- Import Pytac and initialise the lattice from the ``VMX`` directory::
 
     >>> import pytac.load_csv
     >>> lattice = pytac.load_csv.load('VMX')
@@ -85,8 +86,8 @@ Get the value of the 'b1' field of the quad elements
     ...
 
 
-- Print the ``QUAD`` read back values of the 'b1' field using the lattice. This is more efficient
-  since it uses only one request to the control system::
+- Print the ``QUAD`` read back values of the 'b1' field using the lattice. This
+  is more efficient since it uses only one request to the control system::
 
     >>> lattice.get_values('QUAD', 'b1', pytac.RB)
     [71.32496643066406,

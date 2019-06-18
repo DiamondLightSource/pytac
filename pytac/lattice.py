@@ -59,8 +59,8 @@ class Lattice(object):
             return [1, 4, 5]
             1 - because it is the start of the first cell.
             4 - because it is the first element in the second cell as the
-                boundary between the first and second cells occurs halfway
-                into the length of element 3.
+            boundary between the first and second cells occurs halfway into
+            the length of element 3.
             5 - (len(lattice)) because it is the end of the second (last) cell.
         """
         if (self.symmetry is None) or (len(self._elements) == 0):
