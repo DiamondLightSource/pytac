@@ -82,7 +82,7 @@ def double_uc():
 def simple_element(x_device, y_device, mock_sim_data_source, unit_uc,
                    double_uc):
     # A unit conversion object that returns the same as the input.
-    element = Element('element1', 0, 'BPM', 0.0, cell=1)
+    element = Element(0.0, 'BPM', 'element1')
     element.add_to_family('family')
     element.set_data_source(DeviceDataSource(), pytac.LIVE)
     element.add_device('x', x_device, unit_uc)
@@ -94,7 +94,7 @@ def simple_element(x_device, y_device, mock_sim_data_source, unit_uc,
 @pytest.fixture
 def simple_lattice(simple_element, x_device, y_device, mock_sim_data_source,
                    unit_uc, double_uc):
-    lattice = Lattice(LATTICE_NAME)
+    lattice = Lattice(LATTICE_NAME, symmetry=6)
     lattice.add_element(simple_element)
     lattice.set_data_source(DeviceDataSource(), pytac.LIVE)
     lattice.add_device('x', x_device, unit_uc)
@@ -116,18 +116,18 @@ def simple_data_source_manager(x_device, y_device, mock_sim_data_source,
 
 @pytest.fixture(scope="session")
 def vmx_ring():
-    return pytac.load_csv.load('VMX', mock.MagicMock)
+    return pytac.load_csv.load('VMX', mock.MagicMock, symmetry=24)
 
 
 @pytest.fixture(scope="session")
 def diad_ring():
-    return pytac.load_csv.load('DIAD', mock.MagicMock)
+    return pytac.load_csv.load('DIAD', mock.MagicMock, symmetry=24)
 
 
 @pytest.fixture
 def lattice():
-    lat = load_csv.load('dummy', mock.MagicMock(), os.path.join(CURRENT_DIR,
-                                                                'data'))
+    lat = load_csv.load('dummy', mock.MagicMock(),
+                        os.path.join(CURRENT_DIR, 'data'), 2)
     return lat
 
 
@@ -147,7 +147,7 @@ def mock_cs():
 
 @pytest.fixture
 def simple_epics_element(mock_cs, unit_uc):
-    element = EpicsElement(1, 0, 'BPM', 0.0, cell=1)
+    element = EpicsElement(0.0, 'BPM')
     basic_device = BasicDevice(0)
     x_device = EpicsDevice('x_device', mock_cs, True, RB_PV, SP_PV)
     y_device = EpicsDevice('y_device', mock_cs, True, SP_PV, RB_PV)

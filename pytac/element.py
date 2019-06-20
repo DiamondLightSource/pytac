@@ -16,36 +16,62 @@ class Element(object):
         name (str): The name identifying the element.
         type_ (str): The type of the element.
         length (float): The length of the element in metres.
-        s (float): The element's start position within the lattice in metres.
-        index (int): The element's index within the ring, starting at 1.
-        cell (int): The lattice cell this element is wihin.
         families (set): The families this element is a member of.
 
     .. Private Attributes:
+           _lattice (Lattice): The lattice to which the element belongs.
            _data_source_manager (DataSourceManager): A class that manages the
                                                       data sources associated
                                                       with this element.
     """
-    def __init__(self, name, length, element_type, s, index=None, cell=None):
+    def __init__(self, length, element_type, name=None, lattice=None):
         """
         Args:
-            name (int): The unique identifier for the element in the ring.
             length (float): The length of the element.
             element_type (str): The type of the element.
-            s (float): The position of the start of the element in the ring.
-            index (float): The index of the element in the ring, starting at 1.
-            cell (int): The lattice cell this element is wihin.
+            name (str): The unique identifier for the element in the ring.
+            lattice (Lattice): The lattice to which the element belongs.
 
         **Methods:**
         """
         self.name = name
         self.type_ = element_type
         self.length = length
-        self.s = s
-        self.index = index
-        self.cell = cell
         self.families = set()
+        self._lattice = lattice
         self._data_source_manager = DataSourceManager()
+
+    @property
+    def index(self):
+        """int: The element's index within the ring, starting at 1.
+        """
+        if self._lattice is None:
+            return None
+        else:
+            return self._lattice._elements.index(self) + 1
+
+    @property
+    def s(self):
+        """float: The element's start position within the lattice in metres.
+        """
+        if self._lattice is None:
+            return None
+        else:
+            return sum([el.length for el in self._lattice[:self.index - 1]])
+
+    @property
+    def cell(self):
+        """int: The lattice cell this element is within.
+
+        N.B. If the element spans multiple cells then the cell it begins in is
+        returned (lowest cell number).
+        """
+        if self._lattice is None:
+            return None
+        elif self._lattice.cell_length is None:
+            return None
+        else:
+            return int(self.s / self._lattice.cell_length) + 1
 
     def __str__(self):
         """Return a representation of an element, as a string.
@@ -53,9 +79,16 @@ class Element(object):
         Returns:
             str: A representation of an element.
         """
-        repn = '<Element {0}, length {1} m, families {2}>'
-        return repn.format(self.name, self.length, ', '.join(f for f in
-                                                             self.families))
+        repn = "<Element "
+        if self.name is not None:
+            repn += "'{0}', ".format(self.name)
+        if self.index is not None:
+            repn += "index {0}, ".format(self.index)
+        repn += "length {0} m, ".format(self.length)
+        if self.cell is not None:
+            repn += "cell {0}, ".format(self.cell)
+        repn += "families {0}>".format(', '.join(f for f in self.families))
+        return repn
 
     __repr__ = __str__
 
@@ -143,6 +176,15 @@ class Element(object):
             raise FieldException("No unit conversion option for field {0} on "
                                  "element {1}.".format(field, self))
 
+    def set_unitconv(self, field, uc):
+        """Set the unit conversion option for the specified field.
+
+        Args:
+            field (str): The field associated with this conversion.
+            uc (UnitConv): The unit conversion object to be set.
+        """
+        self._data_source_manager.set_unitconv(field, uc)
+
     def add_to_family(self, family):
         """Add the element to the specified family.
 
@@ -215,6 +257,15 @@ class Element(object):
             raise FieldException("Element {0} does not have field {1}."
                                  .format(self, field))
 
+    def set_lattice(self, lattice):
+        """Set the stored lattice reference for this element to the passed
+        lattice object.
+
+        Args:
+            lattice (Lattice): lattice object to store a reference to.
+        """
+        self._lattice = lattice
+
 
 class EpicsElement(Element):
     """EPICS-aware element.
@@ -241,11 +292,11 @@ class EpicsElement(Element):
             return (self._data_source_manager._data_sources[pytac.LIVE]
                     .get_device(field).get_pv_name(handle))
         except KeyError:
-            raise DataSourceException("No data source for field {0} on element"
-                                      " {1}.".format(field, self))
+            raise DataSourceException("No data source for field {0} on "
+                                      "element {1}.".format(field, self))
         except AttributeError:
-            raise DataSourceException("Cannot get PV for field {0} on element"
-                                      " {1}, as basic devices do not have "
+            raise DataSourceException("Cannot get PV for field {0} on element "
+                                      "{1}, as basic devices do not have "
                                       "associated PV's.".format(field, self))
         except FieldException:
             raise FieldException("No field {0} on element {1}.".format(field,

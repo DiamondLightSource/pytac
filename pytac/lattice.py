@@ -8,7 +8,7 @@ import numpy
 import pytac
 from pytac.data_source import DataSourceManager
 from pytac.exceptions import (DataSourceException, FieldException,
-                              UnitsException)
+                              UnitsException, HandleException)
 
 
 class Lattice(object):
@@ -21,24 +21,59 @@ class Lattice(object):
 
     Attributes:
         name (str): The name of the lattice.
+        symmetry (int): The symmetry of the lattice (the number of cells).
 
     .. Private Attributes:
            _elements (list): The list of all the element objects in the lattice
-           _cs (ControlSystem): The control system used to store the values on
-                                 a PV.
            _data_source_manager (DataSourceManager): A class that manages the
                                                       data sources associated
                                                       with this lattice.
     """
-    def __init__(self, name):
+    def __init__(self, name, symmetry=None):
         """Args:
             name (str): The name of the lattice.
+            symmetry (int): The symmetry of the lattice (the number of cells).
 
         **Methods:**
         """
         self.name = name
+        self.symmetry = symmetry
         self._elements = []
         self._data_source_manager = DataSourceManager()
+
+    @property
+    def cell_length(self):
+        """float: The average length of a cell in the lattice.
+        """
+        if (self.symmetry is None) or (self.get_length() == 0):
+            return None
+        else:
+            return self.get_length() / self.symmetry
+
+    @property
+    def cell_bounds(self):
+        """list (str): The indexes of elements in which a cell boundary occurs.
+
+        Examples:
+            A lattice of 5 equal length elements with 2 fold symmetry would
+            return [1, 4, 5]
+            1 - because it is the start of the first cell.
+            4 - because it is the first element in the second cell as the
+            boundary between the first and second cells occurs halfway into
+            the length of element 3.
+            5 - (len(lattice)) because it is the end of the second (last) cell.
+        """
+        if (self.symmetry is None) or (len(self._elements) == 0):
+            return None
+        else:
+            bounds = [1]
+            for cell in range(2, self.symmetry + 1, 1):
+                for elem in self._elements[bounds[-1]:]:
+                    if elem.cell == cell:
+                        bounds.append(elem.index)
+                        break
+            bounds.append(len(self._elements))
+            return bounds
 
     def __getitem__(self, n):
         """Get the (n + 1)th element of the lattice.
@@ -78,7 +113,7 @@ class Lattice(object):
         Includes all fields defined by all data sources.
 
         Returns:
-            dict: A dictionary of all the fields defined on the manager,
+            dict: A dictionary of all the fields defined on the lattice,
                    separated by data source(key).
         """
         return self._data_source_manager.get_fields()
@@ -144,6 +179,15 @@ class Lattice(object):
         except FieldException:
             raise FieldException("No unit conversion option for field {0} on "
                                  "lattice {1}.".format(field, self))
+
+    def set_unitconv(self, field, uc):
+        """Set the unit conversion option for the specified field.
+
+        Args:
+            field (str): The field associated with this conversion.
+            uc (UnitConv): The unit conversion object to be set.
+        """
+        self._data_source_manager.set_unitconv(field, uc)
 
     def get_value(self, field, handle=pytac.RB, units=pytac.DEFAULT,
                   data_source=pytac.DEFAULT, throw=True):
@@ -215,17 +259,18 @@ class Lattice(object):
         Returns:
             float: The length of the lattice (m).
         """
-        total_length = 0
+        total_length = 0.0
         for e in self._elements:
             total_length += e.length
         return total_length
 
     def add_element(self, element):
-        """Append an element to the lattice.
+        """Append an element to the lattice and update its lattice reference.
 
         Args:
             element (Element): element to append.
         """
+        element.set_lattice(self)
         self._elements.append(element)
 
     def get_elements(self, family=None, cell=None):
@@ -328,47 +373,58 @@ class Lattice(object):
         devices = self.get_element_devices(family, field)
         return [device.name for device in devices]
 
-    def get_element_values(self, family, field, handle, dtype=None):
-        """Get all values for a family and field.
+    def get_element_values(self, family, field, handle=pytac.RB,
+                           units=pytac.DEFAULT, data_source=pytac.DEFAULT,
+                           dtype=None):
+        """Get the value of the given field for all elements in the given
+        family in the lattice.
 
         Args:
-            family (str): family to request the values of.
+            family (str): family of elements to request the values of.
             field (str): field to request values for.
             handle (str): pytac.RB or pytac.SP.
+            units (str): pytac.ENG or pytac.PHYS.
+            data_source (str): pytac.LIVE or pytac.SIM.
             dtype (numpy.dtype): if None, return a list. If not None, return a
                                   numpy array of the specified type.
 
         Returns:
-            list or numpy array: sequence of values.
+            list or numpy.array: The requested values.
         """
         elements = self.get_elements(family)
-        values = [element.get_value(field, handle) for element in elements]
+        values = [element.get_value(field, handle, units, data_source)
+                  for element in elements]
         if dtype is not None:
             values = numpy.array(values, dtype=dtype)
         return values
 
-    def set_element_values(self, family, field, values):
-        """Sets the values for a family and field.
-
-        The PVs are determined by family and device. Note that only setpoint
-        PVs can be modified.
+    def set_element_values(self, family, field, values, handle=pytac.SP,
+                           units=pytac.DEFAULT, data_source=pytac.DEFAULT):
+        """Set the value of the given field for all elements in the given
+        family in the lattice to the given values.
 
         Args:
-            family (str): family on which to set values.
+            family (str): family of elements on which to set values.
             field (str):  field to set values for.
             values (sequence): A list of values to assign.
+            handle (str): pytac.SP or pytac.RB.
+            units (str): pytac.ENG or pytac.PHYS.
+            data_source (str): pytac.LIVE or pytac.SIM.
 
         Raises:
             IndexError: if the given list of values doesn't match the number of
                          elements in the family.
         """
+        if handle != pytac.SP:
+            raise HandleException("Must write using {0}.".format(pytac.SP))
         elements = self.get_elements(family)
         if len(elements) != len(values):
             raise IndexError("Number of elements in given array({0}) must be "
                              "equal to the number of elements in the "
                              "family({1}).".format(len(values), len(elements)))
         for element, value in zip(elements, values):
-            element.set_value(field, value, handle=pytac.SP)
+            element.set_value(field, value, handle=pytac.SP, units=units,
+                              data_source=data_source)
 
     def set_default_units(self, default_units):
         """Sets the default unit type for the lattice and all its elements.
@@ -429,27 +485,65 @@ class Lattice(object):
         """
         return self._data_source_manager.default_data_source
 
+    def convert_family_values(self, family, field, values, origin, target):
+        """Convert the given values according to the given origin and target
+        units, using the unit conversion objects for the given field on the
+        elements in the given family.
+
+        Args:
+            family (str): the family of elements which the values belong to.
+            field (str): the field on the elements which the values are from.
+            values (sequence): values to be converted.
+            origin (str): pytac.ENG or pytac.PHYS.
+            target (str): pytac.ENG or pytac.PHYS.
+        """
+        elements = self.get_elements(family)
+        if len(elements) != len(values):
+            raise IndexError("Number of elements in given sequence({0}) must "
+                             "be equal to the number of elements in the "
+                             "family({1}).".format(len(values), len(elements)))
+        converted_values = []
+        for elem, value in zip(elements, values):
+            uc = elem.get_unitconv(field)
+            converted_values.append(uc.convert(value, origin, target))
+        return converted_values
+
 
 class EpicsLattice(Lattice):
     """EPICS-aware lattice class.
 
     Allows efficient get_values() and set_values() methods, and adds
     get_pv_names() method.
+
+    **Attributes:**
+
+    Attributes:
+        name (str): The name of the lattice.
+        symmetry (int): The symmetry of the lattice (the number of cells).
+
+    .. Private Attributes:
+           _elements (list): The list of all the element objects in the lattice
+           _cs (ControlSystem): The control system to use for the more
+                                 efficient batch getting and setting of PVs.
+           _data_source_manager (DataSourceManager): A class that manages the
+                                                      data sources associated
+                                                      with this lattice.
     """
-    def __init__(self, name, epics_cs):
+    def __init__(self, name, epics_cs, symmetry=None):
         """
         Args:
             name (str): The name of the epics lattice.
             epics_cs (ControlSystem): The control system used to store the
                                        values on a PV.
+            symmetry (int): The symmetry of the lattice (the number of cells).
 
         **Methods:**
         """
-        super(EpicsLattice, self).__init__(name)
+        super(EpicsLattice, self).__init__(name, symmetry)
         self._cs = epics_cs
 
     def get_pv_name(self, field, handle):
-        """Get the PV name for a specific field, and handle.
+        """Get the PV name for a specific field, and handle on this lattice.
 
         Args:
             field (str): The requested field.
@@ -462,15 +556,16 @@ class EpicsLattice(Lattice):
             return (self._data_source_manager._data_sources[pytac.LIVE]
                     .get_device(field).get_pv_name(handle))
         except KeyError:
-            raise DataSourceException("Lattice {0} has no device for field"
-                                      " {1}.".format(self, field))
+            raise DataSourceException("Lattice {0} has no device for field "
+                                      "{1}.".format(self, field))
         except AttributeError:
-            raise DataSourceException("Cannot get PV for field {0} on lattice"
-                                      " {1}, as basic devices do not have "
+            raise DataSourceException("Cannot get PV for field {0} on lattice "
+                                      "{1}, as basic devices do not have "
                                       "associated PV's.".format(field, self))
 
     def get_element_pv_names(self, family, field, handle):
-        """Get all PV names for a specific family, field, and handle.
+        """Get the PV names for the given field, and handle, on all elements
+        in the given family in the lattice.
 
         Assume that the elements are EpicsElements that have the get_pv_name()
         method.
@@ -489,42 +584,79 @@ class EpicsLattice(Lattice):
             pv_names.append(element.get_pv_name(field, handle))
         return pv_names
 
-    def get_element_values(self, family, field, handle, dtype=None):
-        """Get the value for a family and field for all applicable elements in
-        the lattice.
+    def get_element_values(self, family, field, handle=pytac.RB,
+                           units=pytac.DEFAULT, data_source=pytac.DEFAULT,
+                           dtype=None):
+        """Get the value of the given field for all elements in the given
+        family in the lattice.
 
         Args:
-            family (str): requested family.
-            field (str): requested field.
+            family (str): family of elements to request the values of.
+            field (str): field to request values for.
             handle (str): pytac.RB or pytac.SP.
-            dtype (numpy.dtype): if set it specifies the data type of the
-                                  values in the output array.
+            units (str): pytac.ENG or pytac.PHYS.
+            data_source (str): pytac.LIVE or pytac.SIM.
+            dtype (numpy.dtype): if None, return a list. If not None, return a
+                                  numpy array of the specified type.
 
         Returns:
-            list or array: The requested values.
+            list or numpy.array: The requested values.
         """
-        pv_names = self.get_element_pv_names(family, field, handle)
-        values = self._cs.get_multiple(pv_names)
+        if data_source == pytac.DEFAULT:
+            data_source = self.get_default_data_source()
+        if units == pytac.DEFAULT:
+            units = self.get_default_units()
+        if data_source == pytac.LIVE:
+            pv_names = self.get_element_pv_names(family, field, handle)
+            values = self._cs.get_multiple(pv_names)
+            if units == pytac.PHYS:
+                values = self.convert_family_values(family, field, values,
+                                                    pytac.ENG, pytac.PHYS)
+        else:
+            values = super(EpicsLattice, self).get_element_values(family,
+                                                                  field,
+                                                                  handle,
+                                                                  units,
+                                                                  data_source)
         if dtype is not None:
             values = numpy.array(values, dtype=dtype)
         return values
 
-    def set_element_values(self, family, field, values):
-        """Set the value for a family and field for all applicable elements in
-        the lattice.
+    def set_element_values(self, family, field, values, handle=pytac.SP,
+                           units=pytac.DEFAULT, data_source=pytac.DEFAULT):
+        """Set the value of the given field for all elements in the given
+        family in the lattice to the given values.
 
         Args:
-            family (str): requested family.
-            field (str): requested field.
-            values (sequence): values to be set.
+            family (str): family of elements on which to set values.
+            field (str):  field to set values for.
+            values (sequence): A list of values to assign.
+            handle (str): pytac.SP or pytac.RB.
+            units (str): pytac.ENG or pytac.PHYS.
+            data_source (str): pytac.LIVE or pytac.SIM.
 
         Raises:
             IndexError: if the given list of values doesn't match the number of
                          elements in the family.
         """
-        pv_names = self.get_element_pv_names(family, field, pytac.SP)
-        if len(pv_names) != len(values):
-            raise IndexError("Number of elements in given array({0}) must be "
-                             "equal to the number of elements in the "
-                             "family({1}).".format(len(values), len(pv_names)))
-        self._cs.set_multiple(pv_names, values)
+        if data_source == pytac.DEFAULT:
+            data_source = self.get_default_data_source()
+        if units == pytac.DEFAULT:
+            units = self.get_default_units()
+        if handle != pytac.SP:
+            raise HandleException("Must write using {0}.".format(pytac.SP))
+        if data_source == pytac.LIVE:
+            if units == pytac.PHYS:
+                values = self.convert_family_values(family, field, values,
+                                                    pytac.PHYS, pytac.ENG)
+            pv_names = self.get_element_pv_names(family, field, pytac.SP)
+            if len(pv_names) != len(values):
+                raise IndexError("Number of elements in given sequence({0}) "
+                                 "must be equal to the number of elements in "
+                                 "the family({1}).".format(len(values),
+                                                           len(pv_names)))
+            self._cs.set_multiple(pv_names, values)
+        else:
+            super(EpicsLattice, self).set_element_values(family, field, values,
+                                                         pytac.SP, units,
+                                                         data_source)

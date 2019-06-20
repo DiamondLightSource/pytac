@@ -100,28 +100,33 @@ def load_unitconv(directory, mode, lattice):
         for item in csv_reader:
             if int(item['el_id']) == 0:
                 if item['uc_type'] != 'null':
-                    lattice._data_source_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
-                    lattice._data_source_manager._uc[item['field']].phys_units = item['phys_units']
-                    lattice._data_source_manager._uc[item['field']].eng_units = item['eng_units']
+                    uc = unitconvs[int(item['uc_id'])]
+                    uc.phys_units = item['phys_units']
+                    uc.eng_units = item['eng_units']
                 else:
-                    lattice._data_source_manager._uc[item['field']] = units.NullUnitConv(item['eng_units'], item['phys_units'])
+                    uc = units.NullUnitConv(item['eng_units'],
+                                            item['phys_units'])
+                lattice.set_unitconv(item['field'], uc)
             else:
                 element = lattice[int(item['el_id']) - 1]
                 # For certain magnet types, we need an additional rigidity
                 # conversion factor as well as the raw conversion.
                 if item['uc_type'] == 'null':
-                    element._data_source_manager._uc[item['field']] = units.NullUnitConv(item['eng_units'], item['phys_units'])
+                    uc = units.NullUnitConv(item['eng_units'],
+                                            item['phys_units'])
                 else:
+                    uc = unitconvs[int(item['uc_id'])]
                     if element.families.intersection(('HSTR', 'VSTR', 'QUAD',
                                                       'SEXT')):
-                        unitconvs[int(item['uc_id'])]._post_eng_to_phys = utils.get_div_rigidity(lattice.get_value('energy', units=pytac.PHYS))
-                        unitconvs[int(item['uc_id'])]._pre_phys_to_eng = utils.get_mult_rigidity(lattice.get_value('energy', units=pytac.PHYS))
-                    element._data_source_manager._uc[item['field']] = unitconvs[int(item['uc_id'])]
-                    element._data_source_manager._uc[item['field']].phys_units = item['phys_units']
-                    element._data_source_manager._uc[item['field']].eng_units = item['eng_units']
+                        energy = lattice.get_value('energy', units=pytac.PHYS)
+                        uc.set_post_eng_to_phys(utils.get_div_rigidity(energy))
+                        uc.set_pre_phys_to_eng(utils.get_mult_rigidity(energy))
+                    uc.phys_units = item['phys_units']
+                    uc.eng_units = item['eng_units']
+                element.set_unitconv(item['field'], uc)
 
 
-def load(mode, control_system=None, directory=None):
+def load(mode, control_system=None, directory=None, symmetry=None):
     """Load the elements of a lattice from a directory.
 
     Args:
@@ -132,6 +137,7 @@ def load(mode, control_system=None, directory=None):
         directory (str): Directory where to load the files from. If no
                           directory is given the data directory at the root of
                           the repository is used.
+        symmetry (int): The symmetry of the lattice (the number of cells).
 
     Returns:
         Lattice: The lattice containing all elements.
@@ -148,27 +154,22 @@ def load(mode, control_system=None, directory=None):
             control_system = cothread_cs.CothreadControlSystem()
     except ImportError:
         raise ControlSystemException("Please install cothread to load a "
-                                     "lattice using the default control system"
-                                     " (found in cothread_cs.py).")
+                                     "lattice using the default control "
+                                     "system (found in cothread_cs.py).")
     if directory is None:
         directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                  'data')
-    lat = lattice.EpicsLattice(mode, control_system)
+    lat = lattice.EpicsLattice(mode, control_system, symmetry=symmetry)
     lat.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
-    s = 0.0
-    index = 1
     with open(os.path.join(directory, mode, ELEMENTS_FILENAME)) as elements:
         csv_reader = csv.DictReader(elements)
         for item in csv_reader:
-            length = float(item['length'])
-            cell = int(item['cell']) if item['cell'] else None
-            e = element.EpicsElement(item['name'], length, item['type'], s,
-                                     index, cell)
+            name = item['name'] if item['name'] != '' else None
+            e = element.EpicsElement(float(item['length']), item['type'],
+                                     name, lat)
             e.add_to_family(item['type'])
             e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)
-            s += length
-            index += 1
     with open(os.path.join(directory, mode, DEVICES_FILENAME)) as devices:
         csv_reader = csv.DictReader(devices)
         for item in csv_reader:
@@ -178,11 +179,11 @@ def load(mode, control_system=None, directory=None):
             pve = True
             d = device.EpicsDevice(name, control_system, pve, get_pv, set_pv)
             # Devices on index 0 are attached to the lattice not elements.
-            if int(item['id']) == 0:
+            if int(item['el_id']) == 0:
                 lat.add_device(item['field'], d, DEFAULT_UC)
             else:
-                lat[int(item['id']) - 1].add_device(item['field'], d,
-                                                    DEFAULT_UC)
+                lat[int(item['el_id']) - 1].add_device(item['field'], d,
+                                                       DEFAULT_UC)
         # Add basic devices to the lattice.
         positions = []
         for elem in lat:
@@ -192,7 +193,7 @@ def load(mode, control_system=None, directory=None):
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)
         for item in csv_reader:
-            lat[int(item['id']) - 1].add_to_family(item['family'])
+            lat[int(item['el_id']) - 1].add_to_family(item['family'])
     if os.path.exists(os.path.join(directory, mode, UNITCONV_FILENAME)):
         load_unitconv(directory, mode, lat)
     return lat

@@ -10,7 +10,8 @@
    :target: https://badge.fury.io/py/pytac
 
 
-Python Toolkit for Accelerator Controls (Pytac) is a Python library for working with elements of particle accelerators.
+Python Toolkit for Accelerator Controls (Pytac) is a Python library for working
+with elements of particle accelerators.
 
 Documentation is available at Readthedocs_.
 
@@ -31,6 +32,10 @@ To run the tests::
 To see a coverage report, check pytest-cov::
 
  $ python -m pytest --cov-report term-missing --cov=pytac
+
+To see style violations, use flake8::
+
+ $ flake8
 
 To build the documentation::
 

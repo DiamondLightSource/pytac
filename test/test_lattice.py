@@ -1,3 +1,4 @@
+import mock
 import numpy
 import pytest
 
@@ -11,6 +12,36 @@ def test_create_lattice():
     lat = Lattice(LATTICE_NAME)
     assert(len(lat)) == 0
     assert lat.name == LATTICE_NAME
+
+
+def test_add_element_to_lattice():
+    lat1 = Lattice('lat1')
+    elem = Element(0.5, 'DRIFT')
+    assert lat1._elements == []
+    assert elem._lattice is None
+    lat1.add_element(elem)
+    assert lat1._elements == [elem]
+    assert elem._lattice == lat1
+    lat2 = Lattice('lat2')
+    lat2.add_element(elem)
+    assert elem._lattice == lat2
+
+
+def test_lattice_without_symmetry():
+    lat = Lattice('')
+    assert lat.cell_length is None
+    assert lat.cell_bounds is None
+    lat = Lattice('', 6)
+    assert lat.cell_length is None
+    assert lat.cell_bounds is None
+
+
+def test_lattice_cell_properties():
+    lat = Lattice('', 2)
+    for i in range(5):
+        lat.add_element(Element(0.5, 'DRIFT'))
+    assert lat.cell_length == 1.25
+    assert lat.cell_bounds == [1, 4, 5]
 
 
 def test_get_element_devices(simple_lattice):
@@ -33,6 +64,16 @@ def test_device_methods_raise_DataSourceException_if_no_live_data_source(simple_
 def test_get_unitconv_raises_FieldException_if_no_uc_for_field(simple_lattice):
     with pytest.raises(pytac.exceptions.FieldException):
         simple_lattice.get_unitconv('not_a_field')
+
+
+def test_get_and_set_unitconv():
+    lat = Lattice('')
+    with pytest.raises(KeyError):
+        lat._data_source_manager._uc['field1']
+    uc = mock.Mock()
+    lat.set_unitconv('field1', uc)
+    assert lat._data_source_manager._uc['field1'] == uc
+    assert lat.get_unitconv('field1') == uc
 
 
 def test_get_value_raises_exceptions_correctly(simple_lattice):
@@ -91,7 +132,9 @@ def test_lattice_get_elements_with_family(simple_lattice):
 
 def test_lattice_get_elements_by_cell(simple_lattice):
     elem = simple_lattice[0]
+    elem.length = 0.1  # length hacking as cells require a non-zero...
     assert simple_lattice.get_elements(cell=1) == [elem]
+    elem.length = 0.0  # ...length lattice to work.
     with pytest.raises(ValueError):
         simple_lattice.get_elements(cell=2)
 
@@ -126,7 +169,9 @@ def test_set_element_values(simple_lattice):
     simple_lattice.get_element_devices('family', 'x')[0].set_value.assert_called_with(1, True)
 
 
-def test_set_element_values_length_mismatch_raises_IndexError(simple_lattice):
+def test_set_element_values_raises_Exceptions_correctly(simple_lattice):
+    with pytest.raises(pytac.exceptions.HandleException):
+        simple_lattice.set_element_values('family', 'x', [1], handle=pytac.RB)
     with pytest.raises(IndexError):
         simple_lattice.set_element_values('family', 'x', [1, 2])
     with pytest.raises(IndexError):
@@ -136,20 +181,20 @@ def test_set_element_values_length_mismatch_raises_IndexError(simple_lattice):
 def test_get_family_s(simple_lattice):
     assert simple_lattice.get_family_s('family') == [0]
 
-    element2 = Element(2, 1.0, 'family', 0.0)
+    element2 = Element(1.0, 'family')
     element2.add_to_family('family')
     simple_lattice.add_element(element2)
     assert simple_lattice.get_family_s('family') == [0, 0]
 
-    element3 = Element(3, 1.5, 'family', 1.0)
+    element3 = Element(2.5, 'family')
     element3.add_to_family('family')
     simple_lattice.add_element(element3)
     assert simple_lattice.get_family_s('family') == [0, 0, 1.0]
 
-    element4 = Element(3, 1.5, 'family', 2.5)
+    element4 = Element(0.0, 'family')
     element4.add_to_family('family')
     simple_lattice.add_element(element4)
-    assert simple_lattice.get_family_s('family') == [0, 0, 1.0, 2.5]
+    assert simple_lattice.get_family_s('family') == [0, 0, 1.0, 3.5]
 
 
 def test_get_default_arguments(simple_lattice):
@@ -169,3 +214,27 @@ def test_set_default_arguments_exceptions(simple_lattice):
         simple_lattice.set_default_units('invalid_units')
     with pytest.raises(pytac.exceptions.DataSourceException):
         simple_lattice.set_default_data_source('invalid_data_source')
+
+
+def test_convert_family_values(simple_lattice):
+    post_values = simple_lattice.convert_family_values('family', 'y', [12],
+                                                       pytac.PHYS, pytac.ENG)
+    assert post_values == [6]
+    post_values = simple_lattice.convert_family_values('family', 'y', [12],
+                                                       pytac.ENG, pytac.PHYS)
+    assert post_values == [24]
+    post_values = simple_lattice.convert_family_values('family', 'y', [12],
+                                                       pytac.ENG, pytac.ENG)
+    assert post_values == [12]
+    post_values = simple_lattice.convert_family_values('family', 'y', [12],
+                                                       pytac.PHYS, pytac.PHYS)
+    assert post_values == [12]
+
+
+def test_convert_family_values_length_mismatch_raises_IndexError(simple_lattice):
+    with pytest.raises(IndexError):
+        simple_lattice.convert_family_values('family', 'x', [1, 2], pytac.ENG,
+                                             pytac.PHYS)
+    with pytest.raises(IndexError):
+        simple_lattice.convert_family_values('family', 'x', [], pytac.ENG,
+                                             pytac.PHYS)

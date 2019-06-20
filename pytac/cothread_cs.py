@@ -7,11 +7,10 @@ from pytac.exceptions import ControlSystemException
 
 
 class CothreadControlSystem(ControlSystem):
-    """A control system using cothread to communicate with EPICS. N.B. this is
-        the default control system.
+    """A control system using cothread to communicate with EPICS.
 
-    It is used to communicate over channel access with the hardware
-    in the ring.
+    N.B. this is the default control system. It is used to communicate over
+    channel access with the hardware in the ring.
 
     **Methods:**
     """

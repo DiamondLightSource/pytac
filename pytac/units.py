@@ -64,6 +64,22 @@ class UnitConv(object):
         self.eng_units = engineering_units
         self.phys_units = physics_units
 
+    def set_post_eng_to_phys(self, post_eng_to_phys):
+        """Set the function to be applied after the initial conversion.
+        Args:
+            post_eng_to_phys (function): Function to be applied after the
+                                          initial conversion.
+        """
+        self._post_eng_to_phys = post_eng_to_phys
+
+    def set_pre_phys_to_eng(self, pre_phys_to_eng):
+        """Set the function to be applied before the initial conversion.
+        Args:
+            pre_phys_to_eng (function): Function to be applied before the
+                                         initial conversion.
+        """
+        self._pre_phys_to_eng = pre_phys_to_eng
+
     def _raw_eng_to_phys(self, value):
         """Function to be implemented by child classes.
 
@@ -208,9 +224,12 @@ class PolyUnitConv(UnitConv):
         if len(roots) == 1:
             x = roots[0]
             return x
-        else:
+        elif len(roots) == 0:
             raise UnitsException("A corresponding engineering value does not "
-                                 "exist, or there are multiple:", roots)
+                                 "exist.")
+        else:
+            raise UnitsException("There are multiple corresponding "
+                                 "engineering values: {0}".format(roots))
 
 
 class PchipUnitConv(UnitConv):
@@ -264,7 +283,7 @@ class PchipUnitConv(UnitConv):
         # constructor.
         y_diff = numpy.diff(y)
         if not ((numpy.all(y_diff > 0)) or (numpy.all((y_diff < 0)))):
-            raise ValueError("y coefficients must be monotonically"
+            raise ValueError("y coefficients must be monotonically "
                              "increasing or decreasing.")
 
     def _raw_eng_to_phys(self, eng_value):
@@ -307,8 +326,8 @@ class PchipUnitConv(UnitConv):
                 else:
                     # I believe this should never happen because of the
                     # requirement for self.y to be monotonically increasing.
-                    raise UnitsException("More than one solution within Pchip"
-                                         " bounds.")
+                    raise UnitsException("More than one solution within Pchip "
+                                         "bounds.")
         if unique_root is None:
             raise UnitsException("No solution within Pchip bounds.")
         return unique_root

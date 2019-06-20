@@ -1,8 +1,8 @@
 Developers
 ==========
 
-The installation and initialisation steps are slightly different if you want to work on pytac.
-N.B. This guide uses pipenv but a virtualenv will also work.
+The installation and initialisation steps are slightly different if you want to
+work on Pytac. N.B. This guide uses pipenv but a virtualenv will also work.
 
 
 Installation
@@ -10,20 +10,23 @@ Installation
 
 This is only required on your first use.
 
-- Ensure you have the following requirements: Pip, Pipenv, and a local copy of pytac.
+- Ensure you have the following requirements: Pip, Pipenv, and a local copy of
+  Pytac.
 
-- Install dev-packages and cothread for EPICS support::
+- Install dev-packages and Cothread for EPICS support::
 
     $ pipenv install --dev
-    $ pip install cothread	# cothread is required for EPICS functionality, but pytac can run without it.
+    $ pip install cothread
+    $ # Cothread is required for EPICS functionality, but Pytac can run without it.
 
 
 Initialisation
 ~~~~~~~~~~~~~~
 
-This is required each time you want to start up pytac.
+This is required each time you want to start up Pytac.
 
-- Navigate to your pytac directory and activate a Pipenv shell, and start Python::
+- Navigate to your ``pytac`` directory and activate a Pipenv shell, and start
+  Python::
 
     $ cd <directory-path>
     $ pipenv shell
@@ -34,7 +37,7 @@ This is required each time you want to start up pytac.
     >>>
 
 
-- Import pytac and initialise the lattice from the ``VMX`` directory::
+- Import Pytac and initialise the lattice from the ``VMX`` directory::
 
     >>> import pytac.load_csv
     >>> lattice = pytac.load_csv.load('VMX')
