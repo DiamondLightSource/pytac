@@ -1,3 +1,4 @@
+import mock
 import numpy
 import pytest
 
@@ -29,6 +30,26 @@ def test_UnitConv_requires_correct_arguments(origin, target):
     uc = UnitConv()
     with pytest.raises(pytac.exceptions.UnitsException):
         uc.convert(10, origin, target)
+
+
+def test_set_post_eng_to_phys():
+    uc = UnitConv()
+    assert uc._post_eng_to_phys == pytac.units.unit_function
+    assert uc._pre_phys_to_eng == pytac.units.unit_function
+    m = mock.Mock()
+    uc.set_post_eng_to_phys(m)
+    assert uc._post_eng_to_phys == m
+    assert uc._pre_phys_to_eng == pytac.units.unit_function
+
+
+def test_set_per_phys_to_eng():
+    uc = UnitConv()
+    assert uc._post_eng_to_phys == pytac.units.unit_function
+    assert uc._pre_phys_to_eng == pytac.units.unit_function
+    m = mock.Mock()
+    uc.set_pre_phys_to_eng(m)
+    assert uc._post_eng_to_phys == pytac.units.unit_function
+    assert uc._pre_phys_to_eng == m
 
 
 def test_identity_conversion():

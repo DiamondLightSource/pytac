@@ -257,6 +257,15 @@ class Element(object):
             raise FieldException("Element {0} does not have field {1}."
                                  .format(self, field))
 
+    def set_lattice(self, lattice):
+        """Set the stored lattice reference for this element to the passed
+        lattice object.
+
+        Args:
+            lattice (Lattice): lattice object to store a reference to.
+        """
+        self._lattice = lattice
+
 
 class EpicsElement(Element):
     """EPICS-aware element.

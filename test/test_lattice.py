@@ -169,7 +169,9 @@ def test_set_element_values(simple_lattice):
     simple_lattice.get_element_devices('family', 'x')[0].set_value.assert_called_with(1, True)
 
 
-def test_set_element_values_length_mismatch_raises_IndexError(simple_lattice):
+def test_set_element_values_raises_Exceptions_correctly(simple_lattice):
+    with pytest.raises(pytac.exceptions.HandleException):
+        simple_lattice.set_element_values('family', 'x', [1], handle=pytac.RB)
     with pytest.raises(IndexError):
         simple_lattice.set_element_values('family', 'x', [1, 2])
     with pytest.raises(IndexError):
@@ -212,3 +214,27 @@ def test_set_default_arguments_exceptions(simple_lattice):
         simple_lattice.set_default_units('invalid_units')
     with pytest.raises(pytac.exceptions.DataSourceException):
         simple_lattice.set_default_data_source('invalid_data_source')
+
+
+def test_convert_family_values(simple_lattice):
+    post_values = simple_lattice.convert_family_values('family', 'y', [12],
+                                                       pytac.PHYS, pytac.ENG)
+    assert post_values == [6]
+    post_values = simple_lattice.convert_family_values('family', 'y', [12],
+                                                       pytac.ENG, pytac.PHYS)
+    assert post_values == [24]
+    post_values = simple_lattice.convert_family_values('family', 'y', [12],
+                                                       pytac.ENG, pytac.ENG)
+    assert post_values == [12]
+    post_values = simple_lattice.convert_family_values('family', 'y', [12],
+                                                       pytac.PHYS, pytac.PHYS)
+    assert post_values == [12]
+
+
+def test_convert_family_values_length_mismatch_raises_IndexError(simple_lattice):
+    with pytest.raises(IndexError):
+        simple_lattice.convert_family_values('family', 'x', [1, 2], pytac.ENG,
+                                             pytac.PHYS)
+    with pytest.raises(IndexError):
+        simple_lattice.convert_family_values('family', 'x', [], pytac.ENG,
+                                             pytac.PHYS)

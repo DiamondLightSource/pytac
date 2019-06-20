@@ -119,8 +119,8 @@ def load_unitconv(directory, mode, lattice):
                     if element.families.intersection(('HSTR', 'VSTR', 'QUAD',
                                                       'SEXT')):
                         energy = lattice.get_value('energy', units=pytac.PHYS)
-                        uc._post_eng_to_phys = utils.get_div_rigidity(energy)
-                        uc._pre_phys_to_eng = utils.get_mult_rigidity(energy)
+                        uc.set_post_eng_to_phys(utils.get_div_rigidity(energy))
+                        uc.set_pre_phys_to_eng(utils.get_mult_rigidity(energy))
                     uc.phys_units = item['phys_units']
                     uc.eng_units = item['eng_units']
                 element.set_unitconv(item['field'], uc)

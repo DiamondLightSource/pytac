@@ -64,6 +64,22 @@ class UnitConv(object):
         self.eng_units = engineering_units
         self.phys_units = physics_units
 
+    def set_post_eng_to_phys(self, post_eng_to_phys):
+        """Set the function to be applied after the initial conversion.
+        Args:
+            post_eng_to_phys (function): Function to be applied after the
+                                          initial conversion.
+        """
+        self._post_eng_to_phys = post_eng_to_phys
+
+    def set_pre_phys_to_eng(self, pre_phys_to_eng):
+        """Set the function to be applied before the initial conversion.
+        Args:
+            pre_phys_to_eng (function): Function to be applied before the
+                                         initial conversion.
+        """
+        self._pre_phys_to_eng = pre_phys_to_eng
+
     def _raw_eng_to_phys(self, value):
         """Function to be implemented by child classes.
 

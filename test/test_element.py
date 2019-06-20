@@ -70,11 +70,11 @@ def test_get_unitconv_returns_unitconv_object(simple_element, unit_uc,
     assert simple_element.get_unitconv('y') == double_uc
 
 
-def tes_set_unit_conv(simple_element):
+def test_set_unit_conv(simple_element):
     with pytest.raises(KeyError):
         simple_element._data_source_manager._uc['field1']
     uc = mock.Mock()
-    simple_element.set_unitConv('field1', uc)
+    simple_element.set_unitconv('field1', uc)
     assert simple_element._data_source_manager._uc['field1'] == uc
 
 
@@ -163,3 +163,16 @@ def test_element_representation():
     elem.name = None
     assert str(elem) == ("<Element index 1, length 0.1 m, cell 1, families "
                          "fam1>")
+
+
+def test_set_lattice_reference():
+    elem1 = Element(1.0, 'BPM')
+    lat1 = Lattice('one')
+    elem2 = Element(2.0, 'BPM', lattice=lat1)
+    lat2 = Lattice('two')
+    assert elem1._lattice is None
+    assert elem2._lattice == lat1
+    elem1.set_lattice(lat1)
+    elem2.set_lattice(lat2)
+    assert elem1._lattice == lat1
+    assert elem2._lattice == lat2
