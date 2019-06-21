@@ -67,6 +67,8 @@ class UnitConv(object):
         self._pre_phys_to_eng = pre_phys_to_eng
         self.eng_units = engineering_units
         self.phys_units = physics_units
+        self.lower_limit = None
+        self.upper_limit = None
 
     def set_post_eng_to_phys(self, post_eng_to_phys):
         """Set the function to be applied after the initial conversion.
@@ -152,11 +154,34 @@ class UnitConv(object):
         if origin == target:
             return value
         if origin == pytac.PHYS and target == pytac.ENG:
-            return self.phys_to_eng(value)
+            result = self.phys_to_eng(value)
+            if self.lower_limit is None:
+                return result
+            else:
+                if (result > self.lower_limit) and (result < self.upper_limit):
+                    return result
+                else:
+                    raise UnitsException("UnitConv {0}: Result of conversion "
+                                         "({1}) outside conversion limits."
+                                         .format(self.id, value))
         if origin == pytac.ENG and target == pytac.PHYS:
-            return self.eng_to_phys(value)
+            if self.lower_limit is None:
+                return self.eng_to_phys(value)
+            else:
+                if (value > self.lower_limit) and (value < self.upper_limit):
+                    return self.eng_to_phys(value)
+                else:
+                    raise UnitsException("UnitConv {0}: Value to convert "
+                                         "({1}) outside conversion limits."
+                                         .format(self.id, value))
         raise UnitsException("UnitConv {0}: Conversion from {1} to {2} not "
                              "understood.".format(self.id, origin, target))
+
+    def set_conversion_limits(self, lower_limit, upper_limit):
+        """Limits are in eng.
+        """
+        self.lower_limit = lower_limit
+        self.upper_limit = upper_limit
 
 
 class PolyUnitConv(UnitConv):

@@ -104,6 +104,9 @@ def load_unitconv(directory, mode, lattice):
                     uc = unitconvs[int(item['uc_id'])]
                     uc.phys_units = item['phys_units']
                     uc.eng_units = item['eng_units']
+                    if item['lower_lim'] != '':
+                        uc.set_conversion_limits(float(item['lower_lim']),
+                                                 float(item['upper_lim']))
                 else:
                     uc = units.NullUnitConv(item['eng_units'],
                                             item['phys_units'])
@@ -124,6 +127,9 @@ def load_unitconv(directory, mode, lattice):
                         uc.set_pre_phys_to_eng(utils.get_mult_rigidity(energy))
                     uc.phys_units = item['phys_units']
                     uc.eng_units = item['eng_units']
+                    if item['lower_lim'] != '':
+                        uc.set_conversion_limits(float(item['lower_lim']),
+                                                 float(item['upper_lim']))
                 element.set_unitconv(item['field'], uc)
 
 
