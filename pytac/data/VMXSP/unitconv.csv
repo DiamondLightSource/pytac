@@ -3,10 +3,6 @@ el_id,field,uc_type,uc_id,phys_units,eng_units
 0,beta,null,0,m,m
 0,dispersion,null,0,m,m
 0,beam_current,null,0,A,A
-111,db0,null,0,m^-1,A
-189,db0,null,0,m^-1,A
-136,db0,null,0,m^-1,A
-164,db0,null,0,m^-1,A
 1490,f,null,0,Hz,Hz
 0,energy,poly,1,Gev,Mev
 0,emittance_x,poly,2,m,nm
@@ -480,10 +476,10 @@ el_id,field,uc_type,uc_id,phys_units,eng_units
 2044,b0,pchip,116,m^-1,A
 2094,b0,pchip,116,m^-1,A
 2123,b0,pchip,116,m^-1,A
-111,b0,pchip,117,m^-1,A
-189,b0,pchip,117,m^-1,A
-136,b0,pchip,118,m^-1,A
-164,b0,pchip,118,m^-1,A
+111,db0,pchip,117,m^-1,A
+189,db0,pchip,117,m^-1,A
+136,db0,pchip,118,m^-1,A
+164,db0,pchip,118,m^-1,A
 3,x,poly,119,mm,m
 3,y,poly,119,mm,m
 19,x,poly,119,mm,m

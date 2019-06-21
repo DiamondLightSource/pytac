@@ -48,7 +48,8 @@ def load_poly_unitconv(filename):
                                                float(item['val'])))
     # Create PolyUnitConv for each item and put in the dict
     for uc_id in data:
-        u = units.PolyUnitConv([x[1] for x in reversed(sorted(data[uc_id]))])
+        u = units.PolyUnitConv([x[1] for x in reversed(sorted(data[uc_id]))],
+                               uc_id)
         unitconvs[uc_id] = u
     return unitconvs
 
@@ -74,7 +75,7 @@ def load_pchip_unitconv(filename):
     for uc_id in data:
         eng = [x[0] for x in sorted(data[uc_id])]
         phy = [x[1] for x in sorted(data[uc_id])]
-        u = units.PchipUnitConv(eng, phy)
+        u = units.PchipUnitConv(eng, phy, uc_id)
         unitconvs[uc_id] = u
     return unitconvs
 
@@ -117,7 +118,7 @@ def load_unitconv(directory, mode, lattice):
                 else:
                     uc = unitconvs[int(item['uc_id'])]
                     if element.families.intersection(('HSTR', 'VSTR', 'QUAD',
-                                                      'SEXT')):
+                                                      'SEXT', 'BEND')):
                         energy = lattice.get_value('energy', units=pytac.PHYS)
                         uc.set_post_eng_to_phys(utils.get_div_rigidity(energy))
                         uc.set_pre_phys_to_eng(utils.get_mult_rigidity(energy))

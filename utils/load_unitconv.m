@@ -26,13 +26,6 @@ fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'dispersion', uc_id, 'm', 'm');
 fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'beam_current', uc_id, 'A', 'A');
 
 % Element null unit conversions
-s_data = getfamilydata('BBVMXS');
-l_data = getfamilydata('BBVMXL');
-db_indexes = [s_data.AT.ATIndex, l_data.AT.ATIndex];
-db_indexes = db_indexes(:);
-for i = 1:length(db_indexes)
-    fprintf(f_units, '%d,%s,null,%d,%s,%s\n', renamedIndexes(db_indexes(i)), 'db0', 0, 'm^-1', 'A');
-end
 rfs = getfamilydata('RF');
 if length(rfs.ElementList) == 1
     fprintf(f_units, '%d,%s,null,%d,%s,%s\n', renamedIndexes(family2atindex('RF')), 'f', 0, 'Hz', 'Hz');
@@ -69,7 +62,12 @@ end
 
 bend_families = findmemberof('BEND');
 for i = 1:length(bend_families)
-    write_multipole_section(bend_families{i}, 'b0', renamedIndexes, 'm^-1', 'A');
+    if strcmp(bend_families{i}, 'BBVMXS') || strcmp(bend_families{i}, 'BBVMXL')
+        % Double bend families
+        write_multipole_section(bend_families{i}, 'db0', renamedIndexes, 'm^-1', 'A');
+    else
+        write_multipole_section(bend_families{i}, 'b0', renamedIndexes, 'm^-1', 'A');
+    end
 end
 
 bpms = getfamilydata('BPMx');

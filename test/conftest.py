@@ -70,12 +70,12 @@ def mock_sim_data_source():
 
 @pytest.fixture
 def unit_uc():
-    return PolyUnitConv([1, 0])
+    return PolyUnitConv([1, 0], 0)
 
 
 @pytest.fixture
 def double_uc():
-    return PolyUnitConv([2, 0])
+    return PolyUnitConv([2, 0], 0)
 
 
 @pytest.fixture

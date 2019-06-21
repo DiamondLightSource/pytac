@@ -33,6 +33,7 @@ class UnitConv(object):
     **Attributes:**
 
     Attributes:
+        id (int): The unit conversion id as it appears in the csv files.
         eng_units (str): The unit type of the post conversion engineering
                           value.
         phys_units (str): The unit type of the post conversion physics value.
@@ -43,11 +44,13 @@ class UnitConv(object):
            _pre_phys_to_eng (function): Function to be applied before the
                                          initial conversion.
     """
-    def __init__(self, post_eng_to_phys=unit_function,
+    def __init__(self, conv_id, post_eng_to_phys=unit_function,
                  pre_phys_to_eng=unit_function, engineering_units='',
                  physics_units=''):
         """
         Args:
+            conv_id (int): The unit conversion id as it appears in the csv
+                            files.
             post_eng_to_phys (function): Function to be applied after the
                                           initial conversion.
             pre_phys_to_eng (function): Function to be applied before the
@@ -59,6 +62,7 @@ class UnitConv(object):
 
         **Methods:**
         """
+        self.id = conv_id
         self._post_eng_to_phys = post_eng_to_phys
         self._pre_phys_to_eng = pre_phys_to_eng
         self.eng_units = engineering_units
@@ -151,8 +155,8 @@ class UnitConv(object):
             return self.phys_to_eng(value)
         if origin == pytac.ENG and target == pytac.PHYS:
             return self.eng_to_phys(value)
-        raise UnitsException("Conversion from {0} to {1} not understood."
-                             .format(origin, target))
+        raise UnitsException("UnitConv {0}: Conversion from {1} to {2} not "
+                             "understood.".format(self.id, origin, target))
 
 
 class PolyUnitConv(UnitConv):
@@ -163,6 +167,7 @@ class PolyUnitConv(UnitConv):
 
     Attributes:
         p (poly1d): A one-dimensional polynomial of coefficients.
+        id (int): The unit conversion id as it appears in the csv files.
         eng_units (str): The unit type of the post conversion engineering
                           value.
         phys_units (str): The unit type of the post conversion physics value.
@@ -173,13 +178,15 @@ class PolyUnitConv(UnitConv):
            _pre_phys_to_eng (function): Function to be applied before the
                                          initial conversion.
     """
-    def __init__(self, coef, post_eng_to_phys=unit_function,
+    def __init__(self, coef, conv_id, post_eng_to_phys=unit_function,
                  pre_phys_to_eng=unit_function, engineering_units='',
                  physics_units=''):
         """
         Args:
             coef (array-like): The polynomial's coefficients, in decreasing
                                 powers.
+            conv_id (int): The unit conversion id as it appears in the csv
+                            files.
             post_eng_to_phys (float): The value after conversion between ENG
                                        and PHYS.
             pre_eng_to_phys (float): The value before conversion.
@@ -188,7 +195,8 @@ class PolyUnitConv(UnitConv):
             physics_units (str): The unit type of the post conversion physics
                                   value.
         """
-        super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng,
+        super(self.__class__, self).__init__(conv_id, post_eng_to_phys,
+                                             pre_phys_to_eng,
                                              engineering_units, physics_units)
         self.p = numpy.poly1d(coef)
 
@@ -220,16 +228,21 @@ class PolyUnitConv(UnitConv):
             UnitsException: An error occurred when there exist no roots or more
                              than one root.
         """
-        roots = (self.p - physics_value).roots
-        if len(roots) == 1:
-            x = roots[0]
+        roots = set((self.p - physics_value).roots)  # remove duplicates
+        valid_roots = []
+        for root in roots:  # remove imaginary roots
+            if not numpy.issubdtype(root.dtype, numpy.complexfloating):
+                valid_roots.append(root)
+        if len(valid_roots) == 1:
+            x = valid_roots[0]
             return x
-        elif len(roots) == 0:
-            raise UnitsException("A corresponding engineering value does not "
-                                 "exist.")
+        elif len(valid_roots) == 0:
+            raise UnitsException("UnitConv {0}: A corresponding engineering "
+                                 "value does not exist.".format(self.id))
         else:
-            raise UnitsException("There are multiple corresponding "
-                                 "engineering values: {0}".format(roots))
+            raise UnitsException("UnitConv {0}: There are multiple "
+                                 "corresponding engineering values: {1}"
+                                 .format(self.id, roots))
 
 
 class PchipUnitConv(UnitConv):
@@ -245,6 +258,7 @@ class PchipUnitConv(UnitConv):
                    or decreasing order. Otherwise, a ValueError is raised.
         pp (PchipInterpolator): A pchip one-dimensional monotonic cubic
                                  interpolation of points on both x and y axes.
+        id (int): The unit conversion id as it appears in the csv files.
         eng_units (str): The unit type of the post conversion engineering
                           value.
         phys_units (str): The unit type of the post conversion physics value.
@@ -255,7 +269,7 @@ class PchipUnitConv(UnitConv):
            _pre_phys_to_eng (function): Function to be applied before the
                                          initial conversion.
     """
-    def __init__(self, x, y, post_eng_to_phys=unit_function,
+    def __init__(self, x, y, conv_id, post_eng_to_phys=unit_function,
                  pre_phys_to_eng=unit_function, engineering_units='',
                  physics_units=''):
         """
@@ -266,6 +280,8 @@ class PchipUnitConv(UnitConv):
             y (list): A list of points on the y axis. These must be in
                        increasing or decreasing order. Otherwise, a ValueError
                        is raised.
+            conv_id (int): The unit conversion id as it appears in the csv
+                            files.
             engineering_units (str): The unit type of the post conversion
                                       engineering value.
             physics_units (str): The unit type of the post conversion physics
@@ -274,7 +290,8 @@ class PchipUnitConv(UnitConv):
         Raises:
             ValueError: if coefficients are not appropriately monotonic.
         """
-        super(self.__class__, self).__init__(post_eng_to_phys, pre_phys_to_eng,
+        super(self.__class__, self).__init__(conv_id, post_eng_to_phys,
+                                             pre_phys_to_eng,
                                              engineering_units, physics_units)
         self.x = x
         self.y = y
@@ -326,10 +343,12 @@ class PchipUnitConv(UnitConv):
                 else:
                     # I believe this should never happen because of the
                     # requirement for self.y to be monotonically increasing.
-                    raise UnitsException("More than one solution within Pchip "
-                                         "bounds.")
+                    raise UnitsException("UnitConv {0}: More than one "
+                                         "solution within Pchip bounds."
+                                         .format(self.id))
         if unique_root is None:
-            raise UnitsException("No solution within Pchip bounds.")
+            raise UnitsException("UnitConv {0}: No solution within Pchip "
+                                 "bounds.".format(self.id))
         return unique_root
 
 
@@ -339,6 +358,8 @@ class NullUnitConv(UnitConv):
     **Attributes:**
 
     Attributes:
+        id (int): The unit conversion id as it appears in the csv files,
+                   always 0 as is the convention in the csv files.
         eng_units (str): The unit type of the post conversion engineering
                           value.
         phys_units (str): The unit type of the post conversion physics value.
@@ -357,7 +378,7 @@ class NullUnitConv(UnitConv):
             physics_units (str): The unit type of the post conversion physics
                                   value.
         """
-        super(self.__class__, self).__init__(unit_function, unit_function,
+        super(self.__class__, self).__init__(0, unit_function, unit_function,
                                              engineering_units, physics_units)
 
     def _raw_eng_to_phys(self, eng_value):
