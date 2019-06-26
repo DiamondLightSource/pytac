@@ -56,12 +56,12 @@ Print BPM PV names along with s position
 
 - Get PV names and positions for BPMs directly from the lattice object::
 
-    >>> lattice.get_pv_names('BPM', 'x', pytac.RB)
+    >>> lattice.get_element_pv_names('BPM', 'x', pytac.RB)
     ['SR01C-DI-EBPM-01:SA:X',
     'SR01C-DI-EBPM-02:SA:X',
     'SR01C-DI-EBPM-03:SA:X'
     ...
-    >>> lattice.get_pv_names('BPM', 'y', pytac.RB)
+    >>> lattice.get_element_pv_names('BPM', 'y', pytac.RB)
     ['SR01C-DI-EBPM-01:SA:Y',
     'SR01C-DI-EBPM-02:SA:Y',
     'SR01C-DI-EBPM-03:SA:Y',
