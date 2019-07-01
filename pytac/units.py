@@ -95,23 +95,6 @@ class UnitConv(object):
         """
         raise NotImplementedError('No eng-to-phys conversion provided')
 
-    def eng_to_phys(self, value):
-        """Function that does the unit conversion.
-
-        Conversion from engineering to physics units. An additional function
-        may be cast on the initial conversion.
-
-        Args:
-            value (float): Value to be converted from engineering to physics
-                            units.
-
-        Returns:
-            float: The result value.
-        """
-        x = self._raw_eng_to_phys(value)
-        result = self._post_eng_to_phys(x)
-        return result
-
     def _raw_phys_to_eng(self, value):
         """Function to be implemented by child classes.
 
@@ -121,61 +104,77 @@ class UnitConv(object):
         """
         raise NotImplementedError('No phys-to-eng conversion provided')
 
-    def phys_to_eng(self, value):
-        """Function that does the unit conversion.
-
-        Conversion from physics to engineering units. An additional function
-        may be cast on the initial conversion.
-
-        Args:
-            value (float): Value to be converted from physics to engineering
-                            units.
-
-        Returns:
-            float: The result value.
-        """
-        x = self._pre_phys_to_eng(value)
-        result = self._raw_phys_to_eng(x)
-        return result
-
     def convert(self, value, origin, target):
-        """
+        """Convert between two different unit types and chek the validity of
+        the result.
+
         Args:
             value (float):
             origin (str): pytac.ENG or pytac.PHYS
             target (str): pytac.ENG or pytac.PHYS
 
         Returns:
-            float: The result value.
+            float: The resulting value.
 
         Raises:
-            UnitsException: invalid conversion.
+            UnitsException: If the conversion is invalid; i.e. if there are no
+                             solutions, or multiple, within conversion limits.
         """
         if origin == target:
             return value
-        if origin == pytac.PHYS and target == pytac.ENG:
-            result = self.phys_to_eng(value)
-            if self.lower_limit is None:
-                return result
+        elif origin == pytac.ENG and target == pytac.PHYS:
+            if self.lower_limit is not None:
+                if value < self.lower_limit:
+                    raise UnitsException("UnitConv {0}: Input less than lower "
+                                         "conversion limit ({1})."
+                                         .format(self.id, self.lower_limit))
+            if self.upper_limit is not None:
+                if value > self.upper_limit:
+                    raise UnitsException("UnitConv {0}: Input greater than "
+                                         "upper conversion limit ({1})."
+                                         .format(self.id, self.upper_limit))
+            results = self._raw_eng_to_phys(value)
+            valid_results = [self._post_eng_to_phys(result)
+                             for result in results]
+            if len(valid_results) == 1:
+                return valid_results[0]
+            elif len(valid_results) == 0:
+                raise UnitsException("UnitConv {0}: A corresponding {0} value "
+                                     "does not exist.".format(self.id, target))
             else:
-                if (result > self.lower_limit) and (result < self.upper_limit):
-                    return result
-                else:
-                    raise UnitsException("UnitConv {0}: Result of conversion "
-                                         "({1}) outside conversion limits."
-                                         .format(self.id, value))
-        if origin == pytac.ENG and target == pytac.PHYS:
-            if self.lower_limit is None:
-                return self.eng_to_phys(value)
+                raise UnitsException("UnitConv {0}: There are multiple "
+                                     "corresponding {1} values ({2})."
+                                     .format(self.id, target, valid_results))
+        elif origin == pytac.PHYS and target == pytac.ENG:
+            adjusted_value = self._pre_phys_to_eng(value)
+            results = self._raw_phys_to_eng(adjusted_value)
+            if self.lower_limit is not None:
+                l = set([result for result in results
+                         if result > self.lower_limit])
             else:
-                if (value > self.lower_limit) and (value < self.upper_limit):
-                    return self.eng_to_phys(value)
-                else:
-                    raise UnitsException("UnitConv {0}: Value to convert "
-                                         "({1}) outside conversion limits."
-                                         .format(self.id, value))
-        raise UnitsException("UnitConv {0}: Conversion from {1} to {2} not "
-                             "understood.".format(self.id, origin, target))
+                l = set(results)
+            if self.upper_limit is not None:
+                u = set([result for result in results
+                         if result < self.upper_limit])
+            else:
+                u = set(results)
+            valid_results = list(l & u)
+            if len(valid_results) == 1:
+                return valid_results[0]
+            elif len(valid_results) == 0:
+                raise UnitsException("UnitConv {0}: Result of conversion "
+                                     "({1}) outside conversion limits ({2}, "
+                                     "{3}).".format(self.id, results,
+                                                    self.lower_limit,
+                                                    self.upper_limit))
+            else:
+                raise UnitsException("UnitConv {0}: There are multiple "
+                                     "corresponding {1} values ({2})."
+                                     .format(self.id, target, valid_results))
+        else:
+            raise UnitsException("UnitConv {0}: Conversion from {1} to {2} "
+                                 "not understood.".format(self.id, origin,
+                                                          target))
 
     def set_conversion_limits(self, lower_limit, upper_limit):
         """Limits are in eng.
@@ -233,10 +232,10 @@ class PolyUnitConv(UnitConv):
                                 units.
 
         Returns:
-            float: The converted physics value from the given engineering
-                    value.
+            list: Containing the converted physics value from the given
+                    engineering value.
         """
-        return self.p(eng_value)
+        return [self.p(eng_value)]
 
     def _raw_phys_to_eng(self, physics_value):
         """Convert between physics and engineering units.
@@ -246,28 +245,15 @@ class PolyUnitConv(UnitConv):
                                     engineering units.
 
         Returns:
-            float: The converted engineering value from the given physics
-                    value.
-
-        Raises:
-            UnitsException: An error occurred when there exist no roots or more
-                             than one root.
+            list: Containing all posible real engineering values converted
+                   from the given physics value.
         """
         roots = set((self.p - physics_value).roots)  # remove duplicates
         valid_roots = []
         for root in roots:  # remove imaginary roots
             if not numpy.issubdtype(root.dtype, numpy.complexfloating):
                 valid_roots.append(root)
-        if len(valid_roots) == 1:
-            x = valid_roots[0]
-            return x
-        elif len(valid_roots) == 0:
-            raise UnitsException("UnitConv {0}: A corresponding engineering "
-                                 "value does not exist.".format(self.id))
-        else:
-            raise UnitsException("UnitConv {0}: There are multiple "
-                                 "corresponding engineering values: {1}"
-                                 .format(self.id, roots))
+        return valid_roots
 
 
 class PchipUnitConv(UnitConv):
@@ -335,46 +321,30 @@ class PchipUnitConv(UnitConv):
             eng_value (float): The engineering value to be converted to physics
                                 units.
         Returns:
-            float: The converted physics value from the given engineering
-                    value.
+            list: Containing the converted physics value from the given
+                    engineering value.
         """
-        return self.pp(eng_value)
+        return [self.pp(eng_value)]
 
     def _raw_phys_to_eng(self, physics_value):
         """Convert between physics and engineering units.
-
-        This expects there to be exactly one solution for x within the
-        range of the x values in self.x, otherwise a UnitsException is raised.
 
         Args:
             physics_value (float): The physics value to be converted to
                                     engineering units.
 
         Returns:
-            float: The converted engineering value from the given physics
-                    value.
-
-        Raises:
-            UnitsException: if there is not exactly one solution.
+            list: Containing all posible real engineering values converted
+                   from the given physics value.
         """
         y = [val - physics_value for val in self.y]
         new_pp = PchipInterpolator(self.x, y)
-        roots = new_pp.roots()
-        unique_root = None
-        for root in roots:
-            if self.x[0] <= root <= self.x[-1]:
-                if unique_root is None:
-                    unique_root = root
-                else:
-                    # I believe this should never happen because of the
-                    # requirement for self.y to be monotonically increasing.
-                    raise UnitsException("UnitConv {0}: More than one "
-                                         "solution within Pchip bounds."
-                                         .format(self.id))
-        if unique_root is None:
-            raise UnitsException("UnitConv {0}: No solution within Pchip "
-                                 "bounds.".format(self.id))
-        return unique_root
+        roots = set(new_pp.roots())  # remove duplicates
+        valid_roots = []
+        for root in roots:  # remove imaginary roots
+            if not numpy.issubdtype(root.dtype, numpy.complexfloating):
+                valid_roots.append(root)
+        return valid_roots
 
 
 class NullUnitConv(UnitConv):
@@ -415,9 +385,9 @@ class NullUnitConv(UnitConv):
         Args:
             eng_value (float): The engineering value to be returned unchanged.
         Returns:
-            float: The unconverted given engineering value.
+            list: Containing the unconverted given engineering value.
         """
-        return eng_value
+        return [eng_value]
 
     def _raw_phys_to_eng(self, phys_value):
         """Doesn't convert between physics and engineering units.
@@ -429,6 +399,6 @@ class NullUnitConv(UnitConv):
             physics_value (float): The physics value to be returned unchanged.
 
         Returns:
-            float: The unconverted given physics value.
+            list: Containing the unconverted given physics value.
         """
-        return phys_value
+        return [phys_value]
