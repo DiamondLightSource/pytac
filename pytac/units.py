@@ -109,7 +109,7 @@ class UnitConv(object):
         the result.
 
         Args:
-            value (float):
+            value (float): the value to be converted
             origin (str): pytac.ENG or pytac.PHYS
             target (str): pytac.ENG or pytac.PHYS
 
@@ -139,9 +139,13 @@ class UnitConv(object):
             if len(valid_results) == 1:
                 return valid_results[0]
             elif len(valid_results) == 0:
+                # This will not occur for our existing NullUnitConv,
+                # PchipUintConv, and PolyUnitConv classes.
                 raise UnitsException("UnitConv {0}: A corresponding {0} value "
                                      "does not exist.".format(self.id, target))
             else:
+                # This will not occur for our existing NullUnitConv,
+                # PchipUintConv, and PolyUnitConv classes.
                 raise UnitsException("UnitConv {0}: There are multiple "
                                      "corresponding {1} values ({2})."
                                      .format(self.id, target, valid_results))
@@ -150,12 +154,12 @@ class UnitConv(object):
             results = self._raw_phys_to_eng(adjusted_value)
             if self.lower_limit is not None:
                 l = set([result for result in results
-                         if result > self.lower_limit])
+                         if result >= self.lower_limit])
             else:
                 l = set(results)
             if self.upper_limit is not None:
                 u = set([result for result in results
-                         if result < self.upper_limit])
+                         if result <= self.upper_limit])
             else:
                 u = set(results)
             valid_results = list(l & u)
@@ -177,7 +181,12 @@ class UnitConv(object):
                                                           target))
 
     def set_conversion_limits(self, lower_limit, upper_limit):
-        """Limits are in eng.
+        """Conversion limits to be applied before or after a conversion take
+        place. Limits should be set in in engineering units.
+
+        Args:
+            lower_limit (float): the lower conversion limit
+            upper_limit (float): the upper conversion limit
         """
         self.lower_limit = lower_limit
         self.upper_limit = upper_limit
@@ -307,6 +316,11 @@ class PchipUnitConv(UnitConv):
         self.x = x
         self.y = y
         self.pp = PchipInterpolator(x, y)
+        # Set conversion limits to PChip bounds if they are not already set.
+        if self.lower_limit is None:
+            self.lower_limit = self.x[0]
+        if self.upper_limit is None:
+            self.upper_limit = self.x[-1]
         # Note that the x coefficients are checked by the PchipInterpolator
         # constructor.
         y_diff = numpy.diff(y)
