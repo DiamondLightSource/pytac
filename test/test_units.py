@@ -52,9 +52,8 @@ def test_UnitConv_raises_UnitsException_for_values_outside_limits(origin,
 
 def test_UnitConv_includes_name_in_exception():
     uc = UnitConv(name='test_unitconv')
-    with pytest.raises(NotImplementedError) as e:
+    with pytest.raises(NotImplementedError, match="test_unitconv"):
         uc.convert(10, pytac.ENG, pytac.PHYS)
-    assert 'test_unitconv' in str(e)
 
 
 @pytest.mark.parametrize('origin, target', [(pytac.LIVE, pytac.ENG),
