@@ -48,8 +48,9 @@ def load_poly_unitconv(filename):
                                                float(item['val'])))
     # Create PolyUnitConv for each item and put in the dict
     for uc_id in data:
-        u = units.PolyUnitConv([x[1] for x in reversed(sorted(data[uc_id]))],
-                               uc_id)
+        u = units.PolyUnitConv(
+            [x[1] for x in reversed(sorted(data[uc_id]))], name=uc_id
+        )
         unitconvs[uc_id] = u
     return unitconvs
 

@@ -44,13 +44,11 @@ class UnitConv(object):
            _pre_phys_to_eng (function): Function to be applied before the
                                          initial conversion.
     """
-    def __init__(self, conv_id, post_eng_to_phys=unit_function,
+    def __init__(self, post_eng_to_phys=unit_function,
                  pre_phys_to_eng=unit_function, engineering_units='',
-                 physics_units=''):
+                 physics_units='', name=None):
         """
         Args:
-            conv_id (int): The unit conversion id as it appears in the csv
-                            files.
             post_eng_to_phys (function): Function to be applied after the
                                           initial conversion.
             pre_phys_to_eng (function): Function to be applied before the
@@ -59,16 +57,23 @@ class UnitConv(object):
                                       engineering value.
             physics_units (str): The unit type of the post conversion physics
                                   value.
+            name (str): An identifier for the unit conversion object.
 
         **Methods:**
         """
-        self.id = conv_id
+        self.name = name
         self._post_eng_to_phys = post_eng_to_phys
         self._pre_phys_to_eng = pre_phys_to_eng
         self.eng_units = engineering_units
         self.phys_units = physics_units
         self.lower_limit = None
         self.upper_limit = None
+
+    def __str__(self):
+        string_rep = self.__class__.__name__
+        if self.name is not None:
+            string_rep += " {}".format(self.name)
+        return string_rep
 
     def set_post_eng_to_phys(self, post_eng_to_phys):
         """Set the function to be applied after the initial conversion.
@@ -93,7 +98,9 @@ class UnitConv(object):
             value (float): The engineering value to be converted to physics
                             units.
         """
-        raise NotImplementedError('No eng-to-phys conversion provided')
+        raise NotImplementedError(
+            '{0}: No eng-to-phys conversion provided'.format(self)
+        )
 
     def eng_to_phys(self, value):
         """Function that does the unit conversion.
@@ -110,14 +117,14 @@ class UnitConv(object):
         """
         if self.lower_limit is not None:
             if value < self.lower_limit:
-                raise UnitsException("UnitConv {0}: Input less than lower "
+                raise UnitsException("{0}: Input less than lower "
                                      "conversion limit ({1})."
-                                     .format(self.id, self.lower_limit))
+                                     .format(self, self.lower_limit))
         if self.upper_limit is not None:
             if value > self.upper_limit:
-                raise UnitsException("UnitConv {0}: Input greater than "
+                raise UnitsException("{0}: Input greater than "
                                      "upper conversion limit ({1})."
-                                     .format(self.id, self.upper_limit))
+                                     .format(self, self.upper_limit))
         results = self._raw_eng_to_phys(value)
         valid_results = [self._post_eng_to_phys(result)
                          for result in results]
@@ -126,14 +133,14 @@ class UnitConv(object):
         elif len(valid_results) == 0:
             # This will not occur for our existing NullUnitConv,
             # PchipUintConv, and PolyUnitConv classes.
-            raise UnitsException("UnitConv {0}: A corresponding physics value "
-                                 "does not exist.".format(self.id))
+            raise UnitsException("{0}: A corresponding physics value "
+                                 "does not exist.".format(self))
         else:
             # This will not occur for our existing NullUnitConv,
             # PchipUintConv, and PolyUnitConv classes.
-            raise UnitsException("UnitConv {0}: There are multiple "
+            raise UnitsException("{0}: There are multiple "
                                  "corresponding physics values ({1})."
-                                 .format(self.id, valid_results))
+                                 .format(self, valid_results))
         return result
 
     def _raw_phys_to_eng(self, value):
@@ -143,7 +150,9 @@ class UnitConv(object):
             value (float): The physics value to be converted to engineering
                             units.
         """
-        raise NotImplementedError('No phys-to-eng conversion provided')
+        raise NotImplementedError(
+            '{0}: No phys-to-eng conversion provided'.format(self)
+        )
 
     def phys_to_eng(self, value):
         """Function that does the unit conversion.
@@ -168,15 +177,15 @@ class UnitConv(object):
         if len(results) == 1:
             return results[0]
         elif len(results) == 0:
-            raise UnitsException("UnitConv {0}: Result of conversion "
+            raise UnitsException("{0}: Result of conversion "
                                  "({1}) outside conversion limits ({2}, "
-                                 "{3}).".format(self.id, results,
+                                 "{3}).".format(self, results,
                                                 self.lower_limit,
                                                 self.upper_limit))
         else:
-            raise UnitsException("UnitConv {0}: There are multiple "
+            raise UnitsException("{0}: There are multiple "
                                  "corresponding engineering values ({1})."
-                                 .format(self.id, results))
+                                 .format(self, results))
 
     def convert(self, value, origin, target):
         """Convert between two different unit types and chek the validity of
@@ -201,8 +210,8 @@ class UnitConv(object):
         elif origin == pytac.PHYS and target == pytac.ENG:
             return self.phys_to_eng(value)
         else:
-            raise UnitsException("UnitConv {0}: Conversion from {1} to {2} "
-                                 "not understood.".format(self.id, origin,
+            raise UnitsException("{0}: Conversion from {1} to {2} "
+                                 "not understood.".format(self, origin,
                                                           target))
 
     def set_conversion_limits(self, lower_limit, upper_limit):
@@ -236,15 +245,13 @@ class PolyUnitConv(UnitConv):
            _pre_phys_to_eng (function): Function to be applied before the
                                          initial conversion.
     """
-    def __init__(self, coef, conv_id, post_eng_to_phys=unit_function,
+    def __init__(self, coef, post_eng_to_phys=unit_function,
                  pre_phys_to_eng=unit_function, engineering_units='',
-                 physics_units=''):
+                 physics_units='', name=None):
         """
         Args:
             coef (array-like): The polynomial's coefficients, in decreasing
                                 powers.
-            conv_id (int): The unit conversion id as it appears in the csv
-                            files.
             post_eng_to_phys (float): The value after conversion between ENG
                                        and PHYS.
             pre_eng_to_phys (float): The value before conversion.
@@ -252,10 +259,13 @@ class PolyUnitConv(UnitConv):
                                       engineering value.
             physics_units (str): The unit type of the post conversion physics
                                   value.
+            name (str): An identifier for the unit conversion object.
         """
-        super(self.__class__, self).__init__(conv_id, post_eng_to_phys,
+        super(self.__class__, self).__init__(post_eng_to_phys,
                                              pre_phys_to_eng,
-                                             engineering_units, physics_units)
+                                             engineering_units,
+                                             physics_units,
+                                             name)
         self.p = numpy.poly1d(coef)
 
     def _raw_eng_to_phys(self, eng_value):
@@ -314,9 +324,9 @@ class PchipUnitConv(UnitConv):
            _pre_phys_to_eng (function): Function to be applied before the
                                          initial conversion.
     """
-    def __init__(self, x, y, conv_id, post_eng_to_phys=unit_function,
+    def __init__(self, x, y, post_eng_to_phys=unit_function,
                  pre_phys_to_eng=unit_function, engineering_units='',
-                 physics_units=''):
+                 physics_units='', name=None):
         """
         Args:
             x (list): A list of points on the x axis. These must be in
@@ -325,19 +335,20 @@ class PchipUnitConv(UnitConv):
             y (list): A list of points on the y axis. These must be in
                        increasing or decreasing order. Otherwise, a ValueError
                        is raised.
-            conv_id (int): The unit conversion id as it appears in the csv
-                            files.
             engineering_units (str): The unit type of the post conversion
                                       engineering value.
             physics_units (str): The unit type of the post conversion physics
                                   value.
+            name (str): An identifier for the unit conversion object.
 
         Raises:
             ValueError: if coefficients are not appropriately monotonic.
         """
-        super(self.__class__, self).__init__(conv_id, post_eng_to_phys,
+        super(self.__class__, self).__init__(post_eng_to_phys,
                                              pre_phys_to_eng,
-                                             engineering_units, physics_units)
+                                             engineering_units,
+                                             physics_units,
+                                             name)
         self.x = x
         self.y = y
         self.pp = PchipInterpolator(x, y)
@@ -412,7 +423,7 @@ class NullUnitConv(UnitConv):
             physics_units (str): The unit type of the post conversion physics
                                   value.
         """
-        super(self.__class__, self).__init__(0, unit_function, unit_function,
+        super(self.__class__, self).__init__(unit_function, unit_function,
                                              engineering_units, physics_units)
 
     def _raw_eng_to_phys(self, eng_value):

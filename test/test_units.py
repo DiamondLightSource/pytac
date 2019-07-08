@@ -50,18 +50,25 @@ def test_UnitConv_raises_UnitsException_for_values_outside_limits(origin,
         uc.convert(11, origin, target)  # above upper limit
 
 
+def test_UnitConv_includes_name_in_exception():
+    uc = UnitConv(name='test_unitconv')
+    with pytest.raises(NotImplementedError) as e:
+        uc.convert(10, pytac.ENG, pytac.PHYS)
+    assert 'test_unitconv' in str(e)
+
+
 @pytest.mark.parametrize('origin, target', [(pytac.LIVE, pytac.ENG),
                                             (pytac.PHYS, pytac.SP),
                                             ('a', 'b')])
 def test_UnitConv_requires_correct_arguments(origin, target):
-    uc = UnitConv(12)
-    assert uc.id == 12
+    uc = UnitConv(name=12)
+    assert uc.name == 12
     with pytest.raises(pytac.exceptions.UnitsException):
         uc.convert(10, origin, target)
 
 
 def test_set_post_eng_to_phys():
-    uc = UnitConv(0)
+    uc = UnitConv()
     assert uc._post_eng_to_phys == pytac.units.unit_function
     assert uc._pre_phys_to_eng == pytac.units.unit_function
     m = mock.Mock()
@@ -71,7 +78,7 @@ def test_set_post_eng_to_phys():
 
 
 def test_set_per_phys_to_eng():
-    uc = UnitConv(0)
+    uc = UnitConv()
     assert uc._post_eng_to_phys == pytac.units.unit_function
     assert uc._pre_phys_to_eng == pytac.units.unit_function
     m = mock.Mock()
@@ -81,7 +88,7 @@ def test_set_per_phys_to_eng():
 
 
 def test_identity_conversion():
-    id_conversion = PolyUnitConv([1, 0], 0)
+    id_conversion = PolyUnitConv([1, 0])
     physics_value = id_conversion.convert(4, pytac.ENG, pytac.PHYS)
     machine_value = id_conversion.convert(4, pytac.PHYS, pytac.ENG)
     assert machine_value == 4
@@ -89,7 +96,7 @@ def test_identity_conversion():
 
 
 def test_linear_conversion():
-    linear_conversion = PolyUnitConv([2, 3], 0)
+    linear_conversion = PolyUnitConv([2, 3])
     physics_value = linear_conversion.convert(4, pytac.ENG, pytac.PHYS)
     machine_value = linear_conversion.convert(5, pytac.PHYS, pytac.ENG)
     assert physics_value == 11
@@ -97,7 +104,7 @@ def test_linear_conversion():
 
 
 def test_quadratic_conversion():
-    quadratic_conversion = PolyUnitConv([1, 2, 3], 0)
+    quadratic_conversion = PolyUnitConv([1, 2, 3])
     physics_value = quadratic_conversion.convert(4, pytac.ENG, pytac.PHYS)
     assert physics_value == 27
     with pytest.raises(pytac.exceptions.UnitsException):
@@ -105,20 +112,20 @@ def test_quadratic_conversion():
 
 
 def test_poly_unit_conv_removes_imaginary_roots():
-    poly_uc = PolyUnitConv([1, -3, 4], 0)
+    poly_uc = PolyUnitConv([1, -3, 4])
     with pytest.raises(pytac.exceptions.UnitsException):
         poly_uc.convert(1, pytac.PHYS, pytac.ENG)
 
 
 def test_ppconversion_to_physics_2_points():
-    pchip_uc = PchipUnitConv([1, 3], [1, 3], 0)
+    pchip_uc = PchipUnitConv([1, 3], [1, 3])
     assert pchip_uc.convert(1, pytac.ENG, pytac.PHYS) == 1
     assert pchip_uc.convert(2, pytac.ENG, pytac.PHYS) == 2
     assert pchip_uc.convert(3, pytac.ENG, pytac.PHYS) == 3
 
 
 def test_pp_conversion_to_physics_3_points():
-    pchip_uc = PchipUnitConv([1, 3, 5], [1, 3, 6], 0)
+    pchip_uc = PchipUnitConv([1, 3, 5], [1, 3, 6])
     assert pchip_uc.convert(1, pytac.ENG, pytac.PHYS) == 1
     assert numpy.round(pchip_uc.convert(2, pytac.ENG, pytac.PHYS), 4) == 1.8875
     assert pchip_uc.convert(3, pytac.ENG, pytac.PHYS) == 3
@@ -127,33 +134,33 @@ def test_pp_conversion_to_physics_3_points():
 
 
 def test_pp_conversion_to_machine_2_points():
-    pchip_uc = PchipUnitConv([1, 3], [1, 3], 0)
+    pchip_uc = PchipUnitConv([1, 3], [1, 3])
     assert pchip_uc.convert(1, pytac.PHYS, pytac.ENG) == 1
     assert pchip_uc.convert(1.5, pytac.PHYS, pytac.ENG) == 1.5
 
 
 def test_PchipInterpolator_raises_ValueError_if_x_not_monotonically_increasing():
     with pytest.raises(ValueError):
-        PchipUnitConv([1, 3, 2], [1, 2, 3], 0)
+        PchipUnitConv([1, 3, 2], [1, 2, 3])
     with pytest.raises(ValueError):
-        PchipUnitConv([-1, -2, -3], [-1, -2, -3], 0)
+        PchipUnitConv([-1, -2, -3], [-1, -2, -3])
 
 
 def test_PchipInterpolator_raises_ValueError_if_y_not_monotonic():
     with pytest.raises(ValueError):
-        PchipUnitConv([1, 2, 3], [1, 3, 2], 0)
+        PchipUnitConv([1, 2, 3], [1, 3, 2])
 
 
 def test_PchipUnitConv_with_solution_outside_bounds_raises_UnitsException():
     # This is a linear relationship, but the root is 0, outside of the
     # range of measurements.
-    pchip_uc = PchipUnitConv((1, 2, 3), (1, 2, 3), 0)
+    pchip_uc = PchipUnitConv((1, 2, 3), (1, 2, 3))
     with pytest.raises(pytac.exceptions.UnitsException):
         pchip_uc.convert(0, pytac.PHYS, pytac.ENG)
 
 
 def test_PchipUnitConv_with_additional_function():
-    pchip_uc = PchipUnitConv([2, 4], [2, 4], 0, f1, f2)
+    pchip_uc = PchipUnitConv([2, 4], [2, 4], f1, f2)
     assert pchip_uc.convert(2, pytac.ENG, pytac.PHYS) == 4.0
     assert pchip_uc.convert(3, pytac.ENG, pytac.PHYS) == 6.0
     assert pchip_uc.convert(4.0, pytac.PHYS, pytac.ENG) == 2
@@ -161,7 +168,7 @@ def test_PchipUnitConv_with_additional_function():
 
 
 def test_PolyUnitConv_with_additional_function():
-    poly_uc = PolyUnitConv([2, 3], 0, f1, f2)
+    poly_uc = PolyUnitConv([2, 3], f1, f2)
     assert poly_uc.convert(4, pytac.ENG, pytac.PHYS) == 22.0
     assert poly_uc.convert(5, pytac.ENG, pytac.PHYS) == 26.0
     assert poly_uc.convert(3, pytac.ENG, pytac.PHYS) == 18.0
