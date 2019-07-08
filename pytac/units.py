@@ -95,6 +95,47 @@ class UnitConv(object):
         """
         raise NotImplementedError('No eng-to-phys conversion provided')
 
+    def eng_to_phys(self, value):
+        """Function that does the unit conversion.
+
+        Conversion from engineering to physics units. An additional function
+        may be cast on the initial conversion.
+
+        Args:
+            value (float): Value to be converted from engineering to physics
+                            units.
+
+        Returns:
+            float: The result value.
+        """
+        if self.lower_limit is not None:
+            if value < self.lower_limit:
+                raise UnitsException("UnitConv {0}: Input less than lower "
+                                     "conversion limit ({1})."
+                                     .format(self.id, self.lower_limit))
+        if self.upper_limit is not None:
+            if value > self.upper_limit:
+                raise UnitsException("UnitConv {0}: Input greater than "
+                                     "upper conversion limit ({1})."
+                                     .format(self.id, self.upper_limit))
+        results = self._raw_eng_to_phys(value)
+        valid_results = [self._post_eng_to_phys(result)
+                         for result in results]
+        if len(valid_results) == 1:
+            result = valid_results[0]
+        elif len(valid_results) == 0:
+            # This will not occur for our existing NullUnitConv,
+            # PchipUintConv, and PolyUnitConv classes.
+            raise UnitsException("UnitConv {0}: A corresponding physics value "
+                                 "does not exist.".format(self.id))
+        else:
+            # This will not occur for our existing NullUnitConv,
+            # PchipUintConv, and PolyUnitConv classes.
+            raise UnitsException("UnitConv {0}: There are multiple "
+                                 "corresponding physics values ({1})."
+                                 .format(self.id, valid_results))
+        return result
+
     def _raw_phys_to_eng(self, value):
         """Function to be implemented by child classes.
 
@@ -103,6 +144,39 @@ class UnitConv(object):
                             units.
         """
         raise NotImplementedError('No phys-to-eng conversion provided')
+
+    def phys_to_eng(self, value):
+        """Function that does the unit conversion.
+
+        Conversion from physics to engineering units. An additional function
+        may be cast on the initial conversion.
+
+        Args:
+            value (float): Value to be converted from physics to engineering
+                            units.
+
+        Returns:
+            float: The result value.
+        """
+        adjusted_value = self._pre_phys_to_eng(value)
+        results = self._raw_phys_to_eng(adjusted_value)
+
+        if self.lower_limit is not None:
+            results = [r for r in results if r >= self.lower_limit]
+        if self.upper_limit is not None:
+            results = [r for r in results if r <= self.upper_limit]
+        if len(results) == 1:
+            return results[0]
+        elif len(results) == 0:
+            raise UnitsException("UnitConv {0}: Result of conversion "
+                                 "({1}) outside conversion limits ({2}, "
+                                 "{3}).".format(self.id, results,
+                                                self.lower_limit,
+                                                self.upper_limit))
+        else:
+            raise UnitsException("UnitConv {0}: There are multiple "
+                                 "corresponding engineering values ({1})."
+                                 .format(self.id, results))
 
     def convert(self, value, origin, target):
         """Convert between two different unit types and chek the validity of
@@ -123,58 +197,9 @@ class UnitConv(object):
         if origin == target:
             return value
         elif origin == pytac.ENG and target == pytac.PHYS:
-            if self.lower_limit is not None:
-                if value < self.lower_limit:
-                    raise UnitsException("UnitConv {0}: Input less than lower "
-                                         "conversion limit ({1})."
-                                         .format(self.id, self.lower_limit))
-            if self.upper_limit is not None:
-                if value > self.upper_limit:
-                    raise UnitsException("UnitConv {0}: Input greater than "
-                                         "upper conversion limit ({1})."
-                                         .format(self.id, self.upper_limit))
-            results = self._raw_eng_to_phys(value)
-            valid_results = [self._post_eng_to_phys(result)
-                             for result in results]
-            if len(valid_results) == 1:
-                return valid_results[0]
-            elif len(valid_results) == 0:
-                # This will not occur for our existing NullUnitConv,
-                # PchipUintConv, and PolyUnitConv classes.
-                raise UnitsException("UnitConv {0}: A corresponding {0} value "
-                                     "does not exist.".format(self.id, target))
-            else:
-                # This will not occur for our existing NullUnitConv,
-                # PchipUintConv, and PolyUnitConv classes.
-                raise UnitsException("UnitConv {0}: There are multiple "
-                                     "corresponding {1} values ({2})."
-                                     .format(self.id, target, valid_results))
+            return self.eng_to_phys(value)
         elif origin == pytac.PHYS and target == pytac.ENG:
-            adjusted_value = self._pre_phys_to_eng(value)
-            results = self._raw_phys_to_eng(adjusted_value)
-            if self.lower_limit is not None:
-                l = set([result for result in results
-                         if result >= self.lower_limit])
-            else:
-                l = set(results)
-            if self.upper_limit is not None:
-                u = set([result for result in results
-                         if result <= self.upper_limit])
-            else:
-                u = set(results)
-            valid_results = list(l & u)
-            if len(valid_results) == 1:
-                return valid_results[0]
-            elif len(valid_results) == 0:
-                raise UnitsException("UnitConv {0}: Result of conversion "
-                                     "({1}) outside conversion limits ({2}, "
-                                     "{3}).".format(self.id, results,
-                                                    self.lower_limit,
-                                                    self.upper_limit))
-            else:
-                raise UnitsException("UnitConv {0}: There are multiple "
-                                     "corresponding {1} values ({2})."
-                                     .format(self.id, target, valid_results))
+            return self.phys_to_eng(value)
         else:
             raise UnitsException("UnitConv {0}: Conversion from {1} to {2} "
                                  "not understood.".format(self.id, origin,
