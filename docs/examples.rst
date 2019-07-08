@@ -94,3 +94,10 @@ Get the value of the 'b1' field of the quad elements
     129.35191345214844,
     98.25287628173828,
     ...
+
+Tutorial
+~~~~~~~~
+
+For an introduction to pytac concepts and finding your way around, 
+an interactive tutorial is available using Jupyter Notebook. Take a look in the
+``jupyter`` directory - the ``README.rst`` there describes how to access the tutorial.
