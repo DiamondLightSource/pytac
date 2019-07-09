@@ -33,7 +33,7 @@ class UnitConv(object):
     **Attributes:**
 
     Attributes:
-        id (int): The unit conversion id as it appears in the csv files.
+        name (str): An identifier for the unit conversion object.
         eng_units (str): The unit type of the post conversion engineering
                           value.
         phys_units (str): The unit type of the post conversion physics value.
@@ -114,6 +114,10 @@ class UnitConv(object):
 
         Returns:
             float: The result value.
+
+        Raises:
+            UnitsException: If the conversion is invalid; i.e. if there are no
+                            solutions, or multiple, within conversion limits.
         """
         if self.lower_limit is not None:
             if value < self.lower_limit:
@@ -166,6 +170,10 @@ class UnitConv(object):
 
         Returns:
             float: The result value.
+
+        Raises:
+            UnitsException: If the conversion is invalid; i.e. if there are no
+                            solutions, or multiple, within conversion limits.
         """
         adjusted_value = self._pre_phys_to_eng(value)
         results = self._raw_phys_to_eng(adjusted_value)
@@ -177,9 +185,9 @@ class UnitConv(object):
         if len(results) == 1:
             return results[0]
         elif len(results) == 0:
-            raise UnitsException("{0}: Result of conversion "
-                                 "({1}) outside conversion limits ({2}, "
-                                 "{3}).".format(self, results,
+            raise UnitsException("{0}: no conversion result "
+                                 "within conversion limits ({1}, "
+                                 "{2}).".format(self,
                                                 self.lower_limit,
                                                 self.upper_limit))
         else:
@@ -234,7 +242,7 @@ class PolyUnitConv(UnitConv):
 
     Attributes:
         p (poly1d): A one-dimensional polynomial of coefficients.
-        id (int): The unit conversion id as it appears in the csv files.
+        name (str): An identifier for the unit conversion object.
         eng_units (str): The unit type of the post conversion engineering
                           value.
         phys_units (str): The unit type of the post conversion physics value.
@@ -313,7 +321,8 @@ class PchipUnitConv(UnitConv):
                    or decreasing order. Otherwise, a ValueError is raised.
         pp (PchipInterpolator): A pchip one-dimensional monotonic cubic
                                  interpolation of points on both x and y axes.
-        id (int): The unit conversion id as it appears in the csv files.
+
+        name (str): An identifier for the unit conversion object.
         eng_units (str): The unit type of the post conversion engineering
                           value.
         phys_units (str): The unit type of the post conversion physics value.
@@ -403,8 +412,7 @@ class NullUnitConv(UnitConv):
     **Attributes:**
 
     Attributes:
-        id (int): The unit conversion id as it appears in the csv files,
-                   always 0 as is the convention in the csv files.
+        name (str): An identifier for the unit conversion object.
         eng_units (str): The unit type of the post conversion engineering
                           value.
         phys_units (str): The unit type of the post conversion physics value.
@@ -415,16 +423,18 @@ class NullUnitConv(UnitConv):
            _pre_phys_to_eng (function): Always unit_function as no conversion
                                           is performed.
     """
-    def __init__(self, engineering_units='', physics_units=''):
+    def __init__(self, engineering_units='', physics_units='', name=None):
         """
         Args:
             engineering_units (str): The unit type of the post conversion
                                       engineering value.
             physics_units (str): The unit type of the post conversion physics
                                   value.
+            name (str): An identifier for the unit conversion object.
         """
         super(self.__class__, self).__init__(unit_function, unit_function,
-                                             engineering_units, physics_units)
+                                             engineering_units, physics_units,
+                                             name=None)
 
     def _raw_eng_to_phys(self, eng_value):
         """Doesn't convert between engineering and physics units.
