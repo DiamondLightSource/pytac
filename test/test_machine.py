@@ -176,3 +176,20 @@ def test_quad_unitconv_known_failing_test():
     uc._pre_phys_to_eng = pytac.utils.get_mult_rigidity(LAT_ENERGY)
     numpy.testing.assert_allclose(uc.eng_to_phys(70), -0.69133465)
     numpy.testing.assert_allclose(uc.phys_to_eng(-0.7), 70.8834284954)
+
+
+@pytest.mark.parametrize('quad_index,phys_value', [
+                         [747, -1.9457],
+                         [1135, -1.9864]
+])
+def test_quad_unitconv_with_different_limits(diad_ring, quad_index, phys_value):
+    """Test elements with unit conversions that have different limits.
+
+    The limits on these quads are different to the rest of the family.
+    They caused problems until we implemented different limits per UnitConv
+    object.
+    """
+    problem_quad = diad_ring[quad_index - 1]
+    uc = problem_quad.get_unitconv('b1')
+    # This is just outside the power supply limits 0 to 200A.
+    uc.phys_to_eng(phys_value)

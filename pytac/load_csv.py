@@ -10,6 +10,7 @@ The csv files are stored in one directory with specified names:
  * uc_pchip_data.csv
 """
 import collections
+import copy
 import csv
 import os
 
@@ -100,9 +101,12 @@ def load_unitconv(directory, mode, lattice):
     with open(os.path.join(directory, mode, UNITCONV_FILENAME)) as unitconv:
         csv_reader = csv.DictReader(unitconv)
         for item in csv_reader:
+            # Special case for element 0: the lattice itself.
             if int(item['el_id']) == 0:
                 if item['uc_type'] != 'null':
-                    uc = unitconvs[int(item['uc_id'])]
+                    # Each element needs its own unitconv object as
+                    # it may for example have different limit.
+                    uc = copy.copy(unitconvs[int(item['uc_id'])])
                     uc.phys_units = item['phys_units']
                     uc.eng_units = item['eng_units']
                     if item['lower_lim'] != '':
@@ -120,7 +124,9 @@ def load_unitconv(directory, mode, lattice):
                     uc = units.NullUnitConv(item['eng_units'],
                                             item['phys_units'])
                 else:
-                    uc = unitconvs[int(item['uc_id'])]
+                    # Each element needs its own unitconv object as
+                    # it may for example have different limit.
+                    uc = copy.copy(unitconvs[int(item['uc_id'])])
                     if element.families.intersection(('HSTR', 'VSTR', 'QUAD',
                                                       'SEXT', 'BEND')):
                         energy = lattice.get_value('energy', units=pytac.PHYS)
