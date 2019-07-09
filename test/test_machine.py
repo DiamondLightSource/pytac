@@ -180,8 +180,7 @@ def test_quad_unitconv_known_failing_test():
 
 @pytest.mark.parametrize('quad_index,phys_value', [
                          [747, -1.9457],
-                         [1135, -1.9864]
-])
+                         [1135, -1.9864]])
 def test_quad_unitconv_with_different_limits(diad_ring, quad_index, phys_value):
     """Test elements with unit conversions that have different limits.
 
