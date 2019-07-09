@@ -178,22 +178,24 @@ class UnitConv(object):
         adjusted_value = self._pre_phys_to_eng(value)
         results = self._raw_phys_to_eng(adjusted_value)
 
+        valid_results = results[:]
+
         if self.lower_limit is not None:
-            results = [r for r in results if r >= self.lower_limit]
+            valid_results = [r for r in valid_results if r >= self.lower_limit]
         if self.upper_limit is not None:
-            results = [r for r in results if r <= self.upper_limit]
-        if len(results) == 1:
-            return results[0]
-        elif len(results) == 0:
-            raise UnitsException("{0}: no conversion result "
-                                 "within conversion limits ({1}, "
-                                 "{2}).".format(self,
+            valid_results = [r for r in valid_results if r <= self.upper_limit]
+        if len(valid_results) == 1:
+            return valid_results[0]
+        elif len(valid_results) == 0:
+            raise UnitsException("{0}: none of conversion results {1} "
+                                 "within conversion limits ({2}, "
+                                 "{3}).".format(self, results,
                                                 self.lower_limit,
                                                 self.upper_limit))
         else:
             raise UnitsException("{0}: There are multiple "
                                  "corresponding engineering values ({1})."
-                                 .format(self, results))
+                                 .format(self, valid_results))
 
     def convert(self, value, origin, target):
         """Convert between two different unit types and chek the validity of
