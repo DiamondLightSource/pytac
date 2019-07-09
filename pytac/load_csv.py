@@ -77,7 +77,7 @@ def load_pchip_unitconv(filename):
     for uc_id in data:
         eng = [x[0] for x in sorted(data[uc_id])]
         phy = [x[1] for x in sorted(data[uc_id])]
-        u = units.PchipUnitConv(eng, phy, uc_id)
+        u = units.PchipUnitConv(eng, phy, name=uc_id)
         unitconvs[uc_id] = u
     return unitconvs
 
