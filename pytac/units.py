@@ -414,7 +414,6 @@ class NullUnitConv(UnitConv):
     **Attributes:**
 
     Attributes:
-        name (str): An identifier for the unit conversion object.
         eng_units (str): The unit type of the post conversion engineering
                           value.
         phys_units (str): The unit type of the post conversion physics value.
@@ -425,18 +424,16 @@ class NullUnitConv(UnitConv):
            _pre_phys_to_eng (function): Always unit_function as no conversion
                                           is performed.
     """
-    def __init__(self, engineering_units='', physics_units='', name=None):
+    def __init__(self, engineering_units='', physics_units=''):
         """
         Args:
             engineering_units (str): The unit type of the post conversion
                                       engineering value.
             physics_units (str): The unit type of the post conversion physics
                                   value.
-            name (str): An identifier for the unit conversion object.
         """
         super(self.__class__, self).__init__(unit_function, unit_function,
-                                             engineering_units, physics_units,
-                                             name=None)
+                                             engineering_units, physics_units)
 
     def _raw_eng_to_phys(self, eng_value):
         """Doesn't convert between engineering and physics units.
