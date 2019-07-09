@@ -146,8 +146,8 @@ def test_bpm_unitconv(lattice, field):
     bpm = lattice.get_elements('BPM')[0]
     uc = bpm._data_source_manager._uc[field]
 
-    assert uc.convert(1, pytac.ENG, pytac.PHYS) == 0.001
-    assert uc.convert(2, pytac.PHYS, pytac.ENG) == 2000
+    assert uc.eng_to_phys(1) == 0.001
+    assert uc.phys_to_eng(2) == 2000
 
 
 def test_quad_unitconv(vmx_ring):
@@ -156,27 +156,23 @@ def test_quad_unitconv(vmx_ring):
     # This test depends on the lattice having an energy of 3000Mev.
     for q in q1d:
         uc = q._data_source_manager._uc['b1']
-        numpy.testing.assert_allclose(uc.convert(70, pytac.ENG, pytac.PHYS),
-                                      -0.691334652255027)
-        numpy.testing.assert_allclose(uc.convert(-0.691334652255027,
-                                                 pytac.PHYS, pytac.ENG), 70)
+        numpy.testing.assert_allclose(uc.eng_to_phys(70), -0.691334652255027)
+        numpy.testing.assert_allclose(uc.phys_to_eng(-0.691334652255027), 70)
 
 
 def test_quad_unitconv_raise_exception():
     uc = pytac.units.PchipUnitConv([50.0, 100.0, 180.0],
-                                   [-4.95, -9.85, -17.56], 0)
+                                   [-4.95, -9.85, -17.56])
     with pytest.raises(pytac.exceptions.UnitsException):
-        uc.convert(-0.7, pytac.PHYS, pytac.ENG)
+        uc.phys_to_eng(-0.7)
 
 
 def test_quad_unitconv_known_failing_test():
     LAT_ENERGY = 3000
 
     uc = pytac.units.PchipUnitConv([50.0, 100.0, 180.0],
-                                   [-4.95, -9.85, -17.56], 0)
+                                   [-4.95, -9.85, -17.56])
     uc._post_eng_to_phys = pytac.utils.get_div_rigidity(LAT_ENERGY)
     uc._pre_phys_to_eng = pytac.utils.get_mult_rigidity(LAT_ENERGY)
-    numpy.testing.assert_allclose(uc.convert(70, pytac.ENG, pytac.PHYS),
-                                  -0.69133465)
-    numpy.testing.assert_allclose(uc.convert(-0.7, pytac.PHYS, pytac.ENG),
-                                  70.8834284954)
+    numpy.testing.assert_allclose(uc.eng_to_phys(70), -0.69133465)
+    numpy.testing.assert_allclose(uc.phys_to_eng(-0.7), 70.8834284954)
