@@ -14,45 +14,41 @@ f_pchip = fopen(pchip_file, 'w');
 uc_id = 0;
 
 % Add title rows.
-fprintf(f_units, 'el_id,field,uc_type,uc_id,phys_units,eng_units\n');
+fprintf(f_units, 'el_id,field,uc_type,uc_id,phys_units,eng_units,lower_lim,upper_lim\n');
 fprintf(f_poly, 'uc_id,coeff,val\n');
 fprintf(f_pchip, 'uc_id,eng,phy\n');
 
 
 % Lattice null unit conversions
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 's_position', uc_id, 'm', 'm');
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'beta', uc_id, 'm', 'm');
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'dispersion', uc_id, 'm', 'm');
-fprintf(f_units, '%d,%s,null,%d,%s,%s\n', 0, 'beam_current', uc_id, 'A', 'A');
+% lower and upper conversion limits are '' as NullUnitConvs do not convert
+fprintf(f_units, '%d,%s,null,%d,%s,%s,%s,%s\n', 0, 's_position', uc_id, 'm', 'm', '', '');
+fprintf(f_units, '%d,%s,null,%d,%s,%s,%s,%s\n', 0, 'beta', uc_id, 'm', 'm', '', '');
+fprintf(f_units, '%d,%s,null,%d,%s,%s,%s,%s\n', 0, 'dispersion', uc_id, 'm', 'm', '', '');
+fprintf(f_units, '%d,%s,null,%d,%s,%s,%s,%s\n', 0, 'beam_current', uc_id, 'A', 'A', '', '');
 
 % Element null unit conversions
-s_data = getfamilydata('BBVMXS');
-l_data = getfamilydata('BBVMXL');
-db_indexes = [s_data.AT.ATIndex, l_data.AT.ATIndex];
-db_indexes = db_indexes(:);
-for i = 1:length(db_indexes)
-    fprintf(f_units, '%d,%s,null,%d,%s,%s\n', renamedIndexes(db_indexes(i)), 'db0', 0, 'm^-1', 'A');
-end
+% lower and upper conversion limits are '' as NullUnitConvs do not convert
 rfs = getfamilydata('RF');
 if length(rfs.ElementList) == 1
-    fprintf(f_units, '%d,%s,null,%d,%s,%s\n', renamedIndexes(family2atindex('RF')), 'f', 0, 'Hz', 'Hz');
+    fprintf(f_units, '%d,%s,null,%d,%s,%s,%s,%s\n', renamedIndexes(family2atindex('RF')), 'f', 0, 'Hz', 'Hz', '', '');
 else
     for i = 1:length(rfs.AT.ATIndex)
-        fprintf(f_units, '%d,%s,null,%d,%s,%s\n', renamedIndexes(rfs.AT.ATIndex(i)), 'f', 0, 'Hz', 'Hz');
+        fprintf(f_units, '%d,%s,null,%d,%s,%s,%s,%s\n', renamedIndexes(rfs.AT.ATIndex(i)), 'f', 0, 'Hz', 'Hz', '', '');
     end
 end
 
 % Unit conversions for lattice fields
+% the conversion limits are '' as these fields don't have a Setpoint field
 uc_id = uc_id + 1;
-fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', 0, 'energy', uc_id, 'Gev', 'Mev');
+fprintf(f_units, '%d,%s,poly,%d,%s,%s,%s,%s\n', 0, 'energy', uc_id, 'Gev', 'Mev', '', '');
 fprintf(f_poly, '%d,%d,%f\n', uc_id, 0, 0);
 fprintf(f_poly, '%d,%d,%g\n', uc_id, 1, 1e-6);
 uc_id = uc_id + 1;
-fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', 0, 'emittance_x', uc_id, 'm', 'nm');
+fprintf(f_units, '%d,%s,poly,%d,%s,%s,%s,%s\n', 0, 'emittance_x', uc_id, 'm', 'nm', '', '');
 fprintf(f_poly, '%d,%d,%f\n', uc_id, 0, 0);
 fprintf(f_poly, '%d,%d,%g\n', uc_id, 1, 1e-9);
 uc_id = uc_id + 1;
-fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', 0, 'emittance_y', uc_id, 'm', 'pm');
+fprintf(f_units, '%d,%s,poly,%d,%s,%s,%s,%s\n', 0, 'emittance_y', uc_id, 'm', 'pm', '', '');
 fprintf(f_poly, '%d,%d,%f\n', uc_id, 0, 0);
 fprintf(f_poly, '%d,%d,%g\n', uc_id, 1, 1e-12);
 
@@ -69,28 +65,36 @@ end
 
 bend_families = findmemberof('BEND');
 for i = 1:length(bend_families)
-    write_multipole_section(bend_families{i}, 'b0', renamedIndexes, 'm^-1', 'A');
+    if strcmp(bend_families{i}, 'BBVMXS') || strcmp(bend_families{i}, 'BBVMXL')
+        % Double bend families
+        write_multipole_section(bend_families{i}, 'db0', renamedIndexes, 'm^-1', 'A');
+    else
+        write_multipole_section(bend_families{i}, 'b0', renamedIndexes, 'm^-1', 'A');
+    end
 end
 
 bpms = getfamilydata('BPMx');
 bpm_uc_id = write_linear_data(0.001, 0);
+% the conversion limits are '' as these fields don't have a Setpoint field
 for i = 1:length(bpms.AT.ATIndex)
-    fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(bpms.AT.ATIndex(i)), 'x', bpm_uc_id, 'mm', 'm'); 
-    fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(bpms.AT.ATIndex(i)), 'y', bpm_uc_id, 'mm', 'm'); 
+    fprintf(f_units, '%d,%s,poly,%d,%s,%s,%s,%s\n', renamedIndexes(bpms.AT.ATIndex(i)), 'x', bpm_uc_id, 'mm', 'm', '', '');
+    fprintf(f_units, '%d,%s,poly,%d,%s,%s,%s,%s\n', renamedIndexes(bpms.AT.ATIndex(i)), 'y', bpm_uc_id, 'mm', 'm', '', '');
 end
 
 htrim = getfamilydata('HTRIM');
+control_ranges = get_range('HTRIM');
 for i = 1:length(htrim.AT.ATIndex)
     data = el_cal_data(htrim.Monitor.ChannelNames(i,:));
     id = write_linear_data(data.field(2) / data.current(2), 0);
-    fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(htrim.AT.ATIndex(i)), 'x_kick', id, '', 'A');
+    fprintf(f_units, '%d,%s,poly,%d,%s,%s,%d,%d\n', renamedIndexes(htrim.AT.ATIndex(i)), 'x_kick', id, '', 'A', control_ranges(i,1), control_ranges(i,2));
 end
 
 vtrim = getfamilydata('VTRIM');
+control_ranges = get_range('VTRIM');
 for i = 1:length(vtrim.AT.ATIndex)
     data = el_cal_data(vtrim.Monitor.ChannelNames(i,:));
     id = write_linear_data(data.field(2) / data.current(2), 0);
-    fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(vtrim.AT.ATIndex(i)), 'x_kick', id, '', 'A');
+    fprintf(f_units, '%d,%s,poly,%d,%s,%s,%d,%d\n', renamedIndexes(vtrim.AT.ATIndex(i)), 'x_kick', id, '', 'A', control_ranges(i,1), control_ranges(i,2));
 end
 
 % The skew quadrupoles are windings on the sextupoles, but there is no
@@ -104,6 +108,7 @@ sext_data = getfamilydata('SEXT_');
 sext_indices = sext_data.AT.ATIndex;
 
 hcor = getfamilydata('HCM');
+control_ranges = get_range('HCM');
 for i = 1:length(hcor.AT.ATIndex)
     data = el_cal_data(hcor.Monitor.ChannelNames(i,:));
     hcor_index = hcor.AT.ATIndex(i);
@@ -111,10 +116,11 @@ for i = 1:length(hcor.AT.ATIndex)
         hcor_index = hcor_index + 1;
     end
     id = write_linear_data(data.field(2) / data.current(2), 0);
-    fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(hcor_index), 'x_kick', id, '', 'A');
+    fprintf(f_units, '%d,%s,poly,%d,%s,%s,%d,%d\n', renamedIndexes(hcor_index), 'x_kick', id, '', 'A', control_ranges(i,1), control_ranges(i,2));
 end
 
 vcor = getfamilydata('VCM');
+control_ranges = get_range('HCM');
 for i = 1:length(vcor.AT.ATIndex)
     data = el_cal_data(vcor.Monitor.ChannelNames(i,:));
     vcor_index = vcor.AT.ATIndex(i);
@@ -122,7 +128,7 @@ for i = 1:length(vcor.AT.ATIndex)
         vcor_index = vcor_index + 1;
     end
     id = write_linear_data(data.field(2) / data.current(2), 0);
-    fprintf(f_units, '%d,%s,poly,%d,%s,%s\n', renamedIndexes(vcor_index), 'y_kick', id, '', 'A');
+    fprintf(f_units, '%d,%s,poly,%d,%s,%s,%d,%d\n', renamedIndexes(vcor_index), 'y_kick', id, '', 'A', control_ranges(i,1), control_ranges(i,2));
 end
 
 
@@ -158,16 +164,18 @@ fprintf('Finished.\n');
             caldata = fam_cal_data(family);
             bpm_uc_id = write_pchip_data(caldata.current, caldata.field);
             fdata = getfamilydata(family);
+            control_ranges = get_range(family);
             for j = 1:length(fdata.AT.ATIndex)
-                fprintf(f_units, '%d,%s,pchip,%d,%s,%s\n', renamedIndexes(fdata.AT.ATIndex(j)), field, bpm_uc_id, phys_units, eng_units); 
+                fprintf(f_units, '%d,%s,pchip,%d,%s,%s,%d,%d\n', renamedIndexes(fdata.AT.ATIndex(j)), field, bpm_uc_id, phys_units, eng_units, control_ranges(j,1), control_ranges(j,2));
             end
         else  % Need unit conversion data for each magnet in the family.
             irregular_mags = getfamilydata(family);
+            control_ranges = get_range(family);
             for j = 1:length(irregular_mags.DeviceList)
                 caldata = el_cal_data(irregular_mags.Monitor.ChannelNames(j,:));
                 q_index = renamedIndexes(irregular_mags.AT.ATIndex(j));
                 bpm_uc_id = write_pchip_data(caldata.current, caldata.field);
-                fprintf(f_units, '%d,%s,pchip,%d,%s,%s\n', q_index, field, bpm_uc_id, phys_units, eng_units);        
+                fprintf(f_units, '%d,%s,pchip,%d,%s,%s,%d,%d\n', q_index, field, bpm_uc_id, phys_units, eng_units, control_ranges(j,1), control_ranges(j,2));
             end
         end
     end
@@ -182,6 +190,20 @@ fprintf('Finished.\n');
         fd = getfamilydata(famname);
         chan = fd.Monitor.ChannelNames(1,:);
         caldata = el_cal_data(chan);
+    end
+
+    function sp_range = get_range(famname)
+        fd = getfamilydata(famname);
+        if length(fd.Setpoint.Range(:,1)) == length(fd.AT.ATIndex)
+            sp_range = fd.Setpoint.Range;
+        else
+            r = fd.Setpoint.Range(1, 1:2);
+            all_r = r;
+            for i = 1:length(fd.AT.ATIndex)-1
+                all_r = [all_r; r];
+            end
+            sp_range = all_r;
+        end
     end
 
 end
