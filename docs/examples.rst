@@ -56,12 +56,12 @@ Print BPM PV names along with s position
 
 - Get PV names and positions for BPMs directly from the lattice object::
 
-    >>> lattice.get_pv_names('BPM', 'x', pytac.RB)
+    >>> lattice.get_element_pv_names('BPM', 'x', pytac.RB)
     ['SR01C-DI-EBPM-01:SA:X',
     'SR01C-DI-EBPM-02:SA:X',
     'SR01C-DI-EBPM-03:SA:X'
     ...
-    >>> lattice.get_pv_names('BPM', 'y', pytac.RB)
+    >>> lattice.get_element_pv_names('BPM', 'y', pytac.RB)
     ['SR01C-DI-EBPM-01:SA:Y',
     'SR01C-DI-EBPM-02:SA:Y',
     'SR01C-DI-EBPM-03:SA:Y',
@@ -94,3 +94,10 @@ Get the value of the 'b1' field of the quad elements
     129.35191345214844,
     98.25287628173828,
     ...
+
+Tutorial
+~~~~~~~~
+
+For an introduction to pytac concepts and finding your way around, 
+an interactive tutorial is available using Jupyter Notebook. Take a look in the
+``jupyter`` directory - the ``README.rst`` there describes how to access the tutorial.

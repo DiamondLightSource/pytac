@@ -33,7 +33,8 @@ the control system.
 Elements may be grouped into families (an element may be in more than one
 family), and requested from the lattice object in those families. The current
 control system integrates with EPICS and uses EPICS PV (process variable)
-objects to tell EPICS which IOC (input/output controller) to communicate with.
+objects to tell EPICS which IOC (input/output controller - an EPICS server 
+process) to communicate with.
 The type of the PV specifies which operations can be performed, there are two
 types of PV: readback, which can only be used to retrieve data; and setpoint,
 which can be used to set a value as well as for retrieving data. A single
@@ -61,10 +62,15 @@ a fundamental part of how Pytac integrates with the physical accelerator, as
 physics units are what our description of the accelerator works with (e.g. the
 magnetic field inside a magnet) and engineering units are what the IOCs on the
 physical components use (e.g. the current in a magnet). Two types of unit
-conversion are available: Polynomial (``PolyUnitConv``; often used for linear
-conversion) and Piecewise Cubic Hermite Interpolating Polynomial
-(``PchipUnitConv``; often used for magnet data where field may not be linear
-with current). In the case that measurement data (used to set up the conversion
+conversion are available: 
+
+* Polynomial (``PolyUnitConv``; often used for linear
+  conversion);
+* Piecewise Cubic Hermite Interpolating Polynomial
+  (``PchipUnitConv``; often used for magnet data where field may not be linear
+  with current). 
+
+In the case that measurement data (used to set up the conversion
 objects) is not in the same units as the physical models, further functions may
 be given to these objects to complete the conversion correctly.
 
