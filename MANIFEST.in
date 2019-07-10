@@ -3,4 +3,3 @@ include LICENSE
 
 # Include the data files
 recursive-include pytac/data *
-recursive-include docs *
