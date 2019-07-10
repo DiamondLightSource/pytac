@@ -47,6 +47,9 @@ The documentation is built inside _build/html.
 Uploading to Pypi
 =================
 
+Ensure that the version is correct in `setup.py` and then make a tag that
+is the same as the version.
+
 Create a source distribution::
 
  $ python setup.py sdist
