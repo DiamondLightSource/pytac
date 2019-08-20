@@ -131,7 +131,7 @@ def lattice():
     return lat
 
 
-def set_func(pvs, values):
+def set_func(pvs, values, throw=None):
     if len(pvs) is not len(values):
         raise ValueError
 

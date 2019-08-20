@@ -31,9 +31,8 @@ class DataSource(object):
         Args:
             field (str): field of the requested value.
             handle (str): pytac.RB or pytac.SP
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False None will be returned for any PV that fails
-                           and log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException; if
+                           False, return None and log a warning.
 
         Returns:
             float: value for specified field and handle.
@@ -48,8 +47,8 @@ class DataSource(object):
         Args:
             field (str): field to set.
             value (float): value to set.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException: if
+                           False, log a warning.
         """
         raise NotImplementedError()
 
@@ -193,9 +192,8 @@ class DataSourceManager(object):
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS returned.
             data_source (str): pytac.LIVE or pytac.SIM.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False None will be returned for any PV that fails
-                           and log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException; if
+                           False, return None and log a warning.
 
         Returns:
             float: The value of the requested field
@@ -233,8 +231,8 @@ class DataSourceManager(object):
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException: if
+                           False, log a warning.
 
         Raises:
             HandleException: if the specified handle is not pytac.SP.
@@ -323,9 +321,8 @@ class DeviceDataSource(DataSource):
         Args:
             field (str): field of the requested value.
             handle (str): pytac.RB or pytac.SP.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False None will be returned for any PV that fails
-                           and log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException; if
+                           False, return None and log a warning.
 
         Returns:
             float: The value of the PV.
@@ -346,8 +343,8 @@ class DeviceDataSource(DataSource):
         Args:
             field (str): field for the requested value.
             value (float): The value to set on the PV.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException: if
+                           False, log a warning.
 
         Raises:
             FieldException: if the device does not have the specified field.

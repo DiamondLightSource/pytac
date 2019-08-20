@@ -203,9 +203,8 @@ class Lattice(object):
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS returned.
             data_source (str): pytac.LIVE or pytac.SIM.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False None will be returned for any PV that fails
-                           and log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException; if
+                           False, return None and log a warning.
 
         Returns:
             float: The value of the requested field
@@ -236,8 +235,8 @@ class Lattice(object):
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException: if
+                           False, log a warning.
 
         Raises:
             DataSourceException: if arguments are incorrect.
@@ -375,7 +374,7 @@ class Lattice(object):
 
     def get_element_values(self, family, field, handle=pytac.RB,
                            units=pytac.DEFAULT, data_source=pytac.DEFAULT,
-                           dtype=None):
+                           throw=True, dtype=None):
         """Get the value of the given field for all elements in the given
         family in the lattice.
 
@@ -385,6 +384,9 @@ class Lattice(object):
             handle (str): pytac.RB or pytac.SP.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
+            throw (bool): On failure: if True, raise ControlSystemException; if
+                           False, None will be returned for any PV that fails
+                           and a warning will be logged.
             dtype (numpy.dtype): if None, return a list. If not None, return a
                                   numpy array of the specified type.
 
@@ -392,14 +394,15 @@ class Lattice(object):
             list or numpy.array: The requested values.
         """
         elements = self.get_elements(family)
-        values = [element.get_value(field, handle, units, data_source)
+        values = [element.get_value(field, handle, units, data_source, throw)
                   for element in elements]
         if dtype is not None:
             values = numpy.array(values, dtype=dtype)
         return values
 
     def set_element_values(self, family, field, values, handle=pytac.SP,
-                           units=pytac.DEFAULT, data_source=pytac.DEFAULT):
+                           units=pytac.DEFAULT, data_source=pytac.DEFAULT,
+                           throw=True):
         """Set the value of the given field for all elements in the given
         family in the lattice to the given values.
 
@@ -410,6 +413,10 @@ class Lattice(object):
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
+            throw (bool): On failure, if True raise ControlSystemException, if
+                           False return a list of True and False values
+                           corresponding to successes and failures and log a
+                           warning for each PV that fails.
 
         Raises:
             IndexError: if the given list of values doesn't match the number of
@@ -423,8 +430,11 @@ class Lattice(object):
                              "equal to the number of elements in the "
                              "family({1}).".format(len(values), len(elements)))
         for element, value in zip(elements, values):
-            element.set_value(field, value, handle=pytac.SP, units=units,
-                              data_source=data_source)
+            status = element.set_value(field, value, handle=pytac.SP,
+                                       units=units, data_source=data_source,
+                                       throw=throw)
+            if status is not None:
+                return status
 
     def set_default_units(self, default_units):
         """Sets the default unit type for the lattice and all its elements.
@@ -586,7 +596,7 @@ class EpicsLattice(Lattice):
 
     def get_element_values(self, family, field, handle=pytac.RB,
                            units=pytac.DEFAULT, data_source=pytac.DEFAULT,
-                           dtype=None):
+                           throw=True, dtype=None):
         """Get the value of the given field for all elements in the given
         family in the lattice.
 
@@ -596,6 +606,9 @@ class EpicsLattice(Lattice):
             handle (str): pytac.RB or pytac.SP.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
+            throw (bool): On failure: if True, raise ControlSystemException; if
+                           False, None will be returned for any PV that fails
+                           and a warning will be logged.
             dtype (numpy.dtype): if None, return a list. If not None, return a
                                   numpy array of the specified type.
 
@@ -608,7 +621,7 @@ class EpicsLattice(Lattice):
             units = self.get_default_units()
         if data_source == pytac.LIVE:
             pv_names = self.get_element_pv_names(family, field, handle)
-            values = self._cs.get_multiple(pv_names)
+            values = self._cs.get_multiple(pv_names, throw)
             if units == pytac.PHYS:
                 values = self.convert_family_values(family, field, values,
                                                     pytac.ENG, pytac.PHYS)
@@ -617,13 +630,15 @@ class EpicsLattice(Lattice):
                                                                   field,
                                                                   handle,
                                                                   units,
-                                                                  data_source)
+                                                                  data_source,
+                                                                  throw)
         if dtype is not None:
             values = numpy.array(values, dtype=dtype)
         return values
 
     def set_element_values(self, family, field, values, handle=pytac.SP,
-                           units=pytac.DEFAULT, data_source=pytac.DEFAULT):
+                           units=pytac.DEFAULT, data_source=pytac.DEFAULT,
+                           throw=True):
         """Set the value of the given field for all elements in the given
         family in the lattice to the given values.
 
@@ -634,6 +649,8 @@ class EpicsLattice(Lattice):
             handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
+            throw (bool): On failure: if True, raise ControlSystemException: if
+                           False, log a warning.
 
         Raises:
             IndexError: if the given list of values doesn't match the number of
@@ -655,8 +672,8 @@ class EpicsLattice(Lattice):
                                  "must be equal to the number of elements in "
                                  "the family({1}).".format(len(values),
                                                            len(pv_names)))
-            self._cs.set_multiple(pv_names, values)
+            self._cs.set_multiple(pv_names, values, throw)
         else:
             super(EpicsLattice, self).set_element_values(family, field, values,
                                                          pytac.SP, units,
-                                                         data_source)
+                                                         data_source, throw)

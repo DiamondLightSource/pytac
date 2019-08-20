@@ -232,8 +232,32 @@ class UnitConv(object):
             lower_limit (float): the lower conversion limit
             upper_limit (float): the upper conversion limit
         """
+        if (lower_limit is not None) and (upper_limit is not None):
+            if lower_limit >= upper_limit:
+                raise ValueError("Lower conversion limit ({0}) must be less "
+                                 "than the upper limit ({1})."
+                                 .format(lower_limit, upper_limit))
         self.lower_limit = lower_limit
         self.upper_limit = upper_limit
+
+    def get_conversion_limits(self, units=pytac.ENG):
+        """Return the current conversion limits in the specified unit type.
+
+        Args:
+            units:
+
+        Returns:
+            list: the conversion limits in the desired unit type,
+                   format: [lower_limit, upper_limit]
+        """
+        if units == pytac.ENG:
+            return [self.lower_limit, self.upper_limit]
+        elif units == pytac.PHYS:
+            return [self.convert(self.lower_limit, pytac.ENG, pytac.PHYS),
+                    self.convert(self.upper_limit, pytac.ENG, pytac.PHYS)]
+        else:
+            raise UnitsException("{0}: Unit type {1} not understood."
+                                 .format(self, units))
 
 
 class PolyUnitConv(UnitConv):

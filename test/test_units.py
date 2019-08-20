@@ -6,7 +6,6 @@ from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, DUMMY_VALUE_3
 import pytac
 from pytac.units import NullUnitConv, PchipUnitConv, PolyUnitConv, UnitConv
 
-
 def f1(value):
     return value * 2
 
@@ -36,6 +35,28 @@ def test_set_conversion_limits():
     uc.set_conversion_limits(-1, 1e5)
     assert uc.lower_limit == -1
     assert uc.upper_limit == 1e5
+    uc.set_conversion_limits(None, 2)
+    assert uc.lower_limit is None
+    assert uc.upper_limit == 2
+    uc.set_conversion_limits(1, None)
+    assert uc.lower_limit == 1
+    assert uc.upper_limit is None
+    uc.set_conversion_limits(None, None)
+    assert uc.lower_limit is None
+    assert uc.upper_limit is None
+    with pytest.raises(ValueError):
+        uc.set_conversion_limits(2, 1)
+
+
+def test_get_conversion_limits():
+    uc = PolyUnitConv([2, 0])
+    assert uc.get_conversion_limits() == [None, None]
+    uc.set_conversion_limits(8, 13)
+    assert uc.get_conversion_limits() == [8, 13]
+    assert uc.get_conversion_limits(pytac.ENG) == [8, 13]
+    assert uc.get_conversion_limits(pytac.PHYS) == [16, 26]
+    with pytest.raises(pytac.exceptions.UnitsException):
+        uc.get_conversion_limits('invalid-unit-type')
 
 
 @pytest.mark.parametrize('origin, target', [(pytac.ENG, pytac.PHYS),
