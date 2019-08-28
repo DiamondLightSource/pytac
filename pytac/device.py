@@ -30,9 +30,8 @@ class Device(object):
 
         Args:
             handle (str): pytac.SP or pytac.RB.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False None will be returned for any PV that fails
-                           and log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException; if
+                           False, return None and log a warning.
 
         Returns:
             float: the value of the PV.
@@ -44,8 +43,8 @@ class Device(object):
 
         Args:
             value (float): the value to set.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException: if
+                           False, log a warning.
         """
         raise NotImplementedError()
 
@@ -160,9 +159,8 @@ class EpicsDevice(Device):
 
         Args:
             handle (str): pytac.SP or pytac.RB.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False None will be returned for any PV that fails
-                           and log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException; if
+                           False, return None and log a warning.
 
         Returns:
             float: The value of the PV.
@@ -183,8 +181,8 @@ class EpicsDevice(Device):
 
         Args:
             value (float): The value to set.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException: if
+                           False, log a warning.
 
         Raises:
             HandleException: if no setpoint PV exists.

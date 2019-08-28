@@ -15,9 +15,8 @@ class ControlSystem(object):
         Args:
             pv (string): PV to get the value of.
                          readback or a setpoint PV.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False None will be returned for any PV that fails
-                           and log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException; if
+                           False, return None and log a warning.
 
         Returns:
             object: the current value of the given PV.
@@ -32,9 +31,9 @@ class ControlSystem(object):
 
         Args:
             pvs (sequence): PVs to get values of.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False None will be returned for any PV that fails
-                           and log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException; if
+                           False, None will be returned for any PV that fails
+                           and a warning will be logged.
 
         Returns:
             list(object): the current values of the PVs.
@@ -50,8 +49,8 @@ class ControlSystem(object):
         Args:
             pv (string): The PV to set the value of.
             value (object): The value to set the PV to.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException: if
+                           False, log a warning.
 
         Raises:
             ControlSystemException: if it cannot connect to the specified PV.
@@ -67,7 +66,7 @@ class ControlSystem(object):
             throw (bool): On failure, if True raise ControlSystemException, if
                            False return a list of True and False values
                            corresponding to successes and failures and log a
-                           warning.
+                           warning for each PV that fails.
 
         Raises:
             ValueError: if the PVs or values are not passed in as sequences

@@ -23,9 +23,8 @@ class CothreadControlSystem(ControlSystem):
         Args:
             pv (string): The process variable given as a string. It can be a
                          readback or a setpoint PV.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False None will be returned for any PV that fails
-                           and log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException; if
+                           False, return None and log a warning.
 
         Returns:
             object: the current value of the given PV.
@@ -48,9 +47,9 @@ class CothreadControlSystem(ControlSystem):
 
         Args:
             pvs (sequence): PVs to get values of.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False None will be returned for any PV that fails
-                           and log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException; if
+                           False, None will be returned for any PV that fails
+                           and a warning will be logged.
 
         Returns:
             sequence: the current values of the PVs.
@@ -81,8 +80,8 @@ class CothreadControlSystem(ControlSystem):
         Args:
             pv (string): PV to set the value of.
             value (object): The value to set the PV to.
-            throw (bool): On failure, if True raise ControlSystemException, if
-                           False log a warning.
+            throw (bool): On failure: if True, raise ControlSystemException: if
+                           False, log a warning.
 
         Returns:
             bool: True for success, False for failure
@@ -110,10 +109,11 @@ class CothreadControlSystem(ControlSystem):
             throw (bool): On failure, if True raise ControlSystemException, if
                            False return a list of True and False values
                            corresponding to successes and failures and log a
-                           warning.
+                           warning for each PV that fails.
 
         Returns:
-            list(bool): True for success, False for failure
+            list(bool): True for success, False for failure; only returned if
+                         throw is false and a failure occurs.
 
         Raises:
             ValueError: if the lists of values and PVs are diffent lengths.
@@ -131,7 +131,9 @@ class CothreadControlSystem(ControlSystem):
                 logging.warning('Cannot connect to {}.'.format(stat.name))
             else:
                 return_values.append(True)
-        if throw and failures:
-            error_msg = '{} caput calls failed.'.format(len(failures))
-            raise ControlSystemException(error_msg)
-        return return_values
+        if failures:
+            if throw:
+                error_msg = '{} caput calls failed.'.format(len(failures))
+                raise ControlSystemException(error_msg)
+            else:
+                return return_values

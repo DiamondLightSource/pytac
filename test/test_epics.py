@@ -9,7 +9,7 @@ import pytac
 def test_get_values_live(simple_epics_lattice, mock_cs):
     simple_epics_lattice.get_element_values('family', 'x', pytac.RB,
                                             pytac.PHYS)
-    mock_cs.get_multiple.assert_called_with([RB_PV])
+    mock_cs.get_multiple.assert_called_with([RB_PV], True)
 
 
 def test_get_values_sim(simple_epics_lattice):
@@ -26,7 +26,7 @@ def test_get_values_sim(simple_epics_lattice):
 def test_set_element_values_live(simple_epics_lattice, mock_cs):
     simple_epics_lattice.set_element_values('family', 'x', [1],
                                             units=pytac.PHYS)
-    mock_cs.set_multiple.assert_called_with([SP_PV], [1])
+    mock_cs.set_multiple.assert_called_with([SP_PV], [1], True)
 
 
 def test_set_element_values_sim(simple_epics_lattice):
@@ -65,7 +65,7 @@ def test_get_values_returns_numpy_array_if_requested(simple_epics_lattice,
     values = simple_epics_lattice.get_element_values('family', 'x', pytac.RB,
                                                      dtype=dtype)
     numpy.testing.assert_equal(values, expected)
-    mock_cs.get_multiple.assert_called_with([RB_PV])
+    mock_cs.get_multiple.assert_called_with([RB_PV], True)
 
 
 @pytest.mark.parametrize('pv_type', ['readback', 'setpoint'])
