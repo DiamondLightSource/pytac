@@ -55,46 +55,45 @@ def test_set_multiple_calls_caput_correctly(cs):
 def test_get_multiple_raises_ControlSystemException(cs):
     """Here we check that errors are thrown, suppressed and logged correctly.
     """
-    caget.return_value = [12, ca_nothing('pv', False)]
+    caget.return_value = [12, ca_nothing("pv", False)]
     with pytest.raises(pytac.exceptions.ControlSystemException):
         cs.get_multiple([RB_PV, SP_PV])
     with LogCapture() as log:
         assert cs.get_multiple([RB_PV, SP_PV], throw=False) == [12, None]
-    log.check(('root', 'WARNING', 'Cannot connect to pv.'))
+    log.check(("root", "WARNING", "Cannot connect to pv."))
 
 
 def test_set_multiple_raises_ControlSystemException(cs):
     """Here we check that errors are thrown, suppressed and logged correctly.
     """
-    caput.return_value = [ca_nothing('pv1', True), ca_nothing('pv2', False)]
+    caput.return_value = [ca_nothing("pv1", True), ca_nothing("pv2", False)]
     with pytest.raises(pytac.exceptions.ControlSystemException):
         cs.set_multiple([RB_PV, SP_PV], [42, 6])
     with LogCapture() as log:
-        assert cs.set_multiple([RB_PV, SP_PV], [42, 6], throw=False) == [True,
-                                                                         False]
-    log.check(('root', 'WARNING', 'Cannot connect to pv2.'))
+        assert cs.set_multiple([RB_PV, SP_PV], [42, 6], throw=False) == [True, False]
+    log.check(("root", "WARNING", "Cannot connect to pv2."))
 
 
 def test_get_single_raises_ControlSystemException(cs):
     """Here we check that errors are thrown, suppressed and logged correctly.
     """
-    caget.side_effect = ca_nothing('pv', False)
+    caget.side_effect = ca_nothing("pv", False)
     with LogCapture() as log:
         assert cs.get_single(RB_PV, throw=False) is None
         with pytest.raises(pytac.exceptions.ControlSystemException):
             cs.get_single(RB_PV, throw=True)
-    log.check(('root', 'WARNING', 'Cannot connect to prefix:rb.'))
+    log.check(("root", "WARNING", "Cannot connect to prefix:rb."))
 
 
 def test_set_single_raises_ControlSystemException(cs):
     """Here we check that errors are thrown, suppressed and logged correctly.
     """
-    caput.side_effect = ca_nothing('pv', False)
+    caput.side_effect = ca_nothing("pv", False)
     with LogCapture() as log:
         assert cs.set_single(SP_PV, 42, throw=False) is False
         with pytest.raises(pytac.exceptions.ControlSystemException):
             cs.set_single(SP_PV, 42, throw=True)
-    log.check(('root', 'WARNING', 'Cannot connect to prefix:sp.'))
+    log.check(("root", "WARNING", "Cannot connect to prefix:sp."))
 
 
 def test_set_multiple_raises_ValueError_on_input_length_mismatch(cs):

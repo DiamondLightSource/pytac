@@ -4,9 +4,8 @@ import math
 import scipy.constants
 
 
-electron_mass_name = 'electron mass energy equivalent in MeV'
-electron_mass_mev, _, _ = (scipy.constants
-                           .physical_constants[electron_mass_name])
+electron_mass_name = "electron mass energy equivalent in MeV"
+electron_mass_mev, _, _ = scipy.constants.physical_constants[electron_mass_name]
 
 
 def get_rigidity(energy_mev):
@@ -36,6 +35,7 @@ def get_div_rigidity(energy):
 
     def div_rigidity(value):
         return value / rigidity
+
     return div_rigidity
 
 
@@ -51,4 +51,5 @@ def get_mult_rigidity(energy):
 
     def mult_rigidity(value):
         return value * rigidity
+
     return mult_rigidity

@@ -24,6 +24,7 @@ class Element(object):
                                                       data sources associated
                                                       with this element.
     """
+
     def __init__(self, length, element_type, name=None, lattice=None):
         """
         Args:
@@ -57,7 +58,7 @@ class Element(object):
         if self._lattice is None:
             return None
         else:
-            return sum([el.length for el in self._lattice[:self.index - 1]])
+            return sum([el.length for el in self._lattice[: self.index - 1]])
 
     @property
     def cell(self):
@@ -87,7 +88,7 @@ class Element(object):
         repn += "length {0} m, ".format(self.length)
         if self.cell is not None:
             repn += "cell {0}, ".format(self.cell)
-        repn += "families {0}>".format(', '.join(f for f in self.families))
+        repn += "families {0}>".format(", ".join(f for f in self.families))
         return repn
 
     __repr__ = __str__
@@ -100,8 +101,7 @@ class Element(object):
             data_source_type (str): the type of the data source being set
                                      pytac.LIVE or pytac.SIM.
         """
-        self._data_source_manager.set_data_source(data_source,
-                                                  data_source_type)
+        self._data_source_manager.set_data_source(data_source, data_source_type)
 
     def get_fields(self):
         """Get the all fields defined on an element.
@@ -133,8 +133,10 @@ class Element(object):
         try:
             self._data_source_manager.add_device(field, device, uc)
         except DataSourceException:
-            raise DataSourceException("No device data source for field {0} on "
-                                      "element {1}.".format(field, self))
+            raise DataSourceException(
+                "No device data source for field {0} on "
+                "element {1}.".format(field, self)
+            )
 
     def get_device(self, field):
         """Get the device for the given field.
@@ -155,8 +157,10 @@ class Element(object):
         try:
             return self._data_source_manager.get_device(field)
         except DataSourceException:
-            raise DataSourceException("No device data source for field {0} on "
-                                      "element {1}.".format(field, self))
+            raise DataSourceException(
+                "No device data source for field {0} on "
+                "element {1}.".format(field, self)
+            )
 
     def get_unitconv(self, field):
         """Get the unit conversion option for the specified field.
@@ -173,8 +177,10 @@ class Element(object):
         try:
             return self._data_source_manager.get_unitconv(field)
         except FieldException:
-            raise FieldException("No unit conversion option for field {0} on "
-                                 "element {1}.".format(field, self))
+            raise FieldException(
+                "No unit conversion option for field {0} on "
+                "element {1}.".format(field, self)
+            )
 
     def set_unitconv(self, field, uc):
         """Set the unit conversion option for the specified field.
@@ -193,8 +199,14 @@ class Element(object):
         """
         self.families.add(family)
 
-    def get_value(self, field, handle=pytac.RB, units=pytac.DEFAULT,
-                  data_source=pytac.DEFAULT, throw=True):
+    def get_value(
+        self,
+        field,
+        handle=pytac.RB,
+        units=pytac.DEFAULT,
+        data_source=pytac.DEFAULT,
+        throw=True,
+    ):
         """Get the value for a field.
 
         Returns the value of a field on the element. This value is uniquely
@@ -218,17 +230,27 @@ class Element(object):
             FieldException: if the element does not have the specified field.
         """
         try:
-            return self._data_source_manager.get_value(field, handle, units,
-                                                       data_source, throw)
+            return self._data_source_manager.get_value(
+                field, handle, units, data_source, throw
+            )
         except DataSourceException:
-            raise DataSourceException("No data source {0} on element {1}."
-                                      .format(data_source, self))
+            raise DataSourceException(
+                "No data source {0} on element {1}.".format(data_source, self)
+            )
         except FieldException:
-            raise FieldException("Element {0} does not have field {1}."
-                                 .format(self, field))
+            raise FieldException(
+                "Element {0} does not have field {1}.".format(self, field)
+            )
 
-    def set_value(self, field, value, handle=pytac.SP, units=pytac.DEFAULT,
-                  data_source=pytac.DEFAULT, throw=True):
+    def set_value(
+        self,
+        field,
+        value,
+        handle=pytac.SP,
+        units=pytac.DEFAULT,
+        data_source=pytac.DEFAULT,
+        throw=True,
+    ):
         """Set the value for a field.
 
         This value can be set on the machine or the simulation.
@@ -247,14 +269,17 @@ class Element(object):
             FieldException: if the element does not have the specified field.
         """
         try:
-            self._data_source_manager.set_value(field, value, handle, units,
-                                                data_source, throw)
+            self._data_source_manager.set_value(
+                field, value, handle, units, data_source, throw
+            )
         except DataSourceException:
-            raise DataSourceException("No data source {0} on element {1}."
-                                      .format(data_source, self))
+            raise DataSourceException(
+                "No data source {0} on element {1}.".format(data_source, self)
+            )
         except FieldException:
-            raise FieldException("Element {0} does not have field {1}."
-                                 .format(self, field))
+            raise FieldException(
+                "Element {0} does not have field {1}.".format(self, field)
+            )
 
     def set_lattice(self, lattice):
         """Set the stored lattice reference for this element to the passed
@@ -273,6 +298,7 @@ class EpicsElement(Element):
 
     **Methods:**
     """
+
     def get_pv_name(self, field, handle):
         """Get PV name for the specified field and handle.
 
@@ -288,15 +314,20 @@ class EpicsElement(Element):
             FieldException: if the specified field doesn't exist.
         """
         try:
-            return (self._data_source_manager._data_sources[pytac.LIVE]
-                    .get_device(field).get_pv_name(handle))
+            return (
+                self._data_source_manager._data_sources[pytac.LIVE]
+                .get_device(field)
+                .get_pv_name(handle)
+            )
         except KeyError:
-            raise DataSourceException("No data source for field {0} on "
-                                      "element {1}.".format(field, self))
+            raise DataSourceException(
+                "No data source for field {0} on " "element {1}.".format(field, self)
+            )
         except AttributeError:
-            raise DataSourceException("Cannot get PV for field {0} on element "
-                                      "{1}, as basic devices do not have "
-                                      "associated PV's.".format(field, self))
+            raise DataSourceException(
+                "Cannot get PV for field {0} on element "
+                "{1}, as basic devices do not have "
+                "associated PV's.".format(field, self)
+            )
         except FieldException:
-            raise FieldException("No field {0} on element {1}.".format(field,
-                                                                       self))
+            raise FieldException("No field {0} on element {1}.".format(field, self))

@@ -8,6 +8,8 @@
    :target: https://badge.fury.io/py/pytac
 .. image:: https://img.shields.io/pypi/pyversions/pytac.svg
    :target: https://badge.fury.io/py/pytac
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/ambv/black
 
 
 Python Toolkit for Accelerator Controls (Pytac) is a Python library for working

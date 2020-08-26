@@ -57,13 +57,13 @@ def test_get_conversion_limits():
     assert uc.get_conversion_limits(pytac.ENG) == [8, 13]
     assert uc.get_conversion_limits(pytac.PHYS) == [16, 26]
     with pytest.raises(pytac.exceptions.UnitsException):
-        uc.get_conversion_limits('invalid-unit-type')
+        uc.get_conversion_limits("invalid-unit-type")
 
 
-@pytest.mark.parametrize('origin, target', [(pytac.ENG, pytac.PHYS),
-                                            (pytac.PHYS, pytac.ENG)])
-def test_UnitConv_raises_UnitsException_for_values_outside_limits(origin,
-                                                                  target):
+@pytest.mark.parametrize(
+    "origin, target", [(pytac.ENG, pytac.PHYS), (pytac.PHYS, pytac.ENG)]
+)
+def test_UnitConv_raises_UnitsException_for_values_outside_limits(origin, target):
     uc = NullUnitConv()
     uc.set_conversion_limits(0, 10)
     with pytest.raises(pytac.exceptions.UnitsException):
@@ -73,14 +73,14 @@ def test_UnitConv_raises_UnitsException_for_values_outside_limits(origin,
 
 
 def test_UnitConv_includes_name_in_exception():
-    uc = UnitConv(name='test_unitconv')
+    uc = UnitConv(name="test_unitconv")
     with pytest.raises(NotImplementedError, match="test_unitconv"):
         uc.convert(10, pytac.ENG, pytac.PHYS)
 
 
-@pytest.mark.parametrize('origin, target', [(pytac.LIVE, pytac.ENG),
-                                            (pytac.PHYS, pytac.SP),
-                                            ('a', 'b')])
+@pytest.mark.parametrize(
+    "origin, target", [(pytac.LIVE, pytac.ENG), (pytac.PHYS, pytac.SP), ("a", "b")]
+)
 def test_UnitConv_requires_correct_arguments(origin, target):
     uc = UnitConv(name=12)
     assert uc.name == 12

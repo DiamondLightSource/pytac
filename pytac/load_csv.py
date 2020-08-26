@@ -22,12 +22,12 @@ from pytac.exceptions import ControlSystemException
 # Create a default unit conversion object that returns the input unchanged.
 DEFAULT_UC = units.NullUnitConv()
 
-ELEMENTS_FILENAME = 'elements.csv'
-DEVICES_FILENAME = 'devices.csv'
-FAMILIES_FILENAME = 'families.csv'
-UNITCONV_FILENAME = 'unitconv.csv'
-POLY_FILENAME = 'uc_poly_data.csv'
-PCHIP_FILENAME = 'uc_pchip_data.csv'
+ELEMENTS_FILENAME = "elements.csv"
+DEVICES_FILENAME = "devices.csv"
+FAMILIES_FILENAME = "families.csv"
+UNITCONV_FILENAME = "unitconv.csv"
+POLY_FILENAME = "uc_poly_data.csv"
+PCHIP_FILENAME = "uc_pchip_data.csv"
 
 
 def load_poly_unitconv(filename):
@@ -45,8 +45,7 @@ def load_poly_unitconv(filename):
     with open(filename) as poly:
         csv_reader = csv.DictReader(poly)
         for item in csv_reader:
-            data[(int(item['uc_id']))].append((int(item['coeff']),
-                                               float(item['val'])))
+            data[(int(item["uc_id"]))].append((int(item["coeff"]), float(item["val"])))
     # Create PolyUnitConv for each item and put in the dict
     for uc_id in data:
         u = units.PolyUnitConv(
@@ -71,8 +70,7 @@ def load_pchip_unitconv(filename):
     with open(filename) as pchip:
         csv_reader = csv.DictReader(pchip)
         for item in csv_reader:
-            data[(int(item['uc_id']))].append((float(item['eng']),
-                                               float(item['phy'])))
+            data[(int(item["uc_id"]))].append((float(item["eng"]), float(item["phy"])))
     # Create PchipUnitConv for each item and put in the dict
     for uc_id in data:
         eng = [x[0] for x in sorted(data[uc_id])]
@@ -102,42 +100,45 @@ def load_unitconv(directory, mode, lattice):
         csv_reader = csv.DictReader(unitconv)
         for item in csv_reader:
             # Special case for element 0: the lattice itself.
-            if int(item['el_id']) == 0:
-                if item['uc_type'] != 'null':
+            if int(item["el_id"]) == 0:
+                if item["uc_type"] != "null":
                     # Each element needs its own unitconv object as
                     # it may for example have different limit.
-                    uc = copy.copy(unitconvs[int(item['uc_id'])])
-                    uc.phys_units = item['phys_units']
-                    uc.eng_units = item['eng_units']
-                    upper, lower = (float(lim) if lim != '' else None for lim
-                                    in [item['upper_lim'], item['lower_lim']])
+                    uc = copy.copy(unitconvs[int(item["uc_id"])])
+                    uc.phys_units = item["phys_units"]
+                    uc.eng_units = item["eng_units"]
+                    upper, lower = (
+                        float(lim) if lim != "" else None
+                        for lim in [item["upper_lim"], item["lower_lim"]]
+                    )
                     uc.set_conversion_limits(lower, upper)
                 else:
-                    uc = units.NullUnitConv(item['eng_units'],
-                                            item['phys_units'])
-                lattice.set_unitconv(item['field'], uc)
+                    uc = units.NullUnitConv(item["eng_units"], item["phys_units"])
+                lattice.set_unitconv(item["field"], uc)
             else:
-                element = lattice[int(item['el_id']) - 1]
+                element = lattice[int(item["el_id"]) - 1]
                 # For certain magnet types, we need an additional rigidity
                 # conversion factor as well as the raw conversion.
-                if item['uc_type'] == 'null':
-                    uc = units.NullUnitConv(item['eng_units'],
-                                            item['phys_units'])
+                if item["uc_type"] == "null":
+                    uc = units.NullUnitConv(item["eng_units"], item["phys_units"])
                 else:
                     # Each element needs its own unitconv object as
                     # it may for example have different limit.
-                    uc = copy.copy(unitconvs[int(item['uc_id'])])
-                    if element.families.intersection(('HSTR', 'VSTR', 'QUAD',
-                                                      'SEXT', 'BEND')):
-                        energy = lattice.get_value('energy', units=pytac.PHYS)
+                    uc = copy.copy(unitconvs[int(item["uc_id"])])
+                    if element.families.intersection(
+                        ("HSTR", "VSTR", "QUAD", "SEXT", "BEND")
+                    ):
+                        energy = lattice.get_value("energy", units=pytac.PHYS)
                         uc.set_post_eng_to_phys(utils.get_div_rigidity(energy))
                         uc.set_pre_phys_to_eng(utils.get_mult_rigidity(energy))
-                    uc.phys_units = item['phys_units']
-                    uc.eng_units = item['eng_units']
-                    upper, lower = (float(lim) if lim != '' else None for lim
-                                    in [item['upper_lim'], item['lower_lim']])
+                    uc.phys_units = item["phys_units"]
+                    uc.eng_units = item["eng_units"]
+                    upper, lower = (
+                        float(lim) if lim != "" else None
+                        for lim in [item["upper_lim"], item["lower_lim"]]
+                    )
                     uc.set_conversion_limits(lower, upper)
-                element.set_unitconv(item['field'], uc)
+                element.set_unitconv(item["field"], uc)
 
 
 def load(mode, control_system=None, directory=None, symmetry=None):
@@ -165,49 +166,49 @@ def load(mode, control_system=None, directory=None, symmetry=None):
             # Don't import epics unless we need it to avoid unnecessary
             # installation of cothread
             from pytac import cothread_cs
+
             control_system = cothread_cs.CothreadControlSystem()
     except ImportError:
-        raise ControlSystemException("Please install cothread to load a "
-                                     "lattice using the default control "
-                                     "system (found in cothread_cs.py).")
+        raise ControlSystemException(
+            "Please install cothread to load a "
+            "lattice using the default control "
+            "system (found in cothread_cs.py)."
+        )
     if directory is None:
-        directory = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                 'data')
+        directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
     lat = lattice.EpicsLattice(mode, control_system, symmetry=symmetry)
     lat.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
     with open(os.path.join(directory, mode, ELEMENTS_FILENAME)) as elements:
         csv_reader = csv.DictReader(elements)
         for item in csv_reader:
-            name = item['name'] if item['name'] != '' else None
-            e = element.EpicsElement(float(item['length']), item['type'],
-                                     name, lat)
-            e.add_to_family(item['type'])
+            name = item["name"] if item["name"] != "" else None
+            e = element.EpicsElement(float(item["length"]), item["type"], name, lat)
+            e.add_to_family(item["type"])
             e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)
     with open(os.path.join(directory, mode, DEVICES_FILENAME)) as devices:
         csv_reader = csv.DictReader(devices)
         for item in csv_reader:
-            name = item['name']
-            get_pv = item['get_pv'] if item['get_pv'] else None
-            set_pv = item['set_pv'] if item['set_pv'] else None
+            name = item["name"]
+            get_pv = item["get_pv"] if item["get_pv"] else None
+            set_pv = item["set_pv"] if item["set_pv"] else None
             pve = True
             d = device.EpicsDevice(name, control_system, pve, get_pv, set_pv)
             # Devices on index 0 are attached to the lattice not elements.
-            if int(item['el_id']) == 0:
-                lat.add_device(item['field'], d, DEFAULT_UC)
+            if int(item["el_id"]) == 0:
+                lat.add_device(item["field"], d, DEFAULT_UC)
             else:
-                lat[int(item['el_id']) - 1].add_device(item['field'], d,
-                                                       DEFAULT_UC)
+                lat[int(item["el_id"]) - 1].add_device(item["field"], d, DEFAULT_UC)
         # Add basic devices to the lattice.
         positions = []
         for elem in lat:
             positions.append(elem.s)
-        lat.add_device('s_position', device.BasicDevice(positions), DEFAULT_UC)
-        lat.add_device('energy', device.BasicDevice(3.e+09), DEFAULT_UC)
+        lat.add_device("s_position", device.BasicDevice(positions), DEFAULT_UC)
+        lat.add_device("energy", device.BasicDevice(3.0e09), DEFAULT_UC)
     with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
         csv_reader = csv.DictReader(families)
         for item in csv_reader:
-            lat[int(item['el_id']) - 1].add_to_family(item['family'])
+            lat[int(item["el_id"]) - 1].add_to_family(item["family"])
     if os.path.exists(os.path.join(directory, mode, UNITCONV_FILENAME)):
         load_unitconv(directory, mode, lat)
     return lat

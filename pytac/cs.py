@@ -9,6 +9,7 @@ class ControlSystem(object):
 
     **Methods:**
     """
+
     def get_single(self, pv, throw):
         """Get the value of a given PV.
 
