@@ -5,8 +5,15 @@ import types
 import mock
 import pytest
 
-from constants import (CURRENT_DIR, DUMMY_ARRAY, DUMMY_VALUE_1, DUMMY_VALUE_2,
-                       LATTICE_NAME, RB_PV, SP_PV)
+from constants import (
+    CURRENT_DIR,
+    DUMMY_ARRAY,
+    DUMMY_VALUE_1,
+    DUMMY_VALUE_2,
+    LATTICE_NAME,
+    RB_PV,
+    SP_PV,
+)
 import pytac
 from pytac import load_csv
 from pytac.data_source import DataSourceManager, DeviceDataSource
@@ -24,29 +31,31 @@ def pytest_sessionstart():
     from cothread), including the functions that pytac explicitly imports
     (caget and caput).
     """
+
     class ca_nothing(Exception):
         """A minimal mock of the cothread ca_nothing exception class.
         """
+
         def __init__(self, name, errorcode=True):
             self.ok = errorcode
             self.name = name
 
-    cothread = types.ModuleType('cothread')
-    catools = types.ModuleType('catools')
+    cothread = types.ModuleType("cothread")
+    catools = types.ModuleType("catools")
     catools.caget = mock.MagicMock()
     catools.caput = mock.MagicMock()
     catools.ca_nothing = ca_nothing
     cothread.catools = catools
 
-    sys.modules['cothread'] = cothread
-    sys.modules['cothread.catools'] = catools
+    sys.modules["cothread"] = cothread
+    sys.modules["cothread.catools"] = catools
 
 
 # Create mock devices and attach them to the element
 @pytest.fixture
 def x_device():
     x_device = mock.MagicMock()
-    x_device.name = 'x_device'
+    x_device.name = "x_device"
     x_device.get_value.return_value = DUMMY_VALUE_1
     return x_device
 
@@ -54,7 +63,7 @@ def x_device():
 @pytest.fixture
 def y_device():
     y_device = mock.MagicMock()
-    y_device.name = 'y_device'
+    y_device.name = "y_device"
     y_device.get_pv_name.return_value = SP_PV
     return y_device
 
@@ -79,55 +88,55 @@ def double_uc():
 
 
 @pytest.fixture
-def simple_element(x_device, y_device, mock_sim_data_source, unit_uc,
-                   double_uc):
+def simple_element(x_device, y_device, mock_sim_data_source, unit_uc, double_uc):
     # A unit conversion object that returns the same as the input.
-    element = Element(0.0, 'BPM', 'element1')
-    element.add_to_family('family')
+    element = Element(0.0, "BPM", "element1")
+    element.add_to_family("family")
     element.set_data_source(DeviceDataSource(), pytac.LIVE)
-    element.add_device('x', x_device, unit_uc)
-    element.add_device('y', y_device, double_uc)
+    element.add_device("x", x_device, unit_uc)
+    element.add_device("y", y_device, double_uc)
     element.set_data_source(mock_sim_data_source, pytac.SIM)
     return element
 
 
 @pytest.fixture
-def simple_lattice(simple_element, x_device, y_device, mock_sim_data_source,
-                   unit_uc, double_uc):
+def simple_lattice(
+    simple_element, x_device, y_device, mock_sim_data_source, unit_uc, double_uc
+):
     lattice = Lattice(LATTICE_NAME, symmetry=6)
     lattice.add_element(simple_element)
     lattice.set_data_source(DeviceDataSource(), pytac.LIVE)
-    lattice.add_device('x', x_device, unit_uc)
-    lattice.add_device('y', y_device, double_uc)
+    lattice.add_device("x", x_device, unit_uc)
+    lattice.add_device("y", y_device, double_uc)
     lattice.set_data_source(mock_sim_data_source, pytac.SIM)
     return lattice
 
 
 @pytest.fixture
-def simple_data_source_manager(x_device, y_device, mock_sim_data_source,
-                               unit_uc, double_uc):
+def simple_data_source_manager(
+    x_device, y_device, mock_sim_data_source, unit_uc, double_uc
+):
     data_source_manager = DataSourceManager()
     data_source_manager.set_data_source(DeviceDataSource(), pytac.LIVE)
-    data_source_manager.add_device('x', x_device, unit_uc)
-    data_source_manager.add_device('y', y_device, double_uc)
+    data_source_manager.add_device("x", x_device, unit_uc)
+    data_source_manager.add_device("y", y_device, double_uc)
     data_source_manager.set_data_source(mock_sim_data_source, pytac.SIM)
     return data_source_manager
 
 
 @pytest.fixture(scope="session")
 def vmx_ring():
-    return pytac.load_csv.load('VMX', mock.MagicMock, symmetry=24)
+    return pytac.load_csv.load("VMX", mock.MagicMock, symmetry=24)
 
 
 @pytest.fixture(scope="session")
 def diad_ring():
-    return pytac.load_csv.load('DIAD', mock.MagicMock, symmetry=24)
+    return pytac.load_csv.load("DIAD", mock.MagicMock, symmetry=24)
 
 
 @pytest.fixture
 def lattice():
-    lat = load_csv.load('dummy', mock.MagicMock(),
-                        os.path.join(CURRENT_DIR, 'data'), 2)
+    lat = load_csv.load("dummy", mock.MagicMock(), os.path.join(CURRENT_DIR, "data"), 2)
     return lat
 
 
@@ -147,27 +156,27 @@ def mock_cs():
 
 @pytest.fixture
 def simple_epics_element(mock_cs, unit_uc):
-    element = EpicsElement(0.0, 'BPM')
+    element = EpicsElement(0.0, "BPM")
     basic_device = BasicDevice(0)
-    x_device = EpicsDevice('x_device', mock_cs, True, RB_PV, SP_PV)
-    y_device = EpicsDevice('y_device', mock_cs, True, SP_PV, RB_PV)
-    element.add_to_family('family')
+    x_device = EpicsDevice("x_device", mock_cs, True, RB_PV, SP_PV)
+    y_device = EpicsDevice("y_device", mock_cs, True, SP_PV, RB_PV)
+    element.add_to_family("family")
     element.set_data_source(DeviceDataSource(), pytac.LIVE)
-    element.add_device('basic', basic_device, unit_uc)
-    element.add_device('x', x_device, unit_uc)
-    element.add_device('y', y_device, unit_uc)
+    element.add_device("basic", basic_device, unit_uc)
+    element.add_device("x", x_device, unit_uc)
+    element.add_device("y", y_device, unit_uc)
     return element
 
 
 @pytest.fixture
 def simple_epics_lattice(simple_epics_element, mock_cs, unit_uc):
-    lat = EpicsLattice('lattice', mock_cs)
+    lat = EpicsLattice("lattice", mock_cs)
     lat.add_element(simple_epics_element)
     basic_device = BasicDevice(0)
-    x_device = EpicsDevice('x_device', mock_cs, True, RB_PV, SP_PV)
-    y_device = EpicsDevice('y_device', mock_cs, True, SP_PV, RB_PV)
+    x_device = EpicsDevice("x_device", mock_cs, True, RB_PV, SP_PV)
+    y_device = EpicsDevice("y_device", mock_cs, True, SP_PV, RB_PV)
     lat.set_data_source(DeviceDataSource(), pytac.LIVE)
-    lat.add_device('basic', basic_device, unit_uc)
-    lat.add_device('x', x_device, unit_uc)
-    lat.add_device('y', y_device, unit_uc)
+    lat.add_device("basic", basic_device, unit_uc)
+    lat.add_device("x", x_device, unit_uc)
+    lat.add_device("y", y_device, unit_uc)
     return lat

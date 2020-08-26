@@ -7,8 +7,12 @@ import numpy
 
 import pytac
 from pytac.data_source import DataSourceManager
-from pytac.exceptions import (DataSourceException, FieldException,
-                              UnitsException, HandleException)
+from pytac.exceptions import (
+    DataSourceException,
+    FieldException,
+    UnitsException,
+    HandleException,
+)
 
 
 class Lattice(object):
@@ -29,6 +33,7 @@ class Lattice(object):
                                                       data sources associated
                                                       with this lattice.
     """
+
     def __init__(self, name, symmetry=None):
         """Args:
             name (str): The name of the lattice.
@@ -68,7 +73,7 @@ class Lattice(object):
         else:
             bounds = [1]
             for cell in range(2, self.symmetry + 1, 1):
-                for elem in self._elements[bounds[-1]:]:
+                for elem in self._elements[bounds[-1] :]:
                     if elem.cell == cell:
                         bounds.append(elem.index)
                         break
@@ -104,8 +109,7 @@ class Lattice(object):
             data_source_type (str): the type of the data source being set
                                      pytac.LIVE or pytac.SIM.
         """
-        self._data_source_manager.set_data_source(data_source,
-                                                  data_source_type)
+        self._data_source_manager.set_data_source(data_source, data_source_type)
 
     def get_fields(self):
         """Get the fields defined on the lattice.
@@ -137,8 +141,9 @@ class Lattice(object):
         try:
             self._data_source_manager.add_device(field, device, uc)
         except DataSourceException:
-            raise DataSourceException("No device data source on lattice {0}."
-                                      .format(self))
+            raise DataSourceException(
+                "No device data source on lattice {0}.".format(self)
+            )
 
     def get_device(self, field):
         """Get the device for the given field.
@@ -159,8 +164,9 @@ class Lattice(object):
         try:
             return self._data_source_manager.get_device(field)
         except DataSourceException:
-            raise DataSourceException("No device data source on lattice {0}."
-                                      .format(self))
+            raise DataSourceException(
+                "No device data source on lattice {0}.".format(self)
+            )
 
     def get_unitconv(self, field):
         """Get the unit conversion option for the specified field.
@@ -177,8 +183,10 @@ class Lattice(object):
         try:
             return self._data_source_manager.get_unitconv(field)
         except FieldException:
-            raise FieldException("No unit conversion option for field {0} on "
-                                 "lattice {1}.".format(field, self))
+            raise FieldException(
+                "No unit conversion option for field {0} on "
+                "lattice {1}.".format(field, self)
+            )
 
     def set_unitconv(self, field, uc):
         """Set the unit conversion option for the specified field.
@@ -189,8 +197,14 @@ class Lattice(object):
         """
         self._data_source_manager.set_unitconv(field, uc)
 
-    def get_value(self, field, handle=pytac.RB, units=pytac.DEFAULT,
-                  data_source=pytac.DEFAULT, throw=True):
+    def get_value(
+        self,
+        field,
+        handle=pytac.RB,
+        units=pytac.DEFAULT,
+        data_source=pytac.DEFAULT,
+        throw=True,
+    ):
         """Get the value for a field on the lattice.
 
         Returns the value of a field on the lattice. This value is uniquely
@@ -214,17 +228,28 @@ class Lattice(object):
             FieldException: if the lattice does not have the specified field.
         """
         try:
-            return self._data_source_manager.get_value(field, handle, units,
-                                                       data_source, throw)
+            return self._data_source_manager.get_value(
+                field, handle, units, data_source, throw
+            )
         except DataSourceException:
-            raise DataSourceException("No data source {0} on lattice {1}."
-                                      .format(data_source, self))
+            raise DataSourceException(
+                "No data source {0} on lattice {1}.".format(data_source, self)
+            )
         except FieldException:
-            raise FieldException("Lattice {0} does not have field {1} on data "
-                                 "source {2}".format(self, field, data_source))
+            raise FieldException(
+                "Lattice {0} does not have field {1} on data "
+                "source {2}".format(self, field, data_source)
+            )
 
-    def set_value(self, field, value, handle=pytac.SP, units=pytac.DEFAULT,
-                  data_source=pytac.DEFAULT, throw=True):
+    def set_value(
+        self,
+        field,
+        value,
+        handle=pytac.SP,
+        units=pytac.DEFAULT,
+        data_source=pytac.DEFAULT,
+        throw=True,
+    ):
         """Set the value for a field.
 
         This value can be set on the machine or the simulation.
@@ -243,14 +268,18 @@ class Lattice(object):
             FieldException: if the lattice does not have the specified field.
         """
         try:
-            self._data_source_manager.set_value(field, value, handle, units,
-                                                data_source, throw)
+            self._data_source_manager.set_value(
+                field, value, handle, units, data_source, throw
+            )
         except DataSourceException:
-            raise DataSourceException("No data source {0} on lattice {1}."
-                                      .format(data_source, self))
+            raise DataSourceException(
+                "No data source {0} on lattice {1}.".format(data_source, self)
+            )
         except FieldException:
-            raise FieldException("Lattice {0} does not have field {1} on data "
-                                 "source {2}".format(self, field, data_source))
+            raise FieldException(
+                "Lattice {0} does not have field {1} on data "
+                "source {2}".format(self, field, data_source)
+            )
 
     def get_length(self):
         """Returns the length of the lattice, in meters.
@@ -350,8 +379,9 @@ class Lattice(object):
             try:
                 devices.append(element.get_device(field))
             except DataSourceException:
-                logging.warning("No device for field {0} on element {1}."
-                                .format(field, element))
+                logging.warning(
+                    "No device for field {0} on element {1}.".format(field, element)
+                )
         return devices
 
     def get_element_device_names(self, family, field):
@@ -372,9 +402,16 @@ class Lattice(object):
         devices = self.get_element_devices(family, field)
         return [device.name for device in devices]
 
-    def get_element_values(self, family, field, handle=pytac.RB,
-                           units=pytac.DEFAULT, data_source=pytac.DEFAULT,
-                           throw=True, dtype=None):
+    def get_element_values(
+        self,
+        family,
+        field,
+        handle=pytac.RB,
+        units=pytac.DEFAULT,
+        data_source=pytac.DEFAULT,
+        throw=True,
+        dtype=None,
+    ):
         """Get the value of the given field for all elements in the given
         family in the lattice.
 
@@ -394,15 +431,24 @@ class Lattice(object):
             list or numpy.array: The requested values.
         """
         elements = self.get_elements(family)
-        values = [element.get_value(field, handle, units, data_source, throw)
-                  for element in elements]
+        values = [
+            element.get_value(field, handle, units, data_source, throw)
+            for element in elements
+        ]
         if dtype is not None:
             values = numpy.array(values, dtype=dtype)
         return values
 
-    def set_element_values(self, family, field, values, handle=pytac.SP,
-                           units=pytac.DEFAULT, data_source=pytac.DEFAULT,
-                           throw=True):
+    def set_element_values(
+        self,
+        family,
+        field,
+        values,
+        handle=pytac.SP,
+        units=pytac.DEFAULT,
+        data_source=pytac.DEFAULT,
+        throw=True,
+    ):
         """Set the value of the given field for all elements in the given
         family in the lattice to the given values.
 
@@ -426,13 +472,20 @@ class Lattice(object):
             raise HandleException("Must write using {0}.".format(pytac.SP))
         elements = self.get_elements(family)
         if len(elements) != len(values):
-            raise IndexError("Number of elements in given array({0}) must be "
-                             "equal to the number of elements in the "
-                             "family({1}).".format(len(values), len(elements)))
+            raise IndexError(
+                "Number of elements in given array({0}) must be "
+                "equal to the number of elements in the "
+                "family({1}).".format(len(values), len(elements))
+            )
         for element, value in zip(elements, values):
-            status = element.set_value(field, value, handle=pytac.SP,
-                                       units=units, data_source=data_source,
-                                       throw=throw)
+            status = element.set_value(
+                field,
+                value,
+                handle=pytac.SP,
+                units=units,
+                data_source=data_source,
+                throw=throw,
+            )
             if status is not None:
                 return status
 
@@ -453,9 +506,10 @@ class Lattice(object):
             for elem in elems:
                 elem._data_source_manager.default_units = default_units
         elif default_units is not None:
-            raise UnitsException("{0} is not a unit type. Please enter {1} or "
-                                 "{2}.".format(default_units, pytac.ENG,
-                                               pytac.PHYS))
+            raise UnitsException(
+                "{0} is not a unit type. Please enter {1} or "
+                "{2}.".format(default_units, pytac.ENG, pytac.PHYS)
+            )
 
     def set_default_data_source(self, default_ds):
         """Sets the default data source for the lattice and all its elements.
@@ -474,10 +528,10 @@ class Lattice(object):
             for elem in elems:
                 elem._data_source_manager.default_data_source = default_ds
         elif default_ds is not None:
-            raise DataSourceException("{0} is not a data source. Please enter "
-                                      "{1} or {2}.".format(default_ds,
-                                                           pytac.LIVE,
-                                                           pytac.SIM))
+            raise DataSourceException(
+                "{0} is not a data source. Please enter "
+                "{1} or {2}.".format(default_ds, pytac.LIVE, pytac.SIM)
+            )
 
     def get_default_units(self):
         """Get the default unit type, pytac.ENG or pytac.PHYS.
@@ -509,9 +563,11 @@ class Lattice(object):
         """
         elements = self.get_elements(family)
         if len(elements) != len(values):
-            raise IndexError("Number of elements in given sequence({0}) must "
-                             "be equal to the number of elements in the "
-                             "family({1}).".format(len(values), len(elements)))
+            raise IndexError(
+                "Number of elements in given sequence({0}) must "
+                "be equal to the number of elements in the "
+                "family({1}).".format(len(values), len(elements))
+            )
         converted_values = []
         for elem, value in zip(elements, values):
             uc = elem.get_unitconv(field)
@@ -539,6 +595,7 @@ class EpicsLattice(Lattice):
                                                       data sources associated
                                                       with this lattice.
     """
+
     def __init__(self, name, epics_cs, symmetry=None):
         """
         Args:
@@ -563,15 +620,21 @@ class EpicsLattice(Lattice):
             str: The readback or setpoint PV for the specified field.
         """
         try:
-            return (self._data_source_manager._data_sources[pytac.LIVE]
-                    .get_device(field).get_pv_name(handle))
+            return (
+                self._data_source_manager._data_sources[pytac.LIVE]
+                .get_device(field)
+                .get_pv_name(handle)
+            )
         except KeyError:
-            raise DataSourceException("Lattice {0} has no device for field "
-                                      "{1}.".format(self, field))
+            raise DataSourceException(
+                "Lattice {0} has no device for field " "{1}.".format(self, field)
+            )
         except AttributeError:
-            raise DataSourceException("Cannot get PV for field {0} on lattice "
-                                      "{1}, as basic devices do not have "
-                                      "associated PV's.".format(field, self))
+            raise DataSourceException(
+                "Cannot get PV for field {0} on lattice "
+                "{1}, as basic devices do not have "
+                "associated PV's.".format(field, self)
+            )
 
     def get_element_pv_names(self, family, field, handle):
         """Get the PV names for the given field, and handle, on all elements
@@ -594,9 +657,16 @@ class EpicsLattice(Lattice):
             pv_names.append(element.get_pv_name(field, handle))
         return pv_names
 
-    def get_element_values(self, family, field, handle=pytac.RB,
-                           units=pytac.DEFAULT, data_source=pytac.DEFAULT,
-                           throw=True, dtype=None):
+    def get_element_values(
+        self,
+        family,
+        field,
+        handle=pytac.RB,
+        units=pytac.DEFAULT,
+        data_source=pytac.DEFAULT,
+        throw=True,
+        dtype=None,
+    ):
         """Get the value of the given field for all elements in the given
         family in the lattice.
 
@@ -623,22 +693,27 @@ class EpicsLattice(Lattice):
             pv_names = self.get_element_pv_names(family, field, handle)
             values = self._cs.get_multiple(pv_names, throw)
             if units == pytac.PHYS:
-                values = self.convert_family_values(family, field, values,
-                                                    pytac.ENG, pytac.PHYS)
+                values = self.convert_family_values(
+                    family, field, values, pytac.ENG, pytac.PHYS
+                )
         else:
-            values = super(EpicsLattice, self).get_element_values(family,
-                                                                  field,
-                                                                  handle,
-                                                                  units,
-                                                                  data_source,
-                                                                  throw)
+            values = super(EpicsLattice, self).get_element_values(
+                family, field, handle, units, data_source, throw
+            )
         if dtype is not None:
             values = numpy.array(values, dtype=dtype)
         return values
 
-    def set_element_values(self, family, field, values, handle=pytac.SP,
-                           units=pytac.DEFAULT, data_source=pytac.DEFAULT,
-                           throw=True):
+    def set_element_values(
+        self,
+        family,
+        field,
+        values,
+        handle=pytac.SP,
+        units=pytac.DEFAULT,
+        data_source=pytac.DEFAULT,
+        throw=True,
+    ):
         """Set the value of the given field for all elements in the given
         family in the lattice to the given values.
 
@@ -664,16 +739,18 @@ class EpicsLattice(Lattice):
             raise HandleException("Must write using {0}.".format(pytac.SP))
         if data_source == pytac.LIVE:
             if units == pytac.PHYS:
-                values = self.convert_family_values(family, field, values,
-                                                    pytac.PHYS, pytac.ENG)
+                values = self.convert_family_values(
+                    family, field, values, pytac.PHYS, pytac.ENG
+                )
             pv_names = self.get_element_pv_names(family, field, pytac.SP)
             if len(pv_names) != len(values):
-                raise IndexError("Number of elements in given sequence({0}) "
-                                 "must be equal to the number of elements in "
-                                 "the family({1}).".format(len(values),
-                                                           len(pv_names)))
+                raise IndexError(
+                    "Number of elements in given sequence({0}) "
+                    "must be equal to the number of elements in "
+                    "the family({1}).".format(len(values), len(pv_names))
+                )
             self._cs.set_multiple(pv_names, values, throw)
         else:
-            super(EpicsLattice, self).set_element_values(family, field, values,
-                                                         pytac.SP, units,
-                                                         data_source, throw)
+            super(EpicsLattice, self).set_element_values(
+                family, field, values, pytac.SP, units, data_source, throw
+            )
