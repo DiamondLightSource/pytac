@@ -35,7 +35,7 @@ function load_mml(ringmode)
 
     % Map from AT types to types in the accelerator object (ao).
     global TYPE_MAP;
-    keys = {'QUAD', 'SEXT', 'VSTR', 'HSTR', 'BEND', 'VTRIM', 'HTRIM'};
+    keys = {'Quadrupole', 'Sextupole', 'VSTR', 'HSTR', 'Bend', 'VTRIM', 'HTRIM'};
     values = {'QUAD_', 'SEXT_', 'VCM', 'HCM', 'BB', 'VTRIM', 'HTRIM'};
     TYPE_MAP = containers.Map(keys, values);
 
@@ -64,7 +64,7 @@ function load_mml(ringmode)
         % Just add that family to the sext element.
         % Don't increment the new_index count as we haven't added an
         % element.
-        if (strcmp(at_elem.FamName, 'HSTR') && strcmp(THERING{old_index - 1}.Class, 'SEXT')) || (strcmp(at_elem.FamName, 'VSTR') && strcmp(THERING{old_index - 2}.Class, 'SEXT'))
+        if (strcmp(at_elem.FamName, 'HSTR') && strcmp(THERING{old_index - 1}.Class, 'Sextupole')) || (strcmp(at_elem.FamName, 'VSTR') && strcmp(THERING{old_index - 2}.Class, 'Sextupole'))
             fprintf(f_families, '%i,%s\n', new_index, at_elem.FamName);
         else
             new_index = new_index + 1;
@@ -102,10 +102,12 @@ function load_mml(ringmode)
     function type = gettype(elem)
         if isfield(elem, 'Class')
             type = elem.Class;
-        elseif isfield(elem, 'FamName')
+            % We need to distinguish
+            % - BPMs, which have class 'Marker'
+            % - vertical and horizontal correctors
+            if (strcmp(type, 'Marker') || strcmp(type, 'Corrector')) && isfield(elem, 'FamName')
                 type = elem.FamName;
-        else
-            type = '';
+            end
         end
     end
 
@@ -147,7 +149,7 @@ function load_mml(ringmode)
             index = used_elements(type);
             % MML is inconsistent about whether the family for the bends
             % is BEND or BB.
-            if strcmp(type, 'BEND') && isfield(ao, 'BEND')
+            if strcmp(type, 'Bend') && isfield(ao, 'Bend')
                 family = 'BEND';
             else
                 family = TYPE_MAP(type);
@@ -158,11 +160,11 @@ function load_mml(ringmode)
             alt_pv1 = {};
             alt_pv2 = {};
 
-            if strcmp(type, 'QUAD')
+            if strcmp(type, 'Quadrupole')
                 field = 'b1';
-            elseif strcmp(type, 'SEXT')
+            elseif strcmp(type, 'Sextupole')
                 field = 'b2';
-            elseif strcmp(type, 'BEND')
+            elseif strcmp(type, 'Bend')
                 field = 'b0';
             elseif strcmp(type, 'VTRIM')
                 field = 'y_kick';
@@ -202,9 +204,9 @@ function load_mml(ringmode)
             y_fofb_pv = pv_struct('y_fofb_disabled', sprintf(alt_template, 'V', 'FAST'), '');
             y_sofb_pv = pv_struct('y_sofb_disabled', sprintf(alt_template, 'V', 'SLOW'), '');
             pvs = {x_pv, y_pv, en_pv, x_fofb_pv, x_sofb_pv, y_fofb_pv, y_sofb_pv};
-        elseif strcmp(type, 'RF')
-            gfpv = ao.(type).Monitor.ChannelNames;
-            sfpv = ao.(type).Setpoint.ChannelNames;
+        elseif strcmp(type, 'RFCavity')
+            gfpv = ao.('RF').Monitor.ChannelNames;
+            sfpv = ao.('RF').Setpoint.ChannelNames;
             f_pvs = pv_struct('f', gfpv, sfpv);
             % voltage?
             pvs = {f_pvs};

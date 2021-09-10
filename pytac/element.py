@@ -13,8 +13,10 @@ class Element(object):
     **Attributes:**
 
     Attributes:
-        name (str): The name identifying the element.
-        type_ (str): The type of the element.
+        name (str): The name identifying the element. The user is free to define
+                    this for their own purposes.
+        type_ (str): The type of the element. The user is free to define this for
+                     their own purposes.
         length (float): The length of the element in metres.
         families (set): The families this element is a member of.
 
