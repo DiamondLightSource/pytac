@@ -1,29 +1,38 @@
 function load_mml(ringmode)
+% Extract data from middlelayer and write it into the CSV files
+% used by Pytac.
+% Middlelayer does not have a reliable API so this script is brittle
+% and frequently needs changing.
 
     fprintf('Loading data for ring mode %s\n', ringmode);
-    dir = fileparts(mfilename('fullpath'));
-    cd(dir);
 
-    loaded_mode = getfamilydata('OperationalMode');
+    loaded_ringmode = getfamilydata('OperationalMode');
 
-    if ~strcmp(loaded_mode, ringmode)
-        fprintf('MML ring mode %s loaded, not %s\n', loaded_mode, ringmode);
-        fprintf('Exiting.\n');
+    if ~strcmp(loaded_ringmode, ringmode)
+        fprintf('MML ring mode %s loaded, not %s\n', loaded_ringmode, ringmode);
+        fprintf('Script will exit.\n');
         return;
     end
 
     switch2sim;
 
-    % load directly into the ap SQL database
     dir = fileparts(mfilename('fullpath'));
     cd(dir);
-    elements_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'elements.csv');
+    datadir = fullfile(dir, '..', 'pytac', 'data', ringmode);
+    if ~exist(datadir, 'dir')
+        fprintf('Data directory %s does not exist. Please create it.\n', datadir);
+        fprintf('Script will exit.\n');
+        return;
+    end
+
+    % Open the CSV files that store the Pytac data.
+    elements_file = fullfile(datadir, 'elements.csv');
     f_elements = fopen(elements_file, 'wt', 'n', 'utf-8');
     fprintf(f_elements, 'name,type,length\n');
-    devices_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'devices.csv');
+    devices_file = fullfile(datadir, 'devices.csv');
     f_devices = fopen(devices_file, 'w');
     fprintf(f_devices, 'el_id,name,field,get_pv,set_pv\n');
-    families_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'families.csv');
+    families_file = fullfile(datadir, 'families.csv');
     f_families = fopen(families_file, 'w');
     fprintf(f_families, 'el_id,family\n');
 
