@@ -20,3 +20,7 @@ wheel = "*"
 [packages]
 numpy = "*"
 scipy = "*"
+
+[scripts]
+tests = "python -m pytest"
+build = "python setup.py sdist bdist_wheel"
