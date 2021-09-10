@@ -15,7 +15,12 @@ sphinx-rtd-theme = "*"
 pytest-lazy-fixture = "*"
 testfixtures = "*"
 black = {version = "==19.10b0", markers = "python_version>='3.6'" }
+wheel = "*"
 
 [packages]
 numpy = "*"
 scipy = "*"
+
+[scripts]
+tests = "python -m pytest"
+build = "python setup.py sdist bdist_wheel"
