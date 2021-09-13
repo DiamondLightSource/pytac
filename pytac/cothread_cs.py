@@ -36,7 +36,7 @@ class CothreadControlSystem(ControlSystem):
         try:
             return caget(pv, timeout=self._timeout, throw=True)
         except ca_nothing:
-            error_msg = "Cannot connect to {}.".format(pv)
+            error_msg = f"Cannot connect to {pv}."
             if throw:
                 raise ControlSystemException(error_msg)
             else:
@@ -63,7 +63,7 @@ class CothreadControlSystem(ControlSystem):
         failures = []
         for result in results:
             if isinstance(result, ca_nothing):
-                logging.warning("Cannot connect to {}.".format(result.name))
+                logging.warning(f"Cannot connect to {result.name}.")
                 if throw:
                     failures.append(result)
                 else:
@@ -71,8 +71,7 @@ class CothreadControlSystem(ControlSystem):
             else:
                 return_values.append(result)
         if throw and failures:
-            error_msg = "{} caget calls failed.".format(len(failures))
-            raise ControlSystemException(error_msg)
+            raise ControlSystemException(f"{len(failures)} caget calls failed.")
         return return_values
 
     def set_single(self, pv, value, throw=True):
@@ -94,7 +93,7 @@ class CothreadControlSystem(ControlSystem):
             caput(pv, value, timeout=self._timeout, throw=True)
             return True
         except ca_nothing:
-            error_msg = "Cannot connect to {}.".format(pv)
+            error_msg = f"Cannot connect to {pv}."
             if throw:
                 raise ControlSystemException(error_msg)
             else:
@@ -129,12 +128,11 @@ class CothreadControlSystem(ControlSystem):
             if not stat.ok:
                 return_values.append(False)
                 failures.append(stat)
-                logging.warning("Cannot connect to {}.".format(stat.name))
+                logging.warning(f"Cannot connect to {stat.name}.")
             else:
                 return_values.append(True)
         if failures:
             if throw:
-                error_msg = "{} caput calls failed.".format(len(failures))
-                raise ControlSystemException(error_msg)
+                raise ControlSystemException(f"{len(failures)} caput calls failed.")
             else:
                 return return_values
