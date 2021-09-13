@@ -141,9 +141,7 @@ class Lattice(object):
         try:
             self._data_source_manager.add_device(field, device, uc)
         except DataSourceException:
-            raise DataSourceException(
-                "No device data source on lattice {0}.".format(self)
-            )
+            raise DataSourceException(f"No device data source on lattice {self}.")
 
     def get_device(self, field):
         """Get the device for the given field.
@@ -164,9 +162,7 @@ class Lattice(object):
         try:
             return self._data_source_manager.get_device(field)
         except DataSourceException:
-            raise DataSourceException(
-                "No device data source on lattice {0}.".format(self)
-            )
+            raise DataSourceException(f"No device data source on lattice {self}.")
 
     def get_unitconv(self, field):
         """Get the unit conversion option for the specified field.
@@ -184,8 +180,7 @@ class Lattice(object):
             return self._data_source_manager.get_unitconv(field)
         except FieldException:
             raise FieldException(
-                "No unit conversion option for field {0} on "
-                "lattice {1}.".format(field, self)
+                f"No unit conversion option for field {field} on lattice {self}."
             )
 
     def set_unitconv(self, field, uc):
@@ -233,12 +228,12 @@ class Lattice(object):
             )
         except DataSourceException:
             raise DataSourceException(
-                "No data source {0} on lattice {1}.".format(data_source, self)
+                f"No data source {data_source} on lattice {self}."
             )
         except FieldException:
             raise FieldException(
-                "Lattice {0} does not have field {1} on data "
-                "source {2}".format(self, field, data_source)
+                f"Lattice {self} does not have field {field} on data "
+                f"source {data_source}"
             )
 
     def set_value(
@@ -273,12 +268,12 @@ class Lattice(object):
             )
         except DataSourceException:
             raise DataSourceException(
-                "No data source {0} on lattice {1}.".format(data_source, self)
+                f"No data source {data_source} on lattice {self}."
             )
         except FieldException:
             raise FieldException(
-                "Lattice {0} does not have field {1} on data "
-                "source {2}".format(self, field, data_source)
+                f"Lattice {self} does not have field {field} on data "
+                f"source {data_source}."
             )
 
     def get_length(self):
@@ -321,15 +316,15 @@ class Lattice(object):
         if family is None:
             elements = self._elements[:]
             if len(elements) == 0:
-                raise ValueError("No elements in lattice {0}.".format(self))
+                raise ValueError(f"No elements in lattice {self}.")
         else:
             elements = [e for e in self._elements if family in e.families]
             if len(elements) == 0:
-                raise ValueError("No elements in family {0}.".format(family))
+                raise ValueError(f"No elements in family {family}.")
         if cell is not None:
             elements = [e for e in elements if e.cell == cell]
             if len(elements) == 0:
-                raise ValueError("No elements in cell {0}.".format(cell))
+                raise ValueError(f"No elements in cell {cell}.")
         return elements
 
     def get_all_families(self):
@@ -379,9 +374,7 @@ class Lattice(object):
             try:
                 devices.append(element.get_device(field))
             except DataSourceException:
-                logging.warning(
-                    "No device for field {0} on element {1}.".format(field, element)
-                )
+                logging.warning(f"No device for field {field} on element {element}.")
         return devices
 
     def get_element_device_names(self, family, field):
@@ -469,13 +462,12 @@ class Lattice(object):
                          elements in the family.
         """
         if handle != pytac.SP:
-            raise HandleException("Must write using {0}.".format(pytac.SP))
+            raise HandleException(f"Must write using {pytac.SP}.")
         elements = self.get_elements(family)
         if len(elements) != len(values):
             raise IndexError(
-                "Number of elements in given array({0}) must be "
-                "equal to the number of elements in the "
-                "family({1}).".format(len(values), len(elements))
+                f"Number of elements in given array({len(values)}) must be "
+                f"equal to the number of elements in the family({len(elements)})."
             )
         for element, value in zip(elements, values):
             status = element.set_value(
@@ -507,8 +499,8 @@ class Lattice(object):
                 elem._data_source_manager.default_units = default_units
         elif default_units is not None:
             raise UnitsException(
-                "{0} is not a unit type. Please enter {1} or "
-                "{2}.".format(default_units, pytac.ENG, pytac.PHYS)
+                f"{default_units} is not a unit type. "
+                f"Please enter {pytac.ENG} or {pytac.PHYS}."
             )
 
     def set_default_data_source(self, default_ds):
@@ -529,8 +521,8 @@ class Lattice(object):
                 elem._data_source_manager.default_data_source = default_ds
         elif default_ds is not None:
             raise DataSourceException(
-                "{0} is not a data source. Please enter "
-                "{1} or {2}.".format(default_ds, pytac.LIVE, pytac.SIM)
+                f"{default_ds} is not a data source. "
+                f"Please enter {pytac.LIVE} or {pytac.SIM}."
             )
 
     def get_default_units(self):
@@ -564,9 +556,8 @@ class Lattice(object):
         elements = self.get_elements(family)
         if len(elements) != len(values):
             raise IndexError(
-                "Number of elements in given sequence({0}) must "
-                "be equal to the number of elements in the "
-                "family({1}).".format(len(values), len(elements))
+                f"Number of elements in given sequence({len(values)}) must "
+                f"be equal to the number of elements in the family({len(elements)})."
             )
         converted_values = []
         for elem, value in zip(elements, values):
@@ -627,13 +618,12 @@ class EpicsLattice(Lattice):
             )
         except KeyError:
             raise DataSourceException(
-                "Lattice {0} has no device for field " "{1}.".format(self, field)
+                f"Lattice {self} has no device for field {field}."
             )
         except AttributeError:
             raise DataSourceException(
-                "Cannot get PV for field {0} on lattice "
-                "{1}, as basic devices do not have "
-                "associated PV's.".format(field, self)
+                f"Cannot get PV for field {field} on lattice "
+                f"{self}, as basic devices do not have associated PV's."
             )
 
     def get_element_pv_names(self, family, field, handle):
@@ -736,7 +726,7 @@ class EpicsLattice(Lattice):
         if units == pytac.DEFAULT:
             units = self.get_default_units()
         if handle != pytac.SP:
-            raise HandleException("Must write using {0}.".format(pytac.SP))
+            raise HandleException(f"Must write using {pytac.SP}.")
         if data_source == pytac.LIVE:
             if units == pytac.PHYS:
                 values = self.convert_family_values(
@@ -745,9 +735,9 @@ class EpicsLattice(Lattice):
             pv_names = self.get_element_pv_names(family, field, pytac.SP)
             if len(pv_names) != len(values):
                 raise IndexError(
-                    "Number of elements in given sequence({0}) "
+                    f"Number of elements in given sequence({len(values)}) "
                     "must be equal to the number of elements in "
-                    "the family({1}).".format(len(values), len(pv_names))
+                    f"the family({len(pv_names)})."
                 )
             self._cs.set_multiple(pv_names, values, throw)
         else:

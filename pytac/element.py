@@ -134,8 +134,7 @@ class Element(object):
             self._data_source_manager.add_device(field, device, uc)
         except DataSourceException:
             raise DataSourceException(
-                "No device data source for field {0} on "
-                "element {1}.".format(field, self)
+                f"No device data source for field {field} on element {self}."
             )
 
     def get_device(self, field):
@@ -158,8 +157,7 @@ class Element(object):
             return self._data_source_manager.get_device(field)
         except DataSourceException:
             raise DataSourceException(
-                "No device data source for field {0} on "
-                "element {1}.".format(field, self)
+                f"No device data source for field {field} on element {self}."
             )
 
     def get_unitconv(self, field):
@@ -178,8 +176,7 @@ class Element(object):
             return self._data_source_manager.get_unitconv(field)
         except FieldException:
             raise FieldException(
-                "No unit conversion option for field {0} on "
-                "element {1}.".format(field, self)
+                f"No unit conversion option for field {field} on element {self}."
             )
 
     def set_unitconv(self, field, uc):
@@ -235,12 +232,10 @@ class Element(object):
             )
         except DataSourceException:
             raise DataSourceException(
-                "No data source {0} on element {1}.".format(data_source, self)
+                f"No data source {data_source} on element {self}."
             )
         except FieldException:
-            raise FieldException(
-                "Element {0} does not have field {1}.".format(self, field)
-            )
+            raise FieldException(f"Element {self} does not have field {field}.")
 
     def set_value(
         self,
@@ -274,12 +269,10 @@ class Element(object):
             )
         except DataSourceException:
             raise DataSourceException(
-                "No data source {0} on element {1}.".format(data_source, self)
+                f"No data source {data_source} on element {self}."
             )
         except FieldException:
-            raise FieldException(
-                "Element {0} does not have field {1}.".format(self, field)
-            )
+            raise FieldException(f"Element {self} does not have field {field}.")
 
     def set_lattice(self, lattice):
         """Set the stored lattice reference for this element to the passed
@@ -321,13 +314,12 @@ class EpicsElement(Element):
             )
         except KeyError:
             raise DataSourceException(
-                "No data source for field {0} on " "element {1}.".format(field, self)
+                f"No data source for field {field} on element {self}."
             )
         except AttributeError:
             raise DataSourceException(
-                "Cannot get PV for field {0} on element "
-                "{1}, as basic devices do not have "
-                "associated PV's.".format(field, self)
+                f"Cannot get PV for field {field} on element "
+                f"{self}, as basic devices do not have associated PV's."
             )
         except FieldException:
-            raise FieldException("No field {0} on element {1}.".format(field, self))
+            raise FieldException(f"No field {field} on element {self}.")

@@ -141,8 +141,8 @@ class EpicsDevice(Device):
         """
         if rb_pv is None and sp_pv is None:
             raise DataSourceException(
-                "At least one PV, either {0} or {1} is "
-                "required when creating an EpicsDevice.".format(pytac.RB, pytac.SP)
+                f"At least one PV ({pytac.RB} or {pytac.SP}) is "
+                "required when creating an EpicsDevice."
             )
         self.name = name
         self._cs = cs
@@ -177,7 +177,7 @@ class EpicsDevice(Device):
         elif handle == pytac.SP and self.sp_pv:
             return self._cs.get_single(self.sp_pv, throw)
         else:
-            raise HandleException("Device {0} has no {1} PV.".format(self.name, handle))
+            raise HandleException(f"Device {self.name} has no {handle} PV.")
 
     def set_value(self, value, throw=True):
         """Set the device value.
@@ -191,7 +191,7 @@ class EpicsDevice(Device):
             HandleException: if no setpoint PV exists.
         """
         if self.sp_pv is None:
-            raise HandleException("Device {0} has no setpoint PV.".format(self.name))
+            raise HandleException(f"Device {self.name} has no setpoint PV.")
         else:
             self._cs.set_single(self.sp_pv, value, throw)
 
@@ -212,7 +212,7 @@ class EpicsDevice(Device):
         elif handle == pytac.SP and self.sp_pv:
             return self.sp_pv
         else:
-            raise HandleException("Device {0} has no {1} PV.".format(self.name, handle))
+            raise HandleException(f"Device {self.name} has no {handle} PV.")
 
 
 class PvEnabler(object):
