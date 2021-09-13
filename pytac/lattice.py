@@ -323,7 +323,7 @@ class Lattice(object):
             if len(elements) == 0:
                 raise ValueError("No elements in lattice {0}.".format(self))
         else:
-            elements = [e for e in self._elements if family in e.families]
+            elements = [e for e in self._elements if e.is_in_family(family)]
             if len(elements) == 0:
                 raise ValueError("No elements in family {0}.".format(family))
         if cell is not None:

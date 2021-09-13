@@ -42,10 +42,14 @@ def test_element_properties_with_lattice():
     assert e2.cell == 2
 
 
-def test_add_element_to_family():
+def test_add_element_to_family_and_case_insensitive_retrieval():
     e = Element(6.0, "QUAD", "dummy")
-    e.add_to_family("fam")
+    e.add_to_family("FAM")
+    # Lowercase only
     assert "fam" in e.families
+    assert "FAM" not in e.families
+    assert e.is_in_family("fam")
+    assert e.is_in_family("FAM")
 
 
 def test_device_methods_raise_DataSourceException_if_no_live_data_source(
