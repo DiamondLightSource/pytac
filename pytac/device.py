@@ -242,23 +242,11 @@ class PvEnabler(object):
         self._enabled_value = str(int(float(enabled_value)))
         self._cs = cs
 
-    def __nonzero__(self):
+    def __bool__(self):
         """Used to override the 'if object' clause.
-
-        Support for Python 2.7.
 
         Returns:
             bool: True if the device should be considered enabled.
         """
         pv_value = self._cs.get_single(self._pv)
         return self._enabled_value == str(int(float(pv_value)))
-
-    def __bool__(self):
-        """Used to override the 'if object' clause.
-
-        Support for Python 3.x.
-
-        Returns:
-            bool: True if the device should be considered enabled.
-        """
-        return self.__nonzero__()

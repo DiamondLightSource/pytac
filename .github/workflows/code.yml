@@ -25,7 +25,7 @@ jobs:
       - name: Install Python Dependencies
         run: |
           pip install pipenv
-          pipenv install --dev --deploy --python $(which python) && pipenv graph
+          pipenv install --dev --python $(which python) && pipenv graph
 
       - name: Check wheel version is specified
         run: grep '"wheel":' Pipfile.lock
