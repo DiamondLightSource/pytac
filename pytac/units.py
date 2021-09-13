@@ -123,36 +123,29 @@ class UnitConv(object):
             UnitsException: If the conversion is invalid; i.e. if there are no
                             solutions, or multiple, within conversion limits.
         """
-        if self.lower_limit is not None:
-            if value < self.lower_limit:
-                raise UnitsException(
-                    f"{self}: Input less than lower "
-                    f"conversion limit ({self.lower_limit})."
-                )
-        if self.upper_limit is not None:
-            if value > self.upper_limit:
-                raise UnitsException(
-                    f"{self}: Input greater than upper "
-                    f"conversion limit ({self.upper_limit})."
-                )
+        if self.lower_limit is not None and value < self.lower_limit:
+            raise UnitsException(
+                f"{self}: Input less than lower "
+                f"conversion limit ({self.lower_limit})."
+            )
+        if self.upper_limit is not None and value > self.upper_limit:
+            raise UnitsException(
+                f"{self}: Input greater than upper "
+                f"conversion limit ({self.upper_limit})."
+            )
         results = self._raw_eng_to_phys(value)
         valid_results = [self._post_eng_to_phys(result) for result in results]
-        if len(valid_results) == 1:
-            result = valid_results[0]
-        elif len(valid_results) == 0:
+        if len(valid_results) == 0:
+            # This will not occur for our existing NullUnitConv,
+            # PchipUintConv, and PolyUnitConv classes.
+            raise UnitsException(f"{self}: No corresponding physics value exists.")
+        elif len(valid_results) > 1:
             # This will not occur for our existing NullUnitConv,
             # PchipUintConv, and PolyUnitConv classes.
             raise UnitsException(
-                f"{self}: A corresponding physics value does not exist."
+                f"{self}: Multiple corresponding physics values ({valid_results})."
             )
-        else:
-            # This will not occur for our existing NullUnitConv,
-            # PchipUintConv, and PolyUnitConv classes.
-            raise UnitsException(
-                f"{self}: There are multiple "
-                f"corresponding physics values ({valid_results})."
-            )
-        return result
+        return valid_results[0]
 
     def _raw_phys_to_eng(self, value):
         """Function to be implemented by child classes.
@@ -189,21 +182,20 @@ class UnitConv(object):
             valid_results = [r for r in valid_results if r >= self.lower_limit]
         if self.upper_limit is not None:
             valid_results = [r for r in valid_results if r <= self.upper_limit]
-        if len(valid_results) == 1:
-            return valid_results[0]
-        elif len(valid_results) == 0:
+        if len(valid_results) == 0:
             raise UnitsException(
-                f"{self}: none of conversion results {results} within "
+                f"{self}: None of conversion results {results} within "
                 f"conversion limits ({self.lower_limit}, {self.upper_limit})."
             )
-        else:
+        elif len(valid_results) > 1:
             raise UnitsException(
                 f"{self}: There are multiple "
                 f"corresponding engineering values ({valid_results})."
             )
+        return valid_results[0]
 
     def convert(self, value, origin, target):
-        """Convert between two different unit types and chek the validity of
+        """Convert between two different unit types and check the validity of
         the result.
 
         Args:
@@ -415,7 +407,7 @@ class PchipUnitConv(UnitConv):
         y_diff = numpy.diff(y)
         if not ((numpy.all(y_diff > 0)) or (numpy.all((y_diff < 0)))):
             raise ValueError(
-                "y coefficients must be monotonically " "increasing or decreasing."
+                "y coefficients must be monotonically increasing or decreasing."
             )
 
     def _raw_eng_to_phys(self, eng_value):
