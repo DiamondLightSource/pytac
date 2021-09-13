@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "45d8bd28e55076cc590dea6d287fdf76b57a027d263b2910875863ae3ac6e88a"
+            "sha256": "5352f38c3b7131e5c906287d8510fc305515dfc38c8823e9ae765a9fa36a0751"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -14,10 +14,6 @@
         ]
     },
     "default": {
-        "dls-prom-exporters": {
-            "editable": true,
-            "path": "."
-        },
         "numpy": {
             "hashes": [
                 "sha256:2428b109306075d89d21135bdd6b785f132a1f5a3260c371cee1fae427e12727",
@@ -466,7 +462,7 @@
                 "sha256:ecd2c3fe726758037234c93df7e98deb257fd15c24c9180dacf1ef829da5f921",
                 "sha256:ef565033fa5a958e62796867b1df10c40263ea9ded87164d67572834e57a174d"
             ],
-            "markers": "python_version < '3.8'",
+            "index": "pypi",
             "version": "==0.910"
         },
         "mypy-extensions": {
@@ -775,7 +771,8 @@
                 "sha256:50b6f157849174217d0656f99dc82fe932884fb250826c18350e159ec6cdf342",
                 "sha256:779383f6086d90c99ae41cf0ff39aac8a7937a9283ce0a414e5dd782f4c94a84"
             ],
-            "markers": "python_version < '3.8'",
+            "index": "pypi",
+            "markers": "python_version >= '3.7'",
             "version": "==3.10.0.0"
         },
         "urllib3": {
