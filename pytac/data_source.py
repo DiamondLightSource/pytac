@@ -126,9 +126,7 @@ class DataSourceManager(object):
             self._data_sources[pytac.LIVE].add_device(field, device)
             self._uc[field] = uc
         except KeyError:
-            raise DataSourceException(
-                "No device data source on manager {0}.".format(self)
-            )
+            raise DataSourceException(f"No device data source on manager {self}.")
 
     def get_device(self, field):
         """Get the device for the given field.
@@ -149,9 +147,7 @@ class DataSourceManager(object):
         try:
             return self._data_sources[pytac.LIVE].get_device(field)
         except KeyError:
-            raise DataSourceException(
-                "No device data source on manager {0}.".format(self)
-            )
+            raise DataSourceException(f"No device data source on manager {self}.")
 
     def get_unitconv(self, field):
         """Get the unit conversion option for the specified field.
@@ -169,8 +165,7 @@ class DataSourceManager(object):
             return self._uc[field]
         except KeyError:
             raise FieldException(
-                "No unit conversion option for field {0} on "
-                "manager {1}.".format(field, self)
+                f"No unit conversion option for field {field} on manager {self}."
             )
 
     def set_unitconv(self, field, uc):
@@ -225,10 +220,10 @@ class DataSourceManager(object):
             )
         except KeyError:
             raise DataSourceException(
-                "No data source type {0} on manager {1}.".format(data_source, self)
+                f"No data source type {data_source} on manager {self}."
             )
         except FieldException:
-            raise FieldException("No field {0} on manager {1}.".format(field, self))
+            raise FieldException(f"No field {field} on manager {self}.")
 
     def set_value(
         self,
@@ -263,12 +258,12 @@ class DataSourceManager(object):
         if data_source == pytac.DEFAULT:
             data_source = self.default_data_source
         if handle != pytac.SP:
-            raise HandleException("Must write using {0}.".format(pytac.SP))
+            raise HandleException(f"Must write using {pytac.SP}.")
         try:
             data_source = self._data_sources[data_source]
         except KeyError:
             raise DataSourceException(
-                "No data source type {0} on manager {1}.".format(data_source, self)
+                f"No data source type {data_source} on manager {self}."
             )
         try:
             value = self._uc[field].convert(
@@ -276,9 +271,9 @@ class DataSourceManager(object):
             )
             data_source.set_value(field, value, throw)
         except KeyError:
-            raise FieldException("No field {0} on manager {1}.".format(field, self))
+            raise FieldException(f"No field {field} on manager {self}.")
         except FieldException:
-            raise FieldException("No field {0} on manager {1}.".format(field, self))
+            raise FieldException(f"No field {field} on manager {self}.")
 
 
 class DeviceDataSource(DataSource):
@@ -323,7 +318,7 @@ class DeviceDataSource(DataSource):
         try:
             return self._devices[field]
         except KeyError:
-            raise FieldException("No field {0} on data source {1}.".format(field, self))
+            raise FieldException(f"No field {field} on data source {self}.")
 
     def get_fields(self):
         """Get all the fields from the data_source.
@@ -349,10 +344,7 @@ class DeviceDataSource(DataSource):
         Raises:
             FieldException: if the device does not have the specified field.
         """
-        try:
-            return self._devices[field].get_value(handle, throw)
-        except KeyError:
-            raise FieldException("No field {0} on data source {1}.".format(field, self))
+        return self.get_device(field).get_value(handle, throw)
 
     def set_value(self, field, value, throw=True):
         """Set the value of a readback or setpoint PV for a field from the
@@ -367,7 +359,4 @@ class DeviceDataSource(DataSource):
         Raises:
             FieldException: if the device does not have the specified field.
         """
-        try:
-            self._devices[field].set_value(value, throw)
-        except KeyError:
-            raise FieldException("No field {0} on data source {1}.".format(field, self))
+        self.get_device(field).set_value(value, throw)
