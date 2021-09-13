@@ -18,13 +18,14 @@ class Element(object):
         type_ (str): The type of the element. The user is free to define this for
                      their own purposes.
         length (float): The length of the element in metres.
-        families (set): The families this element is a member of.
 
     .. Private Attributes:
            _lattice (Lattice): The lattice to which the element belongs.
            _data_source_manager (DataSourceManager): A class that manages the
                                                       data sources associated
                                                       with this element.
+           _families (set): The families this element is a member of, stored
+                            as lowercase strings.
     """
 
     def __init__(self, length, element_type, name=None, lattice=None):
@@ -40,7 +41,8 @@ class Element(object):
         self.name = name
         self.type_ = element_type
         self.length = length
-        self.families = set()
+        # Families are case insensitive but stored in lowercase.
+        self._families = set()
         self._lattice = lattice
         self._data_source_manager = DataSourceManager()
 
@@ -75,6 +77,11 @@ class Element(object):
             return None
         else:
             return int(self.s / self._lattice.cell_length) + 1
+
+    @property
+    def families(self):
+        """set(str): All families that this element is in."""
+        return set(self._families)
 
     def __str__(self):
         """Return a representation of an element, as a string.
@@ -199,7 +206,18 @@ class Element(object):
         Args:
             family (str): Represents the name of the family.
         """
-        self.families.add(family)
+        self._families.add(family.lower())
+
+    def is_in_family(self, family):
+        """Return true if the element is in the specified family.
+
+        Args:
+            family (str): Family to check.
+
+        Returns:
+            true if element is in the specified family.
+        """
+        return family.lower() in self._families
 
     def get_value(
         self,
