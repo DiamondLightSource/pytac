@@ -77,7 +77,7 @@ Get the value of the 'b1' field of the quad elements
 
 - Get all Quadrupole elements and print their 'b1' field read back values::
 
-    >>> quads = lattice.get_elements('QUAD')
+    >>> quads = lattice.get_elements('Quadrupole')
     >>> for quad in quads:
     >>>    print(quad.get_value('b1', pytac.RB))
     71.3240509033
@@ -86,10 +86,10 @@ Get the value of the 'b1' field of the quad elements
     ...
 
 
-- Print the ``QUAD`` read back values of the 'b1' field using the lattice. This
+- Print the ``Quadrupole`` read back values of the 'b1' field using the lattice. This
   is more efficient since it uses only one request to the control system::
 
-    >>> lattice.get_values('QUAD', 'b1', pytac.RB)
+    >>> lattice.get_element_values('Quadrupole', 'b1', pytac.RB)
     [71.32496643066406,
     129.35191345214844,
     98.25287628173828,
