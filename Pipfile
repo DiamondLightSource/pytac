@@ -18,8 +18,8 @@ black = {version = "==19.10b0", markers = "python_version>='3.6'" }
 wheel = "*"
 
 [packages]
-numpy = "*"
-scipy = "*"
+# Runtime dependencies from setup.cfg.
+dls_prom_exporters = {editable = true,path = "."}
 
 [scripts]
 tests = "python -m pytest"

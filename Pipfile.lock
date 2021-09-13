@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "24985c382444d1dea2c347e53eb75a17d6284dd1880b59c246064f7398a784d5"
+            "sha256": "51eaaf4157bbfb02ee9d0c9141b9f07cd82a0443e06ebade8c776058d25b96ad"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -14,6 +14,10 @@
         ]
     },
     "default": {
+        "dls-prom-exporters": {
+            "editable": true,
+            "path": "."
+        },
         "numpy": {
             "hashes": [
                 "sha256:2428b109306075d89d21135bdd6b785f132a1f5a3260c371cee1fae427e12727",
@@ -41,8 +45,11 @@
                 "sha256:e9459f40244bb02b2f14f6af0cd0732791d72232bbb0dc4bab57ef88e75f6935",
                 "sha256:edb1f041a9146dcf02cd7df7187db46ab524b9af2515f392f337c7cbbf5b52cd"
             ],
-            "index": "pypi",
             "version": "==1.20.2"
+        },
+        "pytac": {
+            "editable": true,
+            "path": "."
         },
         "scipy": {
             "hashes": [
@@ -66,7 +73,6 @@
                 "sha256:f68eb46b86b2c246af99fcaa6f6e37c7a7a413e1084a794990b877f2ff71f7b6",
                 "sha256:fdf606341cd798530b05705c87779606fcdfaf768a8129c348ea94441da15b04"
             ],
-            "index": "pypi",
             "version": "==1.6.3"
         }
     },
