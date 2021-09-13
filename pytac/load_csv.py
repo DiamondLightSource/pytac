@@ -125,8 +125,9 @@ def load_unitconv(directory, mode, lattice):
                     # Each element needs its own unitconv object as
                     # it may for example have different limit.
                     uc = copy.copy(unitconvs[int(item["uc_id"])])
-                    if element.families.intersection(
-                        ("HSTR", "VSTR", "QUAD", "SEXT", "BEND")
+                    if any(
+                        element.is_in_family(f)
+                        for f in ("HSTR", "VSTR", "Quadrupole", "Sextupole", "Bend")
                     ):
                         energy = lattice.get_value("energy", units=pytac.PHYS)
                         uc.set_post_eng_to_phys(utils.get_div_rigidity(energy))

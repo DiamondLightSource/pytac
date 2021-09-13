@@ -323,7 +323,7 @@ class Lattice(object):
             if len(elements) == 0:
                 raise ValueError("No elements in lattice {0}.".format(self))
         else:
-            elements = [e for e in self._elements if family in e.families]
+            elements = [e for e in self._elements if e.is_in_family(family)]
             if len(elements) == 0:
                 raise ValueError("No elements in family {0}.".format(family))
         if cell is not None:
@@ -578,8 +578,8 @@ class Lattice(object):
 class EpicsLattice(Lattice):
     """EPICS-aware lattice class.
 
-    Allows efficient get_values() and set_values() methods, and adds
-    get_pv_names() method.
+    Allows efficient get_element_values() and set_element_values() methods,
+    and adds get_pv_names() method.
 
     **Attributes:**
 

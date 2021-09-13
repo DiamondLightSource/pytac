@@ -94,7 +94,7 @@ def test_load_drift_elements(lattice, n_drifts):
     [(pytest.lazy_fixture("vmx_ring"), 248), (pytest.lazy_fixture("diad_ring"), 248)],
 )
 def test_load_quadrupoles(lattice, n_quads):
-    quads = lattice.get_elements("QUAD")
+    quads = lattice.get_elements("Quadrupole")
     assert len(quads) == n_quads
     for quad in quads:
         assert set(quad.get_fields()[pytac.LIVE]) == set(["b1"])
