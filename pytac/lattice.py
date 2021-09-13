@@ -2,10 +2,12 @@
     machine.
 """
 import logging
+from typing import List, Optional
 
 import numpy
 
 import pytac
+from pytac.element import Element
 from pytac.data_source import DataSourceManager
 from pytac.exceptions import (
     DataSourceException,
@@ -14,7 +16,7 @@ from pytac.exceptions import (
 )
 
 
-class Lattice(object):
+class Lattice:
     """Representation of a lattice.
 
     Represents a lattice object that contains all elements of the ring. It has
@@ -23,34 +25,34 @@ class Lattice(object):
     **Attributes:**
 
     Attributes:
-        name (str): The name of the lattice.
-        symmetry (int): The symmetry of the lattice (the number of cells).
+        name: The name of the lattice.
+        symmetry: The symmetry of the lattice (the number of cells).
 
     .. Private Attributes:
-           _elements (list): The list of all the element objects in the lattice
-           _data_source_manager (DataSourceManager): A class that manages the
+           _elements: The list of all the element objects in the lattice
+           _data_source_manager: A class that manages the
                                                       data sources associated
                                                       with this lattice.
     """
 
-    def __init__(self, name, symmetry=None):
+    def __init__(self, name: str, symmetry: int = None) -> None:
         """Args:
-            name (str): The name of the lattice.
-            symmetry (int): The symmetry of the lattice (the number of cells).
+            name: The name of the lattice.
+            symmetry: The symmetry of the lattice (the number of cells).
 
         **Methods:**
         """
         self.name = name
         self.symmetry = symmetry
-        self._elements = []
+        self._elements: List[Element] = []
         self._data_source_manager = DataSourceManager()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Lattice {self.name}"
 
     @property
-    def cell_length(self):
-        """float: The average length of a cell in the lattice.
+    def cell_length(self) -> Optional[float]:
+        """The average length of a cell in the lattice.
         """
         if (self.symmetry is None) or (self.get_length() == 0):
             return None
@@ -58,8 +60,8 @@ class Lattice(object):
             return self.get_length() / self.symmetry
 
     @property
-    def cell_bounds(self):
-        """list (str): The indexes of elements in which a cell boundary occurs.
+    def cell_bounds(self) -> Optional[List[int]]:
+        """The indexes of elements in which a cell boundary occurs.
 
         Examples:
             A lattice of 5 equal length elements with 2 fold symmetry would
@@ -82,24 +84,24 @@ class Lattice(object):
             bounds.append(len(self._elements))
             return bounds
 
-    def __getitem__(self, n):
+    def __getitem__(self, n: int) -> Element:
         """Get the (n + 1)th element of the lattice.
 
         i.e. index 0 represents the first element in the lattice.
 
         Args:
-            n (int): index.
+            n: index.
 
         Returns:
-            Element: indexed element.
+            indexed element
         """
         return self._elements[n]
 
-    def __len__(self):
+    def __len__(self) -> int:
         """The number of elements in the lattice.
 
         Returns:
-            int: The number of elements in the lattice.
+            The number of elements in the lattice.
         """
         return len(self._elements)
 
