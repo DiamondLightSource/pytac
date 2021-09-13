@@ -132,10 +132,8 @@ class Element(object):
         """
         try:
             self._data_source_manager.add_device(field, device, uc)
-        except DataSourceException:
-            raise DataSourceException(
-                f"No device data source for field {field} on element {self}."
-            )
+        except DataSourceException as e:
+            raise DataSourceException(f"{self}: {e}.")
 
     def get_device(self, field):
         """Get the device for the given field.
@@ -155,10 +153,8 @@ class Element(object):
         """
         try:
             return self._data_source_manager.get_device(field)
-        except DataSourceException:
-            raise DataSourceException(
-                f"No device data source for field {field} on element {self}."
-            )
+        except DataSourceException as e:
+            raise DataSourceException(f"{self}: {e}.")
 
     def get_unitconv(self, field):
         """Get the unit conversion option for the specified field.
@@ -174,10 +170,8 @@ class Element(object):
         """
         try:
             return self._data_source_manager.get_unitconv(field)
-        except FieldException:
-            raise FieldException(
-                f"No unit conversion option for field {field} on element {self}."
-            )
+        except FieldException as e:
+            raise FieldException(f"{self}: {e}")
 
     def set_unitconv(self, field, uc):
         """Set the unit conversion option for the specified field.
@@ -230,12 +224,10 @@ class Element(object):
             return self._data_source_manager.get_value(
                 field, handle, units, data_source, throw
             )
-        except DataSourceException:
-            raise DataSourceException(
-                f"No data source {data_source} on element {self}."
-            )
-        except FieldException:
-            raise FieldException(f"Element {self} does not have field {field}.")
+        except DataSourceException as e:
+            raise DataSourceException(f"{self}: {e}")
+        except FieldException as e:
+            raise FieldException(f"{self}: {e}")
 
     def set_value(
         self,
@@ -267,12 +259,10 @@ class Element(object):
             self._data_source_manager.set_value(
                 field, value, handle, units, data_source, throw
             )
-        except DataSourceException:
-            raise DataSourceException(
-                f"No data source {data_source} on element {self}."
-            )
-        except FieldException:
-            raise FieldException(f"Element {self} does not have field {field}.")
+        except DataSourceException as e:
+            raise DataSourceException(f"{self}: {e}")
+        except FieldException as e:
+            raise FieldException(f"{self}: {e}")
 
     def set_lattice(self, lattice):
         """Set the stored lattice reference for this element to the passed
@@ -308,18 +298,16 @@ class EpicsElement(Element):
         """
         try:
             return (
-                self._data_source_manager._data_sources[pytac.LIVE]
+                self._data_source_manager.get_data_source(pytac.LIVE)
                 .get_device(field)
                 .get_pv_name(handle)
             )
-        except KeyError:
-            raise DataSourceException(
-                f"No data source for field {field} on element {self}."
-            )
+        except DataSourceException as e:
+            raise DataSourceException(f"{self}: {e}")
         except AttributeError:
             raise DataSourceException(
                 f"Cannot get PV for field {field} on element "
                 f"{self}, as basic devices do not have associated PV's."
             )
-        except FieldException:
-            raise FieldException(f"No field {field} on element {self}.")
+        except FieldException as e:
+            raise FieldException(f"{self}: {e}")
