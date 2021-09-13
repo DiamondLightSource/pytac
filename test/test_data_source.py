@@ -39,8 +39,7 @@ def test_get_unitconv(simple_object, unit_uc):
 )
 def test_get_fields(simple_object):
     fields = simple_object.get_fields()[pytac.LIVE]
-    assert len(fields) == 2
-    assert "x" and "y" in fields
+    assert set(fields) == {"x", "y"}
 
 
 @pytest.mark.parametrize(

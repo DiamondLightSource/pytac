@@ -9,7 +9,6 @@ import pytac
 from pytac.data_source import DataSourceManager
 from pytac.exceptions import (
     DataSourceException,
-    FieldException,
     UnitsException,
     HandleException,
 )
@@ -45,6 +44,9 @@ class Lattice(object):
         self.symmetry = symmetry
         self._elements = []
         self._data_source_manager = DataSourceManager()
+
+    def __str__(self):
+        return f"Lattice {self.name}"
 
     @property
     def cell_length(self):
@@ -138,10 +140,7 @@ class Lattice(object):
         Raises:
             DataSourceException: if no DeviceDataSource is set.
         """
-        try:
-            self._data_source_manager.add_device(field, device, uc)
-        except DataSourceException:
-            raise DataSourceException(f"No device data source on lattice {self}.")
+        self._data_source_manager.add_device(field, device, uc)
 
     def get_device(self, field):
         """Get the device for the given field.
@@ -159,10 +158,7 @@ class Lattice(object):
         Raises:
             DataSourceException: if no DeviceDataSource is set.
         """
-        try:
-            return self._data_source_manager.get_device(field)
-        except DataSourceException:
-            raise DataSourceException(f"No device data source on lattice {self}.")
+        return self._data_source_manager.get_device(field)
 
     def get_unitconv(self, field):
         """Get the unit conversion option for the specified field.
@@ -176,12 +172,7 @@ class Lattice(object):
         Raises:
             FieldException: if no unit conversion object is present.
         """
-        try:
-            return self._data_source_manager.get_unitconv(field)
-        except FieldException:
-            raise FieldException(
-                f"No unit conversion option for field {field} on lattice {self}."
-            )
+        return self._data_source_manager.get_unitconv(field)
 
     def set_unitconv(self, field, uc):
         """Set the unit conversion option for the specified field.
@@ -222,19 +213,9 @@ class Lattice(object):
             DataSourceException: if there is no data source on the given field.
             FieldException: if the lattice does not have the specified field.
         """
-        try:
-            return self._data_source_manager.get_value(
-                field, handle, units, data_source, throw
-            )
-        except DataSourceException:
-            raise DataSourceException(
-                f"No data source {data_source} on lattice {self}."
-            )
-        except FieldException:
-            raise FieldException(
-                f"Lattice {self} does not have field {field} on data "
-                f"source {data_source}"
-            )
+        return self._data_source_manager.get_value(
+            field, handle, units, data_source, throw
+        )
 
     def set_value(
         self,
@@ -262,19 +243,9 @@ class Lattice(object):
             DataSourceException: if arguments are incorrect.
             FieldException: if the lattice does not have the specified field.
         """
-        try:
-            self._data_source_manager.set_value(
-                field, value, handle, units, data_source, throw
-            )
-        except DataSourceException:
-            raise DataSourceException(
-                f"No data source {data_source} on lattice {self}."
-            )
-        except FieldException:
-            raise FieldException(
-                f"Lattice {self} does not have field {field} on data "
-                f"source {data_source}."
-            )
+        self._data_source_manager.set_value(
+            field, value, handle, units, data_source, throw
+        )
 
     def get_length(self):
         """Returns the length of the lattice, in meters.
@@ -320,11 +291,11 @@ class Lattice(object):
         else:
             elements = [e for e in self._elements if family in e.families]
             if len(elements) == 0:
-                raise ValueError(f"No elements in family {family}.")
+                raise ValueError(f"{self}: no elements in family {family}.")
         if cell is not None:
             elements = [e for e in elements if e.cell == cell]
             if len(elements) == 0:
-                raise ValueError(f"No elements in cell {cell}.")
+                raise ValueError(f"{self}: no elements in cell {cell}.")
         return elements
 
     def get_all_families(self):
@@ -612,13 +583,9 @@ class EpicsLattice(Lattice):
         """
         try:
             return (
-                self._data_source_manager._data_sources[pytac.LIVE]
+                self._data_source_manager.get_data_source(pytac.LIVE)
                 .get_device(field)
                 .get_pv_name(handle)
-            )
-        except KeyError:
-            raise DataSourceException(
-                f"Lattice {self} has no device for field {field}."
             )
         except AttributeError:
             raise DataSourceException(
