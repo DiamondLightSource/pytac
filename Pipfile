@@ -6,8 +6,10 @@ name = "pypi"
 [dev-packages]
 pytest = "*"
 pytest-cov = "*"
+pytest-mypy = "*"
+pytest-flake8 = "*"
+pytest-black = "*"
 coveralls = "*"
-mock = "*"
 flake8 = "*"
 bpython = "*"
 sphinx = "*"
@@ -19,8 +21,8 @@ wheel = "*"
 
 [packages]
 # Runtime dependencies from setup.cfg.
-dls_prom_exporters = {editable = true,path = "."}
+pytac = {editable = true,path = "."}
 
 [scripts]
-tests = "python -m pytest"
+tests = "python -m pytest pytac test"
 build = "python setup.py sdist bdist_wheel"

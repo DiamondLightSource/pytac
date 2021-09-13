@@ -1,4 +1,5 @@
-import mock
+from unittest import mock
+
 import pytest
 
 from constants import DUMMY_VALUE_1, DUMMY_VALUE_2

@@ -1,4 +1,5 @@
-import mock
+from unittest import mock
+
 import pytest
 
 from constants import PREFIX, RB_PV, SP_PV

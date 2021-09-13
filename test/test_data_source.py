@@ -1,4 +1,5 @@
 import pytest
+from pytest_lazyfixture import lazy_fixture
 
 from constants import DUMMY_VALUE_2
 import pytac
@@ -7,9 +8,9 @@ import pytac
 @pytest.mark.parametrize(
     "simple_object",
     [
-        pytest.lazy_fixture("simple_element"),
-        pytest.lazy_fixture("simple_lattice"),
-        pytest.lazy_fixture("simple_data_source_manager"),
+        lazy_fixture("simple_element"),
+        lazy_fixture("simple_lattice"),
+        lazy_fixture("simple_data_source_manager"),
     ],
 )
 def test_get_device(simple_object, y_device):
@@ -19,9 +20,9 @@ def test_get_device(simple_object, y_device):
 @pytest.mark.parametrize(
     "simple_object",
     [
-        pytest.lazy_fixture("simple_element"),
-        pytest.lazy_fixture("simple_lattice"),
-        pytest.lazy_fixture("simple_data_source_manager"),
+        lazy_fixture("simple_element"),
+        lazy_fixture("simple_lattice"),
+        lazy_fixture("simple_data_source_manager"),
     ],
 )
 def test_get_unitconv(simple_object, unit_uc):
@@ -31,9 +32,9 @@ def test_get_unitconv(simple_object, unit_uc):
 @pytest.mark.parametrize(
     "simple_object",
     [
-        pytest.lazy_fixture("simple_element"),
-        pytest.lazy_fixture("simple_lattice"),
-        pytest.lazy_fixture("simple_data_source_manager"),
+        lazy_fixture("simple_element"),
+        lazy_fixture("simple_lattice"),
+        lazy_fixture("simple_data_source_manager"),
     ],
 )
 def test_get_fields(simple_object):
@@ -45,9 +46,9 @@ def test_get_fields(simple_object):
 @pytest.mark.parametrize(
     "simple_object",
     [
-        pytest.lazy_fixture("simple_element"),
-        pytest.lazy_fixture("simple_lattice"),
-        pytest.lazy_fixture("simple_data_source_manager"),
+        lazy_fixture("simple_element"),
+        lazy_fixture("simple_lattice"),
+        lazy_fixture("simple_data_source_manager"),
     ],
 )
 def test_set_value(simple_object):
@@ -58,9 +59,9 @@ def test_set_value(simple_object):
 @pytest.mark.parametrize(
     "simple_object",
     [
-        pytest.lazy_fixture("simple_element"),
-        pytest.lazy_fixture("simple_lattice"),
-        pytest.lazy_fixture("simple_data_source_manager"),
+        lazy_fixture("simple_element"),
+        lazy_fixture("simple_lattice"),
+        lazy_fixture("simple_data_source_manager"),
     ],
 )
 def test_get_value_sim(simple_object):
@@ -72,9 +73,9 @@ def test_get_value_sim(simple_object):
 @pytest.mark.parametrize(
     "simple_object",
     [
-        pytest.lazy_fixture("simple_element"),
-        pytest.lazy_fixture("simple_lattice"),
-        pytest.lazy_fixture("simple_data_source_manager"),
+        lazy_fixture("simple_element"),
+        lazy_fixture("simple_lattice"),
+        lazy_fixture("simple_data_source_manager"),
     ],
 )
 def test_unit_conversion(simple_object, double_uc):
