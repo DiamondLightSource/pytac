@@ -454,47 +454,46 @@ class Lattice:
             if status is not None:
                 return status
 
-    def set_default_units(self, default_units):
+    def set_default_units(self, units: str) -> None:
         """Sets the default unit type for the lattice and all its elements.
 
         Args:
-            default_units (str): The default unit type to be set across the
-                                  entire lattice, pytac.ENG or pytac.PHYS.
+            default_units: The default unit type to be set across the
+                            entire lattice, pytac.ENG or pytac.PHYS.
 
         Raises:
             UnitsException: if specified default unit type is not a valid unit
                              type.
         """
-        if default_units == pytac.ENG or default_units == pytac.PHYS:
-            self._data_source_manager.default_units = default_units
+        if units == pytac.ENG or units == pytac.PHYS:
+            self._data_source_manager.default_units = units
             elems = self.get_elements()
             for elem in elems:
-                elem._data_source_manager.default_units = default_units
-        elif default_units is not None:
+                elem.set_default_units(units)
+        else:
             raise UnitsException(
-                f"{default_units} is not a unit type. "
-                f"Please enter {pytac.ENG} or {pytac.PHYS}."
+                f"{units} is not a unit type. Please enter {pytac.ENG} or {pytac.PHYS}."
             )
 
-    def set_default_data_source(self, default_ds):
+    def set_default_data_source(self, data_source_type: str) -> None:
         """Sets the default data source for the lattice and all its elements.
 
         Args:
-            default_ds (str): The default data source to be set across the
+            data_source_type: The default data source to be set across the
                                entire lattice, pytac.LIVE or pytac.SIM.
 
         Raises:
             DataSourceException: if specified default data source is not a
                                   valid data source.
         """
-        if (default_ds == pytac.LIVE) or (default_ds == pytac.SIM):
-            self._data_source_manager.default_data_source = default_ds
+        if (data_source_type == pytac.LIVE) or (data_source_type == pytac.SIM):
+            self._data_source_manager.default_data_source = data_source_type
             elems = self.get_elements()
             for elem in elems:
-                elem._data_source_manager.default_data_source = default_ds
-        elif default_ds is not None:
+                elem._data_source_manager.default_data_source = data_source_type
+        else:
             raise DataSourceException(
-                f"{default_ds} is not a data source. "
+                f"{data_source_type} is not a data source. "
                 f"Please enter {pytac.LIVE} or {pytac.SIM}."
             )
 

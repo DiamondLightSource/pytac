@@ -93,6 +93,23 @@ class Element(object):
 
     __repr__ = __str__
 
+    def set_default_data_source(self, data_source_type: str) -> None:
+        """Set the default data source for this element.
+
+        Args:
+            data_source_type: the type of the data source being set:
+                              pytac.LIVE or pytac.SIM.
+        """
+        self._data_source_manager.default_data_source = data_source_type
+
+    def set_default_units(self, units: str) -> None:
+        """Set the default units type for this element.
+
+        Args:
+            units: pytac.PHYS or pytac.ENG
+        """
+        self._data_source_manager.default_units = units
+
     def set_data_source(self, data_source: DataSource, data_source_type: str) -> None:
         """Add a data source to the element.
 
