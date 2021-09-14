@@ -190,12 +190,12 @@ class DataSourceManager(object):
 
     def get_value(
         self,
-        field,
-        handle=pytac.RB,
-        units=pytac.DEFAULT,
-        data_source=pytac.DEFAULT,
-        throw=True,
-    ):
+        field: str,
+        handle: str = pytac.RB,
+        units: str = pytac.DEFAULT,
+        data_source_type: str = pytac.DEFAULT,
+        throw: bool = True,
+    ) -> float:
         """Get the value for a field.
 
         Returns the value of a field on the manager. This value is uniquely
@@ -205,15 +205,15 @@ class DataSourceManager(object):
         then the lattice default values are used.
 
         Args:
-            field (str): The requested field.
-            handle (str): pytac.SP or pytac.RB.
-            units (str): pytac.ENG or pytac.PHYS returned.
-            data_source (str): pytac.LIVE or pytac.SIM.
-            throw (bool): On failure: if True, raise ControlSystemException; if
+            field: The requested field.
+            handle: pytac.SP or pytac.RB.
+            units: pytac.ENG or pytac.PHYS returned.
+            data_source: pytac.LIVE or pytac.SIM.
+            throw: On failure: if True, raise ControlSystemException; if
                            False, return None and log a warning.
 
         Returns:
-            float: The value of the requested field
+            The value of the requested field
 
         Raises:
             DataSourceException: if there is no data source on the given field.
@@ -221,10 +221,9 @@ class DataSourceManager(object):
         """
         if units == pytac.DEFAULT:
             units = self.default_units
-        if data_source == pytac.DEFAULT:
-            data_source = self.default_data_source
-        # TODO: variable changes type.
-        data_source = self.get_data_source(data_source)
+        if data_source_type == pytac.DEFAULT:
+            data_source_type = self.default_data_source
+        data_source = self.get_data_source(data_source_type)
         value = data_source.get_value(field, handle, throw)
         return self.get_unitconv(field).convert(
             value, origin=data_source.units, target=units
@@ -232,25 +231,25 @@ class DataSourceManager(object):
 
     def set_value(
         self,
-        field,
-        value,
-        handle=pytac.SP,
-        units=pytac.DEFAULT,
-        data_source=pytac.DEFAULT,
-        throw=True,
-    ):
+        field: str,
+        value: float,
+        handle: str = pytac.SP,
+        units: str = pytac.DEFAULT,
+        data_source_type: str = pytac.DEFAULT,
+        throw: bool = True,
+    ) -> None:
         """Set the value for a field.
 
         This sets a value on the machine or the simulation. If handle,units or
         data_source are not given then the lattice default values are used.
 
         Args:
-            field (str): The requested field.
-            value (float): The value to set.
-            handle (str): pytac.SP or pytac.RB.
-            units (str): pytac.ENG or pytac.PHYS.
-            data_source (str): pytac.LIVE or pytac.SIM.
-            throw (bool): On failure: if True, raise ControlSystemException: if
+            field: The requested field.
+            value: The value to set.
+            handle: pytac.SP or pytac.RB.
+            units: pytac.ENG or pytac.PHYS.
+            data_source_type: pytac.LIVE or pytac.SIM.
+            throw: On failure: if True, raise ControlSystemException: if
                            False, log a warning.
 
         Raises:
@@ -260,12 +259,11 @@ class DataSourceManager(object):
         """
         if units == pytac.DEFAULT:
             units = self.default_units
-        if data_source == pytac.DEFAULT:
-            data_source = self.default_data_source
+        if data_source_type == pytac.DEFAULT:
+            data_source_type = self.default_data_source
         if handle != pytac.SP:
             raise HandleException(f"Must write using {pytac.SP}.")
-        # TODO: variable changes type.
-        data_source = self.get_data_source(data_source)
+        data_source = self.get_data_source(data_source_type)
         value = self.get_unitconv(field).convert(
             value, origin=units, target=data_source.units
         )

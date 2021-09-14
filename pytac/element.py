@@ -1,6 +1,6 @@
 """Module containing the element class."""
 import pytac
-from pytac.data_source import DataSourceManager
+from pytac.data_source import DataSource, DataSourceManager
 from pytac.exceptions import DataSourceException, FieldException
 
 
@@ -93,13 +93,13 @@ class Element(object):
 
     __repr__ = __str__
 
-    def set_data_source(self, data_source, data_source_type):
+    def set_data_source(self, data_source: DataSource, data_source_type: str) -> None:
         """Add a data source to the element.
 
         Args:
-            data_source (DataSource): the data source to be set.
-            data_source_type (str): the type of the data source being set
-                                     pytac.LIVE or pytac.SIM.
+            data_source: the data source to be set.
+            data_source: the type of the data source being set:
+                         pytac.LIVE or pytac.SIM.
         """
         self._data_source_manager.set_data_source(data_source, data_source_type)
 
