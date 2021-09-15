@@ -1,7 +1,7 @@
-.. image:: https://travis-ci.org/dls-controls/pytac.png
-   :target: https://travis-ci.org/dls-controls/pytac
-.. image:: https://coveralls.io/repos/github/dls-controls/pytac/badge.svg?branch=master
-   :target: https://coveralls.io/github/dls-controls/pytac?branch=master
+.. image:: https://github.com/dls-controls/pythonSoftIOC/workflows/Code%20CI/badge.svg?branch=master
+   :target: https://github.com/dls-controls/pythonSoftIOC/actions?query=workflow%3A%22Code+CI%22
+.. image:: https://codecov.io/gh/dls-controls/pytac/branch/master/graph/badge.svg?token=be222kVyRP
+   :target: https://codecov.io/gh/dls-controls/pytac
 .. image:: https://readthedocs.org/projects/pytac/badge/?version=latest
    :target: http://pytac.readthedocs.io/en/latest/?badge=latest
 .. image:: https://badge.fury.io/py/pytac.svg
@@ -9,7 +9,7 @@
 .. image:: https://img.shields.io/pypi/pyversions/pytac.svg
    :target: https://badge.fury.io/py/pytac
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-    :target: https://github.com/ambv/black
+   :target: https://github.com/ambv/black
 
 
 Python Toolkit for Accelerator Controls (Pytac) is a Python library for working
