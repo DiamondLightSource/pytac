@@ -3,6 +3,7 @@
 
 # pytest
 .cache
+.pytest_cache
 
 # virtualenv
 bin

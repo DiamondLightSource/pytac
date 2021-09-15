@@ -9,7 +9,7 @@ import pytac
 from pytac.exceptions import DataSourceException, HandleException
 
 
-class Device(object):
+class Device:
     """A representation of a property of an element associated with a field.
 
     Typically a control system will be used to set and get values on a
@@ -18,28 +18,28 @@ class Device(object):
     **Methods:**
     """
 
-    def is_enabled(self):
+    def is_enabled(self) -> bool:
         """Whether the device is enabled.
 
         Returns:
-            bool: whether the device is enabled.
+            whether the device is enabled.
         """
         raise NotImplementedError()
 
-    def get_value(self, handle, throw):
+    def get_value(self, handle: str, throw: bool) -> float:
         """Read the value from the device.
 
         Args:
-            handle (str): pytac.SP or pytac.RB.
-            throw (bool): On failure: if True, raise ControlSystemException; if
+            handle: pytac.SP or pytac.RB.
+            throw: On failure: if True, raise ControlSystemException; if
                            False, return None and log a warning.
 
         Returns:
-            float: the value of the PV.
+            the value of the PV.
         """
         raise NotImplementedError()
 
-    def set_value(self, value, throw):
+    def set_value(self, value: float, throw: bool) -> None:
         """Set the value on the device.
 
         Args:
@@ -141,8 +141,8 @@ class EpicsDevice(Device):
         """
         if rb_pv is None and sp_pv is None:
             raise DataSourceException(
-                "At least one PV, either {0} or {1} is "
-                "required when creating an EpicsDevice.".format(pytac.RB, pytac.SP)
+                f"At least one PV ({pytac.RB} or {pytac.SP}) is "
+                "required when creating an EpicsDevice."
             )
         self.name = name
         self._cs = cs
@@ -172,12 +172,7 @@ class EpicsDevice(Device):
         Raises:
             HandleException: if the requested PV doesn't exist.
         """
-        if handle == pytac.RB and self.rb_pv:
-            return self._cs.get_single(self.rb_pv, throw)
-        elif handle == pytac.SP and self.sp_pv:
-            return self._cs.get_single(self.sp_pv, throw)
-        else:
-            raise HandleException("Device {0} has no {1} PV.".format(self.name, handle))
+        return self._cs.get_single(self.get_pv_name(handle), throw)
 
     def set_value(self, value, throw=True):
         """Set the device value.
@@ -190,10 +185,7 @@ class EpicsDevice(Device):
         Raises:
             HandleException: if no setpoint PV exists.
         """
-        if self.sp_pv is None:
-            raise HandleException("Device {0} has no setpoint PV.".format(self.name))
-        else:
-            self._cs.set_single(self.sp_pv, value, throw)
+        self._cs.set_single(self.get_pv_name(pytac.SP), value, throw)
 
     def get_pv_name(self, handle):
         """Get the PV name for the specified handle.
@@ -212,7 +204,7 @@ class EpicsDevice(Device):
         elif handle == pytac.SP and self.sp_pv:
             return self.sp_pv
         else:
-            raise HandleException("Device {0} has no {1} PV.".format(self.name, handle))
+            raise HandleException(f"Device {self.name} has no {handle} PV.")
 
 
 class PvEnabler(object):
@@ -242,23 +234,11 @@ class PvEnabler(object):
         self._enabled_value = str(int(float(enabled_value)))
         self._cs = cs
 
-    def __nonzero__(self):
+    def __bool__(self):
         """Used to override the 'if object' clause.
-
-        Support for Python 2.7.
 
         Returns:
             bool: True if the device should be considered enabled.
         """
         pv_value = self._cs.get_single(self._pv)
         return self._enabled_value == str(int(float(pv_value)))
-
-    def __bool__(self):
-        """Used to override the 'if object' clause.
-
-        Support for Python 3.x.
-
-        Returns:
-            bool: True if the device should be considered enabled.
-        """
-        return self.__nonzero__()

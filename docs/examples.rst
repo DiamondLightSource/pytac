@@ -22,8 +22,8 @@ This is required each time you want to start up Pytac.
 
     $ cd <directory-path>
     $ python
-    Python 2.7.3 (default, Nov  9 2013, 21:59:00)
-    [GCC 4.4.7 20120313 (Red Hat 4.4.7-3)] on linux2
+    Python 3.7.2 (default, Jan 20 2020, 11:03:41)
+    [GCC 4.8.5 20150623 (Red Hat 4.8.5-39)] on linux
     Type "help", "copyright", "credits" or "license" for more information.
     >>>
 

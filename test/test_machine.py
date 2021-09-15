@@ -3,10 +3,11 @@
     and allows us to check that the pytac setup is working correctly.
 """
 import re
+from unittest import mock
 
-import mock
 import numpy
 import pytest
+from pytest_lazyfixture import lazy_fixture
 
 import pytac
 
@@ -28,8 +29,8 @@ def test_load_lattice_using_default_dir():
 @pytest.mark.parametrize(
     "lattice, name, n_elements, length",
     [
-        (pytest.lazy_fixture("vmx_ring"), "VMX", 2142, 561.571),
-        (pytest.lazy_fixture("diad_ring"), "DIAD", 2144, 561.571),
+        (lazy_fixture("vmx_ring"), "VMX", 2142, 561.571),
+        (lazy_fixture("diad_ring"), "DIAD", 2144, 561.571),
     ],
 )
 def test_load_lattice(lattice, name, n_elements, length):
@@ -40,7 +41,7 @@ def test_load_lattice(lattice, name, n_elements, length):
 
 @pytest.mark.parametrize(
     "lattice, n_bpms",
-    [(pytest.lazy_fixture("vmx_ring"), 173), (pytest.lazy_fixture("diad_ring"), 173)],
+    [(lazy_fixture("vmx_ring"), 173), (lazy_fixture("diad_ring"), 173)],
 )
 def test_get_pv_names(lattice, n_bpms):
     bpm_x_pvs = lattice.get_element_pv_names("BPM", "x", handle="readback")
@@ -57,7 +58,7 @@ def test_get_pv_names(lattice, n_bpms):
 
 @pytest.mark.parametrize(
     "lattice, n_bpms",
-    [(pytest.lazy_fixture("vmx_ring"), 173), (pytest.lazy_fixture("diad_ring"), 173)],
+    [(lazy_fixture("vmx_ring"), 173), (lazy_fixture("diad_ring"), 173)],
 )
 def test_load_bpms(lattice, n_bpms):
     bpms = lattice.get_elements("BPM")
@@ -82,7 +83,7 @@ def test_load_bpms(lattice, n_bpms):
 
 @pytest.mark.parametrize(
     "lattice, n_drifts",
-    [(pytest.lazy_fixture("vmx_ring"), 1308), (pytest.lazy_fixture("diad_ring"), 1311)],
+    [(lazy_fixture("vmx_ring"), 1308), (lazy_fixture("diad_ring"), 1311)],
 )
 def test_load_drift_elements(lattice, n_drifts):
     drifts = lattice.get_elements("DRIFT")
@@ -91,7 +92,7 @@ def test_load_drift_elements(lattice, n_drifts):
 
 @pytest.mark.parametrize(
     "lattice, n_quads",
-    [(pytest.lazy_fixture("vmx_ring"), 248), (pytest.lazy_fixture("diad_ring"), 248)],
+    [(lazy_fixture("vmx_ring"), 248), (lazy_fixture("diad_ring"), 248)],
 )
 def test_load_quadrupoles(lattice, n_quads):
     quads = lattice.get_elements("Quadrupole")
@@ -105,10 +106,7 @@ def test_load_quadrupoles(lattice, n_quads):
 
 @pytest.mark.parametrize(
     "lattice, n_q1b, n_q1d",
-    [
-        (pytest.lazy_fixture("vmx_ring"), 34, 12),
-        (pytest.lazy_fixture("diad_ring"), 34, 12),
-    ],
+    [(lazy_fixture("vmx_ring"), 34, 12), (lazy_fixture("diad_ring"), 34, 12)],
 )
 def test_load_quad_family(lattice, n_q1b, n_q1d):
     q1b = lattice.get_elements("Q1B")
@@ -119,7 +117,7 @@ def test_load_quad_family(lattice, n_q1b, n_q1d):
 
 @pytest.mark.parametrize(
     "lattice, n_correctors",
-    [(pytest.lazy_fixture("vmx_ring"), 173), (pytest.lazy_fixture("diad_ring"), 172)],
+    [(lazy_fixture("vmx_ring"), 173), (lazy_fixture("diad_ring"), 172)],
 )
 def test_load_correctors(lattice, n_correctors):
     hcm = lattice.get_elements("HSTR")
@@ -140,7 +138,7 @@ def test_load_correctors(lattice, n_correctors):
 
 @pytest.mark.parametrize(
     "lattice, n_squads",
-    [(pytest.lazy_fixture("vmx_ring"), 98), (pytest.lazy_fixture("diad_ring"), 98)],
+    [(lazy_fixture("vmx_ring"), 98), (lazy_fixture("diad_ring"), 98)],
 )
 def test_load_squads(lattice, n_squads):
     squads = lattice.get_elements("SQUAD")
@@ -153,7 +151,7 @@ def test_load_squads(lattice, n_squads):
 
 
 @pytest.mark.parametrize(
-    "lattice", (pytest.lazy_fixture("diad_ring"), pytest.lazy_fixture("vmx_ring"))
+    "lattice", (lazy_fixture("diad_ring"), lazy_fixture("vmx_ring"))
 )
 def test_cell(lattice):
     # there are squads in every cell
@@ -163,7 +161,7 @@ def test_cell(lattice):
 
 
 @pytest.mark.parametrize(
-    "lattice", (pytest.lazy_fixture("diad_ring"), pytest.lazy_fixture("vmx_ring"))
+    "lattice", (lazy_fixture("diad_ring"), lazy_fixture("vmx_ring"))
 )
 @pytest.mark.parametrize("field", ("x", "y"))
 def test_bpm_unitconv(lattice, field):
