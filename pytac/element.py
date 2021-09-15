@@ -267,13 +267,7 @@ class Element(object):
             raise FieldException(f"{self}: {e}")
 
     def set_value(
-        self,
-        field,
-        value,
-        handle=pytac.SP,
-        units=pytac.DEFAULT,
-        data_source=pytac.DEFAULT,
-        throw=True,
+        self, field, value, units=pytac.DEFAULT, data_source=pytac.DEFAULT, throw=True,
     ):
         """Set the value for a field.
 
@@ -282,7 +276,6 @@ class Element(object):
         Args:
             field (str): The requested field.
             value (float): The value to set.
-            handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
             throw (bool): On failure: if True, raise ControlSystemException: if
@@ -293,9 +286,7 @@ class Element(object):
             FieldException: if the element does not have the specified field.
         """
         try:
-            self._data_source_manager.set_value(
-                field, value, handle, units, data_source, throw
-            )
+            self._data_source_manager.set_value(field, value, units, data_source, throw)
         except DataSourceException as e:
             raise DataSourceException(f"{self}: {e}")
         except FieldException as e:

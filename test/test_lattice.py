@@ -177,8 +177,6 @@ def test_set_element_values(simple_lattice):
 
 
 def test_set_element_values_raises_Exceptions_correctly(simple_lattice):
-    with pytest.raises(pytac.exceptions.HandleException):
-        simple_lattice.set_element_values("family", "x", [1], handle=pytac.RB)
     with pytest.raises(IndexError):
         simple_lattice.set_element_values("family", "x", [1, 2])
     with pytest.raises(IndexError):

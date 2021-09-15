@@ -36,15 +36,13 @@ def test_set_element_values_sim(simple_epics_lattice):
     simple_epics_lattice[0].set_data_source(mock_ds, pytac.SIM)
     simple_epics_lattice[0].set_unitconv("a_field", mock_uc)
     simple_epics_lattice.set_element_values(
-        "family", "a_field", [1], pytac.SP, pytac.ENG, pytac.SIM
+        "family", "a_field", [1], pytac.ENG, pytac.SIM
     )
     mock_ds.set_value.assert_called_with("a_field", 1, True)
     mock_uc.convert.assert_called_once_with(1, origin=pytac.ENG, target=pytac.PHYS)
 
 
 def test_set_element_values_raises_correctly(simple_epics_lattice):
-    with pytest.raises(pytac.exceptions.HandleException):
-        simple_epics_lattice.set_element_values("family", "x", [1], pytac.RB)
     with pytest.raises(IndexError):
         simple_epics_lattice.set_element_values("family", "x", [1, 2])
     with pytest.raises(IndexError):
