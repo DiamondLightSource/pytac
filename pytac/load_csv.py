@@ -10,10 +10,11 @@ The csv files are stored in one directory with specified names:
  * uc_pchip_data.csv
 """
 import collections
+import contextlib
 import copy
 import csv
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Iterator
 
 import pytac
 from pytac.device import SimpleDevice, EpicsDevice
@@ -35,6 +36,13 @@ POLY_FILENAME = "uc_poly_data.csv"
 PCHIP_FILENAME = "uc_pchip_data.csv"
 
 
+@contextlib.contextmanager
+def csv_loader(csv_file: Path) -> Iterator[csv.DictReader]:
+    with open(csv_file) as f:
+        csv_reader = csv.DictReader(f)
+        yield csv_reader
+
+
 def load_poly_unitconv(filepath: Path) -> Dict[int, PolyUnitConv]:
     """Load polynomial unit conversions from a csv file.
 
@@ -47,8 +55,7 @@ def load_poly_unitconv(filepath: Path) -> Dict[int, PolyUnitConv]:
     """
     unitconvs: Dict[int, PolyUnitConv] = {}
     data = collections.defaultdict(list)
-    with open(filepath) as poly:
-        csv_reader = csv.DictReader(poly)
+    with csv_loader(filepath) as csv_reader:
         for item in csv_reader:
             data[(int(item["uc_id"]))].append((int(item["coeff"]), float(item["val"])))
     # Create PolyUnitConv for each item and put in the dict
@@ -70,8 +77,7 @@ def load_pchip_unitconv(filepath: Path) -> Dict[int, PchipUnitConv]:
     """
     unitconvs: Dict[int, PchipUnitConv] = {}
     data = collections.defaultdict(list)
-    with open(filepath) as pchip:
-        csv_reader = csv.DictReader(pchip)
+    with csv_loader(filepath) as csv_reader:
         for item in csv_reader:
             data[(int(item["uc_id"]))].append((float(item["eng"]), float(item["phy"])))
     # Create PchipUnitConv for each item and put in the dict
@@ -96,8 +102,7 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
     # Assemble datasets from the pchip file
     unitconvs.update(load_pchip_unitconv(mode_dir / PCHIP_FILENAME))
     # Add the unitconv objects to the elements
-    with open(mode_dir / UNITCONV_FILENAME) as unitconv:
-        csv_reader = csv.DictReader(unitconv)
+    with csv_loader(mode_dir / UNITCONV_FILENAME) as csv_reader:
         for item in csv_reader:
             # Special case for element 0: the lattice itself.
             if int(item["el_id"]) == 0:
@@ -180,16 +185,14 @@ def load(mode, control_system=None, directory=None, symmetry=None):
     mode_dir = directory / mode
     lat = EpicsLattice(mode, control_system, symmetry=symmetry)
     lat.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
-    with open(mode_dir / ELEMENTS_FILENAME) as elements:
-        csv_reader = csv.DictReader(elements)
+    with csv_loader(mode_dir / ELEMENTS_FILENAME) as csv_reader:
         for item in csv_reader:
             name = item["name"] if item["name"] != "" else None
             e = element.EpicsElement(float(item["length"]), item["type"], name, lat)
             e.add_to_family(item["type"])
             e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)
-    with open(mode_dir / EPICS_DEVICES_FILENAME) as devices:
-        csv_reader = csv.DictReader(devices)
+    with csv_loader(mode_dir / EPICS_DEVICES_FILENAME) as csv_reader:
         for item in csv_reader:
             name = item["name"]
             get_pv = item["get_pv"] if item["get_pv"] else None
@@ -208,8 +211,7 @@ def load(mode, control_system=None, directory=None, symmetry=None):
         lat.add_device("s_position", SimpleDevice(positions, readonly=True), True)
     simple_devices_file = mode_dir / SIMPLE_DEVICES_FILENAME
     if simple_devices_file.exists():
-        with open(simple_devices_file) as devices:
-            csv_reader = csv.DictReader(devices)
+        with csv_loader(simple_devices_file) as csv_reader:
             for item in csv_reader:
                 index = int(item["el_id"])
                 field = item["field"]
@@ -217,8 +219,7 @@ def load(mode, control_system=None, directory=None, symmetry=None):
                 readonly = item["readonly"].lower() == "true"
                 target = lat if index == 0 else lat[index - 1]
                 target.add_device(field, SimpleDevice(value, readonly=readonly), True)
-    with open(mode_dir / FAMILIES_FILENAME) as families:
-        csv_reader = csv.DictReader(families)
+    with csv_loader(mode_dir / FAMILIES_FILENAME) as csv_reader:
         for item in csv_reader:
             lat[int(item["el_id"]) - 1].add_to_family(item["family"])
     unitconv_file = mode_dir / UNITCONV_FILENAME
