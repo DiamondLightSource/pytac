@@ -12,7 +12,6 @@ from pytac.data_source import DataSource, DataSourceManager
 from pytac.exceptions import (
     DataSourceException,
     UnitsException,
-    HandleException,
 )
 
 
@@ -220,13 +219,7 @@ class Lattice:
         )
 
     def set_value(
-        self,
-        field,
-        value,
-        handle=pytac.SP,
-        units=pytac.DEFAULT,
-        data_source=pytac.DEFAULT,
-        throw=True,
+        self, field, value, units=pytac.DEFAULT, data_source=pytac.DEFAULT, throw=True,
     ):
         """Set the value for a field.
 
@@ -235,7 +228,6 @@ class Lattice:
         Args:
             field (str): The requested field.
             value (float): The value to set.
-            handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
             throw (bool): On failure: if True, raise ControlSystemException: if
@@ -245,9 +237,7 @@ class Lattice:
             DataSourceException: if arguments are incorrect.
             FieldException: if the lattice does not have the specified field.
         """
-        self._data_source_manager.set_value(
-            field, value, handle, units, data_source, throw
-        )
+        self._data_source_manager.set_value(field, value, units, data_source, throw)
 
     def get_length(self):
         """Returns the length of the lattice, in meters.
@@ -410,7 +400,6 @@ class Lattice:
         family,
         field,
         values,
-        handle=pytac.SP,
         units=pytac.DEFAULT,
         data_source=pytac.DEFAULT,
         throw=True,
@@ -422,7 +411,6 @@ class Lattice:
             family (str): family of elements on which to set values.
             field (str):  field to set values for.
             values (sequence): A list of values to assign.
-            handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
             throw (bool): On failure, if True raise ControlSystemException, if
@@ -434,8 +422,6 @@ class Lattice:
             IndexError: if the given list of values doesn't match the number of
                          elements in the family.
         """
-        if handle != pytac.SP:
-            raise HandleException(f"Must write using {pytac.SP}.")
         elements = self.get_elements(family)
         if len(elements) != len(values):
             raise IndexError(
@@ -444,12 +430,7 @@ class Lattice:
             )
         for element, value in zip(elements, values):
             status = element.set_value(
-                field,
-                value,
-                handle=pytac.SP,
-                units=units,
-                data_source=data_source,
-                throw=throw,
+                field, value, units=units, data_source=data_source, throw=throw,
             )
             if status is not None:
                 return status
@@ -667,7 +648,6 @@ class EpicsLattice(Lattice):
         family,
         field,
         values,
-        handle=pytac.SP,
         units=pytac.DEFAULT,
         data_source=pytac.DEFAULT,
         throw=True,
@@ -679,7 +659,6 @@ class EpicsLattice(Lattice):
             family (str): family of elements on which to set values.
             field (str):  field to set values for.
             values (sequence): A list of values to assign.
-            handle (str): pytac.SP or pytac.RB.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
             throw (bool): On failure: if True, raise ControlSystemException: if
@@ -693,8 +672,6 @@ class EpicsLattice(Lattice):
             data_source = self.get_default_data_source()
         if units == pytac.DEFAULT:
             units = self.get_default_units()
-        if handle != pytac.SP:
-            raise HandleException(f"Must write using {pytac.SP}.")
         if data_source == pytac.LIVE:
             if units == pytac.PHYS:
                 values = self.convert_family_values(
@@ -710,5 +687,5 @@ class EpicsLattice(Lattice):
             self._cs.set_multiple(pv_names, values, throw)
         else:
             super(EpicsLattice, self).set_element_values(
-                family, field, values, pytac.SP, units, data_source, throw
+                family, field, values, units, data_source, throw
             )

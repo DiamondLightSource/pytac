@@ -1,6 +1,6 @@
 """Module containing pytac data source classes."""
 import pytac
-from pytac.exceptions import DataSourceException, FieldException, HandleException
+from pytac.exceptions import DataSourceException, FieldException
 
 
 class DataSource(object):
@@ -233,7 +233,6 @@ class DataSourceManager(object):
         self,
         field: str,
         value: float,
-        handle: str = pytac.SP,
         units: str = pytac.DEFAULT,
         data_source_type: str = pytac.DEFAULT,
         throw: bool = True,
@@ -246,7 +245,6 @@ class DataSourceManager(object):
         Args:
             field: The requested field.
             value: The value to set.
-            handle: pytac.SP or pytac.RB.
             units: pytac.ENG or pytac.PHYS.
             data_source_type: pytac.LIVE or pytac.SIM.
             throw: On failure: if True, raise ControlSystemException: if
@@ -261,8 +259,6 @@ class DataSourceManager(object):
             units = self.default_units
         if data_source_type == pytac.DEFAULT:
             data_source_type = self.default_data_source
-        if handle != pytac.SP:
-            raise HandleException(f"Must write using {pytac.SP}.")
         data_source = self.get_data_source(data_source_type)
         value = self.get_unitconv(field).convert(
             value, origin=units, target=data_source.units

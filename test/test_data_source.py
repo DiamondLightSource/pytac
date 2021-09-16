@@ -51,7 +51,7 @@ def test_get_fields(simple_object):
     ],
 )
 def test_set_value(simple_object):
-    simple_object.set_value("x", DUMMY_VALUE_2, pytac.SP, pytac.ENG, pytac.LIVE)
+    simple_object.set_value("x", DUMMY_VALUE_2, pytac.ENG, pytac.LIVE)
     simple_object.get_device("x").set_value.assert_called_with(DUMMY_VALUE_2, True)
 
 
@@ -78,5 +78,5 @@ def test_get_value_sim(simple_object):
     ],
 )
 def test_unit_conversion(simple_object, double_uc):
-    simple_object.set_value("y", DUMMY_VALUE_2, pytac.SP, pytac.PHYS, pytac.LIVE)
+    simple_object.set_value("y", DUMMY_VALUE_2, pytac.PHYS, pytac.LIVE)
     simple_object.get_device("y").set_value.assert_called_with(DUMMY_VALUE_2 / 2, True)

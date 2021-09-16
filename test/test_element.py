@@ -107,30 +107,26 @@ def test_get_value_uses_uc_if_necessary_for_sim_call(simple_element, double_uc):
 
 
 def test_set_value_eng(simple_element):
-    simple_element.set_value("x", DUMMY_VALUE_2, handle=pytac.SP)
+    simple_element.set_value("x", DUMMY_VALUE_2)
     # No conversion needed
     simple_element.get_device("x").set_value.assert_called_with(DUMMY_VALUE_2, True)
 
 
 def test_set_value_phys(simple_element, double_uc):
     simple_element._data_source_manager._uc["x"] = double_uc
-    simple_element.set_value("x", DUMMY_VALUE_2, handle=pytac.SP, units=pytac.PHYS)
+    simple_element.set_value("x", DUMMY_VALUE_2, units=pytac.PHYS)
     # Conversion fron physics to engineering units
     simple_element.get_device("x").set_value.assert_called_with(DUMMY_VALUE_2 / 2, True)
 
 
 def test_set_exceptions(simple_element, unit_uc):
     with pytest.raises(pytac.exceptions.FieldException):
-        simple_element.set_value("unknown_field", 40.0, "setpoint")
-    with pytest.raises(pytac.exceptions.HandleException):
-        simple_element.set_value("y", 40.0, "unknown_handle")
+        simple_element.set_value("unknown_field", 40.0)
     with pytest.raises(pytac.exceptions.DataSourceException):
-        simple_element.set_value(
-            "y", 40.0, "setpoint", data_source="unknown_data_source"
-        )
+        simple_element.set_value("y", 40.0, data_source="unknown_data_source")
     simple_element._data_source_manager._uc["uc_but_no_data_source"] = unit_uc
     with pytest.raises(pytac.exceptions.FieldException):
-        simple_element.set_value("uc_but_no_data_source", 40.0, "setpoint")
+        simple_element.set_value("uc_but_no_data_source", 40.0)
 
 
 def test_get_exceptions(simple_element):
