@@ -206,15 +206,17 @@ def load(mode, control_system=None, directory=None, symmetry=None):
         for elem in lat:
             positions.append(elem.s)
         lat.add_device("s_position", SimpleDevice(positions, readonly=True), True)
-    with open(mode_dir / SIMPLE_DEVICES_FILENAME) as devices:
-        csv_reader = csv.DictReader(devices)
-        for item in csv_reader:
-            index = int(item["el_id"])
-            field = item["field"]
-            value = float(item["value"])
-            readonly = item["readonly"].lower() == "true"
-            target = lat if index == 0 else lat[index - 1]
-            target.add_device(field, SimpleDevice(value, readonly=readonly), True)
+    simple_devices_file = mode_dir / SIMPLE_DEVICES_FILENAME
+    if simple_devices_file.exists():
+        with open(simple_devices_file) as devices:
+            csv_reader = csv.DictReader(devices)
+            for item in csv_reader:
+                index = int(item["el_id"])
+                field = item["field"]
+                value = float(item["value"])
+                readonly = item["readonly"].lower() == "true"
+                target = lat if index == 0 else lat[index - 1]
+                target.add_device(field, SimpleDevice(value, readonly=readonly), True)
     with open(mode_dir / FAMILIES_FILENAME) as families:
         csv_reader = csv.DictReader(families)
         for item in csv_reader:
