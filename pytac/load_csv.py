@@ -195,15 +195,14 @@ def load(mode, control_system=None, directory=None, symmetry=None):
     with csv_loader(mode_dir / EPICS_DEVICES_FILENAME) as csv_reader:
         for item in csv_reader:
             name = item["name"]
+            index = int(item["el_id"])
             get_pv = item["get_pv"] if item["get_pv"] else None
             set_pv = item["set_pv"] if item["set_pv"] else None
             pve = True
             d = EpicsDevice(name, control_system, pve, get_pv, set_pv)
             # Devices on index 0 are attached to the lattice not elements.
-            if int(item["el_id"]) == 0:
-                lat.add_device(item["field"], d, DEFAULT_UC)
-            else:
-                lat[int(item["el_id"]) - 1].add_device(item["field"], d, DEFAULT_UC)
+            target = lat if index == 0 else lat[index - 1]
+            target.add_device(item["field"], d, DEFAULT_UC)
         # Add basic devices to the lattice.
         positions = []
         for elem in lat:
@@ -217,6 +216,7 @@ def load(mode, control_system=None, directory=None, symmetry=None):
                 field = item["field"]
                 value = float(item["value"])
                 readonly = item["readonly"].lower() == "true"
+                # Devices on index 0 are attached to the lattice not elements.
                 target = lat if index == 0 else lat[index - 1]
                 target.add_device(field, SimpleDevice(value, readonly=readonly), True)
     with csv_loader(mode_dir / FAMILIES_FILENAME) as csv_reader:
