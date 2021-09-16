@@ -109,7 +109,7 @@ class SimpleDevice(Device):
                            used, only supported to conform with the base class.
         """
         if self._readonly:
-            raise ValueError("Cannot change value of readonly SimpleDevice")
+            raise DataSourceException("Cannot change value of readonly SimpleDevice")
         self.value = value
 
 

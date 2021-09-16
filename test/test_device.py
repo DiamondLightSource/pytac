@@ -1,3 +1,4 @@
+from pytac.exceptions import DataSourceException
 from unittest import mock
 
 import pytest
@@ -60,6 +61,12 @@ def test_get_simple_device_value_without_handle():
 def test_get_simple_device_value_with_handle():
     device = create_simple_device()
     assert device.get_value(handle=pytac.RB) == 1.0
+
+
+def test_simple_device_raises_DataSourceException_if_readonly_and_set_value_called():
+    device = SimpleDevice(10, readonly=True)
+    with pytest.raises(DataSourceException):
+        device.set_value(4)
 
 
 # Generalised device tests.
