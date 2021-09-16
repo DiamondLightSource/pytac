@@ -12,15 +12,19 @@ The csv files are stored in one directory with specified names:
 import collections
 import copy
 import csv
-import os
+from pathlib import Path
+from typing import Dict
 
 import pytac
-from pytac import data_source, device, element, lattice, units, utils
+from pytac.device import BasicDevice, EpicsDevice
+from pytac.lattice import EpicsLattice, Lattice
+from pytac.units import NullUnitConv, PchipUnitConv, PolyUnitConv, UnitConv
+from pytac import data_source, element, utils
 from pytac.exceptions import ControlSystemException
 
 
 # Create a default unit conversion object that returns the input unchanged.
-DEFAULT_UC = units.NullUnitConv()
+DEFAULT_UC = NullUnitConv()
 
 ELEMENTS_FILENAME = "elements.csv"
 DEVICES_FILENAME = "devices.csv"
@@ -30,32 +34,30 @@ POLY_FILENAME = "uc_poly_data.csv"
 PCHIP_FILENAME = "uc_pchip_data.csv"
 
 
-def load_poly_unitconv(filename):
+def load_poly_unitconv(filepath: Path) -> Dict[int, PolyUnitConv]:
     """Load polynomial unit conversions from a csv file.
 
     Args:
-        filename (path-like object): The pathname of the file from which to
-                                      load the polynomial unit conversions.
+        filename: The pathname of the file from which to load
+                  the polynomial unit conversions.
 
     Returns:
         dict: A dictionary of the unit conversions.
     """
-    unitconvs = {}
+    unitconvs: Dict[int, PolyUnitConv] = {}
     data = collections.defaultdict(list)
-    with open(filename) as poly:
+    with open(filepath) as poly:
         csv_reader = csv.DictReader(poly)
         for item in csv_reader:
             data[(int(item["uc_id"]))].append((int(item["coeff"]), float(item["val"])))
     # Create PolyUnitConv for each item and put in the dict
     for uc_id in data:
-        u = units.PolyUnitConv(
-            [x[1] for x in reversed(sorted(data[uc_id]))], name=uc_id
-        )
+        u = PolyUnitConv([x[1] for x in reversed(sorted(data[uc_id]))], name=uc_id)
         unitconvs[uc_id] = u
     return unitconvs
 
 
-def load_pchip_unitconv(filename):
+def load_pchip_unitconv(filepath: Path) -> Dict[int, PchipUnitConv]:
     """Load pchip unit conversions from a csv file.
 
     Args:
@@ -65,9 +67,9 @@ def load_pchip_unitconv(filename):
     Returns:
         dict: A dictionary of the unit conversions.
     """
-    unitconvs = {}
+    unitconvs: Dict[int, PchipUnitConv] = {}
     data = collections.defaultdict(list)
-    with open(filename) as pchip:
+    with open(filepath) as pchip:
         csv_reader = csv.DictReader(pchip)
         for item in csv_reader:
             data[(int(item["uc_id"]))].append((float(item["eng"]), float(item["phy"])))
@@ -75,28 +77,25 @@ def load_pchip_unitconv(filename):
     for uc_id in data:
         eng = [x[0] for x in sorted(data[uc_id])]
         phy = [x[1] for x in sorted(data[uc_id])]
-        u = units.PchipUnitConv(eng, phy, name=uc_id)
+        u = PchipUnitConv(eng, phy, name=uc_id)
         unitconvs[uc_id] = u
     return unitconvs
 
 
-def load_unitconv(directory, mode, lattice):
+def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
     """Load the unit conversion objects from a file.
 
     Args:
-        directory (str): The directory where the data is stored.
-        mode (str): The name of the mode that is used.
-        lattice(Lattice): The lattice object that will be used.
+        mode_dir: The name of the mode that is used.
+        lattice: The lattice object that will be used.
     """
-    unitconvs = {}
+    unitconvs: Dict[int, UnitConv] = {}
     # Assemble datasets from the polynomial file
-    poly_file = os.path.join(directory, mode, POLY_FILENAME)
-    unitconvs.update(load_poly_unitconv(poly_file))
+    unitconvs.update(load_poly_unitconv(mode_dir / POLY_FILENAME))
     # Assemble datasets from the pchip file
-    pchip_file = os.path.join(directory, mode, PCHIP_FILENAME)
-    unitconvs.update(load_pchip_unitconv(pchip_file))
+    unitconvs.update(load_pchip_unitconv(mode_dir / PCHIP_FILENAME))
     # Add the unitconv objects to the elements
-    with open(os.path.join(directory, mode, UNITCONV_FILENAME)) as unitconv:
+    with open(mode_dir / UNITCONV_FILENAME) as unitconv:
         csv_reader = csv.DictReader(unitconv)
         for item in csv_reader:
             # Special case for element 0: the lattice itself.
@@ -113,14 +112,14 @@ def load_unitconv(directory, mode, lattice):
                     )
                     uc.set_conversion_limits(lower, upper)
                 else:
-                    uc = units.NullUnitConv(item["eng_units"], item["phys_units"])
+                    uc = NullUnitConv(item["eng_units"], item["phys_units"])
                 lattice.set_unitconv(item["field"], uc)
             else:
                 element = lattice[int(item["el_id"]) - 1]
                 # For certain magnet types, we need an additional rigidity
                 # conversion factor as well as the raw conversion.
                 if item["uc_type"] == "null":
-                    uc = units.NullUnitConv(item["eng_units"], item["phys_units"])
+                    uc = NullUnitConv(item["eng_units"], item["phys_units"])
                 else:
                     # Each element needs its own unitconv object as
                     # it may for example have different limit.
@@ -176,10 +175,11 @@ def load(mode, control_system=None, directory=None, symmetry=None):
             "system (found in cothread_cs.py)."
         )
     if directory is None:
-        directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
-    lat = lattice.EpicsLattice(mode, control_system, symmetry=symmetry)
+        directory = Path(__file__).resolve().parent / "data"
+    mode_dir = directory / mode
+    lat = EpicsLattice(mode, control_system, symmetry=symmetry)
     lat.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
-    with open(os.path.join(directory, mode, ELEMENTS_FILENAME)) as elements:
+    with open(mode_dir / ELEMENTS_FILENAME) as elements:
         csv_reader = csv.DictReader(elements)
         for item in csv_reader:
             name = item["name"] if item["name"] != "" else None
@@ -187,14 +187,14 @@ def load(mode, control_system=None, directory=None, symmetry=None):
             e.add_to_family(item["type"])
             e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)
-    with open(os.path.join(directory, mode, DEVICES_FILENAME)) as devices:
+    with open(mode_dir / DEVICES_FILENAME) as devices:
         csv_reader = csv.DictReader(devices)
         for item in csv_reader:
             name = item["name"]
             get_pv = item["get_pv"] if item["get_pv"] else None
             set_pv = item["set_pv"] if item["set_pv"] else None
             pve = True
-            d = device.EpicsDevice(name, control_system, pve, get_pv, set_pv)
+            d = EpicsDevice(name, control_system, pve, get_pv, set_pv)
             # Devices on index 0 are attached to the lattice not elements.
             if int(item["el_id"]) == 0:
                 lat.add_device(item["field"], d, DEFAULT_UC)
@@ -204,12 +204,13 @@ def load(mode, control_system=None, directory=None, symmetry=None):
         positions = []
         for elem in lat:
             positions.append(elem.s)
-        lat.add_device("s_position", device.BasicDevice(positions), DEFAULT_UC)
-        lat.add_device("energy", device.BasicDevice(3.0e09), DEFAULT_UC)
-    with open(os.path.join(directory, mode, FAMILIES_FILENAME)) as families:
+        lat.add_device("s_position", BasicDevice(positions), DEFAULT_UC)
+        lat.add_device("energy", BasicDevice(3.0e09), DEFAULT_UC)
+    with open(mode_dir / FAMILIES_FILENAME) as families:
         csv_reader = csv.DictReader(families)
         for item in csv_reader:
             lat[int(item["el_id"]) - 1].add_to_family(item["family"])
-    if os.path.exists(os.path.join(directory, mode, UNITCONV_FILENAME)):
-        load_unitconv(directory, mode, lat)
+    unitconv_file = mode_dir / UNITCONV_FILENAME
+    if unitconv_file.exists():
+        load_unitconv(mode_dir, lat)
     return lat

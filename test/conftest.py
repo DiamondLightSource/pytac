@@ -1,4 +1,3 @@
-import os
 import sys
 import types
 from unittest import mock
@@ -6,7 +5,7 @@ from unittest import mock
 import pytest
 
 from constants import (
-    CURRENT_DIR,
+    CURRENT_DIR_PATH,
     DUMMY_ARRAY,
     DUMMY_VALUE_1,
     DUMMY_VALUE_2,
@@ -136,7 +135,7 @@ def diad_ring():
 
 @pytest.fixture
 def lattice():
-    lat = load_csv.load("dummy", mock.MagicMock(), os.path.join(CURRENT_DIR, "data"), 2)
+    lat = load_csv.load("dummy", mock.MagicMock(), CURRENT_DIR_PATH / "data", 2)
     return lat
 
 

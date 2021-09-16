@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 
 PREFIX = "prefix"
@@ -15,4 +16,4 @@ DUMMY_ARRAY = [DUMMY_VALUE_1]
 
 LATTICE_NAME = "lattice"
 
-CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+CURRENT_DIR_PATH = Path(__file__).resolve().parent
