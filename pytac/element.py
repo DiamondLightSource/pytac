@@ -335,7 +335,7 @@ class EpicsElement(Element):
         except AttributeError:
             raise DataSourceException(
                 f"Cannot get PV for field {field} on element "
-                f"{self}, as basic devices do not have associated PV's."
+                f"{self}, as the device does not have associated PVs."
             )
         except FieldException as e:
             raise FieldException(f"{self}: {e}")

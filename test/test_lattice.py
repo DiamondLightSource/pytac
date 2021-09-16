@@ -56,7 +56,7 @@ def test_device_methods_raise_DataSourceException_if_no_live_data_source(
 ):
     basic_lattice = simple_lattice
     del basic_lattice._data_source_manager._data_sources[pytac.LIVE]
-    d = pytac.device.BasicDevice(0)
+    d = pytac.device.SimpleDevice(0)
     uc = pytac.units.NullUnitConv()
     with pytest.raises(pytac.exceptions.DataSourceException):
         basic_lattice.add_device("x", d, uc)

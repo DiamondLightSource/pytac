@@ -4,7 +4,7 @@ import pytest
 
 from constants import PREFIX, RB_PV, SP_PV
 import pytac
-from pytac.device import BasicDevice, EpicsDevice, PvEnabler
+from pytac.device import SimpleDevice, EpicsDevice, PvEnabler
 
 
 # Not a test - epics device creation function used in tests.
@@ -15,9 +15,9 @@ def create_epics_device(prefix=PREFIX, rb_pv=RB_PV, sp_pv=SP_PV, enabled=True):
     return device
 
 
-# Not a test - basic device creation function used in tests.
-def create_basic_device(value=1.0, enabled=True):
-    device = BasicDevice(value, enabled)
+# Not a test - simple device creation function used in tests.
+def create_simple_device(value=1.0, enabled=True):
+    device = SimpleDevice(value, enabled, False)
     return device
 
 
@@ -45,26 +45,26 @@ def test_get_epics_device_value_invalid_handle_raises_exception():
         device.get_value("non_existent")
 
 
-# Basic device specific tests.
-def test_set_basic_device_value():
-    device = create_basic_device()
+# Simple device specific tests.
+def test_set_simple_device_value():
+    device = create_simple_device()
     device.set_value(40)
     assert device.value == 40
 
 
-def test_get_basic_device_value_without_handle():
-    device = create_basic_device()
+def test_get_simple_device_value_without_handle():
+    device = create_simple_device()
     assert device.get_value() == 1.0
 
 
-def test_get_basic_device_value_with_handle():
-    device = create_basic_device()
+def test_get_simple_device_value_with_handle():
+    device = create_simple_device()
     assert device.get_value(handle=pytac.RB) == 1.0
 
 
 # Generalised device tests.
 @pytest.mark.parametrize(
-    "device_creation_function", [create_epics_device, create_basic_device]
+    "device_creation_function", [create_epics_device, create_simple_device]
 )
 def test_device_is_enabled_by_default(device_creation_function):
     device = device_creation_function()
@@ -72,7 +72,7 @@ def test_device_is_enabled_by_default(device_creation_function):
 
 
 @pytest.mark.parametrize(
-    "device_creation_function", [create_epics_device, create_basic_device]
+    "device_creation_function", [create_epics_device, create_simple_device]
 )
 def test_device_is_disabled_if_False_enabler(device_creation_function):
     device = device_creation_function(enabled=False)
@@ -80,7 +80,7 @@ def test_device_is_disabled_if_False_enabler(device_creation_function):
 
 
 @pytest.mark.parametrize(
-    "device_creation_function", [create_epics_device, create_basic_device]
+    "device_creation_function", [create_epics_device, create_simple_device]
 )
 def test_device_is_enabled_returns_bool_value(device_creation_function):
     device = device_creation_function(enabled=1)

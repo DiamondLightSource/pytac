@@ -4,7 +4,7 @@ import pytest
 
 from constants import DUMMY_VALUE_1, DUMMY_VALUE_2
 import pytac
-from pytac.device import BasicDevice
+from pytac.device import SimpleDevice
 from pytac.element import Element
 from pytac.lattice import Lattice
 
@@ -58,7 +58,7 @@ def test_device_methods_raise_DataSourceException_if_no_live_data_source(
 ):
     basic_element = simple_element
     del basic_element._data_source_manager._data_sources[pytac.LIVE]
-    d = BasicDevice(0)
+    d = SimpleDevice(0)
     uc = pytac.units.NullUnitConv()
     with pytest.raises(pytac.exceptions.DataSourceException):
         basic_element.add_device("x", d, uc)

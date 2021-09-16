@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Dict
 
 import pytac
-from pytac.device import BasicDevice, EpicsDevice
+from pytac.device import SimpleDevice, EpicsDevice
 from pytac.lattice import EpicsLattice, Lattice
 from pytac.units import NullUnitConv, PchipUnitConv, PolyUnitConv, UnitConv
 from pytac import data_source, element, utils
@@ -27,7 +27,8 @@ from pytac.exceptions import ControlSystemException
 DEFAULT_UC = NullUnitConv()
 
 ELEMENTS_FILENAME = "elements.csv"
-DEVICES_FILENAME = "devices.csv"
+EPICS_DEVICES_FILENAME = "epics_devices.csv"
+SIMPLE_DEVICES_FILENAME = "simple_devices.csv"
 FAMILIES_FILENAME = "families.csv"
 UNITCONV_FILENAME = "unitconv.csv"
 POLY_FILENAME = "uc_poly_data.csv"
@@ -187,7 +188,7 @@ def load(mode, control_system=None, directory=None, symmetry=None):
             e.add_to_family(item["type"])
             e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)
-    with open(mode_dir / DEVICES_FILENAME) as devices:
+    with open(mode_dir / EPICS_DEVICES_FILENAME) as devices:
         csv_reader = csv.DictReader(devices)
         for item in csv_reader:
             name = item["name"]
@@ -204,8 +205,16 @@ def load(mode, control_system=None, directory=None, symmetry=None):
         positions = []
         for elem in lat:
             positions.append(elem.s)
-        lat.add_device("s_position", BasicDevice(positions), DEFAULT_UC)
-        lat.add_device("energy", BasicDevice(3.0e09), DEFAULT_UC)
+        lat.add_device("s_position", SimpleDevice(positions, readonly=True), True)
+    with open(mode_dir / SIMPLE_DEVICES_FILENAME) as devices:
+        csv_reader = csv.DictReader(devices)
+        for item in csv_reader:
+            index = int(item["el_id"])
+            field = item["field"]
+            value = float(item["value"])
+            readonly = item["readonly"].lower() == "true"
+            target = lat if index == 0 else lat[index - 1]
+            target.add_device(field, SimpleDevice(value, readonly=readonly), True)
     with open(mode_dir / FAMILIES_FILENAME) as families:
         csv_reader = csv.DictReader(families)
         for item in csv_reader:
