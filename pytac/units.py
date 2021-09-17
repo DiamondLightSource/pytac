@@ -18,7 +18,7 @@ def unit_function(value):
     return value
 
 
-class UnitConv(object):
+class UnitConv:
     """Class to convert between physics and engineering units.
 
     This class does not do conversion but does return values if the target

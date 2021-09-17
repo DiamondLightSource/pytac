@@ -5,6 +5,8 @@ A physical element in an accelerator may have multiple devices: an example at
 DLS is a sextupole magnet that contains also horizontal and vertical corrector
 magnets and a skew quadrupole.
 """
+from typing import List, Union
+
 import pytac
 from pytac.exceptions import DataSourceException, HandleException
 
@@ -50,7 +52,7 @@ class Device:
         raise NotImplementedError()
 
 
-class BasicDevice(Device):
+class SimpleDevice(Device):
     """A basic implementation of the device class.
 
     This device does not have a PV associated with it, nor does it interact
@@ -59,15 +61,22 @@ class BasicDevice(Device):
     the accelerator.
     """
 
-    def __init__(self, value, enabled=True):
+    def __init__(
+        self,
+        value: Union[float, List[float]],
+        enabled: bool = True,
+        readonly: bool = True,
+    ):
         """
         Args:
-            value (numeric): can be a number or a list of numbers.
-            enabled (bool-like): Whether the device is enabled. May be a
+            value: can be a number or a list of numbers.
+            enabled: whether the device is enabled. May be a
                                   PvEnabler object.
+            readonly: whether the value may be changed.
         """
-        self.value = value
+        self._value = value
         self._enabled = enabled
+        self._readonly = readonly
 
     def is_enabled(self):
         """Whether the device is enabled.
@@ -89,7 +98,7 @@ class BasicDevice(Device):
         Returns:
             numeric: the value of the device.
         """
-        return self.value
+        return self._value
 
     def set_value(self, value, throw=None):
         """Set the value on the device.
@@ -99,6 +108,8 @@ class BasicDevice(Device):
             throw (bool): Irrelevant in this case as a control system is not
                            used, only supported to conform with the base class.
         """
+        if self._readonly:
+            raise DataSourceException("Cannot change value of readonly SimpleDevice")
         self.value = value
 
 

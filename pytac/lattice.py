@@ -572,7 +572,7 @@ class EpicsLattice(Lattice):
         except AttributeError:
             raise DataSourceException(
                 f"Cannot get PV for field {field} on lattice "
-                f"{self}, as basic devices do not have associated PV's."
+                f"{self}, as the device does not have associated PVs."
             )
 
     def get_element_pv_names(self, family, field, handle):
