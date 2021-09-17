@@ -8,7 +8,6 @@ import pytac
 from pytac.device import SimpleDevice, EpicsDevice, PvEnabler
 
 
-# Not a test - epics device creation function used in tests.
 def create_epics_device(prefix=PREFIX, rb_pv=RB_PV, sp_pv=SP_PV, enabled=True):
     mock_cs = mock.MagicMock()
     mock_cs.get_single.return_value = 40.0
@@ -16,7 +15,6 @@ def create_epics_device(prefix=PREFIX, rb_pv=RB_PV, sp_pv=SP_PV, enabled=True):
     return device
 
 
-# Not a test - simple device creation function used in tests.
 def create_simple_device(value=1.0, enabled=True):
     device = SimpleDevice(value, enabled, False)
     return device

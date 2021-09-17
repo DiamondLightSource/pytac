@@ -47,8 +47,7 @@ def load_poly_unitconv(filepath: Path) -> Dict[int, PolyUnitConv]:
     """Load polynomial unit conversions from a csv file.
 
     Args:
-        filename: The pathname of the file from which to load
-                  the polynomial unit conversions.
+        filepath: The file from which to load.
 
     Returns:
         dict: A dictionary of the unit conversions.
@@ -69,8 +68,7 @@ def load_pchip_unitconv(filepath: Path) -> Dict[int, PchipUnitConv]:
     """Load pchip unit conversions from a csv file.
 
     Args:
-        filename (path-like object): The pathname of the file from which to
-                                      load the pchip unit conversions.
+        filename: The file from which to load.
 
     Returns:
         dict: A dictionary of the unit conversions.
@@ -93,7 +91,7 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
     """Load the unit conversion objects from a file.
 
     Args:
-        mode_dir: The name of the mode that is used.
+        mode_dir: Path to directory containing CSV files.
         lattice: The lattice object that will be used.
     """
     unitconvs: Dict[int, UnitConv] = {}
