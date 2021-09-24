@@ -1,4 +1,13 @@
 """Pytac: Python Toolkit for Accelerator Controls."""
+
+try:
+    from importlib.metadata import version
+except ImportError:
+    from importlib_metadata import version
+
+__version__ = version("pytac")
+
+
 # PV types.
 SP = "setpoint"
 RB = "readback"
