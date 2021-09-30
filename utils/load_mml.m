@@ -29,15 +29,21 @@ function load_mml(ringmode)
     elements_file = fullfile(datadir, 'elements.csv');
     f_elements = fopen(elements_file, 'wt', 'n', 'utf-8');
     fprintf(f_elements, 'name,type,length\n');
-    devices_file = fullfile(datadir, 'devices.csv');
-    f_devices = fopen(devices_file, 'w');
-    fprintf(f_devices, 'el_id,name,field,get_pv,set_pv\n');
+    epics_devices_file = fullfile(datadir, 'epics_devices.csv');
+    f_epics_devices = fopen(epics_devices_file, 'w');
+    fprintf(f_epics_devices, 'el_id,name,field,get_pv,set_pv\n');
+    simple_devices_file = fullfile(datadir, 'simple_devices.csv');
+    f_simple_devices = fopen(simple_devices_file, 'w');
+    fprintf(f_simple_devices, 'el_id,field,value,readonly\n');
     families_file = fullfile(datadir, 'families.csv');
     f_families = fopen(families_file, 'w');
     fprintf(f_families, 'el_id,family\n');
 
     global THERING;
     ao = getao();
+
+    % Hard-coded beam energy value.
+    fprintf(f_simple_devices, '0,energy,3e9,true\n');
 
     % The individual BPM PVs are not stored in middlelayer.
     BPMS = get_bpm_pvs(ao);
@@ -100,7 +106,8 @@ function load_mml(ringmode)
 
     renamed_indexes(old_index) = new_index;
     fclose(f_elements);
-    fclose(f_devices);
+    fclose(f_epics_devices);
+    fclose(f_simple_devices);
     fclose(f_families);
 
     fprintf('Loaded %d mml elements into %d pytac elements.\n', old_index, new_index);
@@ -128,7 +135,7 @@ function load_mml(ringmode)
         parts = strsplit(pvs{1}.get_pv,':');
         prefix = parts{1};
         for i = 1:size(pvs, 2)
-            fprintf(f_devices, '%d,%s,%s,%s,%s\n', index, prefix, pvs{i}.field, deblank(pvs{i}.get_pv), deblank(pvs{i}.set_pv));
+            fprintf(f_epics_devices, '%d,%s,%s,%s,%s\n', index, prefix, pvs{i}.field, deblank(pvs{i}.get_pv), deblank(pvs{i}.set_pv));
         end
     end
 
