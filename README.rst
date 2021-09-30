@@ -46,10 +46,10 @@ To build the documentation::
 
 The documentation is built inside _build/html.
 
-Uploading to Pypi
+Uploading to PyPI
 =================
 
-Ensure that the version is correct in `setup.py` and then make a tag that
+Ensure that the version is correct in `setup.cfg` and then make a tag that
 is the same as the version.
 
 Create a source distribution::
