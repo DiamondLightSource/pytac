@@ -15,8 +15,9 @@ class CothreadControlSystem(ControlSystem):
     **Methods:**
     """
 
-    def __init__(self, timeout=1.0):
+    def __init__(self, timeout=1.0, wait=False):
         self._timeout = timeout
+        self._wait = wait
 
     def get_single(self, pv, throw=True):
         """Get the value of a given PV.
@@ -90,7 +91,7 @@ class CothreadControlSystem(ControlSystem):
             ControlSystemException: if it cannot connect to the specified PV.
         """
         try:
-            caput(pv, value, timeout=self._timeout, throw=True)
+            caput(pv, value, timeout=self._timeout, throw=True, wait=self._wait)
             return True
         except ca_nothing:
             error_msg = f"Cannot connect to {pv}."
@@ -121,7 +122,7 @@ class CothreadControlSystem(ControlSystem):
         """
         if len(pvs) != len(values):
             raise ValueError("Please enter the same number of values as PVs.")
-        status = caput(pvs, values, timeout=self._timeout, throw=False)
+        status = caput(pvs, values, timeout=self._timeout, throw=False, wait=self._wait)
         return_values = []
         failures = []
         for stat in status:
