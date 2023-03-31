@@ -1,14 +1,14 @@
 API
 ===
 
-.. automodule:: python3_pip_skeleton
+.. automodule:: pytac
 
-    ``python3_pip_skeleton``
+    ``pytac``
     -----------------------------------
 
-This is the internal API reference for python3_pip_skeleton
+This is the internal API reference for pytac
 
-.. data:: python3_pip_skeleton.__version__
+.. data:: pytac.__version__
     :type: str
 
     Version number as calculated by https://github.com/pypa/setuptools_scm
