@@ -1,65 +1,46 @@
-.. image:: https://github.com/dls-controls/pythonSoftIOC/workflows/Code%20CI/badge.svg?branch=master
-   :target: https://github.com/dls-controls/pythonSoftIOC/actions?query=workflow%3A%22Code+CI%22
-.. image:: https://codecov.io/gh/dls-controls/pytac/branch/master/graph/badge.svg?token=be222kVyRP
-   :target: https://codecov.io/gh/dls-controls/pytac
-.. image:: https://readthedocs.org/projects/pytac/badge/?version=latest
-   :target: http://pytac.readthedocs.io/en/latest/?badge=latest
-.. image:: https://badge.fury.io/py/pytac.svg
-   :target: https://badge.fury.io/py/pytac
-.. image:: https://img.shields.io/pypi/pyversions/pytac.svg
-   :target: https://badge.fury.io/py/pytac
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-   :target: https://github.com/ambv/black
+pytac
+===========================
 
+|code_ci| |docs_ci| |coverage| |pypi_version| |license|
 
 Python Toolkit for Accelerator Controls (Pytac) is a Python library for working
-with elements of particle accelerators.
+with elements of particle accelerators, developed at Diamond Light Source.
 
-Documentation is available at Readthedocs_.
+============== ==============================================================
+PyPI           ``pip install pytac``
+Source code    https://github.com/DiamondLightSource/pytac
+Documentation  https://DiamondLightSource.github.io/pytac
+Releases       https://github.com/DiamondLightSource/pytac/releases
+============== ==============================================================
 
-.. _ReadTheDocs: http://pytac.readthedocs.io
+.. code-block:: python
 
-Testing
-=======
+    from pytac import __version__
 
-It is simplest to work with pipenv::
+    print(f"Hello pytac {__version__}")
 
- $ pipenv install --dev
- $ pipenv shell
+.. |code_ci| image:: https://github.com/DiamondLightSource/pytac/actions/workflows/code.yml/badge.svg?branch=main
+    :target: https://github.com/DiamondLightSource/pytac/actions/workflows/code.yml
+    :alt: Code CI
 
-To run the tests::
+.. |docs_ci| image:: https://github.com/DiamondLightSource/pytac/actions/workflows/docs.yml/badge.svg?branch=main
+    :target: https://github.com/DiamondLightSource/pytac/actions/workflows/docs.yml
+    :alt: Docs CI
 
- $ python -m pytest
+.. |coverage| image:: https://codecov.io/gh/DiamondLightSource/pytac/branch/main/graph/badge.svg
+    :target: https://codecov.io/gh/DiamondLightSource/pytac
+    :alt: Test Coverage
 
-To see a coverage report, check pytest-cov::
+.. |pypi_version| image:: https://img.shields.io/pypi/v/pytac.svg
+    :target: https://pypi.org/project/pytac
+    :alt: Latest PyPI version
 
- $ python -m pytest --cov-report term-missing --cov=pytac
+.. |license| image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
+    :target: https://opensource.org/licenses/Apache-2.0
+    :alt: Apache License
 
-To see style violations, use flake8::
+..
+    Anything below this line is used when viewing README.rst and will be replaced
+    when included in index.rst
 
- $ flake8
-
-To build the documentation::
-
- $ cd docs
- $ sphinx-build -b html -E . _build/html
-
-The documentation is built inside _build/html.
-
-Uploading to PyPI
-=================
-
-Ensure that the version is correct in `setup.cfg` and then make a tag that
-is the same as the version.
-
-Create a source distribution::
-
- $ python setup.py sdist
-
-Build a universal wheel::
-
- $ python setup.py bdist_wheel
-
-Then upload it using twine::
-
- $ twine upload dist/*
+See https://DiamondLightSource.github.io/pytac for more detailed documentation.
