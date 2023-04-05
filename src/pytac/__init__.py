@@ -1,6 +1,6 @@
 import sys
 
-if sys.version_info[1] <= 7:
+if sys.version_info < (3, 8):
     from importlib_metadata import version  # noqa
 else:
     from importlib.metadata import version  # noqa
@@ -28,10 +28,9 @@ from . import (  # isort:skip
     utils,
 )
 
-"""Error 402 is suppressed as we cannot import these modules at the top of the
+"""Ignore isort (flake8 Error 402) as we cannot import these modules at the top of the
 file as the strings above must be set first or the imports will fail.
 """
-
 __version__ = version("pytac")
 del version
 
