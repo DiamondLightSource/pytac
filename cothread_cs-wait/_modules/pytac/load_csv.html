@@ -1,0 +1,699 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pytac.load_csv &#8212; pytac 0.5.1.dev64+gf12946f documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pytac/load_csv';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://DiamondLightSource.github.io/pytac/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'cothread_cs-wait';
+        </script>
+    <link rel="shortcut icon" href="../../_static/dls-favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/dls-logo.svg" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../_static/dls-logo.svg" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+    <p class="title logo__title">pytac</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../user/index.html">
+                        User Guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../developer/index.html">
+                        Developer Guide
+                      </a>
+                    </li>
+                
+
+                <li class="nav-item">
+                  <a class="nav-link nav-external" href="https://github.com/DiamondLightSource/pytac/releases">
+                    Release Notes
+                  </a>
+                </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DiamondLightSource/pytac" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/pytac" title="PyPI" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fas fa-cube"></i></span>
+            <label class="sr-only">PyPI</label></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-bs-toggle="dropdown">
+      cothread_cs-wait  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../user/index.html">
+                        User Guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../developer/index.html">
+                        Developer Guide
+                      </a>
+                    </li>
+                
+
+                <li class="nav-item">
+                  <a class="nav-link nav-external" href="https://github.com/DiamondLightSource/pytac/releases">
+                    Release Notes
+                  </a>
+                </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DiamondLightSource/pytac" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/pytac" title="PyPI" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fas fa-cube"></i></span>
+            <label class="sr-only">PyPI</label></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-bs-toggle="dropdown">
+      cothread_cs-wait  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">pytac.load_csv</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <h1>Source code for pytac.load_csv</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module to load the elements of the machine from csv files.</span>
+
+<span class="sd">The csv files are stored in one directory with specified names:</span>
+
+<span class="sd"> * elements.csv</span>
+<span class="sd"> * devices.csv</span>
+<span class="sd"> * families.csv</span>
+<span class="sd"> * unitconv.csv</span>
+<span class="sd"> * uc_poly_data.csv</span>
+<span class="sd"> * uc_pchip_data.csv</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterator</span>
+
+<span class="kn">import</span> <span class="nn">pytac</span>
+<span class="kn">from</span> <span class="nn">pytac</span> <span class="kn">import</span> <span class="n">data_source</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">pytac.device</span> <span class="kn">import</span> <span class="n">EpicsDevice</span><span class="p">,</span> <span class="n">SimpleDevice</span>
+<span class="kn">from</span> <span class="nn">pytac.exceptions</span> <span class="kn">import</span> <span class="n">ControlSystemException</span>
+<span class="kn">from</span> <span class="nn">pytac.lattice</span> <span class="kn">import</span> <span class="n">EpicsLattice</span><span class="p">,</span> <span class="n">Lattice</span>
+<span class="kn">from</span> <span class="nn">pytac.units</span> <span class="kn">import</span> <span class="n">NullUnitConv</span><span class="p">,</span> <span class="n">PchipUnitConv</span><span class="p">,</span> <span class="n">PolyUnitConv</span><span class="p">,</span> <span class="n">UnitConv</span>
+
+<span class="c1"># Create a default unit conversion object that returns the input unchanged.</span>
+<span class="n">DEFAULT_UC</span> <span class="o">=</span> <span class="n">NullUnitConv</span><span class="p">()</span>
+
+<span class="n">ELEMENTS_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;elements.csv&quot;</span>
+<span class="n">EPICS_DEVICES_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;epics_devices.csv&quot;</span>
+<span class="n">SIMPLE_DEVICES_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;simple_devices.csv&quot;</span>
+<span class="n">FAMILIES_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;families.csv&quot;</span>
+<span class="n">UNITCONV_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;unitconv.csv&quot;</span>
+<span class="n">POLY_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;uc_poly_data.csv&quot;</span>
+<span class="n">PCHIP_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;uc_pchip_data.csv&quot;</span>
+
+
+<div class="viewcode-block" id="csv_loader"><a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.csv_loader">[docs]</a><span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">csv_loader</span><span class="p">(</span><span class="n">csv_file</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">]:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">csv_reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">csv_reader</span></div>
+
+
+<div class="viewcode-block" id="load_poly_unitconv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.load_poly_unitconv">[docs]</a><span class="k">def</span> <span class="nf">load_poly_unitconv</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">PolyUnitConv</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load polynomial unit conversions from a csv file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filepath: The file from which to load.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary of the unit conversions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">unitconvs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">PolyUnitConv</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">csv_loader</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_reader</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">csv_reader</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[(</span><span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;uc_id&quot;</span><span class="p">]))]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;coeff&quot;</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">])))</span>
+    <span class="c1"># Create PolyUnitConv for each item and put in the dict</span>
+    <span class="k">for</span> <span class="n">uc_id</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">PolyUnitConv</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">uc_id</span><span class="p">]))],</span> <span class="n">name</span><span class="o">=</span><span class="n">uc_id</span><span class="p">)</span>
+        <span class="n">unitconvs</span><span class="p">[</span><span class="n">uc_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span>
+    <span class="k">return</span> <span class="n">unitconvs</span></div>
+
+
+<div class="viewcode-block" id="load_pchip_unitconv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.load_pchip_unitconv">[docs]</a><span class="k">def</span> <span class="nf">load_pchip_unitconv</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">PchipUnitConv</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load pchip unit conversions from a csv file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename: The file from which to load.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary of the unit conversions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">unitconvs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">PchipUnitConv</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">csv_loader</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_reader</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">csv_reader</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[(</span><span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;uc_id&quot;</span><span class="p">]))]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;eng&quot;</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;phy&quot;</span><span class="p">])))</span>
+    <span class="c1"># Create PchipUnitConv for each item and put in the dict</span>
+    <span class="k">for</span> <span class="n">uc_id</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">eng</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">uc_id</span><span class="p">])]</span>
+        <span class="n">phy</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">uc_id</span><span class="p">])]</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">PchipUnitConv</span><span class="p">(</span><span class="n">eng</span><span class="p">,</span> <span class="n">phy</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">uc_id</span><span class="p">)</span>
+        <span class="n">unitconvs</span><span class="p">[</span><span class="n">uc_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span>
+    <span class="k">return</span> <span class="n">unitconvs</span></div>
+
+
+<div class="viewcode-block" id="load_unitconv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.load_unitconv">[docs]</a><span class="k">def</span> <span class="nf">load_unitconv</span><span class="p">(</span><span class="n">mode_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">lattice</span><span class="p">:</span> <span class="n">Lattice</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the unit conversion objects from a file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mode_dir: Path to directory containing CSV files.</span>
+<span class="sd">        lattice: The lattice object that will be used.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">unitconvs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">UnitConv</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># Assemble datasets from the polynomial file</span>
+    <span class="n">unitconvs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">load_poly_unitconv</span><span class="p">(</span><span class="n">mode_dir</span> <span class="o">/</span> <span class="n">POLY_FILENAME</span><span class="p">))</span>
+    <span class="c1"># Assemble datasets from the pchip file</span>
+    <span class="n">unitconvs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">load_pchip_unitconv</span><span class="p">(</span><span class="n">mode_dir</span> <span class="o">/</span> <span class="n">PCHIP_FILENAME</span><span class="p">))</span>
+    <span class="c1"># Add the unitconv objects to the elements</span>
+    <span class="k">with</span> <span class="n">csv_loader</span><span class="p">(</span><span class="n">mode_dir</span> <span class="o">/</span> <span class="n">UNITCONV_FILENAME</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_reader</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">csv_reader</span><span class="p">:</span>
+            <span class="c1"># Special case for element 0: the lattice itself.</span>
+            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;el_id&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;uc_type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;null&quot;</span><span class="p">:</span>
+                    <span class="c1"># Each element needs its own unitconv object as</span>
+                    <span class="c1"># it may for example have different limit.</span>
+                    <span class="n">uc</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">unitconvs</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;uc_id&quot;</span><span class="p">])])</span>
+                    <span class="n">uc</span><span class="o">.</span><span class="n">phys_units</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;phys_units&quot;</span><span class="p">]</span>
+                    <span class="n">uc</span><span class="o">.</span><span class="n">eng_units</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;eng_units&quot;</span><span class="p">]</span>
+                    <span class="n">upper</span><span class="p">,</span> <span class="n">lower</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="nb">float</span><span class="p">(</span><span class="n">lim</span><span class="p">)</span> <span class="k">if</span> <span class="n">lim</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="kc">None</span>
+                        <span class="k">for</span> <span class="n">lim</span> <span class="ow">in</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;upper_lim&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;lower_lim&quot;</span><span class="p">]]</span>
+                    <span class="p">)</span>
+                    <span class="n">uc</span><span class="o">.</span><span class="n">set_conversion_limits</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">uc</span> <span class="o">=</span> <span class="n">NullUnitConv</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;eng_units&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;phys_units&quot;</span><span class="p">])</span>
+                <span class="n">lattice</span><span class="o">.</span><span class="n">set_unitconv</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;field&quot;</span><span class="p">],</span> <span class="n">uc</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">element</span> <span class="o">=</span> <span class="n">lattice</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;el_id&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="c1"># For certain magnet types, we need an additional rigidity</span>
+                <span class="c1"># conversion factor as well as the raw conversion.</span>
+                <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;uc_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;null&quot;</span><span class="p">:</span>
+                    <span class="n">uc</span> <span class="o">=</span> <span class="n">NullUnitConv</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;eng_units&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;phys_units&quot;</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Each element needs its own unitconv object as</span>
+                    <span class="c1"># it may for example have different limit.</span>
+                    <span class="n">uc</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">unitconvs</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;uc_id&quot;</span><span class="p">])])</span>
+                    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
+                        <span class="n">element</span><span class="o">.</span><span class="n">is_in_family</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;HSTR&quot;</span><span class="p">,</span> <span class="s2">&quot;VSTR&quot;</span><span class="p">,</span> <span class="s2">&quot;Quadrupole&quot;</span><span class="p">,</span> <span class="s2">&quot;Sextupole&quot;</span><span class="p">,</span> <span class="s2">&quot;Bend&quot;</span><span class="p">)</span>
+                    <span class="p">):</span>
+                        <span class="n">energy</span> <span class="o">=</span> <span class="n">lattice</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;energy&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">PHYS</span><span class="p">)</span>
+                        <span class="n">uc</span><span class="o">.</span><span class="n">set_post_eng_to_phys</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">get_div_rigidity</span><span class="p">(</span><span class="n">energy</span><span class="p">))</span>
+                        <span class="n">uc</span><span class="o">.</span><span class="n">set_pre_phys_to_eng</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">get_mult_rigidity</span><span class="p">(</span><span class="n">energy</span><span class="p">))</span>
+                    <span class="n">uc</span><span class="o">.</span><span class="n">phys_units</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;phys_units&quot;</span><span class="p">]</span>
+                    <span class="n">uc</span><span class="o">.</span><span class="n">eng_units</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;eng_units&quot;</span><span class="p">]</span>
+                    <span class="n">upper</span><span class="p">,</span> <span class="n">lower</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="nb">float</span><span class="p">(</span><span class="n">lim</span><span class="p">)</span> <span class="k">if</span> <span class="n">lim</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="kc">None</span>
+                        <span class="k">for</span> <span class="n">lim</span> <span class="ow">in</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;upper_lim&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;lower_lim&quot;</span><span class="p">]]</span>
+                    <span class="p">)</span>
+                    <span class="n">uc</span><span class="o">.</span><span class="n">set_conversion_limits</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">)</span>
+                <span class="n">element</span><span class="o">.</span><span class="n">set_unitconv</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;field&quot;</span><span class="p">],</span> <span class="n">uc</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">control_system</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the elements of a lattice from a directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mode (str): The name of the mode to be loaded.</span>
+<span class="sd">        control_system (ControlSystem): The control system to be used. If none</span>
+<span class="sd">                                         is provided an EpicsControlSystem will</span>
+<span class="sd">                                         be created.</span>
+<span class="sd">        directory (str): Directory where to load the files from. If no</span>
+<span class="sd">                          directory is given the data directory at the root of</span>
+<span class="sd">                          the repository is used.</span>
+<span class="sd">        symmetry (int): The symmetry of the lattice (the number of cells).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Lattice: The lattice containing all elements.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ControlSystemException: if the default control system, cothread, is not</span>
+<span class="sd">                                 installed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">control_system</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Don&#39;t import epics unless we need it to avoid unnecessary</span>
+            <span class="c1"># installation of cothread</span>
+            <span class="kn">from</span> <span class="nn">pytac</span> <span class="kn">import</span> <span class="n">cothread_cs</span>
+
+            <span class="n">control_system</span> <span class="o">=</span> <span class="n">cothread_cs</span><span class="o">.</span><span class="n">CothreadControlSystem</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ControlSystemException</span><span class="p">(</span>
+            <span class="s2">&quot;Please install cothread to load a &quot;</span>
+            <span class="s2">&quot;lattice using the default control &quot;</span>
+            <span class="s2">&quot;system (found in cothread_cs.py).&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">directory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span>
+    <span class="n">mode_dir</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="n">mode</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">EpicsLattice</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">control_system</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="n">symmetry</span><span class="p">)</span>
+    <span class="n">lat</span><span class="o">.</span><span class="n">set_data_source</span><span class="p">(</span><span class="n">data_source</span><span class="o">.</span><span class="n">DeviceDataSource</span><span class="p">(),</span> <span class="n">pytac</span><span class="o">.</span><span class="n">LIVE</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">csv_loader</span><span class="p">(</span><span class="n">mode_dir</span> <span class="o">/</span> <span class="n">ELEMENTS_FILENAME</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_reader</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">csv_reader</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">EpicsElement</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">]),</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span> <span class="n">name</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">add_to_family</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">set_data_source</span><span class="p">(</span><span class="n">data_source</span><span class="o">.</span><span class="n">DeviceDataSource</span><span class="p">(),</span> <span class="n">pytac</span><span class="o">.</span><span class="n">LIVE</span><span class="p">)</span>
+            <span class="n">lat</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">csv_loader</span><span class="p">(</span><span class="n">mode_dir</span> <span class="o">/</span> <span class="n">EPICS_DEVICES_FILENAME</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_reader</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">csv_reader</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;el_id&quot;</span><span class="p">])</span>
+            <span class="n">get_pv</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;get_pv&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;get_pv&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">set_pv</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;set_pv&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;set_pv&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">pve</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">EpicsDevice</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">control_system</span><span class="p">,</span> <span class="n">pve</span><span class="p">,</span> <span class="n">get_pv</span><span class="p">,</span> <span class="n">set_pv</span><span class="p">)</span>
+            <span class="c1"># Devices on index 0 are attached to the lattice not elements.</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">lat</span> <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">lat</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;field&quot;</span><span class="p">],</span> <span class="n">d</span><span class="p">,</span> <span class="n">DEFAULT_UC</span><span class="p">)</span>
+        <span class="c1"># Add basic devices to the lattice.</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">lat</span><span class="p">:</span>
+            <span class="n">positions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elem</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">lat</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="s2">&quot;s_position&quot;</span><span class="p">,</span> <span class="n">SimpleDevice</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">simple_devices_file</span> <span class="o">=</span> <span class="n">mode_dir</span> <span class="o">/</span> <span class="n">SIMPLE_DEVICES_FILENAME</span>
+    <span class="k">if</span> <span class="n">simple_devices_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">with</span> <span class="n">csv_loader</span><span class="p">(</span><span class="n">simple_devices_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_reader</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">csv_reader</span><span class="p">:</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;el_id&quot;</span><span class="p">])</span>
+                <span class="n">field</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;field&quot;</span><span class="p">]</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span>
+                <span class="n">readonly</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;readonly&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span>
+                <span class="c1"># Devices on index 0 are attached to the lattice not elements.</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="n">lat</span> <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">lat</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">target</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">SimpleDevice</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="n">readonly</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">csv_loader</span><span class="p">(</span><span class="n">mode_dir</span> <span class="o">/</span> <span class="n">FAMILIES_FILENAME</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_reader</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">csv_reader</span><span class="p">:</span>
+            <span class="n">lat</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;el_id&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">add_to_family</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">])</span>
+    <span class="n">unitconv_file</span> <span class="o">=</span> <span class="n">mode_dir</span> <span class="o">/</span> <span class="n">UNITCONV_FILENAME</span>
+    <span class="k">if</span> <span class="n">unitconv_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">load_unitconv</span><span class="p">(</span><span class="n">mode_dir</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lat</span></div>
+</pre></div>
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

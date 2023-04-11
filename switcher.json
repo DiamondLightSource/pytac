@@ -2,5 +2,9 @@
   {
     "version": "main",
     "url": "https://DiamondLightSource.github.io/pytac/main/"
+  },
+  {
+    "version": "cothread_cs-wait",
+    "url": "https://DiamondLightSource.github.io/pytac/cothread_cs-wait/"
   }
 ]

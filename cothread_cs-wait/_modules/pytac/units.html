@@ -1,0 +1,976 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pytac.units &#8212; pytac 0.5.1.dev64+gf12946f documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pytac/units';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://DiamondLightSource.github.io/pytac/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'cothread_cs-wait';
+        </script>
+    <link rel="shortcut icon" href="../../_static/dls-favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/dls-logo.svg" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../_static/dls-logo.svg" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+    <p class="title logo__title">pytac</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../user/index.html">
+                        User Guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../developer/index.html">
+                        Developer Guide
+                      </a>
+                    </li>
+                
+
+                <li class="nav-item">
+                  <a class="nav-link nav-external" href="https://github.com/DiamondLightSource/pytac/releases">
+                    Release Notes
+                  </a>
+                </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DiamondLightSource/pytac" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/pytac" title="PyPI" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fas fa-cube"></i></span>
+            <label class="sr-only">PyPI</label></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-bs-toggle="dropdown">
+      cothread_cs-wait  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../user/index.html">
+                        User Guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../developer/index.html">
+                        Developer Guide
+                      </a>
+                    </li>
+                
+
+                <li class="nav-item">
+                  <a class="nav-link nav-external" href="https://github.com/DiamondLightSource/pytac/releases">
+                    Release Notes
+                  </a>
+                </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DiamondLightSource/pytac" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/pytac" title="PyPI" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fas fa-cube"></i></span>
+            <label class="sr-only">PyPI</label></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-bs-toggle="dropdown">
+      cothread_cs-wait  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">pytac.units</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <h1>Source code for pytac.units</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Classes for use in unit conversion.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">PchipInterpolator</span>
+
+<span class="kn">import</span> <span class="nn">pytac</span>
+<span class="kn">from</span> <span class="nn">pytac.exceptions</span> <span class="kn">import</span> <span class="n">UnitsException</span>
+
+
+<div class="viewcode-block" id="unit_function"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.unit_function">[docs]</a><span class="k">def</span> <span class="nf">unit_function</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Default value for the pre and post functions used in unit conversion.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value (float): The value to be converted.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: The result of the conversion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="UnitConv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv">[docs]</a><span class="k">class</span> <span class="nc">UnitConv</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to convert between physics and engineering units.</span>
+
+<span class="sd">    This class does not do conversion but does return values if the target</span>
+<span class="sd">    units are the same as the provided units. Subclasses should implement</span>
+<span class="sd">    _raw_eng_to_phys() and _raw_phys_to_eng() in order to provide complete</span>
+<span class="sd">    unit conversion.</span>
+
+<span class="sd">    The two arguments to this function represent functions that are</span>
+<span class="sd">    applied to the result of the initial conversion. One happens after</span>
+<span class="sd">    the conversion, the other happens before the conversion back.</span>
+
+<span class="sd">    **Attributes:**</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name (str): An identifier for the unit conversion object.</span>
+<span class="sd">        eng_units (str): The unit type of the post conversion engineering</span>
+<span class="sd">                          value.</span>
+<span class="sd">        phys_units (str): The unit type of the post conversion physics value.</span>
+
+<span class="sd">    .. Private Attributes:</span>
+<span class="sd">           _post_eng_to_phys (function): Function to be applied after the</span>
+<span class="sd">                                         initial conversion.</span>
+<span class="sd">           _pre_phys_to_eng (function): Function to be applied before the</span>
+<span class="sd">                                         initial conversion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">post_eng_to_phys</span><span class="o">=</span><span class="n">unit_function</span><span class="p">,</span>
+        <span class="n">pre_phys_to_eng</span><span class="o">=</span><span class="n">unit_function</span><span class="p">,</span>
+        <span class="n">engineering_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">physics_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            post_eng_to_phys (function): Function to be applied after the</span>
+<span class="sd">                                          initial conversion.</span>
+<span class="sd">            pre_phys_to_eng (function): Function to be applied before the</span>
+<span class="sd">                                         initial conversion.</span>
+<span class="sd">            engineering_units (str): The unit type of the post conversion</span>
+<span class="sd">                                      engineering value.</span>
+<span class="sd">            physics_units (str): The unit type of the post conversion physics</span>
+<span class="sd">                                  value.</span>
+<span class="sd">            name (str): An identifier for the unit conversion object.</span>
+
+<span class="sd">        **Methods:**</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_post_eng_to_phys</span> <span class="o">=</span> <span class="n">post_eng_to_phys</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pre_phys_to_eng</span> <span class="o">=</span> <span class="n">pre_phys_to_eng</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eng_units</span> <span class="o">=</span> <span class="n">engineering_units</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phys_units</span> <span class="o">=</span> <span class="n">physics_units</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">string_rep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">string_rep</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">string_rep</span>
+
+<div class="viewcode-block" id="UnitConv.set_post_eng_to_phys"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_post_eng_to_phys">[docs]</a>    <span class="k">def</span> <span class="nf">set_post_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_eng_to_phys</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the function to be applied after the initial conversion.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            post_eng_to_phys (function): Function to be applied after the</span>
+<span class="sd">                                          initial conversion.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_post_eng_to_phys</span> <span class="o">=</span> <span class="n">post_eng_to_phys</span></div>
+
+<div class="viewcode-block" id="UnitConv.set_pre_phys_to_eng"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_pre_phys_to_eng">[docs]</a>    <span class="k">def</span> <span class="nf">set_pre_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre_phys_to_eng</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the function to be applied before the initial conversion.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pre_phys_to_eng (function): Function to be applied before the</span>
+<span class="sd">                                         initial conversion.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pre_phys_to_eng</span> <span class="o">=</span> <span class="n">pre_phys_to_eng</span></div>
+
+    <span class="k">def</span> <span class="nf">_raw_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to be implemented by child classes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (float): The engineering value to be converted to physics</span>
+<span class="sd">                            units.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: No eng-to-phys conversion provided&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UnitConv.eng_to_phys"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.eng_to_phys">[docs]</a>    <span class="k">def</span> <span class="nf">eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function that does the unit conversion.</span>
+
+<span class="sd">        Conversion from engineering to physics units. An additional function</span>
+<span class="sd">        may be cast on the initial conversion.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (float): Value to be converted from engineering to physics</span>
+<span class="sd">                            units.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The result value.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            UnitsException: If the conversion is invalid; i.e. if there are no</span>
+<span class="sd">                            solutions, or multiple, within conversion limits.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnitsException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: Input less than lower &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;conversion limit (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span><span class="si">}</span><span class="s2">).&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnitsException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: Input greater than upper &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;conversion limit (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span><span class="si">}</span><span class="s2">).&quot;</span>
+            <span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_eng_to_phys</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">valid_results</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_post_eng_to_phys</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># This will not occur for our existing NullUnitConv,</span>
+            <span class="c1"># PchipUintConv, and PolyUnitConv classes.</span>
+            <span class="k">raise</span> <span class="n">UnitsException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: No corresponding physics value exists.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_results</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># This will not occur for our existing NullUnitConv,</span>
+            <span class="c1"># PchipUintConv, and PolyUnitConv classes.</span>
+            <span class="k">raise</span> <span class="n">UnitsException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: Multiple corresponding physics values (</span><span class="si">{</span><span class="n">valid_results</span><span class="si">}</span><span class="s2">).&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">valid_results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">_raw_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to be implemented by child classes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (float): The physics value to be converted to engineering</span>
+<span class="sd">                            units.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: No phys-to-eng conversion provided&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UnitConv.phys_to_eng"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.phys_to_eng">[docs]</a>    <span class="k">def</span> <span class="nf">phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function that does the unit conversion.</span>
+
+<span class="sd">        Conversion from physics to engineering units. An additional function</span>
+<span class="sd">        may be cast on the initial conversion.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (float): Value to be converted from physics to engineering</span>
+<span class="sd">                            units.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The result value.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            UnitsException: If the conversion is invalid; i.e. if there are no</span>
+<span class="sd">                            solutions, or multiple, within conversion limits.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">adjusted_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_phys_to_eng</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_phys_to_eng</span><span class="p">(</span><span class="n">adjusted_value</span><span class="p">)</span>
+
+        <span class="n">valid_results</span> <span class="o">=</span> <span class="n">results</span><span class="p">[:]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">valid_results</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">valid_results</span> <span class="k">if</span> <span class="n">r</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">valid_results</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">valid_results</span> <span class="k">if</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnitsException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: None of conversion results </span><span class="si">{</span><span class="n">results</span><span class="si">}</span><span class="s2"> within &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;conversion limits (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span><span class="si">}</span><span class="s2">).&quot;</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_results</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnitsException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: There are multiple &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;corresponding engineering values (</span><span class="si">{</span><span class="n">valid_results</span><span class="si">}</span><span class="s2">).&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">valid_results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="UnitConv.convert"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert between two different unit types and check the validity of</span>
+<span class="sd">        the result.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (float): the value to be converted</span>
+<span class="sd">            origin (str): pytac.ENG or pytac.PHYS</span>
+<span class="sd">            target (str): pytac.ENG or pytac.PHYS</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The resulting value.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            UnitsException: If the conversion is invalid; i.e. if there are no</span>
+<span class="sd">                             solutions, or multiple, within conversion limits.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">origin</span> <span class="o">==</span> <span class="n">target</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">elif</span> <span class="n">origin</span> <span class="o">==</span> <span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span> <span class="ow">and</span> <span class="n">target</span> <span class="o">==</span> <span class="n">pytac</span><span class="o">.</span><span class="n">PHYS</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eng_to_phys</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">origin</span> <span class="o">==</span> <span class="n">pytac</span><span class="o">.</span><span class="n">PHYS</span> <span class="ow">and</span> <span class="n">target</span> <span class="o">==</span> <span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">phys_to_eng</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnitsException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: Conversion from </span><span class="si">{</span><span class="n">origin</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2"> not understood.&quot;</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="UnitConv.set_conversion_limits"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_conversion_limits">[docs]</a>    <span class="k">def</span> <span class="nf">set_conversion_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_limit</span><span class="p">,</span> <span class="n">upper_limit</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Conversion limits to be applied before or after a conversion take</span>
+<span class="sd">        place. Limits should be set in in engineering units.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lower_limit (float): the lower conversion limit</span>
+<span class="sd">            upper_limit (float): the upper conversion limit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">lower_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">upper_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">lower_limit</span> <span class="o">&gt;=</span> <span class="n">upper_limit</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Lower conversion limit (</span><span class="si">{</span><span class="n">lower_limit</span><span class="si">}</span><span class="s2">) must be less &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;than the upper limit (</span><span class="si">{</span><span class="n">upper_limit</span><span class="si">}</span><span class="s2">).&quot;</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span> <span class="o">=</span> <span class="n">lower_limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span> <span class="o">=</span> <span class="n">upper_limit</span></div>
+
+<div class="viewcode-block" id="UnitConv.get_conversion_limits"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.get_conversion_limits">[docs]</a>    <span class="k">def</span> <span class="nf">get_conversion_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the current conversion limits in the specified unit type.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            units:</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: the conversion limits in the desired unit type,</span>
+<span class="sd">                   format: [lower_limit, upper_limit]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">units</span> <span class="o">==</span> <span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">units</span> <span class="o">==</span> <span class="n">pytac</span><span class="o">.</span><span class="n">PHYS</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span><span class="p">,</span> <span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="p">,</span> <span class="n">pytac</span><span class="o">.</span><span class="n">PHYS</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span><span class="p">,</span> <span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="p">,</span> <span class="n">pytac</span><span class="o">.</span><span class="n">PHYS</span><span class="p">),</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnitsException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: Unit type </span><span class="si">{</span><span class="n">units</span><span class="si">}</span><span class="s2"> not understood.&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="PolyUnitConv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.PolyUnitConv">[docs]</a><span class="k">class</span> <span class="nc">PolyUnitConv</span><span class="p">(</span><span class="n">UnitConv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Linear interpolation for converting between physics and engineering</span>
+<span class="sd">    units.</span>
+
+<span class="sd">    **Attributes:**</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        p (poly1d): A one-dimensional polynomial of coefficients.</span>
+<span class="sd">        name (str): An identifier for the unit conversion object.</span>
+<span class="sd">        eng_units (str): The unit type of the post conversion engineering</span>
+<span class="sd">                          value.</span>
+<span class="sd">        phys_units (str): The unit type of the post conversion physics value.</span>
+
+<span class="sd">    .. Private Attributes:</span>
+<span class="sd">           _post_eng_to_phys (function): Function to be applied after the</span>
+<span class="sd">                                         initial conversion.</span>
+<span class="sd">           _pre_phys_to_eng (function): Function to be applied before the</span>
+<span class="sd">                                         initial conversion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">coef</span><span class="p">,</span>
+        <span class="n">post_eng_to_phys</span><span class="o">=</span><span class="n">unit_function</span><span class="p">,</span>
+        <span class="n">pre_phys_to_eng</span><span class="o">=</span><span class="n">unit_function</span><span class="p">,</span>
+        <span class="n">engineering_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">physics_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            coef (array-like): The polynomial&#39;s coefficients, in decreasing</span>
+<span class="sd">                                powers.</span>
+<span class="sd">            post_eng_to_phys (float): The value after conversion between ENG</span>
+<span class="sd">                                       and PHYS.</span>
+<span class="sd">            pre_eng_to_phys (float): The value before conversion.</span>
+<span class="sd">            engineering_units (str): The unit type of the post conversion</span>
+<span class="sd">                                      engineering value.</span>
+<span class="sd">            physics_units (str): The unit type of the post conversion physics</span>
+<span class="sd">                                  value.</span>
+<span class="sd">            name (str): An identifier for the unit conversion object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">post_eng_to_phys</span><span class="p">,</span> <span class="n">pre_phys_to_eng</span><span class="p">,</span> <span class="n">engineering_units</span><span class="p">,</span> <span class="n">physics_units</span><span class="p">,</span> <span class="n">name</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">coef</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_raw_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eng_value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert between engineering and physics units.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            eng_value (float): The engineering value to be converted to physics</span>
+<span class="sd">                                units.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: Containing the converted physics value from the given</span>
+<span class="sd">                    engineering value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">(</span><span class="n">eng_value</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">_raw_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physics_value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert between physics and engineering units.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            physics_value (float): The physics value to be converted to</span>
+<span class="sd">                                    engineering units.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: Containing all posible real engineering values converted</span>
+<span class="sd">                   from the given physics value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">roots</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">-</span> <span class="n">physics_value</span><span class="p">)</span><span class="o">.</span><span class="n">roots</span><span class="p">)</span>  <span class="c1"># remove duplicates</span>
+        <span class="n">valid_roots</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">root</span> <span class="ow">in</span> <span class="n">roots</span><span class="p">:</span>  <span class="c1"># remove imaginary roots</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">complexfloating</span><span class="p">):</span>
+                <span class="n">valid_roots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">valid_roots</span></div>
+
+
+<div class="viewcode-block" id="PchipUnitConv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.PchipUnitConv">[docs]</a><span class="k">class</span> <span class="nc">PchipUnitConv</span><span class="p">(</span><span class="n">UnitConv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Piecewise Cubic Hermite Interpolating Polynomial unit conversion.</span>
+
+<span class="sd">    **Attributes:**</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        x (list): A list of points on the x axis. These must be in increasing</span>
+<span class="sd">                   order for the interpolation to work. Otherwise, a ValueError</span>
+<span class="sd">                   is raised.</span>
+<span class="sd">        y (list): A list of points on the y axis. These must be in increasing</span>
+<span class="sd">                   or decreasing order. Otherwise, a ValueError is raised.</span>
+<span class="sd">        pp (PchipInterpolator): A pchip one-dimensional monotonic cubic</span>
+<span class="sd">                                 interpolation of points on both x and y axes.</span>
+
+<span class="sd">        name (str): An identifier for the unit conversion object.</span>
+<span class="sd">        eng_units (str): The unit type of the post conversion engineering</span>
+<span class="sd">                          value.</span>
+<span class="sd">        phys_units (str): The unit type of the post conversion physics value.</span>
+
+<span class="sd">    .. Private Attributes:</span>
+<span class="sd">           _post_eng_to_phys (function): Function to be applied after the</span>
+<span class="sd">                                         initial conversion.</span>
+<span class="sd">           _pre_phys_to_eng (function): Function to be applied before the</span>
+<span class="sd">                                         initial conversion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">,</span>
+        <span class="n">post_eng_to_phys</span><span class="o">=</span><span class="n">unit_function</span><span class="p">,</span>
+        <span class="n">pre_phys_to_eng</span><span class="o">=</span><span class="n">unit_function</span><span class="p">,</span>
+        <span class="n">engineering_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">physics_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            x (list): A list of points on the x axis. These must be in</span>
+<span class="sd">                       increasing order for the interpolation to work.</span>
+<span class="sd">                       Otherwise, a ValueError is raised.</span>
+<span class="sd">            y (list): A list of points on the y axis. These must be in</span>
+<span class="sd">                       increasing or decreasing order. Otherwise, a ValueError</span>
+<span class="sd">                       is raised.</span>
+<span class="sd">            engineering_units (str): The unit type of the post conversion</span>
+<span class="sd">                                      engineering value.</span>
+<span class="sd">            physics_units (str): The unit type of the post conversion physics</span>
+<span class="sd">                                  value.</span>
+<span class="sd">            name (str): An identifier for the unit conversion object.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if coefficients are not appropriately monotonic.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">post_eng_to_phys</span><span class="p">,</span> <span class="n">pre_phys_to_eng</span><span class="p">,</span> <span class="n">engineering_units</span><span class="p">,</span> <span class="n">physics_units</span><span class="p">,</span> <span class="n">name</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pp</span> <span class="o">=</span> <span class="n">PchipInterpolator</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="c1"># Set conversion limits to PChip bounds if they are not already set.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Note that the x coefficients are checked by the PchipInterpolator</span>
+        <span class="c1"># constructor.</span>
+        <span class="n">y_diff</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">y_diff</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">((</span><span class="n">y_diff</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)))):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;y coefficients must be monotonically increasing or decreasing.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_raw_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eng_value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert between engineering and physics units.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            eng_value (float): The engineering value to be converted to physics</span>
+<span class="sd">                                units.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            list: Containing the converted physics value from the given</span>
+<span class="sd">                    engineering value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="p">(</span><span class="n">eng_value</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">_raw_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physics_value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert between physics and engineering units.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            physics_value (float): The physics value to be converted to</span>
+<span class="sd">                                    engineering units.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: Containing all posible real engineering values converted</span>
+<span class="sd">                   from the given physics value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">val</span> <span class="o">-</span> <span class="n">physics_value</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">]</span>
+        <span class="n">new_pp</span> <span class="o">=</span> <span class="n">PchipInterpolator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">roots</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_pp</span><span class="o">.</span><span class="n">roots</span><span class="p">())</span>  <span class="c1"># remove duplicates</span>
+        <span class="n">valid_roots</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">root</span> <span class="ow">in</span> <span class="n">roots</span><span class="p">:</span>  <span class="c1"># remove imaginary roots</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">complexfloating</span><span class="p">):</span>
+                <span class="n">valid_roots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">valid_roots</span></div>
+
+
+<div class="viewcode-block" id="NullUnitConv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.NullUnitConv">[docs]</a><span class="k">class</span> <span class="nc">NullUnitConv</span><span class="p">(</span><span class="n">UnitConv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns input value without performing any conversions.</span>
+
+<span class="sd">    **Attributes:**</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        eng_units (str): The unit type of the post conversion engineering</span>
+<span class="sd">                          value.</span>
+<span class="sd">        phys_units (str): The unit type of the post conversion physics value.</span>
+
+<span class="sd">    .. Private Attributes:</span>
+<span class="sd">           _post_eng_to_phys (function): Always unit_function as no conversion</span>
+<span class="sd">                                          is performed.</span>
+<span class="sd">           _pre_phys_to_eng (function): Always unit_function as no conversion</span>
+<span class="sd">                                          is performed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engineering_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">physics_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            engineering_units (str): The unit type of the post conversion</span>
+<span class="sd">                                      engineering value.</span>
+<span class="sd">            physics_units (str): The unit type of the post conversion physics</span>
+<span class="sd">                                  value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">unit_function</span><span class="p">,</span> <span class="n">unit_function</span><span class="p">,</span> <span class="n">engineering_units</span><span class="p">,</span> <span class="n">physics_units</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_raw_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eng_value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Doesn&#39;t convert between engineering and physics units.</span>
+
+<span class="sd">        Maintains the same syntax as the other UnitConv classes for</span>
+<span class="sd">        compatibility, but does not perform any conversion.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            eng_value (float): The engineering value to be returned unchanged.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            list: Containing the unconverted given engineering value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">eng_value</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_raw_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Doesn&#39;t convert between physics and engineering units.</span>
+
+<span class="sd">        Maintains the same syntax as the other UnitConv classes for</span>
+<span class="sd">        compatibility, but does not perform any conversion.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            physics_value (float): The physics value to be returned unchanged.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: Containing the unconverted given physics value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">phys_value</span><span class="p">]</span></div>
+</pre></div>
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
