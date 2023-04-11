@@ -38,7 +38,7 @@ def test_get_multiple_calls_caget_correctly(cs):
 
 def test_set_single_calls_caput_correctly(cs):
     assert cs.set_single(SP_PV, 42) is True
-    caput.assert_called_with(SP_PV, 42, throw=True, timeout=1.0)
+    caput.assert_called_with(SP_PV, 42, throw=True, timeout=1.0, wait=False)
 
 
 def test_set_multiple_calls_caput_correctly(cs):
@@ -49,7 +49,9 @@ def test_set_multiple_calls_caput_correctly(cs):
     complete sucessfully.
     """
     cs.set_multiple([SP_PV, RB_PV], [42, 6])
-    caput.assert_called_with([SP_PV, RB_PV], [42, 6], throw=False, timeout=1.0)
+    caput.assert_called_with(
+        [SP_PV, RB_PV], [42, 6], throw=False, timeout=1.0, wait=False
+    )
 
 
 def test_get_multiple_raises_ControlSystemException(cs):
