@@ -1,0 +1,796 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Basic Tutorial &#8212; pytac 0.5.1.dev62+g2829f89 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user/tutorials/basic-tutorial';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://DiamondLightSource.github.io/pytac/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'main';
+        </script>
+    <link rel="shortcut icon" href="../../_static/dls-favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Run in a container" href="../how-to/run-container.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/dls-logo.svg" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../_static/dls-logo.svg" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+    <p class="title logo__title">pytac</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../index.html">
+                        User Guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../developer/index.html">
+                        Developer Guide
+                      </a>
+                    </li>
+                
+
+                <li class="nav-item">
+                  <a class="nav-link nav-external" href="https://github.com/DiamondLightSource/pytac/releases">
+                    Release Notes
+                  </a>
+                </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DiamondLightSource/pytac" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/pytac" title="PyPI" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fas fa-cube"></i></span>
+            <label class="sr-only">PyPI</label></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-bs-toggle="dropdown">
+      main  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../index.html">
+                        User Guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../developer/index.html">
+                        Developer Guide
+                      </a>
+                    </li>
+                
+
+                <li class="nav-item">
+                  <a class="nav-link nav-external" href="https://github.com/DiamondLightSource/pytac/releases">
+                    Release Notes
+                  </a>
+                </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DiamondLightSource/pytac" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/pytac" title="PyPI" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fas fa-cube"></i></span>
+            <label class="sr-only">PyPI</label></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-bs-toggle="dropdown">
+      main  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Basic Tutorial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">How-to Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../how-to/run-container.html">Run in a container</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Explanations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../explanations/what-is-pytac.html">Python Toolkit for Accelerator Controls</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../explanations/docs-structure.html">About the documentation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reference/api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../genindex.html">Index</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">Basic Tutorial</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="basic-tutorial">
+<h1>Basic Tutorial<a class="headerlink" href="#basic-tutorial" title="Permalink to this heading">#</a></h1>
+<p>In this tutorial we will go through some of the most common ways of using pytac.
+The aim is to give you an understanding of the interface and how to find out what
+is available.</p>
+<p>The import of the cothread channel access library and epicscorelibs will
+allow us to get some live values from the Diamond accelerators.</p>
+<blockquote>
+<div><p>$ pip install cothread epicscorelibs</p>
+</div></blockquote>
+<p>These docs are able to be run and tested, but may return different values as
+accelerator conditions will have changed.</p>
+<blockquote>
+<div><p>$ pytest docs</p>
+</div></blockquote>
+<section id="loading-the-lattice">
+<h2>Loading the lattice<a class="headerlink" href="#loading-the-lattice" title="Permalink to this heading">#</a></h2>
+<p>The central object in pytac is the <a class="reference internal" href="../reference/api.html#module-pytac.lattice" title="pytac.lattice"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">lattice</span></code></a>. It holds the information about
+all of the elements in the accelerator. All the data about the lattice and its
+elements is stored in CSV files inside the pytac repository. We use the <a class="reference internal" href="../reference/api.html#module-pytac.load_csv" title="pytac.load_csv"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">load_csv</span></code></a>
+module to load the data and initialise a <a class="reference internal" href="../reference/api.html#module-pytac.lattice" title="pytac.lattice"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">lattice</span></code></a> object; this is the normal
+starting point for using pytac.</p>
+<p>The “ring mode” describes one configuration of the elements in the lattice.
+There is one set of CSV files for each ring mode. So when we load the lattice,
+we specify the ring mode we want to load.</p>
+<p>At the time of writing the normal ring mode in use at Diamond is “I04”,
+so let’s load that:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pytac</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lattice</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">load_csv</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;I04&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The lattice object itself has some fields with its own properties:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lattice</span><span class="o">.</span><span class="n">get_fields</span><span class="p">()</span>
+<span class="go">{&#39;live&#39;: dict_keys([&#39;beam_current&#39;, &#39;emittance_x&#39;, &#39;emittance_y&#39;, &#39;tune_x&#39;, &#39;tune_y&#39;, &#39;s_position&#39;, &#39;energy&#39;])}</span>
+</pre></div>
+</div>
+<p>The name “live” is referring to the data source - Pytac can also be set up with
+additional data sources for simulation, but that isn’t described here.</p>
+<p>We can ask for the values of these fields. These commands will try to get the
+real values from the live machine (so won’t work if you’re not on a suitable
+Diamond network):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lattice</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;energy&quot;</span><span class="p">)</span>
+<span class="go">3000000000.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lattice</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;beam_current&quot;</span><span class="p">)</span>
+<span class="go">296.6981619696345</span>
+</pre></div>
+</div>
+</section>
+<section id="families-elements-and-fields">
+<h2>Families, elements and fields<a class="headerlink" href="#families-elements-and-fields" title="Permalink to this heading">#</a></h2>
+<p>The elements in the lattice are grouped by families, and this is the most common
+way to choose some to access. We can list the available families:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lattice</span><span class="o">.</span><span class="n">get_all_families</span><span class="p">()</span>
+<span class="go">[&#39;ap&#39;, &#39;aperture&#39;, &#39;bb&#39;, &#39;bbvmxl&#39;, &#39;bbvmxs&#39;, &#39;bend&#39;, &#39;bpm&#39;, &#39;bpm10&#39;, &#39;bump&#39;, &#39;bumpss&#39;, &#39;d054ba&#39;, &#39;d054bal&#39;, &#39;d09_1&#39;, &#39;d09_10&#39;, &#39;d09_12&#39;, &#39;d09_13&#39;, &#39;d09_14&#39;, &#39;d09_2&#39;, &#39;d09_3&#39;, &#39;d09_5&#39;, &#39;d09_6&#39;, &#39;d09_7&#39;, &#39;d09_8&#39;, &#39;d09_9&#39;, &#39;d104ba0&#39;, &#39;d104ba0r&#39;, &#39;d104ba1&#39;, &#39;d104baa&#39;, &#39;d104bab&#39;, &#39;d104bac&#39;, &#39;d104bad&#39;, &#39;d104bar&#39;, &#39;d10_1&#39;, &#39;d10_2&#39;, &#39;d10_3&#39;, &#39;d10_4&#39;, &#39;d10_5&#39;, &#39;d10_6&#39;, &#39;d10_7&#39;, &#39;d10_8&#39;, &#39;d10_9&#39;, &#39;d13_1&#39;, &#39;d13_10&#39;, &#39;d13_12&#39;, &#39;d13_13&#39;, &#39;d13_14&#39;, &#39;d13_2&#39;, &#39;d13_3&#39;, &#39;d13_5&#39;, &#39;d13_6&#39;, &#39;d13_7&#39;, &#39;d13_8&#39;, &#39;d13_9&#39;, &#39;d154bal&#39;, &#39;d154bar&#39;, &#39;d1a&#39;, &#39;d1aa&#39;, &#39;d1ab&#39;, &#39;d1d2&#39;, &#39;d1m4ba&#39;, &#39;d1m4bal1&#39;, &#39;d1m4bal2&#39;, &#39;d1s4ba&#39;, &#39;d1x&#39;, &#39;d1y&#39;, &#39;d1yad1ya&#39;, &#39;d1yb&#39;, &#39;d20_1&#39;, &#39;d20_2&#39;, &#39;d2a&#39;, &#39;d2b&#39;, &#39;d2b4ba&#39;, &#39;d2xl&#39;, &#39;d2xr&#39;, &#39;d2ya&#39;, &#39;d2yb&#39;, &#39;d2yc&#39;, &#39;d3a&#39;, &#39;d3aa&#39;, &#39;d3ab&#39;, &#39;d3b&#39;, &#39;d3b4ba&#39;, &#39;d3b4bar&#39;, &#39;d4a&#39;, &#39;d4aa&#39;, &#39;d4ab&#39;, &#39;d4b&#39;, &#39;d4b4ba0&#39;, &#39;d4ba&#39;, &#39;d4bb&#39;, &#39;d5b&#39;, &#39;d6b&#39;, &#39;d6b4ba0&#39;, &#39;d6ba&#39;, &#39;d6bb&#39;, &#39;dbpm&#39;, &#39;dhs4ba&#39;, &#39;dhs4bal1&#39;, &#39;dhs4bal2&#39;, &#39;dhs4bar1&#39;, &#39;dhs4bar2&#39;, &#39;dhs4bar3&#39;, &#39;di05&#39;, &#39;dk4bas20&#39;, &#39;dk4bas21&#39;, &#39;dk4bas22&#39;, &#39;dk4bas23&#39;, &#39;dlb4bal&#39;, &#39;dlb4bar&#39;, &#39;dlbm4ba0&#39;, &#39;dlbm4ba1&#39;, &#39;dlbm4bal1&#39;, &#39;dlbm4bal2&#39;, &#39;drbm4ba2&#39;, &#39;drbm4bal1&#39;, &#39;drbm4bal2&#39;, &#39;drbm4bar1&#39;, &#39;drbm4bar2&#39;, &#39;drift&#39;, &#39;drift_drift_s2a&#39;, &#39;drift_s2a&#39;, &#39;dsext&#39;, &#39;hchica&#39;, &#39;hpmu&#39;, &#39;hstr&#39;, &#39;htrim&#39;, &#39;hu64&#39;, &#39;kd1&#39;, &#39;mpw12&#39;, &#39;mpw15&#39;, &#39;mpw45&#39;, &#39;pad&#39;, &#39;q1ab&#39;, &#39;q1ad&#39;, &#39;q1b&#39;, &#39;q1be&#39;, &#39;q1d&#39;, &#39;q2ab&#39;, &#39;q2ad&#39;, &#39;q2b&#39;, &#39;q2be&#39;, &#39;q2d&#39;, &#39;q3b&#39;, &#39;q3d&#39;, &#39;q3e&#39;, &#39;q4e&#39;, &#39;qm09&#39;, &#39;qm13&#39;, &#39;quadrupole&#39;, &#39;rf&#39;, &#39;rfcavity&#39;, &#39;s1a&#39;, &#39;s1b&#39;, &#39;s1be&#39;, &#39;s1c&#39;, &#39;s1d&#39;, &#39;s2a&#39;, &#39;s2b&#39;, &#39;s2be&#39;, &#39;s2c&#39;, &#39;s2d&#39;, &#39;s3e&#39;, &#39;s4e&#39;, &#39;sextupole&#39;, &#39;shim&#39;, &#39;source&#39;, &#39;spacer&#39;, &#39;squad&#39;, &#39;tempdrift&#39;, &#39;u21&#39;, &#39;u23a&#39;, &#39;u23b&#39;, &#39;u27&#39;, &#39;ux&#39;, &#39;vstr&#39;, &#39;vtrim&#39;, &#39;wiggler&#39;]</span>
+</pre></div>
+</div>
+<p>Let’s get all the beam position monitors (BPMs). We do this by using get_elements
+which takes an argument for family name - in this case we use the family name “BPM”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bpms</span> <span class="o">=</span> <span class="n">lattice</span><span class="o">.</span><span class="n">get_elements</span><span class="p">(</span><span class="s1">&#39;BPM&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Got </span><span class="si">{}</span><span class="s2"> BPMs&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bpms</span><span class="p">)))</span>
+<span class="go">Got 173 BPMs</span>
+</pre></div>
+</div>
+<p>Let’s look at what we can find out about a single BPM.</p>
+<p>Each one has some fields:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">one_bpm</span> <span class="o">=</span> <span class="n">bpms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">one_bpm</span><span class="o">.</span><span class="n">get_fields</span><span class="p">()</span>
+<span class="go">{&#39;live&#39;: dict_keys([&#39;x&#39;, &#39;y&#39;, &#39;enabled&#39;, &#39;x_fofb_disabled&#39;, &#39;x_sofb_disabled&#39;, &#39;y_fofb_disabled&#39;, &#39;y_sofb_disabled&#39;])}</span>
+</pre></div>
+</div>
+<p>The fields represent a property of the BPM that can change. For example, x and y
+are the measured positions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">one_bpm</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="go">0.047219</span>
+</pre></div>
+</div>
+</section>
+<section id="devices">
+<h2>Devices<a class="headerlink" href="#devices" title="Permalink to this heading">#</a></h2>
+<p>Each field has a <a class="reference internal" href="../reference/api.html#module-pytac.device" title="pytac.device"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">device</span></code></a> object associated with it, which knows how to set and
+get the value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">one_bpm</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="go">&lt;pytac.device.EpicsDevice at 0x7f4290a71f10&gt;</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../reference/api.html#module-pytac.device" title="pytac.device"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">device</span></code></a> object knows the PV names for reading and writing the value of the
+field. Each field might have a “setpoint” or “readback” handle, which could be
+associated with different PV names.</p>
+<p>You can use either strings or pytac constants to specify which handle to use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">readback_pv</span> <span class="o">=</span> <span class="n">one_bpm</span><span class="o">.</span><span class="n">get_pv_name</span><span class="p">(</span><span class="s2">&quot;x_sofb_disabled&quot;</span><span class="p">,</span> <span class="s2">&quot;readback&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">same_readback_pv</span> <span class="o">=</span> <span class="n">one_bpm</span><span class="o">.</span><span class="n">get_pv_name</span><span class="p">(</span><span class="s2">&quot;x_sofb_disabled&quot;</span><span class="p">,</span> <span class="n">pytac</span><span class="o">.</span><span class="n">RB</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">readback_pv</span><span class="p">,</span> <span class="n">same_readback_pv</span><span class="p">)</span>
+<span class="go">SR01C-PC-HBPM-01:SLOW:DISABLED SR01C-PC-HBPM-01:SLOW:DISABLED</span>
+</pre></div>
+</div>
+<p>Some fields are read-only, in which case there is no setpoint PV to get:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">one_bpm</span><span class="o">.</span><span class="n">get_pv_name</span><span class="p">(</span><span class="s2">&quot;x_sofb_disabled&quot;</span><span class="p">,</span> <span class="n">pytac</span><span class="o">.</span><span class="n">SP</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="go">Device SR01C-DI-EBPM-01 has no setpoint PV.</span>
+</pre></div>
+</div>
+<p>It’s not normally necessary to interact with the <a class="reference internal" href="../reference/api.html#module-pytac.device" title="pytac.device"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">device</span></code></a> directly; you can do
+most things through methods of the <a class="reference internal" href="../reference/api.html#module-pytac.element" title="pytac.element"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">element</span></code></a> or <a class="reference internal" href="../reference/api.html#module-pytac.lattice" title="pytac.lattice"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">lattice</span></code></a>. E.g. <code class="docutils literal notranslate"><span class="pre">element.get_value</span></code>
+above and <code class="docutils literal notranslate"><span class="pre">lattice.get_element_pv_names</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lattice</span><span class="o">.</span><span class="n">get_element_pv_names</span><span class="p">(</span><span class="s1">&#39;BPM&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;readback&#39;</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
+<span class="go">[&#39;SR01C-DI-EBPM-01:SA:Y&#39;, &#39;SR01C-DI-EBPM-02:SA:Y&#39;, &#39;SR01C-DI-EBPM-03:SA:Y&#39;, &#39;SR01C-DI-EBPM-04:SA:Y&#39;, &#39;SR01C-DI-EBPM-05:SA:Y&#39;, &#39;SR01C-DI-EBPM-06:SA:Y&#39;, &#39;SR01C-DI-EBPM-07:SA:Y&#39;, &#39;SR02C-DI-EBPM-01:SA:Y&#39;, &#39;SR02C-DI-EBPM-02:SA:Y&#39;, &#39;SR02C-DI-EBPM-03:SA:Y&#39;]</span>
+</pre></div>
+</div>
+</section>
+<section id="unit-conversions">
+<h2>Unit conversions<a class="headerlink" href="#unit-conversions" title="Permalink to this heading">#</a></h2>
+<p>Many fields can be represented in either engineering units or physics units.
+For example, for a magnet field, the physics unit would be the field strength
+and the engineering unit would be the current applied by the magnet power supply
+controller:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get a corrector magnet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corrector</span> <span class="o">=</span> <span class="n">lattice</span><span class="o">.</span><span class="n">get_elements</span><span class="p">(</span><span class="s2">&quot;HSTR&quot;</span><span class="p">)[</span><span class="mi">5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Request</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corrector</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;x_kick&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="p">)</span>
+<span class="go">-3.0552401542663574</span>
+</pre></div>
+</div>
+<p>In order to get the unit itself, we have to ask for the <code class="docutils literal notranslate"><span class="pre">unitconv</span></code> object associated
+with the field:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">corrector</span><span class="o">.</span><span class="n">get_unitconv</span><span class="p">(</span><span class="s2">&quot;x_kick&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">eng_units</span>
+<span class="go">&#39;A&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="magnet-fields">
+<h2>Magnet fields<a class="headerlink" href="#magnet-fields" title="Permalink to this heading">#</a></h2>
+<p>This seems like a good time to talk about the names for the magnetic fields of magnets.</p>
+<p>In accelerator physics we refer to the different components of magnetic fields
+as a<sub>n</sub> for vertical fields and b<sub>n</sub> for horizontal fields, where n is:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>n</p></th>
+<th class="head"><p>Field</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>Dipole</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>Quadrupole</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>Sextupole</p></td>
+</tr>
+<tr class="row-odd"><td><p>…</p></td>
+<td><p>…</p></td>
+</tr>
+</tbody>
+</table>
+<p>These names are used for the <code class="docutils literal notranslate"><span class="pre">field</span></code>s associated with magnet <a class="reference internal" href="../reference/api.html#module-pytac.element" title="pytac.element"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">element</span></code></a>s in pytac.</p>
+<p>For corrector magnets, although the corrector field acts like a dipole, it is given
+the name <code class="docutils literal notranslate"><span class="pre">x_kick</span></code> or <code class="docutils literal notranslate"><span class="pre">y_kick</span></code> so that it can be easily distinguished. An example
+of this is when several magnets are combined into the same <a class="reference internal" href="../reference/api.html#module-pytac.element" title="pytac.element"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">element</span></code></a>. The following
+example shows an element which combines a corrector, a skew quadrupole and a
+sextupole:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">an_element</span> <span class="o">=</span> <span class="n">lattice</span><span class="o">.</span><span class="n">get_elements</span><span class="p">(</span><span class="s2">&quot;HSTR&quot;</span><span class="p">)[</span><span class="mi">12</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fields:&quot;</span><span class="p">,</span> <span class="n">an_element</span><span class="o">.</span><span class="n">get_fields</span><span class="p">())</span>
+<span class="go">Fields: {&#39;live&#39;: dict_keys([&#39;b2&#39;, &#39;x_kick&#39;, &#39;h_fofb_disabled&#39;, &#39;h_sofb_disabled&#39;, &#39;y_kick&#39;, &#39;v_fofb_disabled&#39;, &#39;v_sofb_disabled&#39;, &#39;a1&#39;])}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Families:&quot;</span><span class="p">,</span> <span class="n">an_element</span><span class="o">.</span><span class="n">families</span><span class="p">)</span>
+<span class="go">Families: [&#39;hstr&#39;, &#39;s4e&#39;, &#39;sextupole&#39;, &#39;squad&#39;, &#39;vstr&#39;]</span>
+</pre></div>
+</div>
+</section>
+<section id="other-methods-of-thr-lattice">
+<h2>Other methods of thr lattice<a class="headerlink" href="#other-methods-of-thr-lattice" title="Permalink to this heading">#</a></h2>
+<p>To finish off for now, let’s look at some more of the methods of the <a class="reference internal" href="../reference/api.html#module-pytac.lattice" title="pytac.lattice"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">lattice</span></code></a></p>
+<p><code class="docutils literal notranslate"><span class="pre">lattice.get_element_values</span></code> lets you get all the live values for a field from a
+while family of elements. E.g. the currents for the horizontal corrector magnets.
+There is also an analogous command <code class="docutils literal notranslate"><span class="pre">lattice.set_element_values</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lattice</span><span class="o">.</span><span class="n">get_element_values</span><span class="p">(</span><span class="s2">&quot;HSTR&quot;</span><span class="p">,</span> <span class="s2">&quot;x_kick&quot;</span><span class="p">,</span> <span class="s2">&quot;readback&quot;</span><span class="p">)</span>
+<span class="go">[-0.24839822947978973,</span>
+<span class="go">0.7639292478561401,</span>
+<span class="go">-0.4572945237159729,</span>
+<span class="go">-0.1370551735162735,</span>
+<span class="go">0.6560376882553101,</span>
+<span class="go">-3.0552401542663574,</span>
+<span class="go">3.0576119422912598,</span>
+<span class="go">0.6859914660453796,</span>
+<span class="go">-0.8835821747779846,</span>
+<span class="go">0.37336450815200806,</span>
+<span class="go">-0.397186279296875,</span>
+<span class="go">-0.3592968285083771,</span>
+<span class="go">1.5479310750961304,</span>
+<span class="go">-0.2497788667678833,</span>
+<span class="go">-0.3833305537700653,</span>
+<span class="go">0.04267336428165436,</span>
+<span class="go">0.387008398771286,</span>
+<span class="go">2.083509922027588,</span>
+<span class="go">-2.213555335998535,</span>
+<span class="go">2.316075086593628,</span>
+<span class="go">-1.2140284776687622,</span>
+<span class="go">0.4225691556930542,</span>
+<span class="go">-0.3863433301448822,</span>
+<span class="go">0.1559593677520752,</span>
+<span class="go">2.3147804737091064,</span>
+<span class="gp">...</span>
+<span class="go">2.295074939727783,</span>
+<span class="go">-0.5442541241645813,</span>
+<span class="go">-1.0026730298995972,</span>
+<span class="go">0.33420810103416443,</span>
+<span class="go">-0.2033674269914627]</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="../reference/api.html#pytac.element.Element.s" title="pytac.element.Element.s"><code class="xref any py py-attr docutils literal notranslate"><span class="pre">s</span></code></a> position is the position of an element in metres around the ring.</p>
+<p>There is a method to get the <a class="reference internal" href="../reference/api.html#pytac.element.Element.s" title="pytac.element.Element.s"><code class="xref any py py-attr docutils literal notranslate"><span class="pre">s</span></code></a> positions of all elements in a family:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lattice</span><span class="o">.</span><span class="n">get_family_s</span><span class="p">(</span><span class="s2">&quot;BPM&quot;</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
+<span class="go">[4.38,</span>
+<span class="go">8.806500000000002,</span>
+<span class="go">11.374000000000002,</span>
+<span class="go">12.559000000000005,</span>
+<span class="go">14.942500000000006,</span>
+<span class="go">18.005000000000003,</span>
+<span class="go">21.270000000000003,</span>
+<span class="go">26.93,</span>
+<span class="go">30.360759,</span>
+<span class="go">32.076129]</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="installation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Installation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../how-to/run-container.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Run in a container</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-the-lattice">Loading the lattice</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#families-elements-and-fields">Families, elements and fields</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#devices">Devices</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-conversions">Unit conversions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#magnet-fields">Magnet fields</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-methods-of-thr-lattice">Other methods of thr lattice</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/DiamondLightSource/pytac/edit/main/docs/user/tutorials/basic-tutorial.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/user/tutorials/basic-tutorial.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
