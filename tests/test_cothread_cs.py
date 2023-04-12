@@ -15,13 +15,13 @@ from pytac.cothread_cs import CothreadControlSystem
 
 @pytest.fixture
 def cs():
-    return CothreadControlSystem()
+    return CothreadControlSystem(wait=True, timeout=2.0)
 
 
 def test_get_single_calls_caget_correctly(cs):
     caget.return_value = 42
     assert cs.get_single(RB_PV) == 42
-    caget.assert_called_with(RB_PV, throw=True, timeout=1.0)
+    caget.assert_called_with(RB_PV, throw=True, timeout=2.0)
 
 
 def test_get_multiple_calls_caget_correctly(cs):
@@ -33,12 +33,12 @@ def test_get_multiple_calls_caget_correctly(cs):
     """
     caget.return_value = [42, 6]
     assert cs.get_multiple([RB_PV, SP_PV]) == [42, 6]
-    caget.assert_called_with([RB_PV, SP_PV], throw=False, timeout=1.0)
+    caget.assert_called_with([RB_PV, SP_PV], throw=False, timeout=2.0)
 
 
 def test_set_single_calls_caput_correctly(cs):
     assert cs.set_single(SP_PV, 42) is True
-    caput.assert_called_with(SP_PV, 42, throw=True, timeout=1.0)
+    caput.assert_called_with(SP_PV, 42, throw=True, timeout=2.0, wait=True)
 
 
 def test_set_multiple_calls_caput_correctly(cs):
@@ -49,7 +49,9 @@ def test_set_multiple_calls_caput_correctly(cs):
     complete sucessfully.
     """
     cs.set_multiple([SP_PV, RB_PV], [42, 6])
-    caput.assert_called_with([SP_PV, RB_PV], [42, 6], throw=False, timeout=1.0)
+    caput.assert_called_with(
+        [SP_PV, RB_PV], [42, 6], throw=False, timeout=2.0, wait=True
+    )
 
 
 def test_get_multiple_raises_ControlSystemException(cs):
