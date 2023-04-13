@@ -385,7 +385,7 @@ class Lattice:
                                   numpy array of the specified type.
 
         Returns:
-            list or numpy.array: The requested values.
+            Union(list, numpy.ndarray): The requested values.
         """
         elements = self.get_elements(family)
         values = [
@@ -411,7 +411,7 @@ class Lattice:
         Args:
             family (str): family of elements on which to set values.
             field (str):  field to set values for.
-            values (sequence): A list of values to assign.
+            values (typing.Sequence): A list of values to assign.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
             throw (bool): On failure, if True raise ControlSystemException, if
@@ -507,7 +507,7 @@ class Lattice:
         Args:
             family (str): the family of elements which the values belong to.
             field (str): the field on the elements which the values are from.
-            values (sequence): values to be converted.
+            values (typing.Sequence): values to be converted.
             origin (str): pytac.ENG or pytac.PHYS.
             target (str): pytac.ENG or pytac.PHYS.
         """
@@ -627,7 +627,7 @@ class EpicsLattice(Lattice):
                                   numpy array of the specified type.
 
         Returns:
-            list or numpy.array: The requested values.
+            Union(list, numpy.ndarray): The requested values.
         """
         if data_source == pytac.DEFAULT:
             data_source = self.get_default_data_source()
@@ -663,7 +663,7 @@ class EpicsLattice(Lattice):
         Args:
             family (str): family of elements on which to set values.
             field (str):  field to set values for.
-            values (sequence): A list of values to assign.
+            values (typing.Sequence): A list of values to assign.
             units (str): pytac.ENG or pytac.PHYS.
             data_source (str): pytac.LIVE or pytac.SIM.
             throw (bool): On failure: if True, raise ControlSystemException: if

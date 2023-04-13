@@ -28,7 +28,7 @@ def get_div_rigidity(energy):
         energy (int): the energy of the lattice.
 
     Returns:
-        function: div rigidity.
+        typing.Callable[[int], float]: div rigidity.
     """
     rigidity = get_rigidity(energy)
 
@@ -44,7 +44,7 @@ def get_mult_rigidity(energy):
         energy (int): the energy of the lattice.
 
     Returns:
-        function: mult rigidity.
+        typing.Callable[[int], float]: mult rigidity.
     """
     rigidity = get_rigidity(energy)
 

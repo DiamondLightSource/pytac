@@ -14,7 +14,7 @@ class ControlSystem(object):
         """Get the value of a given PV.
 
         Args:
-            pv (string): PV to get the value of.
+            pv (str): PV to get the value of.
                          readback or a setpoint PV.
             throw (bool): On failure: if True, raise ControlSystemException; if
                            False, return None and log a warning.
@@ -31,7 +31,7 @@ class ControlSystem(object):
         """Get the value for given PVs.
 
         Args:
-            pvs (sequence): PVs to get values of.
+            pvs (typing.Sequence): PVs to get values of.
             throw (bool): On failure: if True, raise ControlSystemException; if
                            False, None will be returned for any PV that fails
                            and a warning will be logged.
@@ -48,7 +48,7 @@ class ControlSystem(object):
         """Set the value of a given PV.
 
         Args:
-            pv (string): The PV to set the value of.
+            pv (str): The PV to set the value of.
             value (object): The value to set the PV to.
             throw (bool): On failure: if True, raise ControlSystemException: if
                            False, log a warning.
@@ -62,8 +62,8 @@ class ControlSystem(object):
         """Set the values for given PVs.
 
         Args:
-            pvs (sequence): PVs to set the values of.
-            values (sequence): values to set no the PVs.
+            pvs (typing.Sequence): PVs to set the values of.
+            values (typing.Sequence): values to set no the PVs.
             throw (bool): On failure, if True raise ControlSystemException, if
                            False return a list of True and False values
                            corresponding to successes and failures and log a

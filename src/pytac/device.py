@@ -96,7 +96,7 @@ class SimpleDevice(Device):
                            used, only supported to conform with the base class.
 
         Returns:
-            numeric: the value of the device.
+            Union(float, int): the value of the device.
         """
         return self._value
 
@@ -104,7 +104,7 @@ class SimpleDevice(Device):
         """Set the value on the device.
 
         Args:
-            value (numeric): the value to set.
+            value (Union(float, int)): the value to set.
             throw (bool): Irrelevant in this case as a control system is not
                            used, only supported to conform with the base class.
         """
@@ -130,7 +130,7 @@ class EpicsDevice(Device):
     .. Private Attributes:
            _cs (ControlSystem): The control system object used to get and set
                                  the value of a PV.
-           _enabled (bool-like): Whether the device is enabled. May be a
+           _enabled (Union(bool, PvEnabler)): Whether the device is enabled. May be a
                                   PvEnabler object.
     """
 
@@ -140,7 +140,7 @@ class EpicsDevice(Device):
             name (str): The prefix of EPICS PV for this device.
             cs (ControlSystem): The control system object used to get and set
                                  the value of a PV.
-            enabled (bool-like): Whether the device is enabled. May be a
+            enabled (Union(bool, PvEnabler)): Whether the device is enabled. May be a
                                   PvEnabler object.
             rb_pv (str): The EPICS readback PV.
             sp_pv (str): The EPICS setpoint PV.

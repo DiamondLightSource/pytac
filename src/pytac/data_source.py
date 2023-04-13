@@ -21,7 +21,7 @@ class DataSource(object):
         """Get all the fields represented by this data source.
 
         Returns:
-            iterable: all fields.
+            typing.Iterable: all fields.
         """
         raise NotImplementedError()
 

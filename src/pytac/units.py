@@ -39,10 +39,10 @@ class UnitConv:
         phys_units (str): The unit type of the post conversion physics value.
 
     .. Private Attributes:
-           _post_eng_to_phys (function): Function to be applied after the
-                                         initial conversion.
-           _pre_phys_to_eng (function): Function to be applied before the
-                                         initial conversion.
+           _post_eng_to_phys (typing.Callable[[float], float]): Function to be applied
+                after the initial conversion.
+           _pre_phys_to_eng (typing.Callable[[float], float]): Function to be applied
+                before the initial conversion.
     """
 
     def __init__(
@@ -55,10 +55,10 @@ class UnitConv:
     ):
         """
         Args:
-            post_eng_to_phys (function): Function to be applied after the
-                                          initial conversion.
-            pre_phys_to_eng (function): Function to be applied before the
-                                         initial conversion.
+            post_eng_to_phys (typing.Callable[[float], float]): Function to be applied
+                after the initial conversion.
+            pre_phys_to_eng (typing.Callable[[float], float]): Function to be applied
+                before the initial conversion.
             engineering_units (str): The unit type of the post conversion
                                       engineering value.
             physics_units (str): The unit type of the post conversion physics
@@ -85,8 +85,8 @@ class UnitConv:
         """Set the function to be applied after the initial conversion.
 
         Args:
-            post_eng_to_phys (function): Function to be applied after the
-                                          initial conversion.
+            post_eng_to_phys (typing.Callable[[float], float]): Function to be applied
+                after the initial conversion.
         """
         self._post_eng_to_phys = post_eng_to_phys
 
@@ -94,8 +94,8 @@ class UnitConv:
         """Set the function to be applied before the initial conversion.
 
         Args:
-            pre_phys_to_eng (function): Function to be applied before the
-                                         initial conversion.
+            pre_phys_to_eng (typing.Callable[[float], float]): Function to be applied
+                before the initial conversion.
         """
         self._pre_phys_to_eng = pre_phys_to_eng
 
@@ -275,10 +275,10 @@ class PolyUnitConv(UnitConv):
         phys_units (str): The unit type of the post conversion physics value.
 
     .. Private Attributes:
-           _post_eng_to_phys (function): Function to be applied after the
-                                         initial conversion.
-           _pre_phys_to_eng (function): Function to be applied before the
-                                         initial conversion.
+           _post_eng_to_phys (typing.Callable[[float], float]): Function to be applied
+                after the initial conversion.
+           _pre_phys_to_eng (typing.Callable[[float], float]): Function to be applied
+                before the initial conversion.
     """
 
     def __init__(
@@ -292,8 +292,8 @@ class PolyUnitConv(UnitConv):
     ):
         """
         Args:
-            coef (array-like): The polynomial's coefficients, in decreasing
-                                powers.
+            coef (numpy.ndarray[typing.Any, numpy.dtype[numpy.generic]]): The
+                polynomial's coefficients, in decreasing powers.
             post_eng_to_phys (float): The value after conversion between ENG
                                        and PHYS.
             pre_eng_to_phys (float): The value before conversion.
@@ -360,10 +360,10 @@ class PchipUnitConv(UnitConv):
         phys_units (str): The unit type of the post conversion physics value.
 
     .. Private Attributes:
-           _post_eng_to_phys (function): Function to be applied after the
-                                         initial conversion.
-           _pre_phys_to_eng (function): Function to be applied before the
-                                         initial conversion.
+           _post_eng_to_phys (typing.Callable[[float], float]): Function to be applied
+                after the initial conversion.
+           _pre_phys_to_eng (typing.Callable[[float], float]): Function to be applied
+                before the initial conversion.
     """
 
     def __init__(
@@ -456,10 +456,10 @@ class NullUnitConv(UnitConv):
         phys_units (str): The unit type of the post conversion physics value.
 
     .. Private Attributes:
-           _post_eng_to_phys (function): Always unit_function as no conversion
-                                          is performed.
-           _pre_phys_to_eng (function): Always unit_function as no conversion
-                                          is performed.
+           _post_eng_to_phys (typing.Callable[[float], float]): Always unit_function as
+                no conversion is performed.
+           _pre_phys_to_eng (typing.Callable[[float], float]): Always unit_function as
+                no conversion is performed.
     """
 
     def __init__(self, engineering_units="", physics_units=""):
