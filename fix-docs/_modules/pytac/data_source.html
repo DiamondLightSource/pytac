@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 
 
@@ -8,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pytac.data_source &#8212; pytac 0.6.1.dev1+g7939f6b documentation</title>
+    <title>pytac.data_source &#8212; pytac 0.6.1.dev4+g5b93322 documentation</title>
   
   
   
@@ -28,21 +27,21 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/documentation_options.js?v=b3283424"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=30646c52"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pytac/data_source';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://DiamondLightSource.github.io/pytac/switcher.json';
@@ -417,105 +416,124 @@ document.write(`
                   
   <h1>Source code for pytac.data_source</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Module containing pytac data source classes.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">_collections_abc</span> <span class="kn">import</span> <span class="n">KeysView</span>
+
 <span class="kn">import</span> <span class="nn">pytac</span>
+<span class="kn">from</span> <span class="nn">pytac.device</span> <span class="kn">import</span> <span class="n">Device</span>
 <span class="kn">from</span> <span class="nn">pytac.exceptions</span> <span class="kn">import</span> <span class="n">DataSourceException</span><span class="p">,</span> <span class="n">FieldException</span>
+<span class="kn">from</span> <span class="nn">pytac.units</span> <span class="kn">import</span> <span class="n">UnitConv</span>
 
 
-<div class="viewcode-block" id="DataSource"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSource">[docs]</a><span class="k">class</span> <span class="nc">DataSource</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="DataSource">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSource">[docs]</a>
+<span class="k">class</span> <span class="nc">DataSource</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base class for element or lattice data sources.</span>
 
 <span class="sd">    Typically an instance would represent hardware via a control system,</span>
 <span class="sd">    or a simulation.</span>
-
-<span class="sd">    **Attributes:**</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        units (str): pytac.PHYS or pytac.ENG.</span>
-
-<span class="sd">    **Methods:**</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DataSource.get_fields"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSource.get_fields">[docs]</a>    <span class="k">def</span> <span class="nf">get_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">units</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Units of DataSource in pytac.PHYS or pytac.ENG.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DataSource.get_fields">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSource.get_fields">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all the fields represented by this data source.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            typing.Iterable: all fields.</span>
+<span class="sd">            All fields.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="DataSource.get_value"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSource.get_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">throw</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DataSource.get_value">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSource.get_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handle</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a value for a field.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): field of the requested value.</span>
-<span class="sd">            handle (str): pytac.RB or pytac.SP</span>
-<span class="sd">            throw (bool): On failure: if True, raise ControlSystemException; if</span>
-<span class="sd">                           False, return None and log a warning.</span>
+<span class="sd">            field: field of the requested value.</span>
+<span class="sd">            handle: pytac.RB or pytac.SP</span>
+<span class="sd">            throw: On failure: if True, raise ControlSystemException; if False, None</span>
+<span class="sd">                will be returned for any PV that fails and a warning will be logged.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float: value for specified field and handle.</span>
+<span class="sd">            Value for specified field and handle.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="DataSource.set_value"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSource.set_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">throw</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DataSource.set_value">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSource.set_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set a value for a field.</span>
 
 <span class="sd">        This is always set to pytac.SP, never pytac.RB.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): field to set.</span>
-<span class="sd">            value (float): value to set.</span>
-<span class="sd">            throw (bool): On failure: if True, raise ControlSystemException: if</span>
-<span class="sd">                           False, log a warning.</span>
+<span class="sd">            field: field to set.</span>
+<span class="sd">            value: value to set.</span>
+<span class="sd">            throw: On failure: if True, raise ControlSystemException; if False, None</span>
+<span class="sd">                will be returned for any PV that fails and a warning will be logged.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+</div>
 
 
-<div class="viewcode-block" id="DataSourceManager"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager">[docs]</a><span class="k">class</span> <span class="nc">DataSourceManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DataSourceManager">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager">[docs]</a>
+<span class="k">class</span> <span class="nc">DataSourceManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that manages all the data sources and UnitConv objects associated</span>
 <span class="sd">    with a lattice or element.</span>
 
 <span class="sd">    It receives requests from a lattice or element object and directs them to</span>
 <span class="sd">    the correct data source. The unit conversion objects for all fields are</span>
 <span class="sd">    also held here.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        default_units (str): Holds the current default unit type, pytac.PHYS or</span>
-<span class="sd">                              pytac.ENG, for an element or lattice.</span>
-<span class="sd">        default_data_source (str): Holds the current default data source,</span>
-<span class="sd">                                    pytac.LIVE or pytac.SIM, for an element or</span>
-<span class="sd">                                    lattice.</span>
-
-<span class="sd">    .. Private Attributes:</span>
-<span class="sd">           _data_sources (dict): A dictionary of the data sources held.</span>
-<span class="sd">           _uc (dict): A dictionary of the unit conversion objects for each</span>
-<span class="sd">                        key(field).</span>
-
-<span class="sd">    **Methods:**</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data_sources</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_uc</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">default_units</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Holds the current default unit type, pytac.PHYS or pytac.ENG, for an element or</span>
+<span class="sd">        lattice.&quot;&quot;&quot;</span>
+    <span class="n">default_data_source</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Holds the current default data source, pytac.LIVE or pytac.SIM, for an element</span>
+<span class="sd">        or lattice.&quot;&quot;&quot;</span>
+
+    <span class="n">_data_sources</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DataSource</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A dictionary of the data sources held.&quot;&quot;&quot;</span>
+    <span class="n">_uc</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">UnitConv</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A dictionary of the unit conversion objects for each key(field).&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">default_units</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">default_data_source</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">LIVE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_sources</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_uc</span> <span class="o">=</span> <span class="p">{}</span>
 
-<div class="viewcode-block" id="DataSourceManager.set_data_source"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.set_data_source">[docs]</a>    <span class="k">def</span> <span class="nf">set_data_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_source</span><span class="p">,</span> <span class="n">data_source_type</span><span class="p">):</span>
+<div class="viewcode-block" id="DataSourceManager.set_data_source">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.set_data_source">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_data_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_source</span><span class="p">:</span> <span class="n">DataSource</span><span class="p">,</span> <span class="n">data_source_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a data source to the manager.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            data_source (DataSource): the data source to be set.</span>
-<span class="sd">            data_source_type (str): the type of the data source being set</span>
-<span class="sd">                                     pytac.LIVE or pytac.SIM.</span>
+<span class="sd">            data_source: the data source to be set.</span>
+<span class="sd">            data_source_type: the type of the data source being set</span>
+<span class="sd">                pytac.LIVE or pytac.SIM.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_sources</span><span class="p">[</span><span class="n">data_source_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_source</span></div>
 
-<div class="viewcode-block" id="DataSourceManager.get_data_source"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.get_data_source">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_source_type</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DataSourceManager.get_data_source">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.get_data_source">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_data_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_source_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataSource</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a data source.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            data_source_type (str): the type of the data source being set</span>
-<span class="sd">                                     pytac.LIVE or pytac.SIM.</span>
+<span class="sd">            data_source_type: the type of the data source being set</span>
+<span class="sd">                pytac.LIVE or pytac.SIM.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            DataSourceException: if there is no data source on the given field.</span>
@@ -527,21 +545,27 @@ document.write(`
                 <span class="sa">f</span><span class="s2">&quot;No data source </span><span class="si">{</span><span class="n">data_source_type</span><span class="si">}</span><span class="s2"> on manager </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="DataSourceManager.get_fields"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.get_fields">[docs]</a>    <span class="k">def</span> <span class="nf">get_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DataSourceManager.get_fields">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.get_fields">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all the fields defined on the manager.</span>
 
 <span class="sd">        Includes all fields defined by all data sources.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            dict: A dictionary of all the fields defined on the manager,</span>
-<span class="sd">                   separated by data source(key).</span>
+<span class="sd">            A dictionary of all the fields defined on the manager, separated by</span>
+<span class="sd">                data source(key).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">fields</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">data_source</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_sources</span><span class="p">:</span>
             <span class="n">fields</span><span class="p">[</span><span class="n">data_source</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_sources</span><span class="p">[</span><span class="n">data_source</span><span class="p">]</span><span class="o">.</span><span class="n">get_fields</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">fields</span></div>
 
-<div class="viewcode-block" id="DataSourceManager.add_device"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.add_device">[docs]</a>    <span class="k">def</span> <span class="nf">add_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">uc</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DataSourceManager.add_device">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.add_device">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Device</span><span class="p">,</span> <span class="n">uc</span><span class="p">:</span> <span class="n">UnitConv</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add device and unit conversion objects to a given field.</span>
 
 <span class="sd">        A DeviceDataSource must be set before calling this method, this</span>
@@ -549,10 +573,9 @@ document.write(`
 <span class="sd">        uses devices.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): The key to store the unit conversion and device</span>
-<span class="sd">                          objects.</span>
-<span class="sd">            device (Device): The device object used for this field.</span>
-<span class="sd">            uc (UnitConv): The unit conversion object used for this field.</span>
+<span class="sd">            field: The key to store the unit conversion and device objects.</span>
+<span class="sd">            device: The device object used for this field.</span>
+<span class="sd">            uc: The unit conversion object used for this field.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            DataSourceException: if no DeviceDataSource is set.</span>
@@ -560,7 +583,10 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">get_data_source</span><span class="p">(</span><span class="n">pytac</span><span class="o">.</span><span class="n">LIVE</span><span class="p">)</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_unitconv</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">uc</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DataSourceManager.get_device"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.get_device">[docs]</a>    <span class="k">def</span> <span class="nf">get_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DataSourceManager.get_device">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.get_device">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Device</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the device for the given field.</span>
 
 <span class="sd">        A DeviceDataSource must be set before calling this method, this</span>
@@ -568,21 +594,24 @@ document.write(`
 <span class="sd">        uses devices.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): The lookup key to find the device on the manager.</span>
+<span class="sd">            field: The lookup key to find the device on the manager.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Device: The device on the given field.</span>
+<span class="sd">            The device on the given field.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            DataSourceException: if no DeviceDataSource is set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_source</span><span class="p">(</span><span class="n">pytac</span><span class="o">.</span><span class="n">LIVE</span><span class="p">)</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">field</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DataSourceManager.get_unitconv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.get_unitconv">[docs]</a>    <span class="k">def</span> <span class="nf">get_unitconv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DataSourceManager.get_unitconv">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.get_unitconv">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_unitconv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnitConv</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the unit conversion option for the specified field.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): The field associated with this conversion.</span>
+<span class="sd">            field: The field associated with this conversion.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            UnitConv: The object associated with the specified field.</span>
@@ -597,16 +626,22 @@ document.write(`
                 <span class="sa">f</span><span class="s2">&quot;No unit conversion option for field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> on manager </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="DataSourceManager.set_unitconv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.set_unitconv">[docs]</a>    <span class="k">def</span> <span class="nf">set_unitconv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">uc</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DataSourceManager.set_unitconv">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.set_unitconv">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_unitconv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">uc</span><span class="p">:</span> <span class="n">UnitConv</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;set the unit conversion option for the specified field.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): The field associated with this conversion.</span>
-<span class="sd">            uc (UnitConv): The unit conversion object to be set.</span>
+<span class="sd">            field: The field associated with this conversion.</span>
+<span class="sd">            uc: The unit conversion object to be set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_uc</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">uc</span></div>
 
-<div class="viewcode-block" id="DataSourceManager.get_value"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.get_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span>
+
+<div class="viewcode-block" id="DataSourceManager.get_value">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.get_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">handle</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">RB</span><span class="p">,</span>
@@ -627,8 +662,8 @@ document.write(`
 <span class="sd">            handle: pytac.SP or pytac.RB.</span>
 <span class="sd">            units: pytac.ENG or pytac.PHYS returned.</span>
 <span class="sd">            data_source: pytac.LIVE or pytac.SIM.</span>
-<span class="sd">            throw: On failure: if True, raise ControlSystemException; if</span>
-<span class="sd">                           False, return None and log a warning.</span>
+<span class="sd">            throw: On failure: if True, raise ControlSystemException; if False, None</span>
+<span class="sd">                will be returned for any PV that fails and a warning will be logged.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The value of the requested field</span>
@@ -647,7 +682,10 @@ document.write(`
             <span class="n">value</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">data_source</span><span class="o">.</span><span class="n">units</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">units</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="DataSourceManager.set_value"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.set_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span>
+
+<div class="viewcode-block" id="DataSourceManager.set_value">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSourceManager.set_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -665,8 +703,8 @@ document.write(`
 <span class="sd">            value: The value to set.</span>
 <span class="sd">            units: pytac.ENG or pytac.PHYS.</span>
 <span class="sd">            data_source_type: pytac.LIVE or pytac.SIM.</span>
-<span class="sd">            throw: On failure: if True, raise ControlSystemException: if</span>
-<span class="sd">                           False, log a warning.</span>
+<span class="sd">            throw: On failure: if True, raise ControlSystemException; if False, None</span>
+<span class="sd">                will be returned for any PV that fails and a warning will be logged.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            HandleException: if the specified handle is not pytac.SP.</span>
@@ -681,93 +719,114 @@ document.write(`
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_unitconv</span><span class="p">(</span><span class="n">field</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span>
             <span class="n">value</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">units</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">data_source</span><span class="o">.</span><span class="n">units</span>
         <span class="p">)</span>
-        <span class="n">data_source</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">throw</span><span class="p">)</span></div></div>
+        <span class="n">data_source</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">throw</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="DeviceDataSource"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DeviceDataSource">[docs]</a><span class="k">class</span> <span class="nc">DeviceDataSource</span><span class="p">(</span><span class="n">DataSource</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data source containing control system devices.</span>
 
-<span class="sd">    **Attributes:**</span>
+<div class="viewcode-block" id="DeviceDataSource">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DeviceDataSource">[docs]</a>
+<span class="k">class</span> <span class="nc">DeviceDataSource</span><span class="p">(</span><span class="n">DataSource</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data source containing control system devices.&quot;&quot;&quot;</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        units (str): pytac.ENG or pytac.PHYS, pytac.ENG by default.</span>
+    <span class="n">units</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;pytac.ENG or pytac.PHYS, pytac.ENG by default.&quot;&quot;&quot;</span>
 
-<span class="sd">    .. Private Attributes:</span>
-<span class="sd">           _devices (dict): A dictionary of the devices for each key(field).</span>
-
-<span class="sd">    **Methods:**</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_devices</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Device</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A dictionary of the devices for each key(field).&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_devices</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span>
 
-<div class="viewcode-block" id="DeviceDataSource.add_device"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DeviceDataSource.add_device">[docs]</a>    <span class="k">def</span> <span class="nf">add_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
+<div class="viewcode-block" id="DeviceDataSource.add_device">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DeviceDataSource.add_device">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Device</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add device to this data_source.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): field this device represents.</span>
-<span class="sd">            device (Device): device object.</span>
+<span class="sd">            field: field this device represents.</span>
+<span class="sd">            device: device object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_devices</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">device</span></div>
 
-<div class="viewcode-block" id="DeviceDataSource.get_device"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DeviceDataSource.get_device">[docs]</a>    <span class="k">def</span> <span class="nf">get_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DeviceDataSource.get_device">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DeviceDataSource.get_device">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Device</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get device from the data_source.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): field of the requested device.</span>
+<span class="sd">            field: field of the requested device.</span>
 <span class="sd">        Returns:</span>
-<span class="sd">            Device: The device of the specified field.</span>
+<span class="sd">            The device of the specified field.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            FieldException: if the specified field doesn&#39;t exist on this data</span>
-<span class="sd">                             source.</span>
+<span class="sd">            FieldException: if the specified field doesn&#39;t exist on this data source.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_devices</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">FieldException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> on data source </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DeviceDataSource.get_fields"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DeviceDataSource.get_fields">[docs]</a>    <span class="k">def</span> <span class="nf">get_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DeviceDataSource.get_fields">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DeviceDataSource.get_fields">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KeysView</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all the fields from the data_source.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list: list of strings of all the fields of the data_source.</span>
+<span class="sd">            List of strings of all the fields of the data_source.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_devices</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="DeviceDataSource.get_value"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DeviceDataSource.get_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">throw</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DeviceDataSource.get_value">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DeviceDataSource.get_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handle</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of a readback or setpoint PV for a field from the</span>
 <span class="sd">        data_source.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): field of the requested value.</span>
-<span class="sd">            handle (str): pytac.RB or pytac.SP.</span>
-<span class="sd">            throw (bool): On failure: if True, raise ControlSystemException; if</span>
-<span class="sd">                           False, return None and log a warning.</span>
+<span class="sd">            field: field of the requested value.</span>
+<span class="sd">            handle: pytac.RB or pytac.SP.</span>
+<span class="sd">            throw: On failure: if True, raise ControlSystemException; if False, None</span>
+<span class="sd">                will be returned for any PV that fails and a warning will be logged.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float: The value of the PV.</span>
+<span class="sd">            The value of the PV.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            FieldException: if the device does not have the specified field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">field</span><span class="p">)</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">throw</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DeviceDataSource.set_value"><a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DeviceDataSource.set_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">throw</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DeviceDataSource.set_value">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DeviceDataSource.set_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+        <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the value of a readback or setpoint PV for a field from the</span>
 <span class="sd">        data_source.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): field for the requested value.</span>
-<span class="sd">            value (float): The value to set on the PV.</span>
-<span class="sd">            throw (bool): On failure: if True, raise ControlSystemException: if</span>
-<span class="sd">                           False, log a warning.</span>
+<span class="sd">            field: field for the requested value.</span>
+<span class="sd">            value: The value to set on the PV.</span>
+<span class="sd">            throw: On failure: if True, raise ControlSystemException; if False, None</span>
+<span class="sd">                will be returned for any PV that fails and a warning will be logged.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            FieldException: if the device does not have the specified field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">field</span><span class="p">)</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">throw</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">field</span><span class="p">)</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">throw</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
                 </article>

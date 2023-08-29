@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 
 
@@ -8,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pytac.units &#8212; pytac 0.6.1.dev1+g7939f6b documentation</title>
+    <title>pytac.units &#8212; pytac 0.6.1.dev4+g5b93322 documentation</title>
   
   
   
@@ -28,21 +27,21 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/documentation_options.js?v=b3283424"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=30646c52"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pytac/units';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://DiamondLightSource.github.io/pytac/switcher.json';
@@ -417,6 +416,8 @@ document.write(`
                   
   <h1>Source code for pytac.units</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Classes for use in unit conversion.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">PchipInterpolator</span>
 
@@ -424,19 +425,24 @@ document.write(`
 <span class="kn">from</span> <span class="nn">pytac.exceptions</span> <span class="kn">import</span> <span class="n">UnitsException</span>
 
 
-<div class="viewcode-block" id="unit_function"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.unit_function">[docs]</a><span class="k">def</span> <span class="nf">unit_function</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="unit_function">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.unit_function">[docs]</a>
+<span class="k">def</span> <span class="nf">unit_function</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Default value for the pre and post functions used in unit conversion.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        value (float): The value to be converted.</span>
+<span class="sd">        value: The value to be converted.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        float: The result of the conversion.</span>
+<span class="sd">        The result of the conversion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">value</span></div>
 
 
-<div class="viewcode-block" id="UnitConv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv">[docs]</a><span class="k">class</span> <span class="nc">UnitConv</span><span class="p">:</span>
+
+<div class="viewcode-block" id="UnitConv">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv">[docs]</a>
+<span class="k">class</span> <span class="nc">UnitConv</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to convert between physics and engineering units.</span>
 
 <span class="sd">    This class does not do conversion but does return values if the target</span>
@@ -447,101 +453,98 @@ document.write(`
 <span class="sd">    The two arguments to this function represent functions that are</span>
 <span class="sd">    applied to the result of the initial conversion. One happens after</span>
 <span class="sd">    the conversion, the other happens before the conversion back.</span>
-
-<span class="sd">    **Attributes:**</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        name (str): An identifier for the unit conversion object.</span>
-<span class="sd">        eng_units (str): The unit type of the post conversion engineering</span>
-<span class="sd">                          value.</span>
-<span class="sd">        phys_units (str): The unit type of the post conversion physics value.</span>
-
-<span class="sd">    .. Private Attributes:</span>
-<span class="sd">           _post_eng_to_phys (typing.Callable[[float], float]): Function to be applied</span>
-<span class="sd">                after the initial conversion.</span>
-<span class="sd">           _pre_phys_to_eng (typing.Callable[[float], float]): Function to be applied</span>
-<span class="sd">                before the initial conversion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An identifier for the unit conversion object.&quot;&quot;&quot;</span>
+    <span class="n">eng_units</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The unit type of the post conversion engineering value.&quot;&quot;&quot;</span>
+    <span class="n">phys_units</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The unit type of the post conversion physics value.&quot;&quot;&quot;</span>
+
+    <span class="n">_post_eng_to_phys</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to be applied after the initial conversion.&quot;&quot;&quot;</span>
+    <span class="n">_pre_phys_to_eng</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to be applied before the initial conversion.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">post_eng_to_phys</span><span class="o">=</span><span class="n">unit_function</span><span class="p">,</span>
-        <span class="n">pre_phys_to_eng</span><span class="o">=</span><span class="n">unit_function</span><span class="p">,</span>
-        <span class="n">engineering_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">physics_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            post_eng_to_phys (typing.Callable[[float], float]): Function to be applied</span>
-<span class="sd">                after the initial conversion.</span>
-<span class="sd">            pre_phys_to_eng (typing.Callable[[float], float]): Function to be applied</span>
-<span class="sd">                before the initial conversion.</span>
-<span class="sd">            engineering_units (str): The unit type of the post conversion</span>
-<span class="sd">                                      engineering value.</span>
-<span class="sd">            physics_units (str): The unit type of the post conversion physics</span>
-<span class="sd">                                  value.</span>
-<span class="sd">            name (str): An identifier for the unit conversion object.</span>
+        <span class="n">post_eng_to_phys</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_function</span><span class="p">,</span>
+        <span class="n">pre_phys_to_eng</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_function</span><span class="p">,</span>
+        <span class="n">engineering_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">physics_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise the UnitConv Object.</span>
 
-<span class="sd">        **Methods:**</span>
+<span class="sd">        Args:</span>
+<span class="sd">            post_eng_to_phys: Function to be applied after the initial conversion.</span>
+<span class="sd">            pre_phys_to_eng: Function to be applied before the initial conversion.</span>
+<span class="sd">            engineering_units: The unit type of the post conversion engineering value.</span>
+<span class="sd">            physics_units: The unit type of the post conversion physics value.</span>
+<span class="sd">            name: An identifier for the unit conversion object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_post_eng_to_phys</span> <span class="o">=</span> <span class="n">post_eng_to_phys</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pre_phys_to_eng</span> <span class="o">=</span> <span class="n">pre_phys_to_eng</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eng_units</span> <span class="o">=</span> <span class="n">engineering_units</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">phys_units</span> <span class="o">=</span> <span class="n">physics_units</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">string_rep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">string_rep</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="n">string_rep</span>
 
-<div class="viewcode-block" id="UnitConv.set_post_eng_to_phys"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_post_eng_to_phys">[docs]</a>    <span class="k">def</span> <span class="nf">set_post_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_eng_to_phys</span><span class="p">):</span>
+<div class="viewcode-block" id="UnitConv.set_post_eng_to_phys">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_post_eng_to_phys">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_post_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_eng_to_phys</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the function to be applied after the initial conversion.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            post_eng_to_phys (typing.Callable[[float], float]): Function to be applied</span>
-<span class="sd">                after the initial conversion.</span>
+<span class="sd">            post_eng_to_phys: Function to be applied after the initial conversion.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_post_eng_to_phys</span> <span class="o">=</span> <span class="n">post_eng_to_phys</span></div>
 
-<div class="viewcode-block" id="UnitConv.set_pre_phys_to_eng"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_pre_phys_to_eng">[docs]</a>    <span class="k">def</span> <span class="nf">set_pre_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre_phys_to_eng</span><span class="p">):</span>
+
+<div class="viewcode-block" id="UnitConv.set_pre_phys_to_eng">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_pre_phys_to_eng">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_pre_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre_phys_to_eng</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the function to be applied before the initial conversion.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            pre_phys_to_eng (typing.Callable[[float], float]): Function to be applied</span>
-<span class="sd">                before the initial conversion.</span>
+<span class="sd">            pre_phys_to_eng: Function to be applied before the initial conversion.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pre_phys_to_eng</span> <span class="o">=</span> <span class="n">pre_phys_to_eng</span></div>
 
-    <span class="k">def</span> <span class="nf">_raw_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">_raw_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to be implemented by child classes.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            value (float): The engineering value to be converted to physics</span>
-<span class="sd">                            units.</span>
+<span class="sd">            value: The engineering value to be converted to physics units.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: No eng-to-phys conversion provided&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="UnitConv.eng_to_phys"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.eng_to_phys">[docs]</a>    <span class="k">def</span> <span class="nf">eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="UnitConv.eng_to_phys">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.eng_to_phys">[docs]</a>
+    <span class="k">def</span> <span class="nf">eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Function that does the unit conversion.</span>
 
 <span class="sd">        Conversion from engineering to physics units. An additional function</span>
 <span class="sd">        may be cast on the initial conversion.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            value (float): Value to be converted from engineering to physics</span>
-<span class="sd">                            units.</span>
+<span class="sd">            value: Value to be converted from engineering to physics units.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float: The result value.</span>
+<span class="sd">            The result value.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            UnitsException: If the conversion is invalid; i.e. if there are no</span>
-<span class="sd">                            solutions, or multiple, within conversion limits.</span>
+<span class="sd">                solutions, or multiple, within conversion limits.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">UnitsException</span><span class="p">(</span>
@@ -567,31 +570,32 @@ document.write(`
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">valid_results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
-    <span class="k">def</span> <span class="nf">_raw_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">_raw_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to be implemented by child classes.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            value (float): The physics value to be converted to engineering</span>
-<span class="sd">                            units.</span>
+<span class="sd">            value: The physics value to be converted to engineering units.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: No phys-to-eng conversion provided&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="UnitConv.phys_to_eng"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.phys_to_eng">[docs]</a>    <span class="k">def</span> <span class="nf">phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="UnitConv.phys_to_eng">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.phys_to_eng">[docs]</a>
+    <span class="k">def</span> <span class="nf">phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Function that does the unit conversion.</span>
 
 <span class="sd">        Conversion from physics to engineering units. An additional function</span>
 <span class="sd">        may be cast on the initial conversion.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            value (float): Value to be converted from physics to engineering</span>
-<span class="sd">                            units.</span>
+<span class="sd">            value: Value to be converted from physics to engineering units.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float: The result value.</span>
+<span class="sd">            The result value.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            UnitsException: If the conversion is invalid; i.e. if there are no</span>
-<span class="sd">                            solutions, or multiple, within conversion limits.</span>
+<span class="sd">                solutions, or multiple, within conversion limits.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">adjusted_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_phys_to_eng</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_phys_to_eng</span><span class="p">(</span><span class="n">adjusted_value</span><span class="p">)</span>
@@ -614,21 +618,24 @@ document.write(`
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">valid_results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="UnitConv.convert"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+
+<div class="viewcode-block" id="UnitConv.convert">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.convert">[docs]</a>
+    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">origin</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert between two different unit types and check the validity of</span>
 <span class="sd">        the result.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            value (float): the value to be converted</span>
-<span class="sd">            origin (str): pytac.ENG or pytac.PHYS</span>
-<span class="sd">            target (str): pytac.ENG or pytac.PHYS</span>
+<span class="sd">            value: the value to be converted</span>
+<span class="sd">            origin: pytac.ENG or pytac.PHYS</span>
+<span class="sd">            target: pytac.ENG or pytac.PHYS</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float: The resulting value.</span>
+<span class="sd">            The resulting value.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            UnitsException: If the conversion is invalid; i.e. if there are no</span>
-<span class="sd">                             solutions, or multiple, within conversion limits.</span>
+<span class="sd">                solutions, or multiple, within conversion limits.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">origin</span> <span class="o">==</span> <span class="n">target</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">value</span>
@@ -641,13 +648,16 @@ document.write(`
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: Conversion from </span><span class="si">{</span><span class="n">origin</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2"> not understood.&quot;</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="UnitConv.set_conversion_limits"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_conversion_limits">[docs]</a>    <span class="k">def</span> <span class="nf">set_conversion_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_limit</span><span class="p">,</span> <span class="n">upper_limit</span><span class="p">):</span>
+
+<div class="viewcode-block" id="UnitConv.set_conversion_limits">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_conversion_limits">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_conversion_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_limit</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">upper_limit</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Conversion limits to be applied before or after a conversion take</span>
 <span class="sd">        place. Limits should be set in in engineering units.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            lower_limit (float): the lower conversion limit</span>
-<span class="sd">            upper_limit (float): the upper conversion limit</span>
+<span class="sd">            lower_limit: the lower conversion limit</span>
+<span class="sd">            upper_limit: the upper conversion limit</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">lower_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">upper_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">lower_limit</span> <span class="o">&gt;=</span> <span class="n">upper_limit</span><span class="p">:</span>
@@ -658,15 +668,18 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span> <span class="o">=</span> <span class="n">lower_limit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span> <span class="o">=</span> <span class="n">upper_limit</span></div>
 
-<div class="viewcode-block" id="UnitConv.get_conversion_limits"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.get_conversion_limits">[docs]</a>    <span class="k">def</span> <span class="nf">get_conversion_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="p">):</span>
+
+<div class="viewcode-block" id="UnitConv.get_conversion_limits">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.get_conversion_limits">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_conversion_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the current conversion limits in the specified unit type.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            units:</span>
+<span class="sd">            units: The unit type.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list: the conversion limits in the desired unit type,</span>
-<span class="sd">                   format: [lower_limit, upper_limit]</span>
+<span class="sd">            The conversion limits in the desired unit type,</span>
+<span class="sd">                format: [lower_limit, upper_limit]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">units</span> <span class="o">==</span> <span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span><span class="p">]</span>
@@ -676,79 +689,67 @@ document.write(`
                 <span class="bp">self</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span><span class="p">,</span> <span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="p">,</span> <span class="n">pytac</span><span class="o">.</span><span class="n">PHYS</span><span class="p">),</span>
             <span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">UnitsException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: Unit type </span><span class="si">{</span><span class="n">units</span><span class="si">}</span><span class="s2"> not understood.&quot;</span><span class="p">)</span></div></div>
+            <span class="k">raise</span> <span class="n">UnitsException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: Unit type </span><span class="si">{</span><span class="n">units</span><span class="si">}</span><span class="s2"> not understood.&quot;</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="PolyUnitConv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.PolyUnitConv">[docs]</a><span class="k">class</span> <span class="nc">PolyUnitConv</span><span class="p">(</span><span class="n">UnitConv</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PolyUnitConv">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.PolyUnitConv">[docs]</a>
+<span class="k">class</span> <span class="nc">PolyUnitConv</span><span class="p">(</span><span class="n">UnitConv</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Linear interpolation for converting between physics and engineering</span>
 <span class="sd">    units.</span>
-
-<span class="sd">    **Attributes:**</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        p (poly1d): A one-dimensional polynomial of coefficients.</span>
-<span class="sd">        name (str): An identifier for the unit conversion object.</span>
-<span class="sd">        eng_units (str): The unit type of the post conversion engineering</span>
-<span class="sd">                          value.</span>
-<span class="sd">        phys_units (str): The unit type of the post conversion physics value.</span>
-
-<span class="sd">    .. Private Attributes:</span>
-<span class="sd">           _post_eng_to_phys (typing.Callable[[float], float]): Function to be applied</span>
-<span class="sd">                after the initial conversion.</span>
-<span class="sd">           _pre_phys_to_eng (typing.Callable[[float], float]): Function to be applied</span>
-<span class="sd">                before the initial conversion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">p</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">poly1d</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A one-dimensional polynomial of coefficients.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">coef</span><span class="p">,</span>
-        <span class="n">post_eng_to_phys</span><span class="o">=</span><span class="n">unit_function</span><span class="p">,</span>
-        <span class="n">pre_phys_to_eng</span><span class="o">=</span><span class="n">unit_function</span><span class="p">,</span>
-        <span class="n">engineering_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">physics_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">coef</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">generic</span><span class="p">]],</span>
+        <span class="n">post_eng_to_phys</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_function</span><span class="p">,</span>
+        <span class="n">pre_phys_to_eng</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_function</span><span class="p">,</span>
+        <span class="n">engineering_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">physics_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise the PolyUnitConv Object.</span>
+
 <span class="sd">        Args:</span>
-<span class="sd">            coef (numpy.ndarray[typing.Any, numpy.dtype[numpy.generic]]): The</span>
-<span class="sd">                polynomial&#39;s coefficients, in decreasing powers.</span>
-<span class="sd">            post_eng_to_phys (float): The value after conversion between ENG</span>
-<span class="sd">                                       and PHYS.</span>
-<span class="sd">            pre_eng_to_phys (float): The value before conversion.</span>
-<span class="sd">            engineering_units (str): The unit type of the post conversion</span>
-<span class="sd">                                      engineering value.</span>
-<span class="sd">            physics_units (str): The unit type of the post conversion physics</span>
-<span class="sd">                                  value.</span>
-<span class="sd">            name (str): An identifier for the unit conversion object.</span>
+<span class="sd">            coef: The polynomial&#39;s coefficients, in decreasing powers.</span>
+<span class="sd">            post_eng_to_phys: The value after conversion between ENG and PHYS.</span>
+<span class="sd">            pre_eng_to_phys: The value before conversion.</span>
+<span class="sd">            engineering_units: The unit type of the post conversion engineering value.</span>
+<span class="sd">            physics_units: The unit type of the post conversion physics value.</span>
+<span class="sd">            name: An identifier for the unit conversion object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">post_eng_to_phys</span><span class="p">,</span> <span class="n">pre_phys_to_eng</span><span class="p">,</span> <span class="n">engineering_units</span><span class="p">,</span> <span class="n">physics_units</span><span class="p">,</span> <span class="n">name</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">coef</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_raw_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eng_value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_raw_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eng_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert between engineering and physics units.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            eng_value (float): The engineering value to be converted to physics</span>
-<span class="sd">                                units.</span>
+<span class="sd">            eng_value: The engineering value to be converted to physics units.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list: Containing the converted physics value from the given</span>
-<span class="sd">                    engineering value.</span>
+<span class="sd">            Containing the converted physics value from the given</span>
+<span class="sd">                engineering value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">(</span><span class="n">eng_value</span><span class="p">)]</span>
 
-    <span class="k">def</span> <span class="nf">_raw_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physics_value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_raw_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physics_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert between physics and engineering units.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            physics_value (float): The physics value to be converted to</span>
-<span class="sd">                                    engineering units.</span>
+<span class="sd">            physics_value: The physics value to be converted to</span>
+<span class="sd">                engineering units.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list: Containing all posible real engineering values converted</span>
-<span class="sd">                   from the given physics value.</span>
+<span class="sd">            Containing all posible real engineering values converted</span>
+<span class="sd">                from the given physics value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">roots</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">-</span> <span class="n">physics_value</span><span class="p">)</span><span class="o">.</span><span class="n">roots</span><span class="p">)</span>  <span class="c1"># remove duplicates</span>
         <span class="n">valid_roots</span> <span class="o">=</span> <span class="p">[]</span>
@@ -758,55 +759,41 @@ document.write(`
         <span class="k">return</span> <span class="n">valid_roots</span></div>
 
 
-<div class="viewcode-block" id="PchipUnitConv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.PchipUnitConv">[docs]</a><span class="k">class</span> <span class="nc">PchipUnitConv</span><span class="p">(</span><span class="n">UnitConv</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Piecewise Cubic Hermite Interpolating Polynomial unit conversion.</span>
 
-<span class="sd">    **Attributes:**</span>
+<div class="viewcode-block" id="PchipUnitConv">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.PchipUnitConv">[docs]</a>
+<span class="k">class</span> <span class="nc">PchipUnitConv</span><span class="p">(</span><span class="n">UnitConv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Piecewise Cubic Hermite Interpolating Polynomial unit conversion.&quot;&quot;&quot;</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        x (list): A list of points on the x axis. These must be in increasing</span>
-<span class="sd">                   order for the interpolation to work. Otherwise, a ValueError</span>
-<span class="sd">                   is raised.</span>
-<span class="sd">        y (list): A list of points on the y axis. These must be in increasing</span>
-<span class="sd">                   or decreasing order. Otherwise, a ValueError is raised.</span>
-<span class="sd">        pp (PchipInterpolator): A pchip one-dimensional monotonic cubic</span>
-<span class="sd">                                 interpolation of points on both x and y axes.</span>
-
-<span class="sd">        name (str): An identifier for the unit conversion object.</span>
-<span class="sd">        eng_units (str): The unit type of the post conversion engineering</span>
-<span class="sd">                          value.</span>
-<span class="sd">        phys_units (str): The unit type of the post conversion physics value.</span>
-
-<span class="sd">    .. Private Attributes:</span>
-<span class="sd">           _post_eng_to_phys (typing.Callable[[float], float]): Function to be applied</span>
-<span class="sd">                after the initial conversion.</span>
-<span class="sd">           _pre_phys_to_eng (typing.Callable[[float], float]): Function to be applied</span>
-<span class="sd">                before the initial conversion.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of points on the x axis. These must be in increasing order for the</span>
+<span class="sd">        interpolation to work. Otherwise, a ValueError is raised.&quot;&quot;&quot;</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of points on the y axis. These must be in increasing or decreasing</span>
+<span class="sd">        order. Otherwise, a ValueError is raised.&quot;&quot;&quot;</span>
+    <span class="n">pp</span><span class="p">:</span> <span class="n">PchipInterpolator</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A pchip one-dimensional monotonic cubic interpolation of points on both x</span>
+<span class="sd">        and y axes.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">,</span>
-        <span class="n">y</span><span class="p">,</span>
-        <span class="n">post_eng_to_phys</span><span class="o">=</span><span class="n">unit_function</span><span class="p">,</span>
-        <span class="n">pre_phys_to_eng</span><span class="o">=</span><span class="n">unit_function</span><span class="p">,</span>
-        <span class="n">engineering_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">physics_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+        <span class="n">post_eng_to_phys</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_function</span><span class="p">,</span>
+        <span class="n">pre_phys_to_eng</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_function</span><span class="p">,</span>
+        <span class="n">engineering_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">physics_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            x (list): A list of points on the x axis. These must be in</span>
-<span class="sd">                       increasing order for the interpolation to work.</span>
-<span class="sd">                       Otherwise, a ValueError is raised.</span>
-<span class="sd">            y (list): A list of points on the y axis. These must be in</span>
-<span class="sd">                       increasing or decreasing order. Otherwise, a ValueError</span>
-<span class="sd">                       is raised.</span>
-<span class="sd">            engineering_units (str): The unit type of the post conversion</span>
-<span class="sd">                                      engineering value.</span>
-<span class="sd">            physics_units (str): The unit type of the post conversion physics</span>
-<span class="sd">                                  value.</span>
-<span class="sd">            name (str): An identifier for the unit conversion object.</span>
+<span class="sd">            x: A list of points on the x axis. These must be in increasing order for</span>
+<span class="sd">                the interpolation to work. Otherwise, a ValueError is raised.</span>
+<span class="sd">            y: A list of points on the y axis. These must be in increasing or</span>
+<span class="sd">                decreasing order. Otherwise, a ValueError is raised.</span>
+<span class="sd">            engineering_units: The unit type of the post conversion engineering value.</span>
+<span class="sd">            physics_units: The unit type of the post conversion physics value.</span>
+<span class="sd">            name: An identifier for the unit conversion object.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: if coefficients are not appropriately monotonic.</span>
@@ -830,28 +817,25 @@ document.write(`
                 <span class="s2">&quot;y coefficients must be monotonically increasing or decreasing.&quot;</span>
             <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_raw_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eng_value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_raw_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eng_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert between engineering and physics units.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            eng_value (float): The engineering value to be converted to physics</span>
-<span class="sd">                                units.</span>
+<span class="sd">            eng_value: The engineering value to be converted to physics units.</span>
 <span class="sd">        Returns:</span>
-<span class="sd">            list: Containing the converted physics value from the given</span>
-<span class="sd">                    engineering value.</span>
+<span class="sd">            Containing the converted physics value from the given engineering value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="p">(</span><span class="n">eng_value</span><span class="p">)]</span>
 
-    <span class="k">def</span> <span class="nf">_raw_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physics_value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_raw_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physics_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert between physics and engineering units.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            physics_value (float): The physics value to be converted to</span>
-<span class="sd">                                    engineering units.</span>
+<span class="sd">            physics_value: The physics value to be converted to engineering units.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list: Containing all posible real engineering values converted</span>
-<span class="sd">                   from the given physics value.</span>
+<span class="sd">            Containing all posible real engineering values converted from the given</span>
+<span class="sd">                physics value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">val</span> <span class="o">-</span> <span class="n">physics_value</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">]</span>
         <span class="n">new_pp</span> <span class="o">=</span> <span class="n">PchipInterpolator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -863,61 +847,51 @@ document.write(`
         <span class="k">return</span> <span class="n">valid_roots</span></div>
 
 
-<div class="viewcode-block" id="NullUnitConv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.units.NullUnitConv">[docs]</a><span class="k">class</span> <span class="nc">NullUnitConv</span><span class="p">(</span><span class="n">UnitConv</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns input value without performing any conversions.</span>
 
-<span class="sd">    **Attributes:**</span>
+<div class="viewcode-block" id="NullUnitConv">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.NullUnitConv">[docs]</a>
+<span class="k">class</span> <span class="nc">NullUnitConv</span><span class="p">(</span><span class="n">UnitConv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns input value without performing any conversions.&quot;&quot;&quot;</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        eng_units (str): The unit type of the post conversion engineering</span>
-<span class="sd">                          value.</span>
-<span class="sd">        phys_units (str): The unit type of the post conversion physics value.</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engineering_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">physics_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise the NullUnitConv Object.</span>
 
-<span class="sd">    .. Private Attributes:</span>
-<span class="sd">           _post_eng_to_phys (typing.Callable[[float], float]): Always unit_function as</span>
-<span class="sd">                no conversion is performed.</span>
-<span class="sd">           _pre_phys_to_eng (typing.Callable[[float], float]): Always unit_function as</span>
-<span class="sd">                no conversion is performed.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engineering_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">physics_units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            engineering_units (str): The unit type of the post conversion</span>
-<span class="sd">                                      engineering value.</span>
-<span class="sd">            physics_units (str): The unit type of the post conversion physics</span>
-<span class="sd">                                  value.</span>
+<span class="sd">            engineering_units: The unit type of the post conversion engineering value.</span>
+<span class="sd">            physics_units: The unit type of the post conversion physics value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">unit_function</span><span class="p">,</span> <span class="n">unit_function</span><span class="p">,</span> <span class="n">engineering_units</span><span class="p">,</span> <span class="n">physics_units</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_raw_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eng_value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_raw_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eng_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Doesn&#39;t convert between engineering and physics units.</span>
 
 <span class="sd">        Maintains the same syntax as the other UnitConv classes for</span>
 <span class="sd">        compatibility, but does not perform any conversion.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            eng_value (float): The engineering value to be returned unchanged.</span>
+<span class="sd">            eng_value: The engineering value to be returned unchanged.</span>
+
 <span class="sd">        Returns:</span>
-<span class="sd">            list: Containing the unconverted given engineering value.</span>
+<span class="sd">            Containing the unconverted given engineering value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">eng_value</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_raw_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_raw_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Doesn&#39;t convert between physics and engineering units.</span>
 
 <span class="sd">        Maintains the same syntax as the other UnitConv classes for</span>
 <span class="sd">        compatibility, but does not perform any conversion.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            physics_value (float): The physics value to be returned unchanged.</span>
+<span class="sd">            physics_value: The physics value to be returned unchanged.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list: Containing the unconverted given physics value.</span>
+<span class="sd">            Containing the unconverted given physics value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">phys_value</span><span class="p">]</span></div>
+
 </pre></div>
 
                 </article>

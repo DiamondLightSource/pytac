@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 
 
@@ -7,9 +6,9 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Developer install &#8212; pytac 0.6.1.dev1+g7939f6b documentation</title>
+    <title>Developer install &#8212; pytac 0.6.1.dev4+g5b93322 documentation</title>
   
   
   
@@ -29,21 +28,21 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/documentation_options.js?v=b3283424"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=30646c52"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'developer/tutorials/dev-install';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://DiamondLightSource.github.io/pytac/switcher.json';
@@ -459,18 +458,18 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section id="developer-install">
-<h1>Developer install<a class="headerlink" href="#developer-install" title="Permalink to this heading">#</a></h1>
+<h1>Developer install<a class="headerlink" href="#developer-install" title="Link to this heading">#</a></h1>
 <p>These instructions will take you through the minimal steps required to get a dev
 environment setup, so you can run the tests locally.</p>
 <section id="clone-the-repository">
-<h2>Clone the repository<a class="headerlink" href="#clone-the-repository" title="Permalink to this heading">#</a></h2>
+<h2>Clone the repository<a class="headerlink" href="#clone-the-repository" title="Link to this heading">#</a></h2>
 <p>First clone the repository locally using <a class="reference external" href="https://git-scm.com/downloads">Git</a>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone git://github.com/DiamondLightSource/pytac.git
 </pre></div>
 </div>
 </section>
 <section id="install-dependencies">
-<h2>Install dependencies<a class="headerlink" href="#install-dependencies" title="Permalink to this heading">#</a></h2>
+<h2>Install dependencies<a class="headerlink" href="#install-dependencies" title="Link to this heading">#</a></h2>
 <p>You can choose to either develop on the host machine using a <a class="reference external" href="https://docs.python.org/3/library/venv.html#module-venv" title="(in Python v3.11)"><code class="xref any docutils literal notranslate"><span class="pre">venv</span></code></a> (which
 requires python 3.8 or later) or to run in a container under <a class="reference external" href="https://code.visualstudio.com/">VSCode</a></p>
 <div class="sd-tab-set docutils">
@@ -496,14 +495,14 @@ VSCode devcontainer</label><div class="sd-tab-content docutils">
 </div>
 </section>
 <section id="see-what-was-installed">
-<h2>See what was installed<a class="headerlink" href="#see-what-was-installed" title="Permalink to this heading">#</a></h2>
+<h2>See what was installed<a class="headerlink" href="#see-what-was-installed" title="Link to this heading">#</a></h2>
 <p>To see a graph of the python package dependency tree type:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pipdeptree
 </pre></div>
 </div>
 </section>
 <section id="build-and-test">
-<h2>Build and test<a class="headerlink" href="#build-and-test" title="Permalink to this heading">#</a></h2>
+<h2>Build and test<a class="headerlink" href="#build-and-test" title="Link to this heading">#</a></h2>
 <p>Now you have a development environment you can run the tests in a terminal:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ tox -p
 </pre></div>

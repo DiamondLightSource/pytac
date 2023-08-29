@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 
 
@@ -7,9 +6,9 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Basic Tutorial &#8212; pytac 0.6.1.dev1+g7939f6b documentation</title>
+    <title>Basic Tutorial &#8212; pytac 0.6.1.dev4+g5b93322 documentation</title>
   
   
   
@@ -29,21 +28,21 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/documentation_options.js?v=b3283424"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=30646c52"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'user/tutorials/basic-tutorial';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://DiamondLightSource.github.io/pytac/switcher.json';
@@ -451,7 +450,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section id="basic-tutorial">
-<h1>Basic Tutorial<a class="headerlink" href="#basic-tutorial" title="Permalink to this heading">#</a></h1>
+<h1>Basic Tutorial<a class="headerlink" href="#basic-tutorial" title="Link to this heading">#</a></h1>
 <p>In this tutorial we will go through some of the most common ways of using pytac.
 The aim is to give you an understanding of the interface and how to find out what
 is available.</p>
@@ -466,7 +465,7 @@ accelerator conditions will have changed.</p>
 <div><p>$ pytest docs</p>
 </div></blockquote>
 <section id="loading-the-lattice">
-<h2>Loading the lattice<a class="headerlink" href="#loading-the-lattice" title="Permalink to this heading">#</a></h2>
+<h2>Loading the lattice<a class="headerlink" href="#loading-the-lattice" title="Link to this heading">#</a></h2>
 <p>The central object in pytac is the <a class="reference internal" href="../reference/api.html#module-pytac.lattice" title="pytac.lattice"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">lattice</span></code></a>. It holds the information about
 all of the elements in the accelerator. All the data about the lattice and its
 elements is stored in CSV files inside the pytac repository. We use the <a class="reference internal" href="../reference/api.html#module-pytac.load_csv" title="pytac.load_csv"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">load_csv</span></code></a>
@@ -499,7 +498,7 @@ Diamond network):</p>
 </div>
 </section>
 <section id="families-elements-and-fields">
-<h2>Families, elements and fields<a class="headerlink" href="#families-elements-and-fields" title="Permalink to this heading">#</a></h2>
+<h2>Families, elements and fields<a class="headerlink" href="#families-elements-and-fields" title="Link to this heading">#</a></h2>
 <p>The elements in the lattice are grouped by families, and this is the most common
 way to choose some to access. We can list the available families:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lattice</span><span class="o">.</span><span class="n">get_all_families</span><span class="p">()</span>
@@ -528,7 +527,7 @@ are the measured positions:</p>
 </div>
 </section>
 <section id="devices">
-<h2>Devices<a class="headerlink" href="#devices" title="Permalink to this heading">#</a></h2>
+<h2>Devices<a class="headerlink" href="#devices" title="Link to this heading">#</a></h2>
 <p>Each field has a <a class="reference internal" href="../reference/api.html#module-pytac.device" title="pytac.device"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">device</span></code></a> object associated with it, which knows how to set and
 get the value:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">one_bpm</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
@@ -562,7 +561,7 @@ above and <code class="docutils literal notranslate"><span class="pre">lattice.g
 </div>
 </section>
 <section id="unit-conversions">
-<h2>Unit conversions<a class="headerlink" href="#unit-conversions" title="Permalink to this heading">#</a></h2>
+<h2>Unit conversions<a class="headerlink" href="#unit-conversions" title="Link to this heading">#</a></h2>
 <p>Many fields can be represented in either engineering units or physics units.
 For example, for a magnet field, the physics unit would be the field strength
 and the engineering unit would be the current applied by the magnet power supply
@@ -582,7 +581,7 @@ with the field:</p>
 </div>
 </section>
 <section id="magnet-fields">
-<h2>Magnet fields<a class="headerlink" href="#magnet-fields" title="Permalink to this heading">#</a></h2>
+<h2>Magnet fields<a class="headerlink" href="#magnet-fields" title="Link to this heading">#</a></h2>
 <p>This seems like a good time to talk about the names for the magnetic fields of magnets.</p>
 <p>In accelerator physics we refer to the different components of magnetic fields
 as a<sub>n</sub> for vertical fields and b<sub>n</sub> for horizontal fields, where n is:</p>
@@ -622,7 +621,7 @@ sextupole:</p>
 </div>
 </section>
 <section id="other-methods-of-thr-lattice">
-<h2>Other methods of thr lattice<a class="headerlink" href="#other-methods-of-thr-lattice" title="Permalink to this heading">#</a></h2>
+<h2>Other methods of thr lattice<a class="headerlink" href="#other-methods-of-thr-lattice" title="Link to this heading">#</a></h2>
 <p>To finish off for now, let’s look at some more of the methods of the <a class="reference internal" href="../reference/api.html#module-pytac.lattice" title="pytac.lattice"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">lattice</span></code></a></p>
 <p><code class="docutils literal notranslate"><span class="pre">lattice.get_element_values</span></code> lets you get all the live values for a field from a
 while family of elements. E.g. the currents for the horizontal corrector magnets.
@@ -653,7 +652,7 @@ There is also an analogous command <code class="docutils literal notranslate"><s
 <span class="go">-0.3863433301448822,</span>
 <span class="go">0.1559593677520752,</span>
 <span class="go">2.3147804737091064,</span>
-<span class="gp">...</span>
+<span class="go">...</span>
 <span class="go">2.295074939727783,</span>
 <span class="go">-0.5442541241645813,</span>
 <span class="go">-1.0026730298995972,</span>

@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 
 
@@ -8,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pytac.load_csv &#8212; pytac 0.6.1.dev1+g7939f6b documentation</title>
+    <title>pytac.load_csv &#8212; pytac 0.6.1.dev4+g5b93322 documentation</title>
   
   
   
@@ -28,21 +27,21 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/documentation_options.js?v=b3283424"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=30646c52"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pytac/load_csv';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://DiamondLightSource.github.io/pytac/switcher.json';
@@ -432,10 +431,11 @@ document.write(`
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterator</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">pytac</span>
 <span class="kn">from</span> <span class="nn">pytac</span> <span class="kn">import</span> <span class="n">data_source</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">pytac.cs</span> <span class="kn">import</span> <span class="n">ControlSystem</span>
 <span class="kn">from</span> <span class="nn">pytac.device</span> <span class="kn">import</span> <span class="n">EpicsDevice</span><span class="p">,</span> <span class="n">SimpleDevice</span>
 <span class="kn">from</span> <span class="nn">pytac.exceptions</span> <span class="kn">import</span> <span class="n">ControlSystemException</span>
 <span class="kn">from</span> <span class="nn">pytac.lattice</span> <span class="kn">import</span> <span class="n">EpicsLattice</span><span class="p">,</span> <span class="n">Lattice</span>
@@ -453,21 +453,26 @@ document.write(`
 <span class="n">PCHIP_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;uc_pchip_data.csv&quot;</span>
 
 
-<div class="viewcode-block" id="csv_loader"><a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.csv_loader">[docs]</a><span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<div class="viewcode-block" id="csv_loader">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.csv_loader">[docs]</a>
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
 <span class="k">def</span> <span class="nf">csv_loader</span><span class="p">(</span><span class="n">csv_file</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">]:</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">csv_reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">yield</span> <span class="n">csv_reader</span></div>
 
 
-<div class="viewcode-block" id="load_poly_unitconv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.load_poly_unitconv">[docs]</a><span class="k">def</span> <span class="nf">load_poly_unitconv</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">PolyUnitConv</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="load_poly_unitconv">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.load_poly_unitconv">[docs]</a>
+<span class="k">def</span> <span class="nf">load_poly_unitconv</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">PolyUnitConv</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load polynomial unit conversions from a csv file.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        filepath: The file from which to load.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        dict: A dictionary of the unit conversions.</span>
+<span class="sd">        A dictionary of the unit conversions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">unitconvs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">PolyUnitConv</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
@@ -481,14 +486,17 @@ document.write(`
     <span class="k">return</span> <span class="n">unitconvs</span></div>
 
 
-<div class="viewcode-block" id="load_pchip_unitconv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.load_pchip_unitconv">[docs]</a><span class="k">def</span> <span class="nf">load_pchip_unitconv</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">PchipUnitConv</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="load_pchip_unitconv">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.load_pchip_unitconv">[docs]</a>
+<span class="k">def</span> <span class="nf">load_pchip_unitconv</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">PchipUnitConv</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load pchip unit conversions from a csv file.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        filename: The file from which to load.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        dict: A dictionary of the unit conversions.</span>
+<span class="sd">        A dictionary of the unit conversions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">unitconvs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">PchipUnitConv</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
@@ -504,7 +512,10 @@ document.write(`
     <span class="k">return</span> <span class="n">unitconvs</span></div>
 
 
-<div class="viewcode-block" id="load_unitconv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.load_unitconv">[docs]</a><span class="k">def</span> <span class="nf">load_unitconv</span><span class="p">(</span><span class="n">mode_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">lattice</span><span class="p">:</span> <span class="n">Lattice</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="load_unitconv">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.load_unitconv">[docs]</a>
+<span class="k">def</span> <span class="nf">load_unitconv</span><span class="p">(</span><span class="n">mode_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">lattice</span><span class="p">:</span> <span class="n">Lattice</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the unit conversion objects from a file.</span>
 
 <span class="sd">    Args:</span>
@@ -562,25 +573,31 @@ document.write(`
                 <span class="n">element</span><span class="o">.</span><span class="n">set_unitconv</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;field&quot;</span><span class="p">],</span> <span class="n">uc</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">control_system</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="load">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.load_csv.load">[docs]</a>
+<span class="k">def</span> <span class="nf">load</span><span class="p">(</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">control_system</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ControlSystem</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">directory</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">symmetry</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Lattice</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the elements of a lattice from a directory.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        mode (str): The name of the mode to be loaded.</span>
-<span class="sd">        control_system (ControlSystem): The control system to be used. If none</span>
-<span class="sd">                                         is provided an EpicsControlSystem will</span>
-<span class="sd">                                         be created.</span>
-<span class="sd">        directory (str): Directory where to load the files from. If no</span>
-<span class="sd">                          directory is given the data directory at the root of</span>
-<span class="sd">                          the repository is used.</span>
-<span class="sd">        symmetry (int): The symmetry of the lattice (the number of cells).</span>
+<span class="sd">        mode: The name of the mode to be loaded.</span>
+<span class="sd">        control_system: The control system to be used. If none is provided an</span>
+<span class="sd">            EpicsControlSystem will be created.</span>
+<span class="sd">        directory: Directory where to load the files from. If no directory is</span>
+<span class="sd">            given the data directory at the root of the repository is used.</span>
+<span class="sd">        symmetry: The symmetry of the lattice (the number of cells).</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Lattice: The lattice containing all elements.</span>
+<span class="sd">        The lattice containing all elements.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ControlSystemException: if the default control system, cothread, is not</span>
-<span class="sd">                                 installed.</span>
+<span class="sd">            installed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">control_system</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -641,6 +658,7 @@ document.write(`
     <span class="k">if</span> <span class="n">unitconv_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="n">load_unitconv</span><span class="p">(</span><span class="n">mode_dir</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">lat</span></div>
+
 </pre></div>
 
                 </article>

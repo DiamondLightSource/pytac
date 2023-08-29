@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 
 
@@ -8,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pytac.lattice &#8212; pytac 0.6.1.dev1+g7939f6b documentation</title>
+    <title>pytac.lattice &#8212; pytac 0.6.1.dev4+g5b93322 documentation</title>
   
   
   
@@ -28,21 +27,21 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/documentation_options.js?v=b3283424"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=30646c52"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pytac/lattice';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://DiamondLightSource.github.io/pytac/switcher.json';
@@ -420,45 +419,48 @@ document.write(`
 <span class="sd">    machine.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="kn">import</span> <span class="nn">pytac</span>
+<span class="kn">from</span> <span class="nn">pytac.cs</span> <span class="kn">import</span> <span class="n">ControlSystem</span>
 <span class="kn">from</span> <span class="nn">pytac.data_source</span> <span class="kn">import</span> <span class="n">DataSource</span><span class="p">,</span> <span class="n">DataSourceManager</span>
+<span class="kn">from</span> <span class="nn">pytac.device</span> <span class="kn">import</span> <span class="n">Device</span><span class="p">,</span> <span class="n">EpicsDevice</span>
 <span class="kn">from</span> <span class="nn">pytac.element</span> <span class="kn">import</span> <span class="n">Element</span>
 <span class="kn">from</span> <span class="nn">pytac.exceptions</span> <span class="kn">import</span> <span class="n">DataSourceException</span><span class="p">,</span> <span class="n">UnitsException</span>
+<span class="kn">from</span> <span class="nn">pytac.units</span> <span class="kn">import</span> <span class="n">UnitConv</span>
 
 
-<div class="viewcode-block" id="Lattice"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice">[docs]</a><span class="k">class</span> <span class="nc">Lattice</span><span class="p">:</span>
+<div class="viewcode-block" id="Lattice">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice">[docs]</a>
+<span class="k">class</span> <span class="nc">Lattice</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Representation of a lattice.</span>
 
 <span class="sd">    Represents a lattice object that contains all elements of the ring. It has</span>
 <span class="sd">    a name and a control system to be used for unit conversion.</span>
-
-<span class="sd">    **Attributes:**</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        name: The name of the lattice.</span>
-<span class="sd">        symmetry: The symmetry of the lattice (the number of cells).</span>
-
-<span class="sd">    .. Private Attributes:</span>
-<span class="sd">           _elements: The list of all the element objects in the lattice</span>
-<span class="sd">           _data_source_manager: A class that manages the</span>
-<span class="sd">                                                      data sources associated</span>
-<span class="sd">                                                      with this lattice.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the lattice.&quot;&quot;&quot;</span>
+    <span class="n">symmetry</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The symmetry of the lattice (the number of cells).&quot;&quot;&quot;</span>
+
+    <span class="n">_elements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Element</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of all the element objects in the lattice&quot;&quot;&quot;</span>
+    <span class="n">_data_source_manager</span><span class="p">:</span> <span class="n">DataSourceManager</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class that manages the data sources associated with this lattice.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">symmetry</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Args:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise the Lattice object.</span>
+
+<span class="sd">        Args:</span>
 <span class="sd">            name: The name of the lattice.</span>
 <span class="sd">            symmetry: The symmetry of the lattice (the number of cells).</span>
-
-<span class="sd">        **Methods:**</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">symmetry</span> <span class="o">=</span> <span class="n">symmetry</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_elements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Element</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_elements</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span> <span class="o">=</span> <span class="n">DataSourceManager</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -503,10 +505,10 @@ document.write(`
 <span class="sd">        i.e. index 0 represents the first element in the lattice.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            n: index.</span>
+<span class="sd">            n: Index.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            indexed element</span>
+<span class="sd">            Indexed element.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elements</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
 
@@ -518,28 +520,36 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_elements</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Lattice.set_data_source"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.set_data_source">[docs]</a>    <span class="k">def</span> <span class="nf">set_data_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_source</span><span class="p">:</span> <span class="n">DataSource</span><span class="p">,</span> <span class="n">data_source_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Lattice.set_data_source">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.set_data_source">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_data_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_source</span><span class="p">:</span> <span class="n">DataSource</span><span class="p">,</span> <span class="n">data_source_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a data source to the lattice.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            data_source: the data source to be set.</span>
-<span class="sd">            data_source_type: the type of the data source being set:</span>
-<span class="sd">                              pytac.LIVE or pytac.SIM.</span>
+<span class="sd">            data_source_type: the type of the data source being set;</span>
+<span class="sd">                pytac.LIVE or pytac.SIM.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">set_data_source</span><span class="p">(</span><span class="n">data_source</span><span class="p">,</span> <span class="n">data_source_type</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Lattice.get_fields"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_fields">[docs]</a>    <span class="k">def</span> <span class="nf">get_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.get_fields">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_fields">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the fields defined on the lattice.</span>
 
 <span class="sd">        Includes all fields defined by all data sources.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            dict: A dictionary of all the fields defined on the lattice,</span>
-<span class="sd">                   separated by data source(key).</span>
+<span class="sd">            A dictionary of all the fields defined on the lattice, separated by</span>
+<span class="sd">                data source(key).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">get_fields</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Lattice.add_device"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.add_device">[docs]</a>    <span class="k">def</span> <span class="nf">add_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">uc</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.add_device">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.add_device">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Device</span><span class="p">,</span> <span class="n">uc</span><span class="p">:</span> <span class="n">UnitConv</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add device and unit conversion objects to a given field.</span>
 
 <span class="sd">        A DeviceDataSource must be set before calling this method, this</span>
@@ -547,17 +557,19 @@ document.write(`
 <span class="sd">        uses devices.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): The key to store the unit conversion and device</span>
-<span class="sd">                          objects.</span>
-<span class="sd">            device (Device): The device object used for this field.</span>
-<span class="sd">            uc (UnitConv): The unit conversion object used for this field.</span>
+<span class="sd">            field: The key to store the unit conversion and device objects.</span>
+<span class="sd">            device: The device object used for this field.</span>
+<span class="sd">            uc: The unit conversion object used for this field.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            DataSourceException: if no DeviceDataSource is set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">uc</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Lattice.get_device"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_device">[docs]</a>    <span class="k">def</span> <span class="nf">get_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.get_device">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_device">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Device</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the device for the given field.</span>
 
 <span class="sd">        A DeviceDataSource must be set before calling this method, this</span>
@@ -565,47 +577,56 @@ document.write(`
 <span class="sd">        uses devices.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): The lookup key to find the device on the lattice.</span>
+<span class="sd">            field: The lookup key to find the device on the lattice.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Device: The device on the given field.</span>
+<span class="sd">            The device on the given field.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            DataSourceException: if no DeviceDataSource is set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">field</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Lattice.get_unitconv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_unitconv">[docs]</a>    <span class="k">def</span> <span class="nf">get_unitconv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.get_unitconv">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_unitconv">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_unitconv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnitConv</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the unit conversion option for the specified field.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): The field associated with this conversion.</span>
+<span class="sd">            field: The field associated with this conversion.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            UnitConv: The object associated with the specified field.</span>
+<span class="sd">            The object associated with the specified field.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            FieldException: if no unit conversion object is present.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">get_unitconv</span><span class="p">(</span><span class="n">field</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Lattice.set_unitconv"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.set_unitconv">[docs]</a>    <span class="k">def</span> <span class="nf">set_unitconv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">uc</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.set_unitconv">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.set_unitconv">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_unitconv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">uc</span><span class="p">:</span> <span class="n">UnitConv</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the unit conversion option for the specified field.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): The field associated with this conversion.</span>
-<span class="sd">            uc (UnitConv): The unit conversion object to be set.</span>
+<span class="sd">            field: The field associated with this conversion.</span>
+<span class="sd">            uc: The unit conversion object to be set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">set_unitconv</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">uc</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Lattice.get_value"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span>
+
+<div class="viewcode-block" id="Lattice.get_value">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">field</span><span class="p">,</span>
-        <span class="n">handle</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">RB</span><span class="p">,</span>
-        <span class="n">units</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
-        <span class="n">data_source</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
-        <span class="n">throw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">):</span>
+        <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">handle</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">RB</span><span class="p">,</span>
+        <span class="n">units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
+        <span class="n">data_source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
+        <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value for a field on the lattice.</span>
 
 <span class="sd">        Returns the value of a field on the lattice. This value is uniquely</span>
@@ -614,15 +635,15 @@ document.write(`
 <span class="sd">        real or simulated values.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): The requested field.</span>
-<span class="sd">            handle (str): pytac.SP or pytac.RB.</span>
-<span class="sd">            units (str): pytac.ENG or pytac.PHYS returned.</span>
-<span class="sd">            data_source (str): pytac.LIVE or pytac.SIM.</span>
-<span class="sd">            throw (bool): On failure: if True, raise ControlSystemException; if</span>
-<span class="sd">                           False, return None and log a warning.</span>
+<span class="sd">            field: The requested field.</span>
+<span class="sd">            handle: pytac.SP or pytac.RB.</span>
+<span class="sd">            units: pytac.ENG or pytac.PHYS returned.</span>
+<span class="sd">            data_source: pytac.LIVE or pytac.SIM.</span>
+<span class="sd">            throw: On failure: if True, raise ControlSystemException; if False, None</span>
+<span class="sd">                will be returned for any PV that fails and a warning will be logged.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float: The value of the requested field</span>
+<span class="sd">            The value of the requested field</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            DataSourceException: if there is no data source on the given field.</span>
@@ -632,25 +653,28 @@ document.write(`
             <span class="n">field</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">data_source</span><span class="p">,</span> <span class="n">throw</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Lattice.set_value"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.set_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span>
+
+<div class="viewcode-block" id="Lattice.set_value">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.set_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">field</span><span class="p">,</span>
-        <span class="n">value</span><span class="p">,</span>
-        <span class="n">units</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
-        <span class="n">data_source</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
-        <span class="n">throw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
+        <span class="n">data_source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
+        <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the value for a field.</span>
 
 <span class="sd">        This value can be set on the machine or the simulation.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): The requested field.</span>
-<span class="sd">            value (float): The value to set.</span>
-<span class="sd">            units (str): pytac.ENG or pytac.PHYS.</span>
-<span class="sd">            data_source (str): pytac.LIVE or pytac.SIM.</span>
-<span class="sd">            throw (bool): On failure: if True, raise ControlSystemException: if</span>
-<span class="sd">                           False, log a warning.</span>
+<span class="sd">            field: The requested field.</span>
+<span class="sd">            value: The value to set.</span>
+<span class="sd">            units: pytac.ENG or pytac.PHYS.</span>
+<span class="sd">            data_source: pytac.LIVE or pytac.SIM.</span>
+<span class="sd">            throw: On failure: if True, raise ControlSystemException; if False, None</span>
+<span class="sd">                will be returned for any PV that fails and a warning will be logged.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            DataSourceException: if arguments are incorrect.</span>
@@ -658,42 +682,52 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">data_source</span><span class="p">,</span> <span class="n">throw</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Lattice.get_length"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_length">[docs]</a>    <span class="k">def</span> <span class="nf">get_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.get_length">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_length">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_length</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the length of the lattice, in meters.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float: The length of the lattice (m).</span>
+<span class="sd">            The length of the lattice (m).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">total_length</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elements</span><span class="p">:</span>
             <span class="n">total_length</span> <span class="o">+=</span> <span class="n">e</span><span class="o">.</span><span class="n">length</span>
         <span class="k">return</span> <span class="n">total_length</span></div>
 
-<div class="viewcode-block" id="Lattice.add_element"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.add_element">[docs]</a>    <span class="k">def</span> <span class="nf">add_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.add_element">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.add_element">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">Element</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Append an element to the lattice and update its lattice reference.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            element (Element): element to append.</span>
+<span class="sd">            element: element to append.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">element</span><span class="o">.</span><span class="n">set_lattice</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Lattice.get_elements"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_elements">[docs]</a>    <span class="k">def</span> <span class="nf">get_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.get_elements">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_elements">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_elements</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">family</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Element</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the elements of a family from the lattice.</span>
 
 <span class="sd">        If no family is specified it returns all elements. Elements are</span>
 <span class="sd">        returned in the order they exist in the ring.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            family (str): requested family.</span>
-<span class="sd">            cell (int): restrict elements to those in the specified cell.</span>
+<span class="sd">            family: requested family.</span>
+<span class="sd">            cell: restrict elements to those in the specified cell.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list: list containing all elements of the specified family.</span>
+<span class="sd">            List containing all elements of the specified family.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: if there are no elements in the specified cell or</span>
-<span class="sd">                         family.</span>
+<span class="sd">            ValueError: if there are no elements in the specified cell or family.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">family</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elements</span><span class="p">[:]</span>
@@ -709,7 +743,10 @@ document.write(`
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: no elements in cell </span><span class="si">{</span><span class="n">cell</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">elements</span></div>
 
-<div class="viewcode-block" id="Lattice.get_all_families"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_all_families">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_families</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.get_all_families">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_all_families">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_all_families</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all families of elements in the lattice.</span>
 
 <span class="sd">        Returns:</span>
@@ -720,22 +757,29 @@ document.write(`
             <span class="n">families</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">families</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">families</span></div>
 
-<div class="viewcode-block" id="Lattice.get_family_s"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_family_s">[docs]</a>    <span class="k">def</span> <span class="nf">get_family_s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">family</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.get_family_s">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_family_s">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_family_s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">family</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get s positions for all elements from the same family.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            family (str): requested family.</span>
+<span class="sd">            family: requested family.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list: list of s positions for each element.</span>
+<span class="sd">            List of s positions for each element.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elements</span><span class="p">(</span><span class="n">family</span><span class="p">)</span>
         <span class="n">s_positions</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">element</span><span class="o">.</span><span class="n">s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
             <span class="n">s_positions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">s_positions</span></div>
 
-<div class="viewcode-block" id="Lattice.get_element_devices"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_element_devices">[docs]</a>    <span class="k">def</span> <span class="nf">get_element_devices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">family</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.get_element_devices">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_element_devices">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_element_devices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">family</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">EpicsDevice</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get devices for a specific field for elements in the specfied</span>
 <span class="sd">        family.</span>
 
@@ -744,11 +788,11 @@ document.write(`
 <span class="sd">        and &#39;y&#39;.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            family (str): family of elements.</span>
-<span class="sd">            field (str): field specifying the devices.</span>
+<span class="sd">            family: family of elements.</span>
+<span class="sd">            field: field specifying the devices.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list: devices for specified family and field.</span>
+<span class="sd">            Devices for specified family and field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elements</span><span class="p">(</span><span class="n">family</span><span class="p">)</span>
         <span class="n">devices</span> <span class="o">=</span> <span class="p">[]</span>
@@ -759,7 +803,10 @@ document.write(`
                 <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No device for field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> on element </span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">devices</span></div>
 
-<div class="viewcode-block" id="Lattice.get_element_device_names"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_element_device_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_element_device_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">family</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.get_element_device_names">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_element_device_names">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_element_device_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">family</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the names for devices attached to a specific field for elements</span>
 <span class="sd">        in the specfied family.</span>
 
@@ -768,8 +815,8 @@ document.write(`
 <span class="sd">        and &#39;y&#39;.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            family (str): family of elements.</span>
-<span class="sd">            field (str): field specifying the devices.</span>
+<span class="sd">            family: family of elements.</span>
+<span class="sd">            field: field specifying the devices.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            list: device names for specified family and field.</span>
@@ -777,33 +824,35 @@ document.write(`
         <span class="n">devices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_element_devices</span><span class="p">(</span><span class="n">family</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">device</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Lattice.get_element_values"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_element_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_element_values</span><span class="p">(</span>
+
+<div class="viewcode-block" id="Lattice.get_element_values">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_element_values">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_element_values</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">family</span><span class="p">,</span>
-        <span class="n">field</span><span class="p">,</span>
-        <span class="n">handle</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">RB</span><span class="p">,</span>
-        <span class="n">units</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
-        <span class="n">data_source</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
-        <span class="n">throw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
+        <span class="n">family</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">handle</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">RB</span><span class="p">,</span>
+        <span class="n">units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
+        <span class="n">data_source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
+        <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of the given field for all elements in the given</span>
 <span class="sd">        family in the lattice.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            family (str): family of elements to request the values of.</span>
-<span class="sd">            field (str): field to request values for.</span>
-<span class="sd">            handle (str): pytac.RB or pytac.SP.</span>
-<span class="sd">            units (str): pytac.ENG or pytac.PHYS.</span>
-<span class="sd">            data_source (str): pytac.LIVE or pytac.SIM.</span>
-<span class="sd">            throw (bool): On failure: if True, raise ControlSystemException; if</span>
-<span class="sd">                           False, None will be returned for any PV that fails</span>
-<span class="sd">                           and a warning will be logged.</span>
-<span class="sd">            dtype (numpy.dtype): if None, return a list. If not None, return a</span>
-<span class="sd">                                  numpy array of the specified type.</span>
+<span class="sd">            family: family of elements to request the values of.</span>
+<span class="sd">            field: field to request values for.</span>
+<span class="sd">            handle: pytac.RB or pytac.SP.</span>
+<span class="sd">            units: pytac.ENG or pytac.PHYS.</span>
+<span class="sd">            data_source: pytac.LIVE or pytac.SIM.</span>
+<span class="sd">            throw: On failure: if True, raise ControlSystemException; if False, None</span>
+<span class="sd">                will be returned for any PV that fails and a warning will be logged.</span>
+<span class="sd">            dtype: if None, return a list. If not None, return a numpy array of the</span>
+<span class="sd">                specified type.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Union(list, numpy.ndarray): The requested values.</span>
+<span class="sd">            The requested values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elements</span><span class="p">(</span><span class="n">family</span><span class="p">)</span>
         <span class="n">values</span> <span class="o">=</span> <span class="p">[</span>
@@ -814,32 +863,33 @@ document.write(`
             <span class="n">values</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">values</span></div>
 
-<div class="viewcode-block" id="Lattice.set_element_values"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.set_element_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_element_values</span><span class="p">(</span>
+
+<div class="viewcode-block" id="Lattice.set_element_values">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.set_element_values">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_element_values</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">family</span><span class="p">,</span>
-        <span class="n">field</span><span class="p">,</span>
-        <span class="n">values</span><span class="p">,</span>
-        <span class="n">units</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
-        <span class="n">data_source</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
-        <span class="n">throw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">):</span>
+        <span class="n">family</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+        <span class="n">units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
+        <span class="n">data_source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
+        <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the value of the given field for all elements in the given</span>
 <span class="sd">        family in the lattice to the given values.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            family (str): family of elements on which to set values.</span>
-<span class="sd">            field (str):  field to set values for.</span>
-<span class="sd">            values (typing.Sequence): A list of values to assign.</span>
-<span class="sd">            units (str): pytac.ENG or pytac.PHYS.</span>
-<span class="sd">            data_source (str): pytac.LIVE or pytac.SIM.</span>
-<span class="sd">            throw (bool): On failure, if True raise ControlSystemException, if</span>
-<span class="sd">                           False return a list of True and False values</span>
-<span class="sd">                           corresponding to successes and failures and log a</span>
-<span class="sd">                           warning for each PV that fails.</span>
+<span class="sd">            family: family of elements on which to set values.</span>
+<span class="sd">            field:  field to set values for.</span>
+<span class="sd">            values: A list of values to assign.</span>
+<span class="sd">            units: pytac.ENG or pytac.PHYS.</span>
+<span class="sd">            data_source: pytac.LIVE or pytac.SIM.</span>
+<span class="sd">            throw: On failure: if True, raise ControlSystemException; if False, None</span>
+<span class="sd">                will be returned for any PV that fails and a warning will be logged.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            IndexError: if the given list of values doesn&#39;t match the number of</span>
-<span class="sd">                         elements in the family.</span>
+<span class="sd">                elements in the family.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elements</span><span class="p">(</span><span class="n">family</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
@@ -858,16 +908,18 @@ document.write(`
             <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">status</span></div>
 
-<div class="viewcode-block" id="Lattice.set_default_units"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.set_default_units">[docs]</a>    <span class="k">def</span> <span class="nf">set_default_units</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Lattice.set_default_units">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.set_default_units">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_default_units</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the default unit type for the lattice and all its elements.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            default_units: The default unit type to be set across the</span>
-<span class="sd">                            entire lattice, pytac.ENG or pytac.PHYS.</span>
+<span class="sd">            default_units: The default unit type to be set across the entire lattice,</span>
+<span class="sd">                pytac.ENG or pytac.PHYS.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            UnitsException: if specified default unit type is not a valid unit</span>
-<span class="sd">                             type.</span>
+<span class="sd">            UnitsException: if specified default unit type is not a valid unit type.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">units</span> <span class="o">==</span> <span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span> <span class="ow">or</span> <span class="n">units</span> <span class="o">==</span> <span class="n">pytac</span><span class="o">.</span><span class="n">PHYS</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">default_units</span> <span class="o">=</span> <span class="n">units</span>
@@ -879,16 +931,19 @@ document.write(`
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">units</span><span class="si">}</span><span class="s2"> is not a unit type. Please enter </span><span class="si">{</span><span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="si">}</span><span class="s2"> or </span><span class="si">{</span><span class="n">pytac</span><span class="o">.</span><span class="n">PHYS</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Lattice.set_default_data_source"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.set_default_data_source">[docs]</a>    <span class="k">def</span> <span class="nf">set_default_data_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_source_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Lattice.set_default_data_source">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.set_default_data_source">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_default_data_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_source_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the default data source for the lattice and all its elements.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            data_source_type: The default data source to be set across the</span>
-<span class="sd">                               entire lattice, pytac.LIVE or pytac.SIM.</span>
+<span class="sd">            data_source_type: The default data source to be set across the entire</span>
+<span class="sd">                lattice, pytac.LIVE or pytac.SIM.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            DataSourceException: if specified default data source is not a</span>
-<span class="sd">                                  valid data source.</span>
+<span class="sd">            DataSourceException: if specified default data source is not a valid</span>
+<span class="sd">                data source.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">data_source_type</span> <span class="o">==</span> <span class="n">pytac</span><span class="o">.</span><span class="n">LIVE</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">data_source_type</span> <span class="o">==</span> <span class="n">pytac</span><span class="o">.</span><span class="n">SIM</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">default_data_source</span> <span class="o">=</span> <span class="n">data_source_type</span>
@@ -901,33 +956,44 @@ document.write(`
                 <span class="sa">f</span><span class="s2">&quot;Please enter </span><span class="si">{</span><span class="n">pytac</span><span class="o">.</span><span class="n">LIVE</span><span class="si">}</span><span class="s2"> or </span><span class="si">{</span><span class="n">pytac</span><span class="o">.</span><span class="n">SIM</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Lattice.get_default_units"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_default_units">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_units</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.get_default_units">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_default_units">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_default_units</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the default unit type, pytac.ENG or pytac.PHYS.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            str: the default unit type for the entire lattice.</span>
+<span class="sd">            The default unit type for the entire lattice.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">default_units</span></div>
 
-<div class="viewcode-block" id="Lattice.get_default_data_source"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_default_data_source">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_data_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.get_default_data_source">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.get_default_data_source">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_default_data_source</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the default data source, pytac.LIVE or pytac.SIM.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            str: the default data source for the entire lattice.</span>
+<span class="sd">            The default data source for the entire lattice.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">default_data_source</span></div>
 
-<div class="viewcode-block" id="Lattice.convert_family_values"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.convert_family_values">[docs]</a>    <span class="k">def</span> <span class="nf">convert_family_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">family</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Lattice.convert_family_values">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.Lattice.convert_family_values">[docs]</a>
+    <span class="k">def</span> <span class="nf">convert_family_values</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">family</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">origin</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert the given values according to the given origin and target</span>
 <span class="sd">        units, using the unit conversion objects for the given field on the</span>
 <span class="sd">        elements in the given family.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            family (str): the family of elements which the values belong to.</span>
-<span class="sd">            field (str): the field on the elements which the values are from.</span>
-<span class="sd">            values (typing.Sequence): values to be converted.</span>
-<span class="sd">            origin (str): pytac.ENG or pytac.PHYS.</span>
-<span class="sd">            target (str): pytac.ENG or pytac.PHYS.</span>
+<span class="sd">            family: the family of elements which the values belong to.</span>
+<span class="sd">            field: the field on the elements which the values are from.</span>
+<span class="sd">            values: values to be converted.</span>
+<span class="sd">            origin: pytac.ENG or pytac.PHYS.</span>
+<span class="sd">            target: pytac.ENG or pytac.PHYS.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elements</span><span class="p">(</span><span class="n">family</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
@@ -935,56 +1001,60 @@ document.write(`
                 <span class="sa">f</span><span class="s2">&quot;Number of elements in given sequence(</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="si">}</span><span class="s2">) must &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;be equal to the number of elements in the family(</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span><span class="si">}</span><span class="s2">).&quot;</span>
             <span class="p">)</span>
-        <span class="n">converted_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">converted_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">elem</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
             <span class="n">uc</span> <span class="o">=</span> <span class="n">elem</span><span class="o">.</span><span class="n">get_unitconv</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
             <span class="n">converted_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">uc</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">target</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">converted_values</span></div></div>
+        <span class="k">return</span> <span class="n">converted_values</span></div>
+</div>
 
 
-<div class="viewcode-block" id="EpicsLattice"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.EpicsLattice">[docs]</a><span class="k">class</span> <span class="nc">EpicsLattice</span><span class="p">(</span><span class="n">Lattice</span><span class="p">):</span>
+
+<div class="viewcode-block" id="EpicsLattice">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.EpicsLattice">[docs]</a>
+<span class="k">class</span> <span class="nc">EpicsLattice</span><span class="p">(</span><span class="n">Lattice</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;EPICS-aware lattice class.</span>
 
 <span class="sd">    Allows efficient get_element_values() and set_element_values() methods,</span>
 <span class="sd">    and adds get_pv_names() method.</span>
 
-<span class="sd">    **Attributes:**</span>
-
 <span class="sd">    Attributes:</span>
-<span class="sd">        name (str): The name of the lattice.</span>
-<span class="sd">        symmetry (int): The symmetry of the lattice (the number of cells).</span>
+<span class="sd">        name: The name of the lattice.</span>
+<span class="sd">        symmetry: The symmetry of the lattice (the number of cells).</span>
 
 <span class="sd">    .. Private Attributes:</span>
-<span class="sd">           _elements (list): The list of all the element objects in the lattice</span>
-<span class="sd">           _cs (ControlSystem): The control system to use for the more</span>
-<span class="sd">                                 efficient batch getting and setting of PVs.</span>
-<span class="sd">           _data_source_manager (DataSourceManager): A class that manages the</span>
-<span class="sd">                                                      data sources associated</span>
-<span class="sd">                                                      with this lattice.</span>
+<span class="sd">            _elements: The list of all the element objects in the lattice</span>
+<span class="sd">            _cs: The control system to use for the more efficient batch getting and</span>
+<span class="sd">                setting of PVs.</span>
+<span class="sd">            _data_source_manager: A class that manages the data sources associated</span>
+<span class="sd">                with this lattice.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">epics_cs</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">_cs</span><span class="p">:</span> <span class="n">ControlSystem</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">epics_cs</span><span class="p">:</span> <span class="n">ControlSystem</span><span class="p">,</span> <span class="n">symmetry</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            name (str): The name of the epics lattice.</span>
-<span class="sd">            epics_cs (ControlSystem): The control system used to store the</span>
-<span class="sd">                                       values on a PV.</span>
-<span class="sd">            symmetry (int): The symmetry of the lattice (the number of cells).</span>
-
-<span class="sd">        **Methods:**</span>
+<span class="sd">            name: The name of the epics lattice.</span>
+<span class="sd">            epics_cs: The control system used to store the values on a PV.</span>
+<span class="sd">            symmetry: The symmetry of the lattice (the number of cells).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">EpicsLattice</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">symmetry</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cs</span> <span class="o">=</span> <span class="n">epics_cs</span>
 
-<div class="viewcode-block" id="EpicsLattice.get_pv_name"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.EpicsLattice.get_pv_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_pv_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">handle</span><span class="p">):</span>
+<div class="viewcode-block" id="EpicsLattice.get_pv_name">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.EpicsLattice.get_pv_name">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_pv_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handle</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the PV name for a specific field, and handle on this lattice.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            field (str): The requested field.</span>
-<span class="sd">            handle (str): pytac.RB or pytac.SP.</span>
+<span class="sd">            field: The requested field.</span>
+<span class="sd">            handle: pytac.RB or pytac.SP.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            str: The readback or setpoint PV for the specified field.</span>
+<span class="sd">            The readback or setpoint PV for the specified field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span>
@@ -998,20 +1068,22 @@ document.write(`
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">, as the device does not have associated PVs.&quot;</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="EpicsLattice.get_element_pv_names"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.EpicsLattice.get_element_pv_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_element_pv_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">family</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">handle</span><span class="p">):</span>
+
+<div class="viewcode-block" id="EpicsLattice.get_element_pv_names">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.EpicsLattice.get_element_pv_names">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_element_pv_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">family</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handle</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the PV names for the given field, and handle, on all elements</span>
 <span class="sd">        in the given family in the lattice.</span>
 
-<span class="sd">        Assume that the elements are EpicsElements that have the get_pv_name()</span>
-<span class="sd">        method.</span>
+<span class="sd">        Assume that the elements are EpicsElements that have the get_pv_name() method.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            family (str): The requested family.</span>
-<span class="sd">            field (str): The requested field.</span>
-<span class="sd">            handle (str): pytac.RB or pytac.SP.</span>
+<span class="sd">            family: The requested family.</span>
+<span class="sd">            field: The requested field.</span>
+<span class="sd">            handle: pytac.RB or pytac.SP.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list: A list of PV names, strings.</span>
+<span class="sd">            A list of PV names, strings.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elements</span><span class="p">(</span><span class="n">family</span><span class="p">)</span>
         <span class="n">pv_names</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1019,33 +1091,35 @@ document.write(`
             <span class="n">pv_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">get_pv_name</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">handle</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">pv_names</span></div>
 
-<div class="viewcode-block" id="EpicsLattice.get_element_values"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.EpicsLattice.get_element_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_element_values</span><span class="p">(</span>
+
+<div class="viewcode-block" id="EpicsLattice.get_element_values">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.EpicsLattice.get_element_values">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_element_values</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">family</span><span class="p">,</span>
-        <span class="n">field</span><span class="p">,</span>
-        <span class="n">handle</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">RB</span><span class="p">,</span>
-        <span class="n">units</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
-        <span class="n">data_source</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
-        <span class="n">throw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
+        <span class="n">family</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">handle</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">RB</span><span class="p">,</span>
+        <span class="n">units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
+        <span class="n">data_source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
+        <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of the given field for all elements in the given</span>
 <span class="sd">        family in the lattice.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            family (str): family of elements to request the values of.</span>
-<span class="sd">            field (str): field to request values for.</span>
-<span class="sd">            handle (str): pytac.RB or pytac.SP.</span>
-<span class="sd">            units (str): pytac.ENG or pytac.PHYS.</span>
-<span class="sd">            data_source (str): pytac.LIVE or pytac.SIM.</span>
-<span class="sd">            throw (bool): On failure: if True, raise ControlSystemException; if</span>
-<span class="sd">                           False, None will be returned for any PV that fails</span>
-<span class="sd">                           and a warning will be logged.</span>
-<span class="sd">            dtype (numpy.dtype): if None, return a list. If not None, return a</span>
-<span class="sd">                                  numpy array of the specified type.</span>
+<span class="sd">            family: family of elements to request the values of.</span>
+<span class="sd">            field: field to request values for.</span>
+<span class="sd">            handle: pytac.RB or pytac.SP.</span>
+<span class="sd">            units: pytac.ENG or pytac.PHYS.</span>
+<span class="sd">            data_source: pytac.LIVE or pytac.SIM.</span>
+<span class="sd">            throw: On failure: if True, raise ControlSystemException; if False, None</span>
+<span class="sd">                will be returned for any PV that fails and a warning will be logged.</span>
+<span class="sd">            dtype: if None, return a list. If not None, return a numpy array of the</span>
+<span class="sd">                specified type.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Union(list, numpy.ndarray): The requested values.</span>
+<span class="sd">            The requested values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">data_source</span> <span class="o">==</span> <span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">:</span>
             <span class="n">data_source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_default_data_source</span><span class="p">()</span>
@@ -1066,30 +1140,33 @@ document.write(`
             <span class="n">values</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">values</span></div>
 
-<div class="viewcode-block" id="EpicsLattice.set_element_values"><a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.EpicsLattice.set_element_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_element_values</span><span class="p">(</span>
+
+<div class="viewcode-block" id="EpicsLattice.set_element_values">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.lattice.EpicsLattice.set_element_values">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_element_values</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">family</span><span class="p">,</span>
-        <span class="n">field</span><span class="p">,</span>
-        <span class="n">values</span><span class="p">,</span>
-        <span class="n">units</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
-        <span class="n">data_source</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
-        <span class="n">throw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">):</span>
+        <span class="n">family</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+        <span class="n">units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
+        <span class="n">data_source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
+        <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the value of the given field for all elements in the given</span>
 <span class="sd">        family in the lattice to the given values.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            family (str): family of elements on which to set values.</span>
-<span class="sd">            field (str):  field to set values for.</span>
-<span class="sd">            values (typing.Sequence): A list of values to assign.</span>
-<span class="sd">            units (str): pytac.ENG or pytac.PHYS.</span>
-<span class="sd">            data_source (str): pytac.LIVE or pytac.SIM.</span>
-<span class="sd">            throw (bool): On failure: if True, raise ControlSystemException: if</span>
-<span class="sd">                           False, log a warning.</span>
+<span class="sd">            family: family of elements on which to set values.</span>
+<span class="sd">            field:  field to set values for.</span>
+<span class="sd">            values: A list of values to assign.</span>
+<span class="sd">            units: pytac.ENG or pytac.PHYS.</span>
+<span class="sd">            data_source: pytac.LIVE or pytac.SIM.</span>
+<span class="sd">            throw: On failure: if True, raise ControlSystemException; if False, None</span>
+<span class="sd">                will be returned for any PV that fails and a warning will be logged.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            IndexError: if the given list of values doesn&#39;t match the number of</span>
-<span class="sd">                         elements in the family.</span>
+<span class="sd">                elements in the family.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">data_source</span> <span class="o">==</span> <span class="n">pytac</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">:</span>
             <span class="n">data_source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_default_data_source</span><span class="p">()</span>
@@ -1111,7 +1188,9 @@ document.write(`
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">(</span><span class="n">EpicsLattice</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_element_values</span><span class="p">(</span>
                 <span class="n">family</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">data_source</span><span class="p">,</span> <span class="n">throw</span>
-            <span class="p">)</span></div></div>
+            <span class="p">)</span></div>
+</div>
+
 </pre></div>
 
                 </article>
