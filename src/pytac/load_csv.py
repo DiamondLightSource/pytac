@@ -14,7 +14,7 @@ import contextlib
 import copy
 import csv
 from pathlib import Path
-from typing import Dict, Iterator
+from typing import TYPE_CHECKING, Dict, Iterator, Optional, Union
 
 import pytac
 from pytac import data_source, element, utils
@@ -22,6 +22,9 @@ from pytac.device import EpicsDevice, SimpleDevice
 from pytac.exceptions import ControlSystemException
 from pytac.lattice import EpicsLattice, Lattice
 from pytac.units import NullUnitConv, PchipUnitConv, PolyUnitConv, UnitConv
+
+if TYPE_CHECKING:
+    from pytac.cs import ControlSystem
 
 # Create a default unit conversion object that returns the input unchanged.
 DEFAULT_UC = NullUnitConv()
@@ -49,7 +52,7 @@ def load_poly_unitconv(filepath: Path) -> Dict[int, PolyUnitConv]:
         filepath: The file from which to load.
 
     Returns:
-        dict: A dictionary of the unit conversions.
+        A dictionary of the unit conversions.
     """
     unitconvs: Dict[int, PolyUnitConv] = {}
     data = collections.defaultdict(list)
@@ -70,7 +73,7 @@ def load_pchip_unitconv(filepath: Path) -> Dict[int, PchipUnitConv]:
         filename: The file from which to load.
 
     Returns:
-        dict: A dictionary of the unit conversions.
+        A dictionary of the unit conversions.
     """
     unitconvs: Dict[int, PchipUnitConv] = {}
     data = collections.defaultdict(list)
@@ -144,25 +147,28 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
                 element.set_unitconv(item["field"], uc)
 
 
-def load(mode, control_system=None, directory=None, symmetry=None):
+def load(
+    mode: str,
+    control_system: Optional[ControlSystem] = None,
+    directory: Optional[Union[str, Path]] = None,
+    symmetry: Optional[int] = None,
+) -> Lattice:
     """Load the elements of a lattice from a directory.
 
     Args:
-        mode (str): The name of the mode to be loaded.
-        control_system (ControlSystem): The control system to be used. If none
-                                         is provided an EpicsControlSystem will
-                                         be created.
-        directory (str): Directory where to load the files from. If no
-                          directory is given the data directory at the root of
-                          the repository is used.
-        symmetry (int): The symmetry of the lattice (the number of cells).
+        mode: The name of the mode to be loaded.
+        control_system: The control system to be used. If none is provided an
+            EpicsControlSystem will be created.
+        directory: Directory where to load the files from. If no directory is
+            given the data directory at the root of the repository is used.
+        symmetry: The symmetry of the lattice (the number of cells).
 
     Returns:
-        Lattice: The lattice containing all elements.
+        The lattice containing all elements.
 
     Raises:
         ControlSystemException: if the default control system, cothread, is not
-                                 installed.
+            installed.
     """
     try:
         if control_system is None:

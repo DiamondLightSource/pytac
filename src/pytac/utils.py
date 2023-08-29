@@ -1,5 +1,6 @@
 """Utility functions."""
 import math
+from typing import Callable
 
 import scipy.constants
 
@@ -7,13 +8,14 @@ electron_mass_name = "electron mass energy equivalent in MeV"
 electron_mass_mev, _, _ = scipy.constants.physical_constants[electron_mass_name]
 
 
-def get_rigidity(energy_mev):
-    """
+def get_rigidity(energy_mev: int) -> float:
+    """Get rigidity function.
+
     Args:
-        energy_mev (int): the energy of the lattice.
+        energy_mev: the energy of the lattice.
 
     Returns:
-        float: p devided by the elementary charge.
+        p devided by the elementary charge.
     """
     gamma = energy_mev / electron_mass_mev
     beta = math.sqrt(1 - gamma ** (-2))
@@ -22,13 +24,14 @@ def get_rigidity(energy_mev):
     return p / scipy.constants.e
 
 
-def get_div_rigidity(energy):
-    """
+def get_div_rigidity(energy: int) -> Callable[[int], float]:
+    """Return the function div_rigidity.
+
     Args:
-        energy (int): the energy of the lattice.
+        energy: the energy of the lattice.
 
     Returns:
-        typing.Callable[[int], float]: div rigidity.
+        div rigidity.
     """
     rigidity = get_rigidity(energy)
 
@@ -38,13 +41,14 @@ def get_div_rigidity(energy):
     return div_rigidity
 
 
-def get_mult_rigidity(energy):
-    """
+def get_mult_rigidity(energy: int) -> Callable[[int], float]:
+    """Return the function mult_rigidity.
+
     Args:
-        energy (int): the energy of the lattice.
+        energy: the energy of the lattice.
 
     Returns:
-        typing.Callable[[int], float]: mult rigidity.
+        mult rigidity.
     """
     rigidity = get_rigidity(energy)
 

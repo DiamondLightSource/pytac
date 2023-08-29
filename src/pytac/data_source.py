@@ -1,6 +1,12 @@
 """Module containing pytac data source classes."""
+from typing import Any, Dict, Iterable, List, Union
+
+from _collections_abc import KeysView
+
 import pytac
+from pytac.device import Device
 from pytac.exceptions import DataSourceException, FieldException
+from pytac.units import UnitConv
 
 
 class DataSource(object):
@@ -9,46 +15,44 @@ class DataSource(object):
     Typically an instance would represent hardware via a control system,
     or a simulation.
 
-    **Attributes:**
-
     Attributes:
-        units (str): pytac.PHYS or pytac.ENG.
-
-    **Methods:**
+        units: pytac.PHYS or pytac.ENG.
     """
 
-    def get_fields(self):
+    units: str
+
+    def get_fields(self) -> Iterable:
         """Get all the fields represented by this data source.
 
         Returns:
-            typing.Iterable: all fields.
+            All fields.
         """
         raise NotImplementedError()
 
-    def get_value(self, field, handle, throw):
+    def get_value(self, field: str, handle: str, throw: bool) -> Any:
         """Get a value for a field.
 
         Args:
-            field (str): field of the requested value.
-            handle (str): pytac.RB or pytac.SP
-            throw (bool): On failure: if True, raise ControlSystemException; if
-                           False, return None and log a warning.
+            field: field of the requested value.
+            handle: pytac.RB or pytac.SP
+            throw: On failure: if True, raise ControlSystemException; if False, None
+                will be returned for any PV that fails and a warning will be logged.
 
         Returns:
-            float: value for specified field and handle.
+            Value for specified field and handle.
         """
         raise NotImplementedError()
 
-    def set_value(self, field, value, throw):
+    def set_value(self, field: str, value: float, throw: bool) -> Any:
         """Set a value for a field.
 
         This is always set to pytac.SP, never pytac.RB.
 
         Args:
-            field (str): field to set.
-            value (float): value to set.
-            throw (bool): On failure: if True, raise ControlSystemException: if
-                           False, log a warning.
+            field: field to set.
+            value: value to set.
+            throw: On failure: if True, raise ControlSystemException; if False, None
+                will be returned for any PV that fails and a warning will be logged.
         """
         raise NotImplementedError()
 
@@ -62,42 +66,44 @@ class DataSourceManager(object):
     also held here.
 
     Attributes:
-        default_units (str): Holds the current default unit type, pytac.PHYS or
-                              pytac.ENG, for an element or lattice.
-        default_data_source (str): Holds the current default data source,
-                                    pytac.LIVE or pytac.SIM, for an element or
-                                    lattice.
+        default_units: Holds the current default unit type, pytac.PHYS or pytac.ENG,
+            for an element or lattice.
+        default_data_source: Holds the current default data source, pytac.LIVE or
+            pytac.SIM, for an element or lattice.
 
     .. Private Attributes:
-           _data_sources (dict): A dictionary of the data sources held.
-           _uc (dict): A dictionary of the unit conversion objects for each
-                        key(field).
-
-    **Methods:**
+           _data_sources: A dictionary of the data sources held.
+           _uc: A dictionary of the unit conversion objects for each key(field).
     """
 
-    def __init__(self):
-        self._data_sources = {}
-        self._uc = {}
+    default_units: str
+    default_data_source: str
+
+    _data_sources: Dict[str, DataSource]
+    _uc: Dict[str, UnitConv]
+
+    def __init__(self) -> None:
         self.default_units = pytac.ENG
         self.default_data_source = pytac.LIVE
+        self._data_sources = {}
+        self._uc = {}
 
-    def set_data_source(self, data_source, data_source_type):
+    def set_data_source(self, data_source: DataSource, data_source_type: str) -> None:
         """Add a data source to the manager.
 
         Args:
-            data_source (DataSource): the data source to be set.
-            data_source_type (str): the type of the data source being set
-                                     pytac.LIVE or pytac.SIM.
+            data_source: the data source to be set.
+            data_source_type: the type of the data source being set
+                pytac.LIVE or pytac.SIM.
         """
         self._data_sources[data_source_type] = data_source
 
-    def get_data_source(self, data_source_type):
+    def get_data_source(self, data_source_type: str) -> DataSource:
         """Get a data source.
 
         Args:
-            data_source_type (str): the type of the data source being set
-                                     pytac.LIVE or pytac.SIM.
+            data_source_type: the type of the data source being set
+                pytac.LIVE or pytac.SIM.
 
         Raises:
             DataSourceException: if there is no data source on the given field.
@@ -109,21 +115,21 @@ class DataSourceManager(object):
                 f"No data source {data_source_type} on manager {self}."
             )
 
-    def get_fields(self):
+    def get_fields(self) -> Dict[str, Iterable]:
         """Get all the fields defined on the manager.
 
         Includes all fields defined by all data sources.
 
         Returns:
-            dict: A dictionary of all the fields defined on the manager,
-                   separated by data source(key).
+            A dictionary of all the fields defined on the manager, separated by
+                data source(key).
         """
-        fields = {}
+        fields: Dict[str, Iterable] = {}
         for data_source in self._data_sources:
             fields[data_source] = self._data_sources[data_source].get_fields()
         return fields
 
-    def add_device(self, field, device, uc):
+    def add_device(self, field: str, device: Device, uc: UnitConv) -> None:
         """Add device and unit conversion objects to a given field.
 
         A DeviceDataSource must be set before calling this method, this
@@ -131,10 +137,9 @@ class DataSourceManager(object):
         uses devices.
 
         Args:
-            field (str): The key to store the unit conversion and device
-                          objects.
-            device (Device): The device object used for this field.
-            uc (UnitConv): The unit conversion object used for this field.
+            field: The key to store the unit conversion and device objects.
+            device: The device object used for this field.
+            uc: The unit conversion object used for this field.
 
         Raises:
             DataSourceException: if no DeviceDataSource is set.
@@ -142,7 +147,7 @@ class DataSourceManager(object):
         self.get_data_source(pytac.LIVE).add_device(field, device)
         self.set_unitconv(field, uc)
 
-    def get_device(self, field):
+    def get_device(self, field: str) -> Device:
         """Get the device for the given field.
 
         A DeviceDataSource must be set before calling this method, this
@@ -150,21 +155,21 @@ class DataSourceManager(object):
         uses devices.
 
         Args:
-            field (str): The lookup key to find the device on the manager.
+            field: The lookup key to find the device on the manager.
 
         Returns:
-            Device: The device on the given field.
+            The device on the given field.
 
         Raises:
             DataSourceException: if no DeviceDataSource is set.
         """
         return self.get_data_source(pytac.LIVE).get_device(field)
 
-    def get_unitconv(self, field):
+    def get_unitconv(self, field: str) -> UnitConv:
         """Get the unit conversion option for the specified field.
 
         Args:
-            field (str): The field associated with this conversion.
+            field: The field associated with this conversion.
 
         Returns:
             UnitConv: The object associated with the specified field.
@@ -179,12 +184,12 @@ class DataSourceManager(object):
                 f"No unit conversion option for field {field} on manager {self}."
             )
 
-    def set_unitconv(self, field, uc):
+    def set_unitconv(self, field: str, uc: UnitConv) -> None:
         """set the unit conversion option for the specified field.
 
         Args:
-            field (str): The field associated with this conversion.
-            uc (UnitConv): The unit conversion object to be set.
+            field: The field associated with this conversion.
+            uc: The unit conversion object to be set.
         """
         self._uc[field] = uc
 
@@ -209,8 +214,8 @@ class DataSourceManager(object):
             handle: pytac.SP or pytac.RB.
             units: pytac.ENG or pytac.PHYS returned.
             data_source: pytac.LIVE or pytac.SIM.
-            throw: On failure: if True, raise ControlSystemException; if
-                           False, return None and log a warning.
+            throw: On failure: if True, raise ControlSystemException; if False, None
+                will be returned for any PV that fails and a warning will be logged.
 
         Returns:
             The value of the requested field
@@ -247,8 +252,8 @@ class DataSourceManager(object):
             value: The value to set.
             units: pytac.ENG or pytac.PHYS.
             data_source_type: pytac.LIVE or pytac.SIM.
-            throw: On failure: if True, raise ControlSystemException: if
-                           False, log a warning.
+            throw: On failure: if True, raise ControlSystemException; if False, None
+                will be returned for any PV that fails and a warning will be logged.
 
         Raises:
             HandleException: if the specified handle is not pytac.SP.
@@ -269,82 +274,88 @@ class DataSourceManager(object):
 class DeviceDataSource(DataSource):
     """Data source containing control system devices.
 
-    **Attributes:**
-
     Attributes:
-        units (str): pytac.ENG or pytac.PHYS, pytac.ENG by default.
+        units: pytac.ENG or pytac.PHYS, pytac.ENG by default.
 
     .. Private Attributes:
-           _devices (dict): A dictionary of the devices for each key(field).
-
-    **Methods:**
+           _devices: A dictionary of the devices for each key(field).
     """
+
+    units: str
+
+    _devices: Dict[str, Device]
 
     def __init__(self):
         self._devices = {}
         self.units = pytac.ENG
 
-    def add_device(self, field, device):
+    def add_device(self, field: str, device: Device) -> None:
         """Add device to this data_source.
 
         Args:
-            field (str): field this device represents.
-            device (Device): device object.
+            field: field this device represents.
+            device: device object.
         """
         self._devices[field] = device
 
-    def get_device(self, field):
+    def get_device(self, field: str) -> Device:
         """Get device from the data_source.
 
         Args:
-            field (str): field of the requested device.
+            field: field of the requested device.
         Returns:
-            Device: The device of the specified field.
+            The device of the specified field.
 
         Raises:
-            FieldException: if the specified field doesn't exist on this data
-                             source.
+            FieldException: if the specified field doesn't exist on this data source.
         """
         try:
             return self._devices[field]
         except KeyError:
             raise FieldException(f"No field {field} on data source {self}.")
 
-    def get_fields(self):
+    def get_fields(self) -> KeysView:
         """Get all the fields from the data_source.
 
         Returns:
-            list: list of strings of all the fields of the data_source.
+            List of strings of all the fields of the data_source.
         """
         return self._devices.keys()
 
-    def get_value(self, field, handle, throw=True):
+    def get_value(
+        self, field: str, handle: str, throw: bool = True
+    ) -> Union[float, int, List[float], List[int]]:
         """Get the value of a readback or setpoint PV for a field from the
         data_source.
 
         Args:
-            field (str): field of the requested value.
-            handle (str): pytac.RB or pytac.SP.
-            throw (bool): On failure: if True, raise ControlSystemException; if
-                           False, return None and log a warning.
+            field: field of the requested value.
+            handle: pytac.RB or pytac.SP.
+            throw: On failure: if True, raise ControlSystemException; if False, None
+                will be returned for any PV that fails and a warning will be logged.
 
         Returns:
-            float: The value of the PV.
+            The value of the PV.
 
         Raises:
             FieldException: if the device does not have the specified field.
         """
         return self.get_device(field).get_value(handle, throw)
 
-    def set_value(self, field, value, throw=True):
+    def set_value(
+        self,
+        field: str,
+        value: Union[float, int, List[int], List[float]],
+        throw: bool = True,
+    ) -> None:
         """Set the value of a readback or setpoint PV for a field from the
         data_source.
 
         Args:
-            field (str): field for the requested value.
-            value (float): The value to set on the PV.
-            throw (bool): On failure: if True, raise ControlSystemException: if
-                           False, log a warning.
+            field: field for the requested value.
+            value: The value to set on the PV.
+            throw: On failure: if True, raise ControlSystemException; if False, None
+                will be returned for any PV that fails and a warning will be logged.
 
         Raises:
             FieldException: if the device does not have the specified field.
