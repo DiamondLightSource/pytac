@@ -2,29 +2,17 @@
     machine.
 """
 import logging
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Dict,
-    Iterable,
-    List,
-    Optional,
-    Sequence,
-    Set,
-    Union,
-)
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Union
 
 import numpy
 
 import pytac
+from pytac.cs import ControlSystem
 from pytac.data_source import DataSource, DataSourceManager
+from pytac.device import Device, EpicsDevice
 from pytac.element import Element
 from pytac.exceptions import DataSourceException, UnitsException
-
-if TYPE_CHECKING:
-    from pytac.cs import ControlSystem
-    from pytac.device import Device
-    from pytac.units import UnitConv
+from pytac.units import UnitConv
 
 
 class Lattice:
@@ -336,7 +324,7 @@ class Lattice:
             s_positions.append(element.s)
         return s_positions
 
-    def get_element_devices(self, family: str, field: str) -> List[Device]:
+    def get_element_devices(self, family: str, field: str) -> List[EpicsDevice]:
         """Get devices for a specific field for elements in the specfied
         family.
 
@@ -387,7 +375,7 @@ class Lattice:
         data_source: str = pytac.DEFAULT,
         throw: bool = True,
         dtype: Optional[numpy.dtype] = None,
-    ) -> Union[list, numpy.ndarray]:
+    ) -> Union[List[float], numpy.ndarray]:
         """Get the value of the given field for all elements in the given
         family in the lattice.
 

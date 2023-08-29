@@ -8,7 +8,7 @@ electron_mass_name = "electron mass energy equivalent in MeV"
 electron_mass_mev, _, _ = scipy.constants.physical_constants[electron_mass_name]
 
 
-def get_rigidity(energy_mev: int) -> float:
+def get_rigidity(energy_mev: float) -> float:
     """Get rigidity function.
 
     Args:
@@ -24,7 +24,7 @@ def get_rigidity(energy_mev: int) -> float:
     return p / scipy.constants.e
 
 
-def get_div_rigidity(energy: int) -> Callable[[int], float]:
+def get_div_rigidity(energy: float) -> Callable[[float], float]:
     """Return the function div_rigidity.
 
     Args:
@@ -41,7 +41,7 @@ def get_div_rigidity(energy: int) -> Callable[[int], float]:
     return div_rigidity
 
 
-def get_mult_rigidity(energy: int) -> Callable[[int], float]:
+def get_mult_rigidity(energy: float) -> Callable[[float], float]:
     """Return the function mult_rigidity.
 
     Args:

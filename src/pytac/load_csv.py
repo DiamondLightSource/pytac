@@ -14,17 +14,15 @@ import contextlib
 import copy
 import csv
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, Iterator, Optional, Union
+from typing import Dict, Iterator, Optional
 
 import pytac
 from pytac import data_source, element, utils
+from pytac.cs import ControlSystem
 from pytac.device import EpicsDevice, SimpleDevice
 from pytac.exceptions import ControlSystemException
 from pytac.lattice import EpicsLattice, Lattice
 from pytac.units import NullUnitConv, PchipUnitConv, PolyUnitConv, UnitConv
-
-if TYPE_CHECKING:
-    from pytac.cs import ControlSystem
 
 # Create a default unit conversion object that returns the input unchanged.
 DEFAULT_UC = NullUnitConv()
@@ -150,7 +148,7 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
 def load(
     mode: str,
     control_system: Optional[ControlSystem] = None,
-    directory: Optional[Union[str, Path]] = None,
+    directory: Optional[Path] = None,
     symmetry: Optional[int] = None,
 ) -> Lattice:
     """Load the elements of a lattice from a directory.

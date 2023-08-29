@@ -311,7 +311,7 @@ class Element(object):
         except FieldException as e:
             raise FieldException(f"{self}: {e}")
 
-    def set_lattice(self, lattice: Lattice) -> None:
+    def set_lattice(self, lattice: "Lattice") -> None:
         """Set the stored lattice reference for this element to the passed
         lattice object.
 
