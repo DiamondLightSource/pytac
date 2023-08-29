@@ -14,12 +14,10 @@ class DataSource(object):
 
     Typically an instance would represent hardware via a control system,
     or a simulation.
-
-    Attributes:
-        units: pytac.PHYS or pytac.ENG.
     """
 
     units: str
+    """Units of DataSource in pytac.PHYS or pytac.ENG."""
 
     def get_fields(self) -> Iterable:
         """Get all the fields represented by this data source.
@@ -64,23 +62,19 @@ class DataSourceManager(object):
     It receives requests from a lattice or element object and directs them to
     the correct data source. The unit conversion objects for all fields are
     also held here.
-
-    Attributes:
-        default_units: Holds the current default unit type, pytac.PHYS or pytac.ENG,
-            for an element or lattice.
-        default_data_source: Holds the current default data source, pytac.LIVE or
-            pytac.SIM, for an element or lattice.
-
-    .. Private Attributes:
-           _data_sources: A dictionary of the data sources held.
-           _uc: A dictionary of the unit conversion objects for each key(field).
     """
 
     default_units: str
+    """Holds the current default unit type, pytac.PHYS or pytac.ENG, for an element or
+        lattice."""
     default_data_source: str
+    """Holds the current default data source, pytac.LIVE or pytac.SIM, for an element
+        or lattice."""
 
     _data_sources: Dict[str, DataSource]
+    """A dictionary of the data sources held."""
     _uc: Dict[str, UnitConv]
+    """A dictionary of the unit conversion objects for each key(field)."""
 
     def __init__(self) -> None:
         self.default_units = pytac.ENG
@@ -272,18 +266,13 @@ class DataSourceManager(object):
 
 
 class DeviceDataSource(DataSource):
-    """Data source containing control system devices.
-
-    Attributes:
-        units: pytac.ENG or pytac.PHYS, pytac.ENG by default.
-
-    .. Private Attributes:
-           _devices: A dictionary of the devices for each key(field).
-    """
+    """Data source containing control system devices."""
 
     units: str
+    """pytac.ENG or pytac.PHYS, pytac.ENG by default."""
 
     _devices: Dict[str, Device]
+    """A dictionary of the devices for each key(field)."""
 
     def __init__(self):
         self._devices = {}

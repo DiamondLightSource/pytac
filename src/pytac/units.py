@@ -31,23 +31,19 @@ class UnitConv:
     The two arguments to this function represent functions that are
     applied to the result of the initial conversion. One happens after
     the conversion, the other happens before the conversion back.
-
-    Attributes:
-        name: An identifier for the unit conversion object.
-        eng_units: The unit type of the post conversion engineering value.
-        phys_units: The unit type of the post conversion physics value.
-
-    .. Private Attributes:
-           _post_eng_to_phys: Function to be applied after the initial conversion.
-           _pre_phys_to_eng: Function to be applied before the initial conversion.
     """
 
     name: Optional[str]
+    """An identifier for the unit conversion object."""
     eng_units: str
+    """The unit type of the post conversion engineering value."""
     phys_units: str
+    """The unit type of the post conversion physics value."""
 
     _post_eng_to_phys: Callable[[float], float]
+    """Function to be applied after the initial conversion."""
     _pre_phys_to_eng: Callable[[float], float]
+    """Function to be applied before the initial conversion."""
 
     def __init__(
         self,
@@ -257,19 +253,10 @@ class UnitConv:
 class PolyUnitConv(UnitConv):
     """Linear interpolation for converting between physics and engineering
     units.
-
-    Attributes:
-        p: A one-dimensional polynomial of coefficients.
-        name: An identifier for the unit conversion object.
-        eng_units: The unit type of the post conversion engineering value.
-        phys_units: The unit type of the post conversion physics value.
-
-    .. Private Attributes:
-            _post_eng_to_phys: Function to be appliedafter the initial conversion.
-            _pre_phys_to_eng: Function to be applied before the initial conversion.
     """
 
     p: numpy.poly1d
+    """A one-dimensional polynomial of coefficients."""
 
     def __init__(
         self,
@@ -327,27 +314,17 @@ class PolyUnitConv(UnitConv):
 
 
 class PchipUnitConv(UnitConv):
-    """Piecewise Cubic Hermite Interpolating Polynomial unit conversion.
-
-    Attributes:
-        x: A list of points on the x axis. These must be in increasing order
-            for the interpolation to work. Otherwise, a ValueError is raised.
-        y: A list of points on the y axis. These must be in increasing or
-            decreasing order. Otherwise, a ValueError is raised.
-        pp: A pchip one-dimensional monotonic cubic interpolation of points on
-            both x and y axes.
-        name: An identifier for the unit conversion object.
-        eng_units: The unit type of the post conversion engineering value.
-        phys_units: The unit type of the post conversion physics value.
-
-    .. Private Attributes:
-           _post_eng_to_phys: Function to be applied after the initial conversion.
-           _pre_phys_to_eng: Function to be applied before the initial conversion.
-    """
+    """Piecewise Cubic Hermite Interpolating Polynomial unit conversion."""
 
     x: List[Any]
+    """A list of points on the x axis. These must be in increasing order for the
+        interpolation to work. Otherwise, a ValueError is raised."""
     y: List[Any]
+    """A list of points on the y axis. These must be in increasing or decreasing
+        order. Otherwise, a ValueError is raised."""
     pp: PchipInterpolator
+    """A pchip one-dimensional monotonic cubic interpolation of points on both x
+        and y axes."""
 
     def __init__(
         self,
@@ -422,16 +399,7 @@ class PchipUnitConv(UnitConv):
 
 
 class NullUnitConv(UnitConv):
-    """Returns input value without performing any conversions.
-
-    Attributes:
-        eng_units: The unit type of the post conversion engineering value.
-        phys_units: The unit type of the post conversion physics value.
-
-    .. Private Attributes:
-           _post_eng_to_phys: Always unit_function as no conversion is performed.
-           _pre_phys_to_eng: Always unit_function as no conversion is performed.
-    """
+    """Returns input value without performing any conversions."""
 
     def __init__(self, engineering_units: str = "", physics_units: str = "") -> None:
         """Initialise the NullUnitConv Object.

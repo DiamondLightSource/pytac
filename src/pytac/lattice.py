@@ -20,22 +20,17 @@ class Lattice:
 
     Represents a lattice object that contains all elements of the ring. It has
     a name and a control system to be used for unit conversion.
-
-    Attributes:
-        name: The name of the lattice.
-        symmetry: The symmetry of the lattice (the number of cells).
-
-    .. Private Attributes:
-            _elements: The list of all the element objects in the lattice
-            _data_source_manager: A class that manages the data sources associated
-                with this lattice.
     """
 
     name: str
+    """The name of the lattice."""
     symmetry: Optional[int]
+    """The symmetry of the lattice (the number of cells)."""
 
     _elements: List[Element]
+    """The list of all the element objects in the lattice"""
     _data_source_manager: DataSourceManager
+    """A class that manages the data sources associated with this lattice."""
 
     def __init__(self, name: str, symmetry: Optional[int] = None) -> None:
         """Initialise the Lattice object.

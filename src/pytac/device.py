@@ -62,16 +62,14 @@ class SimpleDevice(Device):
     with a simulator. In short this device acts as simple storage for data
     that rarely changes, as it is not affected by changes to other aspects of
     the accelerator.
-
-    Attributes:
-        _value: The value of the device. May be a number or list of numbers.
-        _enabled: Whether the device is enabled. May be a PvEnabler Object.
-        _readonly: Whether the value may be changed.
     """
 
     _value: Union[float, int, List[float], List[int]]
+    """The value of the device. May be a number or list of numbers."""
     _enabled: Union[bool, "PvEnabler"]
+    """Whether the device is enabled. May be a PvEnabler Object."""
     _readonly: bool
+    """Whether the value may be changed."""
 
     def __init__(
         self,
@@ -137,23 +135,19 @@ class EpicsDevice(Device):
     Contains a control system, readback and setpoint PVs. A readback or
     setpoint PV is required when creating an epics device otherwise a
     DataSourceException is raised. The device is enabled by default.
-
-    Attributes:
-        name: The prefix of EPICS PVs for this device.
-        rb_pv: The EPICS readback PV.
-        sp_pv: The EPICS setpoint PV.
-
-    .. Private Attributes:
-            _cs: The control system object used to get and set the value of a PV.
-            _enabled: Whether the device is enabled. May be a PvEnabler object.
     """
 
     name: str
+    """The prefix of EPICS PVs for this device."""
     rb_pv: Optional[str]
+    """The EPICS readback PV."""
     sp_pv: Optional[str]
+    """The EPICS setpoint PV."""
 
     _cs: ControlSystem
+    """The control system object used to get and set the value of a PV."""
     _enabled: Union[bool, "PvEnabler"]
+    """Whether the device is enabled. May be a PvEnabler object."""
 
     def __init__(
         self,
@@ -249,17 +243,14 @@ class PvEnabler(object):
 
     The class will behave like True if the PV value equals enabled_value,
     and False otherwise.
-
-    .. Private Attributes:
-            _pv: The PV name.
-            _enabled_value: The value for PV for which the device should be
-                considered enabled.
-            _cs: The control system object.
     """
 
     _pv: str
+    """The PV name."""
     _enabled_value: str
+    """The value for PV for which the device should be considered enabled."""
     _cs: ControlSystem
+    """The control system object."""
 
     def __init__(self, pv: str, enabled_value: str, cs: ControlSystem):
         """

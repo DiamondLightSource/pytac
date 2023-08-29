@@ -16,29 +16,23 @@ class Element(object):
 
     An element has zero or more devices (e.g. quadrupole magnet) associated
     with each of its fields (e.g. 'b1' for a quadrupole).
-
-    Attributes:
-        name: The name identifying the element. The user is free to define this for
-            their own purposes.
-        type_: The type of the element. The user is free to define this for their own
-            purposes.
-        length: The length of the element in metres.
-
-    .. Private Attributes:
-            _lattice: The lattice to which the element belongs.
-            _data_source_manager: A class that manages the data sources associated with
-                this element.
-            _families The families this element is a member of, stored as lowercase
-                strings.
     """
 
     name: Optional[str]
+    """The name identifying the element. The user is free to define this for their
+        own purposes."""
     type_: str
+    """The type of the element. The user is free to define this for their own
+        purposes."""
     length: float
+    """The length of the element in metres."""
 
     _lattice: Optional["Lattice"]
+    """The lattice to which the element belongs."""
     _data_source_manager: DataSourceManager
+    """A class that manages the data sources associated with this element."""
     _families: Set[Any]
+    """The families this element is a member of, stored as lowercase strings."""
 
     def __init__(
         self,
