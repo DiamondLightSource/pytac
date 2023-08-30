@@ -288,7 +288,7 @@ class PolyUnitConv(UnitConv):
 
     def __init__(
         self,
-        coef: NDArray[numpy.generic],
+        coef: Union[List[float], NDArray[numpy.generic]],
         post_eng_to_phys: Callable[[float], float] = unit_function,
         pre_phys_to_eng: Callable[[float], float] = unit_function,
         engineering_units: str = "",
