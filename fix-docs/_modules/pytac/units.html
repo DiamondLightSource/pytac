@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pytac.units &#8212; pytac 0.6.1.dev4+g5b93322 documentation</title>
+    <title>pytac.units &#8212; pytac 0.6.1.dev5+ga9c168c documentation</title>
   
   
   
@@ -36,7 +36,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script src="../../_static/documentation_options.js?v=b3283424"></script>
+    <script src="../../_static/documentation_options.js?v=79fd5252"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -416,9 +416,10 @@ document.write(`
                   
   <h1>Source code for pytac.units</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Classes for use in unit conversion.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">NDArray</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">PchipInterpolator</span>
 
 <span class="kn">import</span> <span class="nn">pytac</span>
@@ -455,7 +456,7 @@ document.write(`
 <span class="sd">    the conversion, the other happens before the conversion back.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An identifier for the unit conversion object.&quot;&quot;&quot;</span>
     <span class="n">eng_units</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The unit type of the post conversion engineering value.&quot;&quot;&quot;</span>
@@ -473,7 +474,7 @@ document.write(`
         <span class="n">pre_phys_to_eng</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_function</span><span class="p">,</span>
         <span class="n">engineering_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">physics_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise the UnitConv Object.</span>
 
@@ -489,8 +490,8 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">_pre_phys_to_eng</span> <span class="o">=</span> <span class="n">pre_phys_to_eng</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eng_units</span> <span class="o">=</span> <span class="n">engineering_units</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">phys_units</span> <span class="o">=</span> <span class="n">physics_units</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower_limit</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Optional[float]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper_limit</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Optional[float]</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">string_rep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
@@ -500,8 +501,11 @@ document.write(`
 
 <div class="viewcode-block" id="UnitConv.set_post_eng_to_phys">
 <a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_post_eng_to_phys">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_post_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_eng_to_phys</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_post_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_eng_to_phys</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the function to be applied after the initial conversion.</span>
+
+<span class="sd">        N.B. post_eng_to_phys should be of type: Callable[[float], float], but this</span>
+<span class="sd">            cannot be implimented with the current code structure.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            post_eng_to_phys: Function to be applied after the initial conversion.</span>
@@ -511,8 +515,11 @@ document.write(`
 
 <div class="viewcode-block" id="UnitConv.set_pre_phys_to_eng">
 <a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_pre_phys_to_eng">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_pre_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre_phys_to_eng</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_pre_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre_phys_to_eng</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the function to be applied before the initial conversion.</span>
+
+<span class="sd">        N.B. pre_phys_to_eng should be of type: Callable[[float], float], but this</span>
+<span class="sd">            cannot be implimented with the current code structure.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            pre_phys_to_eng: Function to be applied before the initial conversion.</span>
@@ -520,8 +527,11 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">_pre_phys_to_eng</span> <span class="o">=</span> <span class="n">pre_phys_to_eng</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_raw_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_raw_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to be implemented by child classes.</span>
+
+<span class="sd">        N.B. value and return should be of type: float, but this cannot be implimented</span>
+<span class="sd">            with the current code structure.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            value: The engineering value to be converted to physics units.</span>
@@ -530,11 +540,14 @@ document.write(`
 
 <div class="viewcode-block" id="UnitConv.eng_to_phys">
 <a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.eng_to_phys">[docs]</a>
-    <span class="k">def</span> <span class="nf">eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Function that does the unit conversion.</span>
 
 <span class="sd">        Conversion from engineering to physics units. An additional function</span>
 <span class="sd">        may be cast on the initial conversion.</span>
+
+<span class="sd">        N.B. value and return should be of type: float, but this cannot be implimented</span>
+<span class="sd">            with the current code structure.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            value: Value to be converted from engineering to physics units.</span>
@@ -571,8 +584,11 @@ document.write(`
         <span class="k">return</span> <span class="n">valid_results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_raw_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_raw_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to be implemented by child classes.</span>
+
+<span class="sd">        N.B. value and return should be of type: float, but this cannot be implimented</span>
+<span class="sd">            with the current code structure.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            value: The physics value to be converted to engineering units.</span>
@@ -581,11 +597,14 @@ document.write(`
 
 <div class="viewcode-block" id="UnitConv.phys_to_eng">
 <a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.phys_to_eng">[docs]</a>
-    <span class="k">def</span> <span class="nf">phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Function that does the unit conversion.</span>
 
 <span class="sd">        Conversion from physics to engineering units. An additional function</span>
 <span class="sd">        may be cast on the initial conversion.</span>
+
+<span class="sd">        N.B. value and return should be of type: float, but this cannot be implimented</span>
+<span class="sd">            with the current code structure.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            value: Value to be converted from physics to engineering units.</span>
@@ -621,9 +640,12 @@ document.write(`
 
 <div class="viewcode-block" id="UnitConv.convert">
 <a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.convert">[docs]</a>
-    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">origin</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">origin</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert between two different unit types and check the validity of</span>
 <span class="sd">        the result.</span>
+
+<span class="sd">        N.B. value and return should be of type: float, but this cannot be implimented</span>
+<span class="sd">            with the current code structure.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            value: the value to be converted</span>
@@ -651,9 +673,12 @@ document.write(`
 
 <div class="viewcode-block" id="UnitConv.set_conversion_limits">
 <a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_conversion_limits">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_conversion_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_limit</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">upper_limit</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_conversion_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_limit</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">upper_limit</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Conversion limits to be applied before or after a conversion take</span>
 <span class="sd">        place. Limits should be set in in engineering units.</span>
+
+<span class="sd">        N.B. lower_limit and upper_limit should be of type: Optional[float], but</span>
+<span class="sd">            this cannot be implimented with the current code structure.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            lower_limit: the lower conversion limit</span>
@@ -671,8 +696,11 @@ document.write(`
 
 <div class="viewcode-block" id="UnitConv.get_conversion_limits">
 <a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.get_conversion_limits">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_conversion_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">get_conversion_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the current conversion limits in the specified unit type.</span>
+
+<span class="sd">        N.B. return should be type: List[Optional[float]], but this cannot be</span>
+<span class="sd">            implimented with the current code structure.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            units: The unit type.</span>
@@ -706,12 +734,12 @@ document.write(`
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">coef</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">generic</span><span class="p">]],</span>
+        <span class="n">coef</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">generic</span><span class="p">],</span>
         <span class="n">post_eng_to_phys</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_function</span><span class="p">,</span>
         <span class="n">pre_phys_to_eng</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_function</span><span class="p">,</span>
         <span class="n">engineering_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">physics_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise the PolyUnitConv Object.</span>
 
@@ -783,7 +811,7 @@ document.write(`
         <span class="n">pre_phys_to_eng</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_function</span><span class="p">,</span>
         <span class="n">engineering_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">physics_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>

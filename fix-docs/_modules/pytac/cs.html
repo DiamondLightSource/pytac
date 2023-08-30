@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pytac.cs &#8212; pytac 0.6.1.dev4+g5b93322 documentation</title>
+    <title>pytac.cs &#8212; pytac 0.6.1.dev5+ga9c168c documentation</title>
   
   
   
@@ -36,7 +36,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script src="../../_static/documentation_options.js?v=b3283424"></script>
+    <script src="../../_static/documentation_options.js?v=79fd5252"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -418,7 +418,22 @@ document.write(`
 <span></span><span class="sd">&quot;&quot;&quot;Class representing an abstract control system.&quot;&quot;&quot;</span>
 
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
+    <span class="n">Sequence</span><span class="p">,</span>
+    <span class="n">Sized</span><span class="p">,</span>
+    <span class="n">SupportsFloat</span><span class="p">,</span>
+    <span class="n">SupportsIndex</span><span class="p">,</span>
+    <span class="n">SupportsInt</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="AugmentedType">
+<a class="viewcode-back" href="../../user/reference/api.html#pytac.cs.AugmentedType">[docs]</a>
+<span class="k">class</span> <span class="nc">AugmentedType</span><span class="p">(</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">SupportsInt</span><span class="p">,</span> <span class="n">SupportsIndex</span><span class="p">,</span> <span class="n">Sized</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
 
 
 <div class="viewcode-block" id="ControlSystem">
@@ -432,7 +447,7 @@ document.write(`
 
 <div class="viewcode-block" id="ControlSystem.get_single">
 <a class="viewcode-back" href="../../user/reference/api.html#pytac.cs.ControlSystem.get_single">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pv</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pv</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AugmentedType</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of a given PV.</span>
 
 <span class="sd">        Args:</span>
@@ -451,7 +466,9 @@ document.write(`
 
 <div class="viewcode-block" id="ControlSystem.get_multiple">
 <a class="viewcode-back" href="../../user/reference/api.html#pytac.cs.ControlSystem.get_multiple">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pvs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">get_multiple</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">pvs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">AugmentedType</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value for given PVs.</span>
 
 <span class="sd">        Args:</span>
@@ -470,7 +487,7 @@ document.write(`
 
 <div class="viewcode-block" id="ControlSystem.set_single">
 <a class="viewcode-back" href="../../user/reference/api.html#pytac.cs.ControlSystem.set_single">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pv</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pv</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">AugmentedType</span><span class="p">,</span> <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the value of a given PV.</span>
 
 <span class="sd">        Args:</span>
@@ -487,7 +504,9 @@ document.write(`
 
 <div class="viewcode-block" id="ControlSystem.set_multiple">
 <a class="viewcode-back" href="../../user/reference/api.html#pytac.cs.ControlSystem.set_multiple">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pvs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_multiple</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">pvs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">AugmentedType</span><span class="p">],</span> <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">bool</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the values for given PVs.</span>
 
 <span class="sd">        Args:</span>
