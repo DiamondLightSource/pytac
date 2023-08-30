@@ -1,8 +1,9 @@
 """Module containing the element class."""
-from typing import TYPE_CHECKING, Any, Dict, Iterable, Optional, Set
+from typing import TYPE_CHECKING, Any, Dict, Iterable, Optional, Sequence, Set, cast
 
 import pytac
-from pytac.data_source import DataSource, DataSourceManager
+from pytac.cs import AugmentedType
+from pytac.data_source import DataSourceManager, DeviceDataSource
 from pytac.device import Device
 from pytac.exceptions import DataSourceException, FieldException
 from pytac.units import UnitConv
@@ -71,7 +72,12 @@ class Element(object):
         if self._lattice is None:
             return None
         else:
-            return sum([el.length for el in self._lattice[: self.index - 1]])
+            # index is not None when self._lattice is not None as per index property.
+            index = cast(int, self.index)
+            # Lattice must be iterable and indexable, however mypy doesnt accept only
+            # having __getitem__ and __len__ instead of __iter__.
+            typed_lattice = cast(Sequence, self._lattice)
+            return sum([el.length for el in typed_lattice[: index - 1]])
 
     @property
     def cell(self) -> Optional[int]:
@@ -85,7 +91,9 @@ class Element(object):
         elif self._lattice.cell_length is None:
             return None
         else:
-            return int(self.s / self._lattice.cell_length) + 1
+            # s is not None when self._lattice is not None as per s property.
+            s = cast(float, self.s)
+            return int(s / self._lattice.cell_length) + 1
 
     @property
     def families(self) -> Set[Any]:
@@ -128,7 +136,9 @@ class Element(object):
         """
         self._data_source_manager.default_units = units
 
-    def set_data_source(self, data_source: DataSource, data_source_type: str) -> None:
+    def set_data_source(
+        self, data_source: DeviceDataSource, data_source_type: str
+    ) -> None:
         """Add a data source to the element.
 
         Args:
@@ -242,7 +252,7 @@ class Element(object):
         units: str = pytac.DEFAULT,
         data_source: str = pytac.DEFAULT,
         throw: bool = True,
-    ) -> float:
+    ) -> Optional[AugmentedType]:
         """Get the value for a field.
 
         Returns the value of a field on the element. This value is uniquely
@@ -277,7 +287,7 @@ class Element(object):
     def set_value(
         self,
         field: str,
-        value: float,
+        value: AugmentedType,
         units: str = pytac.DEFAULT,
         data_source: str = pytac.DEFAULT,
         throw: bool = True,

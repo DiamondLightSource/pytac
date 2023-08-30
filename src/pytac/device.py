@@ -5,10 +5,10 @@ A physical element in an accelerator may have multiple devices: an example at
 DLS is a sextupole magnet that contains also horizontal and vertical corrector
 magnets and a skew quadrupole.
 """
-from typing import List, Optional, Union
+from typing import Optional, Union, cast
 
 import pytac
-from pytac.cs import ControlSystem
+from pytac.cs import AugmentedType, ControlSystem
 from pytac.exceptions import DataSourceException, HandleException
 
 
@@ -27,9 +27,7 @@ class Device:
         """
         raise NotImplementedError()
 
-    def get_value(
-        self, handle: str, throw: bool
-    ) -> Union[float, int, List[int], List[float]]:
+    def get_value(self, handle: Optional[str], throw: bool) -> Optional[AugmentedType]:
         """Read the value from the device.
 
         Args:
@@ -42,9 +40,7 @@ class Device:
         """
         raise NotImplementedError()
 
-    def set_value(
-        self, value: Union[float, int, List[int], List[float]], throw: bool
-    ) -> None:
+    def set_value(self, value: AugmentedType, throw: bool) -> None:
         """Set the value on the device.
 
         Args:
@@ -64,7 +60,7 @@ class SimpleDevice(Device):
     the accelerator.
     """
 
-    _value: Union[float, int, List[float], List[int]]
+    _value: Optional[AugmentedType]
     """The value of the device. May be a number or list of numbers."""
     _enabled: Union[bool, "PvEnabler"]
     """Whether the device is enabled. May be a PvEnabler Object."""
@@ -73,7 +69,7 @@ class SimpleDevice(Device):
 
     def __init__(
         self,
-        value: Union[float, int, List[int], List[float]],
+        value: Optional[AugmentedType],
         enabled: Union[bool, "PvEnabler"] = True,
         readonly: bool = True,
     ) -> None:
@@ -98,7 +94,7 @@ class SimpleDevice(Device):
 
     def get_value(
         self, handle: Optional[str] = None, throw: Optional[bool] = None
-    ) -> Union[float, int, List[int], List[float]]:
+    ) -> Optional[AugmentedType]:
         """Read the value from the device.
 
         Args:
@@ -114,7 +110,7 @@ class SimpleDevice(Device):
 
     def set_value(
         self,
-        value: Union[float, int, List[int], List[float]],
+        value: Optional[AugmentedType],
         throw: Optional[bool] = None,
     ) -> None:
         """Set the value on the device.
@@ -187,7 +183,9 @@ class EpicsDevice(Device):
         """
         return bool(self._enabled)
 
-    def get_value(self, handle: str, throw: bool = True) -> Union[float, int]:
+    def get_value(
+        self, handle: Optional[str], throw: bool = True
+    ) -> Optional[AugmentedType]:
         """Read the value of a readback or setpoint PV.
 
         Args:
@@ -203,9 +201,7 @@ class EpicsDevice(Device):
         """
         return self._cs.get_single(self.get_pv_name(handle), throw)
 
-    def set_value(
-        self, value: Union[float, int, List[int], List[float]], throw: bool = True
-    ) -> None:
+    def set_value(self, value: AugmentedType, throw: bool = True) -> None:
         """Set the device value.
 
         Args:
@@ -218,7 +214,7 @@ class EpicsDevice(Device):
         """
         self._cs.set_single(self.get_pv_name(pytac.SP), value, throw)
 
-    def get_pv_name(self, handle: str) -> str:
+    def get_pv_name(self, handle: Optional[str]) -> str:
         """Get the PV name for the specified handle.
 
         Args:
@@ -252,7 +248,7 @@ class PvEnabler(object):
     _cs: ControlSystem
     """The control system object."""
 
-    def __init__(self, pv: str, enabled_value: str, cs: ControlSystem):
+    def __init__(self, pv: str, enabled_value: str, cs: ControlSystem) -> None:
         """
         Args:
             pv: The PV name.
@@ -270,5 +266,8 @@ class PvEnabler(object):
         Returns:
             True if the device should be considered enabled.
         """
-        pv_value = self._cs.get_single(self._pv, True)
-        return self._enabled_value == str(int(float(pv_value)))
+        pv_value = self._cs.get_single(self._pv, throw=True)
+        # pv_value is not None as throw is True.
+        # This would raise a ControlSystemException rather than returning None.
+        pv_value_cast = cast(AugmentedType, pv_value)
+        return self._enabled_value == str(int(float(pv_value_cast)))

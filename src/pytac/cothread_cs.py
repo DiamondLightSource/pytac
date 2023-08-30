@@ -3,8 +3,19 @@ from typing import Any, List, Optional, Sequence
 
 from cothread.catools import ca_nothing, caget, caput
 
-from pytac.cs import ControlSystem
+from pytac.cs import AugmentedType, ControlSystem
 from pytac.exceptions import ControlSystemException
+
+
+class AugmentedValue(AugmentedType):
+    """A dummy class for typehinting,
+    taken from aioca.aioca.types and cothread.
+    """
+
+    name: str
+    """Name of the PV used to create this value."""
+    ok: bool
+    """True for normal data, False for error code."""
 
 
 class CothreadControlSystem(ControlSystem):
@@ -33,7 +44,7 @@ class CothreadControlSystem(ControlSystem):
         self._timeout = timeout
         self._wait = wait
 
-    def get_single(self, pv: str, throw: bool = True) -> Optional[Any]:
+    def get_single(self, pv: str, throw: bool = True) -> Optional[AugmentedType]:
         """Get the value of a given PV.
 
         Args:
@@ -58,7 +69,9 @@ class CothreadControlSystem(ControlSystem):
                 logging.warning(error_msg)
                 return None
 
-    def get_multiple(self, pvs: Sequence[str], throw: bool = True) -> List[Any]:
+    def get_multiple(
+        self, pvs: Sequence[str], throw: bool = True
+    ) -> List[Optional[AugmentedType]]:
         """Get the value for given PVs.
 
         Args:
@@ -73,8 +86,8 @@ class CothreadControlSystem(ControlSystem):
             ControlSystemException: if it cannot connect to one or more PVs.
         """
         results = caget(pvs, timeout=self._timeout, throw=False)
-        return_values: List[Optional[Any]] = []
-        failures: List[Any] = []
+        return_values: List[Optional[AugmentedType]] = []
+        failures = []
         for result in results:
             if isinstance(result, ca_nothing):
                 logging.warning(f"Cannot connect to {result.name}.")
@@ -88,7 +101,7 @@ class CothreadControlSystem(ControlSystem):
             raise ControlSystemException(f"{len(failures)} caget calls failed.")
         return return_values
 
-    def set_single(self, pv: str, value: Any, throw: bool = True) -> bool:
+    def set_single(self, pv: str, value: AugmentedType, throw: bool = True) -> bool:
         """Set the value of a given PV.
 
         Args:
@@ -115,7 +128,10 @@ class CothreadControlSystem(ControlSystem):
                 return False
 
     def set_multiple(
-        self, pvs: Sequence[str], values: Any, throw: bool = True
+        self,
+        pvs: Sequence[str],
+        values: Sequence[AugmentedType],
+        throw: bool = True,
     ) -> Optional[List[bool]]:
         """Set the values for given PVs.
 

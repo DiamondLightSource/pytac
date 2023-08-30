@@ -1,9 +1,10 @@
 """Module containing pytac data source classes."""
-from typing import Any, Dict, Iterable, List, Union
+from typing import Dict, Iterable, Optional
 
 from _collections_abc import KeysView
 
 import pytac
+from pytac.cs import AugmentedType
 from pytac.device import Device
 from pytac.exceptions import DataSourceException, FieldException
 from pytac.units import UnitConv
@@ -27,7 +28,9 @@ class DataSource(object):
         """
         raise NotImplementedError()
 
-    def get_value(self, field: str, handle: str, throw: bool) -> Any:
+    def get_value(
+        self, field: str, handle: str, throw: bool
+    ) -> Optional[AugmentedType]:
         """Get a value for a field.
 
         Args:
@@ -41,7 +44,7 @@ class DataSource(object):
         """
         raise NotImplementedError()
 
-    def set_value(self, field: str, value: float, throw: bool) -> Any:
+    def set_value(self, field: str, value: AugmentedType, throw: bool) -> None:
         """Set a value for a field.
 
         This is always set to pytac.SP, never pytac.RB.
@@ -71,7 +74,7 @@ class DataSourceManager(object):
     """Holds the current default data source, pytac.LIVE or pytac.SIM, for an element
         or lattice."""
 
-    _data_sources: Dict[str, DataSource]
+    _data_sources: Dict[str, "DeviceDataSource"]
     """A dictionary of the data sources held."""
     _uc: Dict[str, UnitConv]
     """A dictionary of the unit conversion objects for each key(field)."""
@@ -82,7 +85,9 @@ class DataSourceManager(object):
         self._data_sources = {}
         self._uc = {}
 
-    def set_data_source(self, data_source: DataSource, data_source_type: str) -> None:
+    def set_data_source(
+        self, data_source: "DeviceDataSource", data_source_type: str
+    ) -> None:
         """Add a data source to the manager.
 
         Args:
@@ -92,7 +97,7 @@ class DataSourceManager(object):
         """
         self._data_sources[data_source_type] = data_source
 
-    def get_data_source(self, data_source_type: str) -> DataSource:
+    def get_data_source(self, data_source_type: str) -> "DeviceDataSource":
         """Get a data source.
 
         Args:
@@ -194,7 +199,7 @@ class DataSourceManager(object):
         units: str = pytac.DEFAULT,
         data_source_type: str = pytac.DEFAULT,
         throw: bool = True,
-    ) -> float:
+    ) -> Optional[AugmentedType]:
         """Get the value for a field.
 
         Returns the value of a field on the manager. This value is uniquely
@@ -231,7 +236,7 @@ class DataSourceManager(object):
     def set_value(
         self,
         field: str,
-        value: float,
+        value: AugmentedType,
         units: str = pytac.DEFAULT,
         data_source_type: str = pytac.DEFAULT,
         throw: bool = True,
@@ -313,7 +318,7 @@ class DeviceDataSource(DataSource):
 
     def get_value(
         self, field: str, handle: str, throw: bool = True
-    ) -> Union[float, int, List[float], List[int]]:
+    ) -> Optional[AugmentedType]:
         """Get the value of a readback or setpoint PV for a field from the
         data_source.
 
@@ -334,7 +339,7 @@ class DeviceDataSource(DataSource):
     def set_value(
         self,
         field: str,
-        value: Union[float, int, List[int], List[float]],
+        value: AugmentedType,
         throw: bool = True,
     ) -> None:
         """Set the value of a readback or setpoint PV for a field from the

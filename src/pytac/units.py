@@ -1,7 +1,8 @@
 """Classes for use in unit conversion."""
-from typing import Any, Callable, List, Optional
+from typing import Any, Callable, List, Optional, Union
 
 import numpy
+from numpy.typing import NDArray
 from scipy.interpolate import PchipInterpolator
 
 import pytac
@@ -33,7 +34,7 @@ class UnitConv:
     the conversion, the other happens before the conversion back.
     """
 
-    name: Optional[str]
+    name: Optional[Union[str, int]]
     """An identifier for the unit conversion object."""
     eng_units: str
     """The unit type of the post conversion engineering value."""
@@ -51,7 +52,7 @@ class UnitConv:
         pre_phys_to_eng: Callable[[float], float] = unit_function,
         engineering_units: str = "",
         physics_units: str = "",
-        name: Optional[str] = None,
+        name: Optional[Union[str, int]] = None,
     ) -> None:
         """Initialise the UnitConv Object.
 
@@ -67,8 +68,8 @@ class UnitConv:
         self._pre_phys_to_eng = pre_phys_to_eng
         self.eng_units = engineering_units
         self.phys_units = physics_units
-        self.lower_limit: Optional[float] = None
-        self.upper_limit: Optional[float] = None
+        self.lower_limit: Any = None  # Optional[float]
+        self.upper_limit: Any = None  # Optional[float]
 
     def __str__(self) -> str:
         string_rep = self.__class__.__name__
@@ -76,35 +77,47 @@ class UnitConv:
             string_rep += f" {self.name}"
         return string_rep
 
-    def set_post_eng_to_phys(self, post_eng_to_phys: Callable[[float], float]) -> None:
+    def set_post_eng_to_phys(self, post_eng_to_phys: Callable[[Any], Any]) -> None:
         """Set the function to be applied after the initial conversion.
+
+        N.B. post_eng_to_phys should be of type: Callable[[float], float], but this
+            cannot be implimented with the current code structure.
 
         Args:
             post_eng_to_phys: Function to be applied after the initial conversion.
         """
         self._post_eng_to_phys = post_eng_to_phys
 
-    def set_pre_phys_to_eng(self, pre_phys_to_eng: Callable[[float], float]) -> None:
+    def set_pre_phys_to_eng(self, pre_phys_to_eng: Callable[[Any], Any]) -> None:
         """Set the function to be applied before the initial conversion.
+
+        N.B. pre_phys_to_eng should be of type: Callable[[float], float], but this
+            cannot be implimented with the current code structure.
 
         Args:
             pre_phys_to_eng: Function to be applied before the initial conversion.
         """
         self._pre_phys_to_eng = pre_phys_to_eng
 
-    def _raw_eng_to_phys(self, value: float):
+    def _raw_eng_to_phys(self, value: Any) -> Any:
         """Function to be implemented by child classes.
+
+        N.B. value and return should be of type: float, but this cannot be implimented
+            with the current code structure.
 
         Args:
             value: The engineering value to be converted to physics units.
         """
         raise NotImplementedError(f"{self}: No eng-to-phys conversion provided")
 
-    def eng_to_phys(self, value: float) -> float:
+    def eng_to_phys(self, value: Any) -> Any:
         """Function that does the unit conversion.
 
         Conversion from engineering to physics units. An additional function
         may be cast on the initial conversion.
+
+        N.B. value and return should be of type: float, but this cannot be implimented
+            with the current code structure.
 
         Args:
             value: Value to be converted from engineering to physics units.
@@ -140,19 +153,25 @@ class UnitConv:
             )
         return valid_results[0]
 
-    def _raw_phys_to_eng(self, value: float):
+    def _raw_phys_to_eng(self, value: Any) -> Any:
         """Function to be implemented by child classes.
+
+        N.B. value and return should be of type: float, but this cannot be implimented
+            with the current code structure.
 
         Args:
             value: The physics value to be converted to engineering units.
         """
         raise NotImplementedError(f"{self}: No phys-to-eng conversion provided")
 
-    def phys_to_eng(self, value: float) -> float:
+    def phys_to_eng(self, value: Any) -> Any:
         """Function that does the unit conversion.
 
         Conversion from physics to engineering units. An additional function
         may be cast on the initial conversion.
+
+        N.B. value and return should be of type: float, but this cannot be implimented
+            with the current code structure.
 
         Args:
             value: Value to be converted from physics to engineering units.
@@ -185,9 +204,12 @@ class UnitConv:
             )
         return valid_results[0]
 
-    def convert(self, value: float, origin: str, target: str) -> float:
+    def convert(self, value: Any, origin: str, target: str) -> Any:
         """Convert between two different unit types and check the validity of
         the result.
+
+        N.B. value and return should be of type: float, but this cannot be implimented
+            with the current code structure.
 
         Args:
             value: the value to be converted
@@ -212,9 +234,12 @@ class UnitConv:
                 f"{self}: Conversion from {origin} to {target} not understood."
             )
 
-    def set_conversion_limits(self, lower_limit: float, upper_limit: float) -> None:
+    def set_conversion_limits(self, lower_limit: Any, upper_limit: Any) -> None:
         """Conversion limits to be applied before or after a conversion take
         place. Limits should be set in in engineering units.
+
+        N.B. lower_limit and upper_limit should be of type: Optional[float], but
+            this cannot be implimented with the current code structure.
 
         Args:
             lower_limit: the lower conversion limit
@@ -229,8 +254,11 @@ class UnitConv:
         self.lower_limit = lower_limit
         self.upper_limit = upper_limit
 
-    def get_conversion_limits(self, units: str = pytac.ENG) -> List[float]:
+    def get_conversion_limits(self, units: str = pytac.ENG) -> List[Any]:
         """Return the current conversion limits in the specified unit type.
+
+        N.B. return should be type: List[Optional[float]], but this cannot be
+            implimented with the current code structure.
 
         Args:
             units: The unit type.
@@ -260,12 +288,12 @@ class PolyUnitConv(UnitConv):
 
     def __init__(
         self,
-        coef: numpy.ndarray[Any, numpy.dtype[numpy.generic]],
+        coef: NDArray[numpy.generic],
         post_eng_to_phys: Callable[[float], float] = unit_function,
         pre_phys_to_eng: Callable[[float], float] = unit_function,
         engineering_units: str = "",
         physics_units: str = "",
-        name: Optional[str] = None,
+        name: Optional[Union[str, int]] = None,
     ):
         """Initialise the PolyUnitConv Object.
 
@@ -334,7 +362,7 @@ class PchipUnitConv(UnitConv):
         pre_phys_to_eng: Callable[[float], float] = unit_function,
         engineering_units: str = "",
         physics_units: str = "",
-        name: Optional[str] = None,
+        name: Optional[Union[str, int]] = None,
     ) -> None:
         """
         Args:

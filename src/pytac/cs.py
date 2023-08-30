@@ -1,7 +1,19 @@
 """Class representing an abstract control system."""
 
 
-from typing import Any, List, Sequence
+from typing import (
+    List,
+    Optional,
+    Sequence,
+    Sized,
+    SupportsFloat,
+    SupportsIndex,
+    SupportsInt,
+)
+
+
+class AugmentedType(SupportsFloat, SupportsInt, SupportsIndex, Sized):
+    pass
 
 
 class ControlSystem(object):
@@ -11,7 +23,7 @@ class ControlSystem(object):
     over channel access with the hardware in the ring.
     """
 
-    def get_single(self, pv: str, throw: bool) -> Any:
+    def get_single(self, pv: str, throw: bool) -> Optional[AugmentedType]:
         """Get the value of a given PV.
 
         Args:
@@ -27,7 +39,9 @@ class ControlSystem(object):
         """
         raise NotImplementedError()
 
-    def get_multiple(self, pvs: Sequence[str], throw: bool) -> List[Any]:
+    def get_multiple(
+        self, pvs: Sequence[str], throw: bool
+    ) -> List[Optional[AugmentedType]]:
         """Get the value for given PVs.
 
         Args:
@@ -43,7 +57,7 @@ class ControlSystem(object):
         """
         raise NotImplementedError()
 
-    def set_single(self, pv: str, value: Any, throw: bool):
+    def set_single(self, pv: str, value: AugmentedType, throw: bool) -> bool:
         """Set the value of a given PV.
 
         Args:
@@ -57,7 +71,9 @@ class ControlSystem(object):
         """
         raise NotImplementedError()
 
-    def set_multiple(self, pvs: Sequence[str], values: Sequence[Any], throw: bool):
+    def set_multiple(
+        self, pvs: Sequence[str], values: Sequence[AugmentedType], throw: bool
+    ) -> Optional[List[bool]]:
         """Set the values for given PVs.
 
         Args:

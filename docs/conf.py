@@ -67,6 +67,9 @@ nitpick_ignore = [
     # Added, but custom for pytac.
     ("py:class", "poly1d"),
     ("py:class", "PchipInterpolator"),
+    ("py:class", "numpy._typing._dtype_like._SupportsDType"),
+    ("py:class", "numpy._typing._dtype_like._DTypeDict"),
+    ("py:class", "numpy._typing._array_like._ScalarType_co"),
 ]
 
 # Both the class’ and the __init__ method’s docstring are concatenated and

@@ -2,14 +2,15 @@
     machine.
 """
 import logging
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Union
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Union, cast
 
 import numpy
+from numpy.typing import DTypeLike, NDArray
 
 import pytac
-from pytac.cs import ControlSystem
-from pytac.data_source import DataSource, DataSourceManager
-from pytac.device import Device, EpicsDevice
+from pytac.cs import AugmentedType, ControlSystem
+from pytac.data_source import DataSourceManager, DeviceDataSource
+from pytac.device import Device
 from pytac.element import Element
 from pytac.exceptions import DataSourceException, UnitsException
 from pytac.units import UnitConv
@@ -75,7 +76,9 @@ class Lattice:
             for cell in range(2, self.symmetry + 1, 1):
                 for elem in self._elements[bounds[-1] :]:
                     if elem.cell == cell:
-                        bounds.append(elem.index)
+                        # index is not None when cell attribute is not None.
+                        index = cast(int, elem.index)
+                        bounds.append(index)
                         break
             bounds.append(len(self._elements))
             return bounds
@@ -101,7 +104,9 @@ class Lattice:
         """
         return len(self._elements)
 
-    def set_data_source(self, data_source: DataSource, data_source_type: str) -> None:
+    def set_data_source(
+        self, data_source: DeviceDataSource, data_source_type: str
+    ) -> None:
         """Add a data source to the lattice.
 
         Args:
@@ -187,7 +192,7 @@ class Lattice:
         units: str = pytac.DEFAULT,
         data_source: str = pytac.DEFAULT,
         throw: bool = True,
-    ) -> float:
+    ) -> Optional[AugmentedType]:
         """Get the value for a field on the lattice.
 
         Returns the value of a field on the lattice. This value is uniquely
@@ -217,11 +222,11 @@ class Lattice:
     def set_value(
         self,
         field: str,
-        value: float,
+        value: AugmentedType,
         units: str = pytac.DEFAULT,
         data_source: str = pytac.DEFAULT,
         throw: bool = True,
-    ):
+    ) -> None:
         """Set the value for a field.
 
         This value can be set on the machine or the simulation.
@@ -319,7 +324,7 @@ class Lattice:
             s_positions.append(element.s)
         return s_positions
 
-    def get_element_devices(self, family: str, field: str) -> List[EpicsDevice]:
+    def get_element_devices(self, family: str, field: str) -> List[Device]:
         """Get devices for a specific field for elements in the specfied
         family.
 
@@ -335,7 +340,7 @@ class Lattice:
             Devices for specified family and field.
         """
         elements = self.get_elements(family)
-        devices = []
+        devices: List[Device] = []
         for element in elements:
             try:
                 devices.append(element.get_device(field))
@@ -369,8 +374,8 @@ class Lattice:
         units: str = pytac.DEFAULT,
         data_source: str = pytac.DEFAULT,
         throw: bool = True,
-        dtype: Optional[numpy.dtype] = None,
-    ) -> Union[List[float], numpy.ndarray]:
+        dtype: Optional[DTypeLike] = None,
+    ) -> Union[List[Optional[AugmentedType]], NDArray]:
         """Get the value of the given field for all elements in the given
         family in the lattice.
 
@@ -389,19 +394,20 @@ class Lattice:
             The requested values.
         """
         elements = self.get_elements(family)
-        values = [
+        values: List[Optional[AugmentedType]] = [
             element.get_value(field, handle, units, data_source, throw)
             for element in elements
         ]
         if dtype is not None:
-            values = numpy.array(values, dtype=dtype)
+            array_values: NDArray = numpy.array(values, dtype=dtype)
+            return array_values
         return values
 
     def set_element_values(
         self,
         family: str,
         field: str,
-        values: Sequence[Any],
+        values: Sequence[AugmentedType],
         units: str = pytac.DEFAULT,
         data_source: str = pytac.DEFAULT,
         throw: bool = True,
@@ -498,8 +504,13 @@ class Lattice:
         return self._data_source_manager.default_data_source
 
     def convert_family_values(
-        self, family: str, field: str, values: Sequence[Any], origin: str, target: str
-    ) -> List[float]:
+        self,
+        family: str,
+        field: str,
+        values: Sequence[Optional[AugmentedType]],
+        origin: str,
+        target: str,
+    ) -> List[Optional[AugmentedType]]:
         """Convert the given values according to the given origin and target
         units, using the unit conversion objects for the given field on the
         elements in the given family.
@@ -517,7 +528,7 @@ class Lattice:
                 f"Number of elements in given sequence({len(values)}) must "
                 f"be equal to the number of elements in the family({len(elements)})."
             )
-        converted_values: List[float] = []
+        converted_values = []
         for elem, value in zip(elements, values):
             uc = elem.get_unitconv(field)
             converted_values.append(uc.convert(value, origin, target))
@@ -606,8 +617,8 @@ class EpicsLattice(Lattice):
         units: str = pytac.DEFAULT,
         data_source: str = pytac.DEFAULT,
         throw: bool = True,
-        dtype: Optional[numpy.dtype] = None,
-    ) -> Union[list, numpy.ndarray]:
+        dtype: Optional[DTypeLike] = None,
+    ) -> Union[List[Optional[AugmentedType]], NDArray]:
         """Get the value of the given field for all elements in the given
         family in the lattice.
 
@@ -625,6 +636,8 @@ class EpicsLattice(Lattice):
         Returns:
             The requested values.
         """
+        values: Union[List[Optional[AugmentedType]], NDArray] = []
+
         if data_source == pytac.DEFAULT:
             data_source = self.get_default_data_source()
         if units == pytac.DEFAULT:
@@ -641,14 +654,15 @@ class EpicsLattice(Lattice):
                 family, field, handle, units, data_source, throw
             )
         if dtype is not None:
-            values = numpy.array(values, dtype=dtype)
+            array_values: NDArray = numpy.array(values, dtype=dtype)
+            return array_values
         return values
 
     def set_element_values(
         self,
         family: str,
         field: str,
-        values: Sequence[Any],
+        values: Sequence[AugmentedType],
         units: str = pytac.DEFAULT,
         data_source: str = pytac.DEFAULT,
         throw: bool = True,
@@ -675,17 +689,23 @@ class EpicsLattice(Lattice):
             units = self.get_default_units()
         if data_source == pytac.LIVE:
             if units == pytac.PHYS:
-                values = self.convert_family_values(
+                values_result = self.convert_family_values(
                     family, field, values, pytac.PHYS, pytac.ENG
                 )
+            else:
+                values_result = [
+                    cast(Optional[AugmentedType], value) for value in values
+                ]
             pv_names = self.get_element_pv_names(family, field, pytac.SP)
-            if len(pv_names) != len(values):
+            if len(pv_names) != len(values_result):
                 raise IndexError(
                     f"Number of elements in given sequence({len(values)}) "
                     "must be equal to the number of elements in "
                     f"the family({len(pv_names)})."
                 )
-            self._cs.set_multiple(pv_names, values, throw)
+            # There is no reason to ever set a PV to None.
+            values_result_cast = cast(List[AugmentedType], values_result)
+            self._cs.set_multiple(pv_names, values_result_cast, throw)
         else:
             super(EpicsLattice, self).set_element_values(
                 family, field, values, units, data_source, throw
