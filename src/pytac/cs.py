@@ -1,15 +1,11 @@
 """Class representing an abstract control system."""
+import sys
+from typing import List, Optional, Sequence, Sized, SupportsFloat, SupportsInt
 
-
-from typing import (
-    List,
-    Optional,
-    Sequence,
-    Sized,
-    SupportsFloat,
-    SupportsIndex,
-    SupportsInt,
-)
+if sys.version_info < (3, 8):
+    from typing_extensions import SupportsIndex  # noqa
+else:
+    from typing import SupportsIndex  # noqa
 
 
 class AugmentedType(SupportsFloat, SupportsInt, SupportsIndex, Sized):
