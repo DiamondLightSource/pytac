@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pytac.lattice &#8212; pytac 0.6.1.dev6+g742586d documentation</title>
+    <title>pytac.lattice &#8212; pytac 0.6.1.dev7+gff48955 documentation</title>
   
   
   
@@ -36,7 +36,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script src="../../_static/documentation_options.js?v=85ded8dc"></script>
+    <script src="../../_static/documentation_options.js?v=82c13575"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -427,8 +427,8 @@ document.write(`
 <span class="kn">import</span> <span class="nn">pytac</span>
 <span class="kn">from</span> <span class="nn">pytac.cs</span> <span class="kn">import</span> <span class="n">AugmentedType</span><span class="p">,</span> <span class="n">ControlSystem</span>
 <span class="kn">from</span> <span class="nn">pytac.data_source</span> <span class="kn">import</span> <span class="n">DataSourceManager</span><span class="p">,</span> <span class="n">DeviceDataSource</span>
-<span class="kn">from</span> <span class="nn">pytac.device</span> <span class="kn">import</span> <span class="n">Device</span>
-<span class="kn">from</span> <span class="nn">pytac.element</span> <span class="kn">import</span> <span class="n">Element</span>
+<span class="kn">from</span> <span class="nn">pytac.device</span> <span class="kn">import</span> <span class="n">Device</span><span class="p">,</span> <span class="n">EpicsDevice</span>
+<span class="kn">from</span> <span class="nn">pytac.element</span> <span class="kn">import</span> <span class="n">Element</span><span class="p">,</span> <span class="n">EpicsElement</span>
 <span class="kn">from</span> <span class="nn">pytac.exceptions</span> <span class="kn">import</span> <span class="n">DataSourceException</span><span class="p">,</span> <span class="n">UnitsException</span>
 <span class="kn">from</span> <span class="nn">pytac.units</span> <span class="kn">import</span> <span class="n">UnitConv</span>
 
@@ -827,7 +827,10 @@ document.write(`
 <span class="sd">            list: device names for specified family and field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">devices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_element_devices</span><span class="p">(</span><span class="n">family</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">device</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices</span><span class="p">]</span></div>
+        <span class="c1"># EpicsDevice is the only Device class to have the .name attribute.</span>
+        <span class="c1"># If the device is not EpicsDevice then an exception would be raised.</span>
+        <span class="n">epics_devices</span> <span class="o">=</span> <span class="p">[</span><span class="n">cast</span><span class="p">(</span><span class="n">EpicsDevice</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span> <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">device</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">epics_devices</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="Lattice.get_element_values">
@@ -904,7 +907,8 @@ document.write(`
                 <span class="sa">f</span><span class="s2">&quot;equal to the number of elements in the family(</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span><span class="si">}</span><span class="s2">).&quot;</span>
             <span class="p">)</span>
         <span class="k">for</span> <span class="n">element</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
+            <span class="c1"># Python implicitly returns None, but mypy does not recognise this.</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
                 <span class="n">field</span><span class="p">,</span>
                 <span class="n">value</span><span class="p">,</span>
                 <span class="n">units</span><span class="o">=</span><span class="n">units</span><span class="p">,</span>
@@ -1028,20 +1032,11 @@ document.write(`
 
 <span class="sd">    Allows efficient get_element_values() and set_element_values() methods,</span>
 <span class="sd">    and adds get_pv_names() method.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        name: The name of the lattice.</span>
-<span class="sd">        symmetry: The symmetry of the lattice (the number of cells).</span>
-
-<span class="sd">    .. Private Attributes:</span>
-<span class="sd">            _elements: The list of all the element objects in the lattice</span>
-<span class="sd">            _cs: The control system to use for the more efficient batch getting and</span>
-<span class="sd">                setting of PVs.</span>
-<span class="sd">            _data_source_manager: A class that manages the data sources associated</span>
-<span class="sd">                with this lattice.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_cs</span><span class="p">:</span> <span class="n">ControlSystem</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The control system to use for the more efficient batch</span>
+<span class="sd">        getting and setting of PVs.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">epics_cs</span><span class="p">:</span> <span class="n">ControlSystem</span><span class="p">,</span> <span class="n">symmetry</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1068,11 +1063,13 @@ document.write(`
 <span class="sd">            The readback or setpoint PV for the specified field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">get_data_source</span><span class="p">(</span><span class="n">pytac</span><span class="o">.</span><span class="n">LIVE</span><span class="p">)</span>
-                <span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
-                <span class="o">.</span><span class="n">get_pv_name</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">get_data_source</span><span class="p">(</span><span class="n">pytac</span><span class="o">.</span><span class="n">LIVE</span><span class="p">)</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span>
+                <span class="n">field</span>
             <span class="p">)</span>
+            <span class="c1"># EpicsDevice is the only Device class to have the get_pv_name method.</span>
+            <span class="c1"># If the device is not EpicsDevice then an exception would be raised.</span>
+            <span class="n">epics_device</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">EpicsDevice</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">epics_device</span><span class="o">.</span><span class="n">get_pv_name</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">DataSourceException</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Cannot get PV for field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> on lattice &quot;</span>
@@ -1099,7 +1096,9 @@ document.write(`
         <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elements</span><span class="p">(</span><span class="n">family</span><span class="p">)</span>
         <span class="n">pv_names</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
-            <span class="n">pv_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">get_pv_name</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">handle</span><span class="p">))</span>
+            <span class="c1"># EpicsElement is the only Element class to have the get_pv_name method.</span>
+            <span class="n">epics_element</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">EpicsElement</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+            <span class="n">pv_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epics_element</span><span class="o">.</span><span class="n">get_pv_name</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">handle</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">pv_names</span></div>
 
 

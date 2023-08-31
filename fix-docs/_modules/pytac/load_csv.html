@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pytac.load_csv &#8212; pytac 0.6.1.dev6+g742586d documentation</title>
+    <title>pytac.load_csv &#8212; pytac 0.6.1.dev7+gff48955 documentation</title>
   
   
   
@@ -36,7 +36,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script src="../../_static/documentation_options.js?v=85ded8dc"></script>
+    <script src="../../_static/documentation_options.js?v=82c13575"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -431,12 +431,13 @@ document.write(`
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">import</span> <span class="nn">pytac</span>
 <span class="kn">from</span> <span class="nn">pytac</span> <span class="kn">import</span> <span class="n">data_source</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">pytac.cs</span> <span class="kn">import</span> <span class="n">ControlSystem</span>
 <span class="kn">from</span> <span class="nn">pytac.device</span> <span class="kn">import</span> <span class="n">EpicsDevice</span><span class="p">,</span> <span class="n">SimpleDevice</span>
+<span class="kn">from</span> <span class="nn">pytac.element</span> <span class="kn">import</span> <span class="n">Element</span>
 <span class="kn">from</span> <span class="nn">pytac.exceptions</span> <span class="kn">import</span> <span class="n">ControlSystemException</span>
 <span class="kn">from</span> <span class="nn">pytac.lattice</span> <span class="kn">import</span> <span class="n">EpicsLattice</span><span class="p">,</span> <span class="n">Lattice</span>
 <span class="kn">from</span> <span class="nn">pytac.units</span> <span class="kn">import</span> <span class="n">NullUnitConv</span><span class="p">,</span> <span class="n">PchipUnitConv</span><span class="p">,</span> <span class="n">PolyUnitConv</span><span class="p">,</span> <span class="n">UnitConv</span>
@@ -633,13 +634,21 @@ document.write(`
             <span class="n">pve</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">d</span> <span class="o">=</span> <span class="n">EpicsDevice</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">control_system</span><span class="p">,</span> <span class="n">pve</span><span class="p">,</span> <span class="n">get_pv</span><span class="p">,</span> <span class="n">set_pv</span><span class="p">)</span>
             <span class="c1"># Devices on index 0 are attached to the lattice not elements.</span>
-            <span class="n">target</span> <span class="o">=</span> <span class="n">lat</span> <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">lat</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># Explicitly type target as the base classes to validate add_device method.</span>
+            <span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Lattice</span><span class="p">,</span> <span class="n">Element</span><span class="p">]</span> <span class="o">=</span> <span class="n">lat</span> <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">lat</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
             <span class="n">target</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;field&quot;</span><span class="p">],</span> <span class="n">d</span><span class="p">,</span> <span class="n">DEFAULT_UC</span><span class="p">)</span>
         <span class="c1"># Add basic devices to the lattice.</span>
         <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">lat</span><span class="p">:</span>
+        <span class="c1"># Lattice must be iterable and indexable, however mypy doesnt accept only</span>
+        <span class="c1"># having __getitem__ and __len__ instead of __iter__.</span>
+        <span class="n">type_lattice</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Sequence</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">type_lattice</span><span class="p">:</span>
             <span class="n">positions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elem</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
-        <span class="n">lat</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="s2">&quot;s_position&quot;</span><span class="p">,</span> <span class="n">SimpleDevice</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># AugmentedType can be a list. Until cothread is typed correctly</span>
+        <span class="c1"># this is impractical to fix.</span>
+        <span class="c1"># The add_device method on the lattice accepts a boolean as a UnitConv object.</span>
+        <span class="c1"># This should not be typed as such and DEFAULT_UC should be used instead.</span>
+        <span class="n">lat</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="s2">&quot;s_position&quot;</span><span class="p">,</span> <span class="n">SimpleDevice</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ignore # noqa: E501</span>
     <span class="n">simple_devices_file</span> <span class="o">=</span> <span class="n">mode_dir</span> <span class="o">/</span> <span class="n">SIMPLE_DEVICES_FILENAME</span>
     <span class="k">if</span> <span class="n">simple_devices_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="k">with</span> <span class="n">csv_loader</span><span class="p">(</span><span class="n">simple_devices_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_reader</span><span class="p">:</span>
@@ -650,7 +659,10 @@ document.write(`
                 <span class="n">readonly</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;readonly&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span>
                 <span class="c1"># Devices on index 0 are attached to the lattice not elements.</span>
                 <span class="n">target</span> <span class="o">=</span> <span class="n">lat</span> <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">lat</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-                <span class="n">target</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">SimpleDevice</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="n">readonly</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="c1"># The add_device method on the lattice accepts a boolean as a</span>
+                <span class="c1"># UnitConv object. # This should not be typed as such and DEFAULT_UC</span>
+                <span class="c1"># should be used instead.</span>
+                <span class="n">target</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">SimpleDevice</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="n">readonly</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ignore # noqa: E501</span>
     <span class="k">with</span> <span class="n">csv_loader</span><span class="p">(</span><span class="n">mode_dir</span> <span class="o">/</span> <span class="n">FAMILIES_FILENAME</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_reader</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">csv_reader</span><span class="p">:</span>
             <span class="n">lat</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;el_id&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">add_to_family</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">])</span>
