@@ -5,7 +5,7 @@ A physical element in an accelerator may have multiple devices: an example at
 DLS is a sextupole magnet that contains also horizontal and vertical corrector
 magnets and a skew quadrupole.
 """
-from typing import List, Optional, Union, cast
+from typing import Optional, Union, cast
 
 import pytac
 from pytac.cs import AugmentedType, ControlSystem

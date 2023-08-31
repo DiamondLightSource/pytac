@@ -10,8 +10,8 @@ from numpy.typing import DTypeLike, NDArray
 import pytac
 from pytac.cs import AugmentedType, ControlSystem
 from pytac.data_source import DataSourceManager, DeviceDataSource
-from pytac.device import Device
-from pytac.element import Element
+from pytac.device import Device, EpicsDevice
+from pytac.element import Element, EpicsElement
 from pytac.exceptions import DataSourceException, UnitsException
 from pytac.units import UnitConv
 
@@ -364,7 +364,10 @@ class Lattice:
             list: device names for specified family and field.
         """
         devices = self.get_element_devices(family, field)
-        return [device.name for device in devices]
+        # EpicsDevice is the only Device class to have the .name attribute.
+        # If the device is not EpicsDevice then an exception would be raised.
+        epics_devices = [cast(EpicsDevice, device) for device in devices]
+        return [device.name for device in epics_devices]
 
     def get_element_values(
         self,
@@ -435,7 +438,8 @@ class Lattice:
                 f"equal to the number of elements in the family({len(elements)})."
             )
         for element, value in zip(elements, values):
-            status = element.set_value(
+            # Python implicitly returns None, but mypy does not recognise this.
+            status = element.set_value(  # type: ignore
                 field,
                 value,
                 units=units,
@@ -540,20 +544,11 @@ class EpicsLattice(Lattice):
 
     Allows efficient get_element_values() and set_element_values() methods,
     and adds get_pv_names() method.
-
-    Attributes:
-        name: The name of the lattice.
-        symmetry: The symmetry of the lattice (the number of cells).
-
-    .. Private Attributes:
-            _elements: The list of all the element objects in the lattice
-            _cs: The control system to use for the more efficient batch getting and
-                setting of PVs.
-            _data_source_manager: A class that manages the data sources associated
-                with this lattice.
     """
 
     _cs: ControlSystem
+    """The control system to use for the more efficient batch
+        getting and setting of PVs."""
 
     def __init__(
         self, name: str, epics_cs: ControlSystem, symmetry: Optional[int] = None
@@ -578,11 +573,13 @@ class EpicsLattice(Lattice):
             The readback or setpoint PV for the specified field.
         """
         try:
-            return (
-                self._data_source_manager.get_data_source(pytac.LIVE)
-                .get_device(field)
-                .get_pv_name(handle)
+            device = self._data_source_manager.get_data_source(pytac.LIVE).get_device(
+                field
             )
+            # EpicsDevice is the only Device class to have the get_pv_name method.
+            # If the device is not EpicsDevice then an exception would be raised.
+            epics_device = cast(EpicsDevice, device)
+            return epics_device.get_pv_name(handle)
         except AttributeError:
             raise DataSourceException(
                 f"Cannot get PV for field {field} on lattice "
@@ -606,7 +603,9 @@ class EpicsLattice(Lattice):
         elements = self.get_elements(family)
         pv_names = []
         for element in elements:
-            pv_names.append(element.get_pv_name(field, handle))
+            # EpicsElement is the only Element class to have the get_pv_name method.
+            epics_element = cast(EpicsElement, element)
+            pv_names.append(epics_element.get_pv_name(field, handle))
         return pv_names
 
     def get_element_values(

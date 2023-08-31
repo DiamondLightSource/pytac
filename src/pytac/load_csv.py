@@ -14,12 +14,13 @@ import contextlib
 import copy
 import csv
 from pathlib import Path
-from typing import Dict, Iterator, Optional
+from typing import Dict, Iterator, Optional, Sequence, Union, cast
 
 import pytac
 from pytac import data_source, element, utils
 from pytac.cs import ControlSystem
 from pytac.device import EpicsDevice, SimpleDevice
+from pytac.element import Element
 from pytac.exceptions import ControlSystemException
 from pytac.lattice import EpicsLattice, Lattice
 from pytac.units import NullUnitConv, PchipUnitConv, PolyUnitConv, UnitConv
@@ -202,13 +203,21 @@ def load(
             pve = True
             d = EpicsDevice(name, control_system, pve, get_pv, set_pv)
             # Devices on index 0 are attached to the lattice not elements.
-            target = lat if index == 0 else lat[index - 1]
+            # Explicitly type target as the base classes to validate add_device method.
+            target: Union[Lattice, Element] = lat if index == 0 else lat[index - 1]
             target.add_device(item["field"], d, DEFAULT_UC)
         # Add basic devices to the lattice.
         positions = []
-        for elem in lat:
+        # Lattice must be iterable and indexable, however mypy doesnt accept only
+        # having __getitem__ and __len__ instead of __iter__.
+        type_lattice = cast(Sequence, lat)
+        for elem in type_lattice:
             positions.append(elem.s)
-        lat.add_device("s_position", SimpleDevice(positions, readonly=True), True)
+        # AugmentedType can be a list. Until cothread is typed correctly
+        # this is impractical to fix.
+        # The add_device method on the lattice accepts a boolean as a UnitConv object.
+        # This should not be typed as such and DEFAULT_UC should be used instead.
+        lat.add_device("s_position", SimpleDevice(positions, readonly=True), True)  # type: ignore # noqa: E501
     simple_devices_file = mode_dir / SIMPLE_DEVICES_FILENAME
     if simple_devices_file.exists():
         with csv_loader(simple_devices_file) as csv_reader:
@@ -219,7 +228,10 @@ def load(
                 readonly = item["readonly"].lower() == "true"
                 # Devices on index 0 are attached to the lattice not elements.
                 target = lat if index == 0 else lat[index - 1]
-                target.add_device(field, SimpleDevice(value, readonly=readonly), True)
+                # The add_device method on the lattice accepts a boolean as a
+                # UnitConv object. # This should not be typed as such and DEFAULT_UC
+                # should be used instead.
+                target.add_device(field, SimpleDevice(value, readonly=readonly), True)  # type: ignore # noqa: E501
     with csv_loader(mode_dir / FAMILIES_FILENAME) as csv_reader:
         for item in csv_reader:
             lat[int(item["el_id"]) - 1].add_to_family(item["family"])

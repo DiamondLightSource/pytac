@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any, Dict, Iterable, Optional, Sequence, Set, 
 import pytac
 from pytac.cs import AugmentedType
 from pytac.data_source import DataSourceManager, DeviceDataSource
-from pytac.device import Device
+from pytac.device import Device, EpicsDevice
 from pytac.exceptions import DataSourceException, FieldException
 from pytac.units import UnitConv
 
@@ -346,11 +346,13 @@ class EpicsElement(Element):
             FieldException: if the specified field doesn't exist.
         """
         try:
-            return (
-                self._data_source_manager.get_data_source(pytac.LIVE)
-                .get_device(field)
-                .get_pv_name(handle)
+            device = self._data_source_manager.get_data_source(pytac.LIVE).get_device(
+                field
             )
+            # EpicsDevice is the only Device class to have the get_pv_name method.
+            # If the device is not EpicsDevice then an exception would be raised.
+            epics_device = cast(EpicsDevice, device)
+            return epics_device.get_pv_name(handle)
         except DataSourceException as e:
             raise DataSourceException(f"{self}: {e}")
         except AttributeError:
