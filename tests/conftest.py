@@ -1,5 +1,6 @@
 import sys
 import types
+from pathlib import Path
 from unittest import mock
 
 import pytest
@@ -178,3 +179,18 @@ def simple_epics_lattice(simple_epics_element, mock_cs, unit_uc):
     lat.add_device("x", x_device, unit_uc)
     lat.add_device("y", y_device, unit_uc)
     return lat
+
+
+@pytest.fixture
+def mode_dir():
+    return Path(__file__).resolve().parent / "data/dummy"
+
+
+@pytest.fixture
+def polyconv_file(mode_dir):
+    return mode_dir / load_csv.POLY_FILENAME
+
+
+@pytest.fixture
+def pchipconv_file(mode_dir):
+    return mode_dir / load_csv.PCHIP_FILENAME

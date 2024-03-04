@@ -1,9 +1,10 @@
 from unittest.mock import patch
 
 import pytest
+from testfixtures import LogCapture
 
 import pytac
-from pytac.load_csv import load
+from pytac.load_csv import load, load_unitconv, resolve_unitconv
 
 
 @pytest.fixture
@@ -70,3 +71,62 @@ def test_families_loaded(lattice):
         ["drift", "sext", "quad", "ds", "qf", "qs", "sd"]
     )
     assert lattice.get_elements("quad")[0].families == set(["quad", "qf", "qs"])
+
+
+def test_load_unitconv_warns_if_pchip_or_poly_data_file_not_found(
+    lattice, mode_dir, polyconv_file, pchipconv_file
+):
+    with LogCapture() as log:
+        load_unitconv(mode_dir, lattice)
+    log.check(
+        (
+            "root",
+            "WARNING",
+            f"{polyconv_file} not found, unable to load PolyUnitConvs.",
+        ),
+        (
+            "root",
+            "WARNING",
+            f"{pchipconv_file} not found, unable to load PchipUnitConvs.",
+        ),
+    )
+
+
+def test_resolve_unitconv_raises_UnitsException_if_pchip_or_poly_data_file_not_found(
+    polyconv_file, pchipconv_file
+):
+    uc_params = {
+        "uc_type": "poly",
+        "uc_id": 1,
+        "phys_units": "m^-2",
+        "eng_units": "A",
+        "lower_lim": 0,
+        "upper_lim": 200,
+    }
+    with pytest.raises(pytac.exceptions.UnitsException):
+        resolve_unitconv(uc_params, {}, polyconv_file, pchipconv_file)
+    uc_params = {
+        "uc_type": "pchip",
+        "uc_id": 2,
+        "phys_units": "m^-3",
+        "eng_units": "A",
+        "lower_lim": -100,
+        "upper_lim": 100,
+    }
+    with pytest.raises(pytac.exceptions.UnitsException):
+        resolve_unitconv(uc_params, {}, polyconv_file, pchipconv_file)
+
+
+def test_resolve_unitconv_raises_UnitsException_if_unrecognised_UnitConv_type(
+    polyconv_file, pchipconv_file
+):
+    uc_params = {
+        "uc_type": "unrecognised",
+        "uc_id": 0,
+        "phys_units": "",
+        "eng_units": "",
+        "lower_lim": 0,
+        "upper_lim": 0,
+    }
+    with pytest.raises(pytac.exceptions.UnitsException):
+        resolve_unitconv(uc_params, {}, polyconv_file, pchipconv_file)

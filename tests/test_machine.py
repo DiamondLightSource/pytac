@@ -171,6 +171,15 @@ def test_bpm_unitconv(lattice, field):
     assert uc.phys_to_eng(2) == 2000
 
 
+def test_hstr_unitconv(vmx_ring):
+    # From MML: hw2physics('HTRIM', 'Monitor', 2.5, [1])
+    htrim = vmx_ring.get_elements("HTRIM")[0]
+    # This test depends on the lattice having an energy of 3000Mev.
+    uc = htrim._data_source_manager._uc["x_kick"]
+    numpy.testing.assert_allclose(uc.eng_to_phys(2.5), 0.0001925)
+    numpy.testing.assert_allclose(uc.phys_to_eng(0.0001925), 2.5)
+
+
 def test_quad_unitconv(vmx_ring):
     # From MML: hw2physics('Q1D', 'Monitor', 70, [1])
     q1d = vmx_ring.get_elements("Q1D")
