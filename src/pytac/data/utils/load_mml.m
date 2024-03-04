@@ -18,7 +18,7 @@ function load_mml(ringmode)
 
     dir = fileparts(mfilename('fullpath'));
     cd(dir);
-    datadir = fullfile(dir, '..', 'pytac', 'data', ringmode);
+    datadir = fullfile(dir, '..', ringmode);
     if ~exist(datadir, 'dir')
         fprintf('Data directory %s does not exist. Please create it.\n', datadir);
         fprintf('Script will exit.\n');
