@@ -1,6 +1,5 @@
 import sys
 import types
-from pathlib import Path
 from unittest import mock
 
 import pytest
@@ -183,7 +182,7 @@ def simple_epics_lattice(simple_epics_element, mock_cs, unit_uc):
 
 @pytest.fixture
 def mode_dir():
-    return Path(__file__).resolve().parent / "data/dummy"
+    return CURRENT_DIR_PATH / "data/dummy"
 
 
 @pytest.fixture

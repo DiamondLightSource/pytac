@@ -2,6 +2,7 @@
     files in the data directory. These are more like integration tests,
     and allows us to check that the pytac setup is working correctly.
 """
+
 import re
 from unittest import mock
 
