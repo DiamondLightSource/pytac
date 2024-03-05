@@ -64,6 +64,7 @@ profile = "black"
 extend-ignore = [
     "E203", # See https://github.com/PyCQA/pycodestyle/issues/373
     "E402", # allow isort:skip
+    "E502", # ignore line length
     "F811", # support typing.overload decorator
     "F722", # allow Annotated[typ, some_func("some string")]
 ]

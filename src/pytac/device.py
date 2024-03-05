@@ -5,9 +5,10 @@ A physical element in an accelerator may have multiple devices: an example at
 DLS is a sextupole magnet that contains also horizontal and vertical corrector
 magnets and a skew quadrupole.
 """
-from typing import List, Union
+from typing import Optional, Union, cast
 
 import pytac
+from pytac.cs import AugmentedType, ControlSystem
 from pytac.exceptions import DataSourceException, HandleException
 
 
@@ -16,8 +17,6 @@ class Device:
 
     Typically a control system will be used to set and get values on a
     device.
-
-    **Methods:**
     """
 
     def is_enabled(self) -> bool:
@@ -28,26 +27,26 @@ class Device:
         """
         raise NotImplementedError()
 
-    def get_value(self, handle: str, throw: bool) -> float:
+    def get_value(self, handle: Optional[str], throw: bool) -> Optional[AugmentedType]:
         """Read the value from the device.
 
         Args:
             handle: pytac.SP or pytac.RB.
-            throw: On failure: if True, raise ControlSystemException; if
-                           False, return None and log a warning.
+            throw: On failure: if True, raise ControlSystemException; if False, None
+                will be returned for any PV that fails and a warning will be logged.
 
         Returns:
             the value of the PV.
         """
         raise NotImplementedError()
 
-    def set_value(self, value: float, throw: bool) -> None:
+    def set_value(self, value: AugmentedType, throw: bool) -> None:
         """Set the value on the device.
 
         Args:
-            value (float): the value to set.
-            throw (bool): On failure: if True, raise ControlSystemException: if
-                           False, log a warning.
+            value: the value to set.
+            throw: On failure: if True, raise ControlSystemException; if False, None
+                will be returned for any PV that fails and a warning will be logged.
         """
         raise NotImplementedError()
 
@@ -61,52 +60,65 @@ class SimpleDevice(Device):
     the accelerator.
     """
 
+    _value: Optional[AugmentedType]
+    """The value of the device. May be a number or list of numbers."""
+    _enabled: Union[bool, "PvEnabler"]
+    """Whether the device is enabled. May be a PvEnabler Object."""
+    _readonly: bool
+    """Whether the value may be changed."""
+
     def __init__(
         self,
-        value: Union[float, List[float]],
-        enabled: bool = True,
+        value: Optional[AugmentedType],
+        enabled: Union[bool, "PvEnabler"] = True,
         readonly: bool = True,
-    ):
-        """
+    ) -> None:
+        """Initialise the SimpleDevice object.
+
         Args:
-            value: can be a number or a list of numbers.
-            enabled: whether the device is enabled. May be a
-                                  PvEnabler object.
-            readonly: whether the value may be changed.
+            value: The value of the device. May be a number or list of numbers.
+            enabled: Whether the device is enabled. May be a PvEnabler Object.
+            readonly: Whether the value may be changed.
         """
         self._value = value
         self._enabled = enabled
         self._readonly = readonly
 
-    def is_enabled(self):
+    def is_enabled(self) -> bool:
         """Whether the device is enabled.
 
         Returns:
-            bool: whether the device is enabled.
+            Whether the device is enabled.
         """
         return bool(self._enabled)
 
-    def get_value(self, handle=None, throw=None):
+    def get_value(
+        self, handle: Optional[str] = None, throw: Optional[bool] = None
+    ) -> Optional[AugmentedType]:
         """Read the value from the device.
 
         Args:
-            handle (str): Irrelevant in this case as a control system is not
-                           used, only supported to conform with the base class.
-            throw (bool): Irrelevant in this case as a control system is not
-                           used, only supported to conform with the base class.
+            handle: Irrelevant in this case as a control system is not used, only
+                supported to conform with the base class.
+            throw: Irrelevant in this case as a control system is not used, only
+                supported to conform with the base class.
 
         Returns:
-            numeric: the value of the device.
+            The value of the device.
         """
         return self._value
 
-    def set_value(self, value, throw=None):
+    def set_value(
+        self,
+        value: Optional[AugmentedType],
+        throw: Optional[bool] = None,
+    ) -> None:
         """Set the value on the device.
 
         Args:
-            value (numeric): the value to set.
-            throw (bool): Irrelevant in this case as a control system is not
-                           used, only supported to conform with the base class.
+            value: the value to set.
+            throw: Irrelevant in this case as a control system is not used, only
+                supported to conform with the base class.
         """
         if self._readonly:
             raise DataSourceException("Cannot change value of readonly SimpleDevice")
@@ -119,36 +131,38 @@ class EpicsDevice(Device):
     Contains a control system, readback and setpoint PVs. A readback or
     setpoint PV is required when creating an epics device otherwise a
     DataSourceException is raised. The device is enabled by default.
-
-    **Attributes:**
-
-    Attributes:
-        name (str): The prefix of EPICS PVs for this device.
-        rb_pv (str): The EPICS readback PV.
-        sp_pv (str): The EPICS setpoint PV.
-
-    .. Private Attributes:
-           _cs (ControlSystem): The control system object used to get and set
-                                 the value of a PV.
-           _enabled (bool-like): Whether the device is enabled. May be a
-                                  PvEnabler object.
     """
 
-    def __init__(self, name, cs, enabled=True, rb_pv=None, sp_pv=None):
+    name: str
+    """The prefix of EPICS PVs for this device."""
+    rb_pv: Optional[str]
+    """The EPICS readback PV."""
+    sp_pv: Optional[str]
+    """The EPICS setpoint PV."""
+
+    _cs: ControlSystem
+    """The control system object used to get and set the value of a PV."""
+    _enabled: Union[bool, "PvEnabler"]
+    """Whether the device is enabled. May be a PvEnabler object."""
+
+    def __init__(
+        self,
+        name: str,
+        cs: ControlSystem,
+        enabled: Union[bool, "PvEnabler"] = True,
+        rb_pv: Optional[str] = None,
+        sp_pv: Optional[str] = None,
+    ) -> None:
         """
         Args:
-            name (str): The prefix of EPICS PV for this device.
-            cs (ControlSystem): The control system object used to get and set
-                                 the value of a PV.
-            enabled (bool-like): Whether the device is enabled. May be a
-                                  PvEnabler object.
-            rb_pv (str): The EPICS readback PV.
-            sp_pv (str): The EPICS setpoint PV.
+            name: The prefix of EPICS PV for this device.
+            cs: The control system object used to get and set the value of a PV.
+            enabled: Whether the device is enabled. May be a PvEnabler object.
+            rb_pv: The EPICS readback PV.
+            sp_pv: The EPICS setpoint PV.
 
         Raises:
             DataSourceException: if no PVs are provided.
-
-        **Methods:**
         """
         if rb_pv is None and sp_pv is None:
             raise DataSourceException(
@@ -161,51 +175,53 @@ class EpicsDevice(Device):
         self.sp_pv = sp_pv
         self._enabled = enabled
 
-    def is_enabled(self):
+    def is_enabled(self) -> bool:
         """Whether the device is enabled.
 
         Returns:
-            bool: whether the device is enabled.
+            Whether the device is enabled.
         """
         return bool(self._enabled)
 
-    def get_value(self, handle, throw=True):
+    def get_value(
+        self, handle: Optional[str], throw: bool = True
+    ) -> Optional[AugmentedType]:
         """Read the value of a readback or setpoint PV.
 
         Args:
-            handle (str): pytac.SP or pytac.RB.
-            throw (bool): On failure: if True, raise ControlSystemException; if
-                           False, return None and log a warning.
+            handle: pytac.SP or pytac.RB.
+            throw: On failure: if True, raise ControlSystemException; if False, None
+                will be returned for any PV that fails and a warning will be logged.
 
         Returns:
-            float: The value of the PV.
+            The value of the PV.
 
         Raises:
             HandleException: if the requested PV doesn't exist.
         """
         return self._cs.get_single(self.get_pv_name(handle), throw)
 
-    def set_value(self, value, throw=True):
+    def set_value(self, value: AugmentedType, throw: bool = True) -> None:
         """Set the device value.
 
         Args:
-            value (float): The value to set.
-            throw (bool): On failure: if True, raise ControlSystemException: if
-                           False, log a warning.
+            value: The value to set.
+            throw: On failure: if True, raise ControlSystemException; if False, None
+                will be returned for any PV that fails and a warning will be logged.
 
         Raises:
             HandleException: if no setpoint PV exists.
         """
         self._cs.set_single(self.get_pv_name(pytac.SP), value, throw)
 
-    def get_pv_name(self, handle):
+    def get_pv_name(self, handle: Optional[str]) -> str:
         """Get the PV name for the specified handle.
 
         Args:
-            handle (str): The readback or setpoint handle to be returned.
+            handle: The readback or setpoint handle to be returned.
 
         Returns:
-            str: A readback or setpoint PV.
+            A readback or setpoint PV.
 
         Raises:
             HandleException: if the PV doesn't exist.
@@ -223,33 +239,35 @@ class PvEnabler(object):
 
     The class will behave like True if the PV value equals enabled_value,
     and False otherwise.
-
-    .. Private Attributes:
-           _pv (str): The PV name.
-           _enabled_value (str): The value for PV for which the device should
-                                  be considered enabled.
-           _cs (ControlSystem): The control system object.
     """
 
-    def __init__(self, pv, enabled_value, cs):
+    _pv: str
+    """The PV name."""
+    _enabled_value: str
+    """The value for PV for which the device should be considered enabled."""
+    _cs: ControlSystem
+    """The control system object."""
+
+    def __init__(self, pv: str, enabled_value: str, cs: ControlSystem) -> None:
         """
         Args:
-            pv (str): The PV name.
-            enabled_value (str): The value for PV for which the device should
-                                  be considered enabled.
-            cs (ControlSystem): The control system object.
-
-        **Methods:**
+            pv: The PV name.
+            enabled_value: The value for PV for which the device should be
+                considered enabled.
+            cs: The control system object.
         """
         self._pv = pv
         self._enabled_value = str(int(float(enabled_value)))
         self._cs = cs
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         """Used to override the 'if object' clause.
 
         Returns:
-            bool: True if the device should be considered enabled.
+            True if the device should be considered enabled.
         """
-        pv_value = self._cs.get_single(self._pv)
-        return self._enabled_value == str(int(float(pv_value)))
+        pv_value = self._cs.get_single(self._pv, throw=True)
+        # pv_value is not None as throw is True.
+        # This would raise a ControlSystemException rather than returning None.
+        pv_value_cast = cast(AugmentedType, pv_value)
+        return self._enabled_value == str(int(float(pv_value_cast)))

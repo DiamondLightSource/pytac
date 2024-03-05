@@ -1,19 +1,22 @@
 """Classes for use in unit conversion."""
+from typing import Any, Callable, List, Optional, Union
+
 import numpy
+from numpy.typing import NDArray
 from scipy.interpolate import PchipInterpolator
 
 import pytac
 from pytac.exceptions import UnitsException
 
 
-def unit_function(value):
+def unit_function(value: float) -> float:
     """Default value for the pre and post functions used in unit conversion.
 
     Args:
-        value (float): The value to be converted.
+        value: The value to be converted.
 
     Returns:
-        float: The result of the conversion.
+        The result of the conversion.
     """
     return value
 
@@ -29,101 +32,102 @@ class UnitConv:
     The two arguments to this function represent functions that are
     applied to the result of the initial conversion. One happens after
     the conversion, the other happens before the conversion back.
-
-    **Attributes:**
-
-    Attributes:
-        name (str): An identifier for the unit conversion object.
-        eng_units (str): The unit type of the post conversion engineering
-                          value.
-        phys_units (str): The unit type of the post conversion physics value.
-
-    .. Private Attributes:
-           _post_eng_to_phys (function): Function to be applied after the
-                                         initial conversion.
-           _pre_phys_to_eng (function): Function to be applied before the
-                                         initial conversion.
     """
+
+    name: Optional[Union[str, int]]
+    """An identifier for the unit conversion object."""
+    eng_units: str
+    """The unit type of the post conversion engineering value."""
+    phys_units: str
+    """The unit type of the post conversion physics value."""
+
+    _post_eng_to_phys: Callable[[float], float]
+    """Function to be applied after the initial conversion."""
+    _pre_phys_to_eng: Callable[[float], float]
+    """Function to be applied before the initial conversion."""
 
     def __init__(
         self,
-        post_eng_to_phys=unit_function,
-        pre_phys_to_eng=unit_function,
-        engineering_units="",
-        physics_units="",
-        name=None,
-    ):
-        """
-        Args:
-            post_eng_to_phys (function): Function to be applied after the
-                                          initial conversion.
-            pre_phys_to_eng (function): Function to be applied before the
-                                         initial conversion.
-            engineering_units (str): The unit type of the post conversion
-                                      engineering value.
-            physics_units (str): The unit type of the post conversion physics
-                                  value.
-            name (str): An identifier for the unit conversion object.
+        post_eng_to_phys: Callable[[float], float] = unit_function,
+        pre_phys_to_eng: Callable[[float], float] = unit_function,
+        engineering_units: str = "",
+        physics_units: str = "",
+        name: Optional[Union[str, int]] = None,
+    ) -> None:
+        """Initialise the UnitConv Object.
 
-        **Methods:**
+        Args:
+            post_eng_to_phys: Function to be applied after the initial conversion.
+            pre_phys_to_eng: Function to be applied before the initial conversion.
+            engineering_units: The unit type of the post conversion engineering value.
+            physics_units: The unit type of the post conversion physics value.
+            name: An identifier for the unit conversion object.
         """
         self.name = name
         self._post_eng_to_phys = post_eng_to_phys
         self._pre_phys_to_eng = pre_phys_to_eng
         self.eng_units = engineering_units
         self.phys_units = physics_units
-        self.lower_limit = None
-        self.upper_limit = None
+        self.lower_limit: Any = None  # Optional[float]
+        self.upper_limit: Any = None  # Optional[float]
 
-    def __str__(self):
+    def __str__(self) -> str:
         string_rep = self.__class__.__name__
         if self.name is not None:
             string_rep += f" {self.name}"
         return string_rep
 
-    def set_post_eng_to_phys(self, post_eng_to_phys):
+    def set_post_eng_to_phys(self, post_eng_to_phys: Callable[[Any], Any]) -> None:
         """Set the function to be applied after the initial conversion.
 
+        N.B. post_eng_to_phys should be of type: Callable[[float], float], but this
+            cannot be implimented with the current code structure.
+
         Args:
-            post_eng_to_phys (function): Function to be applied after the
-                                          initial conversion.
+            post_eng_to_phys: Function to be applied after the initial conversion.
         """
         self._post_eng_to_phys = post_eng_to_phys
 
-    def set_pre_phys_to_eng(self, pre_phys_to_eng):
+    def set_pre_phys_to_eng(self, pre_phys_to_eng: Callable[[Any], Any]) -> None:
         """Set the function to be applied before the initial conversion.
 
+        N.B. pre_phys_to_eng should be of type: Callable[[float], float], but this
+            cannot be implimented with the current code structure.
+
         Args:
-            pre_phys_to_eng (function): Function to be applied before the
-                                         initial conversion.
+            pre_phys_to_eng: Function to be applied before the initial conversion.
         """
         self._pre_phys_to_eng = pre_phys_to_eng
 
-    def _raw_eng_to_phys(self, value):
+    def _raw_eng_to_phys(self, value: Any) -> Any:
         """Function to be implemented by child classes.
 
+        N.B. value and return should be of type: float, but this cannot be implimented
+            with the current code structure.
+
         Args:
-            value (float): The engineering value to be converted to physics
-                            units.
+            value: The engineering value to be converted to physics units.
         """
         raise NotImplementedError(f"{self}: No eng-to-phys conversion provided")
 
-    def eng_to_phys(self, value):
+    def eng_to_phys(self, value: Any) -> Any:
         """Function that does the unit conversion.
 
         Conversion from engineering to physics units. An additional function
         may be cast on the initial conversion.
 
+        N.B. value and return should be of type: float, but this cannot be implimented
+            with the current code structure.
+
         Args:
-            value (float): Value to be converted from engineering to physics
-                            units.
+            value: Value to be converted from engineering to physics units.
 
         Returns:
-            float: The result value.
+            The result value.
 
         Raises:
             UnitsException: If the conversion is invalid; i.e. if there are no
-                            solutions, or multiple, within conversion limits.
+                solutions, or multiple, within conversion limits.
         """
         if self.lower_limit is not None and value < self.lower_limit:
             raise UnitsException(
@@ -149,31 +153,35 @@ class UnitConv:
             )
         return valid_results[0]
 
-    def _raw_phys_to_eng(self, value):
+    def _raw_phys_to_eng(self, value: Any) -> Any:
         """Function to be implemented by child classes.
 
+        N.B. value and return should be of type: float, but this cannot be implimented
+            with the current code structure.
+
         Args:
-            value (float): The physics value to be converted to engineering
-                            units.
+            value: The physics value to be converted to engineering units.
         """
         raise NotImplementedError(f"{self}: No phys-to-eng conversion provided")
 
-    def phys_to_eng(self, value):
+    def phys_to_eng(self, value: Any) -> Any:
         """Function that does the unit conversion.
 
         Conversion from physics to engineering units. An additional function
         may be cast on the initial conversion.
 
+        N.B. value and return should be of type: float, but this cannot be implimented
+            with the current code structure.
+
         Args:
-            value (float): Value to be converted from physics to engineering
-                            units.
+            value: Value to be converted from physics to engineering units.
 
         Returns:
-            float: The result value.
+            The result value.
 
         Raises:
             UnitsException: If the conversion is invalid; i.e. if there are no
-                            solutions, or multiple, within conversion limits.
+                solutions, or multiple, within conversion limits.
         """
         adjusted_value = self._pre_phys_to_eng(value)
         results = self._raw_phys_to_eng(adjusted_value)
@@ -196,21 +204,24 @@ class UnitConv:
             )
         return valid_results[0]
 
-    def convert(self, value, origin, target):
+    def convert(self, value: Any, origin: str, target: str) -> Any:
         """Convert between two different unit types and check the validity of
         the result.
 
+        N.B. value and return should be of type: float, but this cannot be implimented
+            with the current code structure.
+
         Args:
-            value (float): the value to be converted
-            origin (str): pytac.ENG or pytac.PHYS
-            target (str): pytac.ENG or pytac.PHYS
+            value: the value to be converted
+            origin: pytac.ENG or pytac.PHYS
+            target: pytac.ENG or pytac.PHYS
 
         Returns:
-            float: The resulting value.
+            The resulting value.
 
         Raises:
             UnitsException: If the conversion is invalid; i.e. if there are no
-                             solutions, or multiple, within conversion limits.
+                solutions, or multiple, within conversion limits.
         """
         if origin == target:
             return value
@@ -223,13 +234,16 @@ class UnitConv:
                 f"{self}: Conversion from {origin} to {target} not understood."
             )
 
-    def set_conversion_limits(self, lower_limit, upper_limit):
+    def set_conversion_limits(self, lower_limit: Any, upper_limit: Any) -> None:
         """Conversion limits to be applied before or after a conversion take
         place. Limits should be set in in engineering units.
 
+        N.B. lower_limit and upper_limit should be of type: Optional[float], but
+            this cannot be implimented with the current code structure.
+
         Args:
-            lower_limit (float): the lower conversion limit
-            upper_limit (float): the upper conversion limit
+            lower_limit: the lower conversion limit
+            upper_limit: the upper conversion limit
         """
         if (lower_limit is not None) and (upper_limit is not None):
             if lower_limit >= upper_limit:
@@ -240,15 +254,18 @@ class UnitConv:
         self.lower_limit = lower_limit
         self.upper_limit = upper_limit
 
-    def get_conversion_limits(self, units=pytac.ENG):
+    def get_conversion_limits(self, units: str = pytac.ENG) -> List[Any]:
         """Return the current conversion limits in the specified unit type.
 
+        N.B. return should be type: List[Optional[float]], but this cannot be
+            implimented with the current code structure.
+
         Args:
-            units:
+            units: The unit type.
 
         Returns:
-            list: the conversion limits in the desired unit type,
-                   format: [lower_limit, upper_limit]
+            The conversion limits in the desired unit type,
+                format: [lower_limit, upper_limit]
         """
         if units == pytac.ENG:
             return [self.lower_limit, self.upper_limit]
@@ -264,73 +281,57 @@ class UnitConv:
 class PolyUnitConv(UnitConv):
     """Linear interpolation for converting between physics and engineering
     units.
-
-    **Attributes:**
-
-    Attributes:
-        p (poly1d): A one-dimensional polynomial of coefficients.
-        name (str): An identifier for the unit conversion object.
-        eng_units (str): The unit type of the post conversion engineering
-                          value.
-        phys_units (str): The unit type of the post conversion physics value.
-
-    .. Private Attributes:
-           _post_eng_to_phys (function): Function to be applied after the
-                                         initial conversion.
-           _pre_phys_to_eng (function): Function to be applied before the
-                                         initial conversion.
     """
+
+    p: numpy.poly1d
+    """A one-dimensional polynomial of coefficients."""
 
     def __init__(
         self,
-        coef,
-        post_eng_to_phys=unit_function,
-        pre_phys_to_eng=unit_function,
-        engineering_units="",
-        physics_units="",
-        name=None,
+        coef: Union[List[float], NDArray[numpy.generic]],
+        post_eng_to_phys: Callable[[float], float] = unit_function,
+        pre_phys_to_eng: Callable[[float], float] = unit_function,
+        engineering_units: str = "",
+        physics_units: str = "",
+        name: Optional[Union[str, int]] = None,
     ):
-        """
+        """Initialise the PolyUnitConv Object.
+
         Args:
-            coef (array-like): The polynomial's coefficients, in decreasing
-                                powers.
-            post_eng_to_phys (float): The value after conversion between ENG
-                                       and PHYS.
-            pre_eng_to_phys (float): The value before conversion.
-            engineering_units (str): The unit type of the post conversion
-                                      engineering value.
-            physics_units (str): The unit type of the post conversion physics
-                                  value.
-            name (str): An identifier for the unit conversion object.
+            coef: The polynomial's coefficients, in decreasing powers.
+            post_eng_to_phys: The value after conversion between ENG and PHYS.
+            pre_eng_to_phys: The value before conversion.
+            engineering_units: The unit type of the post conversion engineering value.
+            physics_units: The unit type of the post conversion physics value.
+            name: An identifier for the unit conversion object.
         """
         super(self.__class__, self).__init__(
             post_eng_to_phys, pre_phys_to_eng, engineering_units, physics_units, name
         )
         self.p = numpy.poly1d(coef)
 
-    def _raw_eng_to_phys(self, eng_value):
+    def _raw_eng_to_phys(self, eng_value: float) -> List[float]:
         """Convert between engineering and physics units.
 
         Args:
-            eng_value (float): The engineering value to be converted to physics
-                                units.
+            eng_value: The engineering value to be converted to physics units.
 
         Returns:
-            list: Containing the converted physics value from the given
-                    engineering value.
+            Containing the converted physics value from the given
+                engineering value.
         """
         return [self.p(eng_value)]
 
-    def _raw_phys_to_eng(self, physics_value):
+    def _raw_phys_to_eng(self, physics_value: float) -> List[float]:
         """Convert between physics and engineering units.
 
         Args:
-            physics_value (float): The physics value to be converted to
-                                    engineering units.
+            physics_value: The physics value to be converted to
+                engineering units.
 
         Returns:
-            list: Containing all posible real engineering values converted
-                   from the given physics value.
+            Containing all posible real engineering values converted
+                from the given physics value.
         """
         roots = set((self.p - physics_value).roots)  # remove duplicates
         valid_roots = []
@@ -341,54 +342,37 @@ class PolyUnitConv(UnitConv):
 
 
 class PchipUnitConv(UnitConv):
-    """Piecewise Cubic Hermite Interpolating Polynomial unit conversion.
+    """Piecewise Cubic Hermite Interpolating Polynomial unit conversion."""
 
-    **Attributes:**
-
-    Attributes:
-        x (list): A list of points on the x axis. These must be in increasing
-                   order for the interpolation to work. Otherwise, a ValueError
-                   is raised.
-        y (list): A list of points on the y axis. These must be in increasing
-                   or decreasing order. Otherwise, a ValueError is raised.
-        pp (PchipInterpolator): A pchip one-dimensional monotonic cubic
-                                 interpolation of points on both x and y axes.
-
-        name (str): An identifier for the unit conversion object.
-        eng_units (str): The unit type of the post conversion engineering
-                          value.
-        phys_units (str): The unit type of the post conversion physics value.
-
-    .. Private Attributes:
-           _post_eng_to_phys (function): Function to be applied after the
-                                         initial conversion.
-           _pre_phys_to_eng (function): Function to be applied before the
-                                         initial conversion.
-    """
+    x: List[Any]
+    """A list of points on the x axis. These must be in increasing order for the
+        interpolation to work. Otherwise, a ValueError is raised."""
+    y: List[Any]
+    """A list of points on the y axis. These must be in increasing or decreasing
+        order. Otherwise, a ValueError is raised."""
+    pp: PchipInterpolator
+    """A pchip one-dimensional monotonic cubic interpolation of points on both x
+        and y axes."""
 
     def __init__(
         self,
-        x,
-        y,
-        post_eng_to_phys=unit_function,
-        pre_phys_to_eng=unit_function,
-        engineering_units="",
-        physics_units="",
-        name=None,
-    ):
+        x: List[Any],
+        y: List[Any],
+        post_eng_to_phys: Callable[[float], float] = unit_function,
+        pre_phys_to_eng: Callable[[float], float] = unit_function,
+        engineering_units: str = "",
+        physics_units: str = "",
+        name: Optional[Union[str, int]] = None,
+    ) -> None:
         """
         Args:
-            x (list): A list of points on the x axis. These must be in
-                       increasing order for the interpolation to work.
-                       Otherwise, a ValueError is raised.
-            y (list): A list of points on the y axis. These must be in
-                       increasing or decreasing order. Otherwise, a ValueError
-                       is raised.
-            engineering_units (str): The unit type of the post conversion
-                                      engineering value.
-            physics_units (str): The unit type of the post conversion physics
-                                  value.
-            name (str): An identifier for the unit conversion object.
+            x: A list of points on the x axis. These must be in increasing order for
+                the interpolation to work. Otherwise, a ValueError is raised.
+            y: A list of points on the y axis. These must be in increasing or
+                decreasing order. Otherwise, a ValueError is raised.
+            engineering_units: The unit type of the post conversion engineering value.
+            physics_units: The unit type of the post conversion physics value.
+            name: An identifier for the unit conversion object.
 
         Raises:
             ValueError: if coefficients are not appropriately monotonic.
@@ -412,28 +396,25 @@ class PchipUnitConv(UnitConv):
                 "y coefficients must be monotonically increasing or decreasing."
             )
 
-    def _raw_eng_to_phys(self, eng_value):
+    def _raw_eng_to_phys(self, eng_value: float) -> List[Any]:
         """Convert between engineering and physics units.
 
         Args:
-            eng_value (float): The engineering value to be converted to physics
-                                units.
+            eng_value: The engineering value to be converted to physics units.
         Returns:
-            list: Containing the converted physics value from the given
-                    engineering value.
+            Containing the converted physics value from the given engineering value.
         """
         return [self.pp(eng_value)]
 
-    def _raw_phys_to_eng(self, physics_value):
+    def _raw_phys_to_eng(self, physics_value: float):
         """Convert between physics and engineering units.
 
         Args:
-            physics_value (float): The physics value to be converted to
-                                    engineering units.
+            physics_value: The physics value to be converted to engineering units.
 
         Returns:
-            list: Containing all posible real engineering values converted
-                   from the given physics value.
+            Containing all posible real engineering values converted from the given
+                physics value.
         """
         y = [val - physics_value for val in self.y]
         new_pp = PchipInterpolator(self.x, y)
@@ -446,57 +427,43 @@ class PchipUnitConv(UnitConv):
 
 
 class NullUnitConv(UnitConv):
-    """Returns input value without performing any conversions.
+    """Returns input value without performing any conversions."""
 
-    **Attributes:**
+    def __init__(self, engineering_units: str = "", physics_units: str = "") -> None:
+        """Initialise the NullUnitConv Object.
 
-    Attributes:
-        eng_units (str): The unit type of the post conversion engineering
-                          value.
-        phys_units (str): The unit type of the post conversion physics value.
-
-    .. Private Attributes:
-           _post_eng_to_phys (function): Always unit_function as no conversion
-                                          is performed.
-           _pre_phys_to_eng (function): Always unit_function as no conversion
-                                          is performed.
-    """
-
-    def __init__(self, engineering_units="", physics_units=""):
-        """
         Args:
-            engineering_units (str): The unit type of the post conversion
-                                      engineering value.
-            physics_units (str): The unit type of the post conversion physics
-                                  value.
+            engineering_units: The unit type of the post conversion engineering value.
+            physics_units: The unit type of the post conversion physics value.
         """
         super(self.__class__, self).__init__(
             unit_function, unit_function, engineering_units, physics_units
         )
 
-    def _raw_eng_to_phys(self, eng_value):
+    def _raw_eng_to_phys(self, eng_value: float) -> List[Any]:
         """Doesn't convert between engineering and physics units.
 
         Maintains the same syntax as the other UnitConv classes for
         compatibility, but does not perform any conversion.
 
         Args:
-            eng_value (float): The engineering value to be returned unchanged.
+            eng_value: The engineering value to be returned unchanged.
+
         Returns:
-            list: Containing the unconverted given engineering value.
+            Containing the unconverted given engineering value.
         """
         return [eng_value]
 
-    def _raw_phys_to_eng(self, phys_value):
+    def _raw_phys_to_eng(self, phys_value: float) -> List[Any]:
         """Doesn't convert between physics and engineering units.
 
         Maintains the same syntax as the other UnitConv classes for
         compatibility, but does not perform any conversion.
 
         Args:
-            physics_value (float): The physics value to be returned unchanged.
+            physics_value: The physics value to be returned unchanged.
 
         Returns:
-            list: Containing the unconverted given physics value.
+            Containing the unconverted given physics value.
         """
         return [phys_value]

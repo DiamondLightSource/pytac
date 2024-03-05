@@ -14,11 +14,13 @@ import contextlib
 import copy
 import csv
 from pathlib import Path
-from typing import Dict, Iterator
+from typing import Dict, Iterator, Optional, Sequence, Union, cast
 
 import pytac
 from pytac import data_source, element, utils
+from pytac.cs import ControlSystem
 from pytac.device import EpicsDevice, SimpleDevice
+from pytac.element import Element
 from pytac.exceptions import ControlSystemException
 from pytac.lattice import EpicsLattice, Lattice
 from pytac.units import NullUnitConv, PchipUnitConv, PolyUnitConv, UnitConv
@@ -49,7 +51,7 @@ def load_poly_unitconv(filepath: Path) -> Dict[int, PolyUnitConv]:
         filepath: The file from which to load.
 
     Returns:
-        dict: A dictionary of the unit conversions.
+        A dictionary of the unit conversions.
     """
     unitconvs: Dict[int, PolyUnitConv] = {}
     data = collections.defaultdict(list)
@@ -70,7 +72,7 @@ def load_pchip_unitconv(filepath: Path) -> Dict[int, PchipUnitConv]:
         filename: The file from which to load.
 
     Returns:
-        dict: A dictionary of the unit conversions.
+        A dictionary of the unit conversions.
     """
     unitconvs: Dict[int, PchipUnitConv] = {}
     data = collections.defaultdict(list)
@@ -144,25 +146,28 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
                 element.set_unitconv(item["field"], uc)
 
 
-def load(mode, control_system=None, directory=None, symmetry=None):
+def load(
+    mode: str,
+    control_system: Optional[ControlSystem] = None,
+    directory: Optional[Path] = None,
+    symmetry: Optional[int] = None,
+) -> Lattice:
     """Load the elements of a lattice from a directory.
 
     Args:
-        mode (str): The name of the mode to be loaded.
-        control_system (ControlSystem): The control system to be used. If none
-                                         is provided an EpicsControlSystem will
-                                         be created.
-        directory (str): Directory where to load the files from. If no
-                          directory is given the data directory at the root of
-                          the repository is used.
-        symmetry (int): The symmetry of the lattice (the number of cells).
+        mode: The name of the mode to be loaded.
+        control_system: The control system to be used. If none is provided an
+            EpicsControlSystem will be created.
+        directory: Directory where to load the files from. If no directory is
+            given the data directory at the root of the repository is used.
+        symmetry: The symmetry of the lattice (the number of cells).
 
     Returns:
-        Lattice: The lattice containing all elements.
+        The lattice containing all elements.
 
     Raises:
         ControlSystemException: if the default control system, cothread, is not
-                                 installed.
+            installed.
     """
     try:
         if control_system is None:
@@ -198,13 +203,21 @@ def load(mode, control_system=None, directory=None, symmetry=None):
             pve = True
             d = EpicsDevice(name, control_system, pve, get_pv, set_pv)
             # Devices on index 0 are attached to the lattice not elements.
-            target = lat if index == 0 else lat[index - 1]
+            # Explicitly type target as the base classes to validate add_device method.
+            target: Union[Lattice, Element] = lat if index == 0 else lat[index - 1]
             target.add_device(item["field"], d, DEFAULT_UC)
         # Add basic devices to the lattice.
         positions = []
-        for elem in lat:
+        # Lattice must be iterable and indexable, however mypy doesnt accept only
+        # having __getitem__ and __len__ instead of __iter__.
+        type_lattice = cast(Sequence, lat)
+        for elem in type_lattice:
             positions.append(elem.s)
-        lat.add_device("s_position", SimpleDevice(positions, readonly=True), True)
+        # AugmentedType can be a list. Until cothread is typed correctly
+        # this is impractical to fix.
+        # The add_device method on the lattice accepts a boolean as a UnitConv object.
+        # This should not be typed as such and DEFAULT_UC should be used instead.
+        lat.add_device("s_position", SimpleDevice(positions, readonly=True), True)  # type: ignore # noqa: E501
     simple_devices_file = mode_dir / SIMPLE_DEVICES_FILENAME
     if simple_devices_file.exists():
         with csv_loader(simple_devices_file) as csv_reader:
@@ -215,7 +228,10 @@ def load(mode, control_system=None, directory=None, symmetry=None):
                 readonly = item["readonly"].lower() == "true"
                 # Devices on index 0 are attached to the lattice not elements.
                 target = lat if index == 0 else lat[index - 1]
-                target.add_device(field, SimpleDevice(value, readonly=readonly), True)
+                # The add_device method on the lattice accepts a boolean as a
+                # UnitConv object. # This should not be typed as such and DEFAULT_UC
+                # should be used instead.
+                target.add_device(field, SimpleDevice(value, readonly=readonly), True)  # type: ignore # noqa: E501
     with csv_loader(mode_dir / FAMILIES_FILENAME) as csv_reader:
         for item in csv_reader:
             lat[int(item["el_id"]) - 1].add_to_family(item["family"])
