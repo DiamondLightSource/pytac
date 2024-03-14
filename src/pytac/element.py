@@ -1,4 +1,5 @@
 """Module containing the element class."""
+
 import pytac
 from pytac.data_source import DataSource, DataSourceManager
 from pytac.exceptions import DataSourceException, FieldException
