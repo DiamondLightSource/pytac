@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: pytac
+  title: Pytac
+  description: Python Toolkit for Accelerator Controls 
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: DiamondLightSource/pytac
+  tags:
+    - python
+    - controls
+spec:
+  type: library
+  lifecycle: production
+  owner: group:Accelerator Controls
