@@ -43,7 +43,7 @@ function load_mml(ringmode)
     ao = getao();
 
     % Hard-coded beam energy value.
-    fprintf(f_simple_devices, '0,energy,3e9,true\n');
+    fprintf(f_simple_devices, '0,energy,3e9,True\n');
 
     % The individual BPM PVs are not stored in middlelayer.
     BPMS = get_bpm_pvs(ao);

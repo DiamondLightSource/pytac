@@ -10,6 +10,7 @@ The csv files are stored in one directory with specified names:
  * uc_pchip_data.csv
 """
 
+import ast
 import collections
 import contextlib
 import copy
@@ -221,8 +222,7 @@ def load(mode, control_system=None, directory=None, symmetry=None):
             index = int(item["el_id"])
             get_pv = item["get_pv"] if item["get_pv"] else None
             set_pv = item["set_pv"] if item["set_pv"] else None
-            pve = True
-            d = EpicsDevice(name, control_system, pve, get_pv, set_pv)
+            d = EpicsDevice(name, control_system, rb_pv=get_pv, sp_pv=set_pv)
             # Devices on index 0 are attached to the lattice not elements.
             target = lat if index == 0 else lat[index - 1]
             # Create with a default UnitConv object that returns the input unchanged.
@@ -231,7 +231,9 @@ def load(mode, control_system=None, directory=None, symmetry=None):
         positions = []
         for elem in lat:
             positions.append(elem.s)
-        lat.add_device("s_position", SimpleDevice(positions, readonly=True), True)
+        lat.add_device(
+            "s_position", SimpleDevice(positions, readonly=True), NullUnitConv()
+        )
     simple_devices_file = mode_dir / SIMPLE_DEVICES_FILENAME
     if simple_devices_file.exists():
         with csv_loader(simple_devices_file) as csv_reader:
@@ -239,10 +241,18 @@ def load(mode, control_system=None, directory=None, symmetry=None):
                 index = int(item["el_id"])
                 field = item["field"]
                 value = float(item["value"])
-                readonly = item["readonly"].lower() == "true"
+                try:
+                    readonly = ast.literal_eval(item["readonly"])
+                    assert isinstance(readonly, bool)
+                except (ValueError, AssertionError):
+                    raise ValueError(
+                        f"Unable to evaluate {item['readonly']} as a boolean."
+                    )
                 # Devices on index 0 are attached to the lattice not elements.
                 target = lat if index == 0 else lat[index - 1]
-                target.add_device(field, SimpleDevice(value, readonly=readonly), True)
+                target.add_device(
+                    field, SimpleDevice(value, readonly=readonly), NullUnitConv()
+                )
     with csv_loader(mode_dir / FAMILIES_FILENAME) as csv_reader:
         for item in csv_reader:
             lat[int(item["el_id"]) - 1].add_to_family(item["family"])
