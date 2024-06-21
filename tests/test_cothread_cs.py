@@ -4,6 +4,7 @@ This module depends on the cothread module being mocked.
 
 See pytest_sessionstart() in conftest.py for more.
 """
+
 import pytest
 from constants import RB_PV, SP_PV
 from cothread.catools import ca_nothing, caget, caput

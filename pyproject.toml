@@ -30,7 +30,6 @@ dev = [
     "pydata-sphinx-theme>=0.12",
     "pytest",
     "pytest-cov",
-    "pytest-lazy-fixture",
     "sphinx-autobuild",
     "sphinx-copybutton",
     "sphinx-design",

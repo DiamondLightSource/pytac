@@ -18,7 +18,7 @@ function load_mml(ringmode)
 
     dir = fileparts(mfilename('fullpath'));
     cd(dir);
-    datadir = fullfile(dir, '..', 'pytac', 'data', ringmode);
+    datadir = fullfile(dir, '..', ringmode);
     if ~exist(datadir, 'dir')
         fprintf('Data directory %s does not exist. Please create it.\n', datadir);
         fprintf('Script will exit.\n');
@@ -43,7 +43,7 @@ function load_mml(ringmode)
     ao = getao();
 
     % Hard-coded beam energy value.
-    fprintf(f_simple_devices, '0,energy,3e9,true\n');
+    fprintf(f_simple_devices, '0,energy,3e9,True\n');
 
     % The individual BPM PVs are not stored in middlelayer.
     BPMS = get_bpm_pvs(ao);
