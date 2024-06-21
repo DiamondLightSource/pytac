@@ -88,7 +88,7 @@ def load_pchip_unitconv(filepath: Path) -> Dict[int, PchipUnitConv]:
 
 def resolve_unitconv(
     uc_params: Dict, unitconvs: Dict, polyconv_file: Path, pchipconv_file: Path
-):
+) -> UnitConv:
     """Create a unit conversion object based on the dictionary of parameters passed.
 
     Args:
@@ -172,7 +172,7 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
                 element.set_unitconv(item["field"], uc)
 
 
-def load(mode, control_system=None, directory=None, symmetry=None):
+def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLattice:
     """Load the elements of a lattice from a directory.
 
     Args:
