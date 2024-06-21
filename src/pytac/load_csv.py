@@ -218,18 +218,20 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
             lat.add_element(e)
     with csv_loader(mode_dir / EPICS_DEVICES_FILENAME) as csv_reader:
         for item in csv_reader:
-            name = item["name"]
             index = int(item["el_id"])
             get_pv = item["get_pv"] if item["get_pv"] else None
             set_pv = item["set_pv"] if item["set_pv"] else None
-            d = EpicsDevice(name, control_system, rb_pv=get_pv, sp_pv=set_pv)
             # Devices on index 0 are attached to the lattice not elements.
             target = lat if index == 0 else lat[index - 1]
-            # Create with a default UnitConv object that returns the input unchanged.
-            target.add_device(item["field"], d, NullUnitConv())
+            # Create with a default UnitConv that returns the input unchanged.
+            target.add_device(  # type: ignore[attr-defined]
+                item["field"],
+                EpicsDevice(item["name"], control_system, rb_pv=get_pv, sp_pv=set_pv),
+                NullUnitConv(),
+            )
         # Add basic devices to the lattice.
         positions = []
-        for elem in lat:
+        for elem in lat:  # type: ignore[attr-defined]
             positions.append(elem.s)
         lat.add_device(
             "s_position", SimpleDevice(positions, readonly=True), NullUnitConv()
@@ -239,8 +241,6 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
         with csv_loader(simple_devices_file) as csv_reader:
             for item in csv_reader:
                 index = int(item["el_id"])
-                field = item["field"]
-                value = float(item["value"])
                 try:
                     readonly = ast.literal_eval(item["readonly"])
                     assert isinstance(readonly, bool)
@@ -250,8 +250,11 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
                     )
                 # Devices on index 0 are attached to the lattice not elements.
                 target = lat if index == 0 else lat[index - 1]
-                target.add_device(
-                    field, SimpleDevice(value, readonly=readonly), NullUnitConv()
+                # Create with a default UnitConv that returns the input unchanged.
+                target.add_device(  # type: ignore[attr-defined]
+                    item["field"],
+                    SimpleDevice(float(item["value"]), readonly=readonly),
+                    NullUnitConv(),
                 )
     with csv_loader(mode_dir / FAMILIES_FILENAME) as csv_reader:
         for item in csv_reader:
