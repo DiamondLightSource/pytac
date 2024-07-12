@@ -1,6 +1,7 @@
 """Representation of a lattice object which contains all the elements of the
     machine.
 """
+
 import logging
 from typing import List, Optional
 

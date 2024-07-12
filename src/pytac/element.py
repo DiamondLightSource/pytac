@@ -1,4 +1,5 @@
 """Module containing the element class."""
+
 import pytac
 from pytac.data_source import DataSource, DataSourceManager
 from pytac.exceptions import DataSourceException, FieldException
@@ -89,13 +90,13 @@ class Element(object):
         """
         repn = "<Element "
         if self.name is not None:
-            repn += "'{0}', ".format(self.name)
+            repn += f"'{self.name}', "
         if self.index is not None:
-            repn += "index {0}, ".format(self.index)
-        repn += "length {0} m, ".format(self.length)
+            repn += f"index {self.index}, "
+        repn += f"length {self.length} m, "
         if self.cell is not None:
-            repn += "cell {0}, ".format(self.cell)
-        repn += "families {0}>".format(", ".join(f for f in self.families))
+            repn += f"cell {self.cell}, "
+        repn += f"families {', '.join(f for f in self.families)}>"
         return repn
 
     __repr__ = __str__

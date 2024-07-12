@@ -9,22 +9,22 @@ The csv files are stored in one directory with specified names:
  * uc_poly_data.csv
  * uc_pchip_data.csv
 """
+
+import ast
 import collections
 import contextlib
 import copy
 import csv
+import logging
 from pathlib import Path
 from typing import Dict, Iterator
 
 import pytac
 from pytac import data_source, element, utils
 from pytac.device import EpicsDevice, SimpleDevice
-from pytac.exceptions import ControlSystemException
+from pytac.exceptions import ControlSystemException, UnitsException
 from pytac.lattice import EpicsLattice, Lattice
 from pytac.units import NullUnitConv, PchipUnitConv, PolyUnitConv, UnitConv
-
-# Create a default unit conversion object that returns the input unchanged.
-DEFAULT_UC = NullUnitConv()
 
 ELEMENTS_FILENAME = "elements.csv"
 EPICS_DEVICES_FILENAME = "epics_devices.csv"
@@ -86,6 +86,52 @@ def load_pchip_unitconv(filepath: Path) -> Dict[int, PchipUnitConv]:
     return unitconvs
 
 
+def resolve_unitconv(
+    uc_params: Dict, unitconvs: Dict, polyconv_file: Path, pchipconv_file: Path
+) -> UnitConv:
+    """Create a unit conversion object based on the dictionary of parameters passed.
+
+    Args:
+        uc_params (Dict): A dictionary of parameters specifying the unit conversion
+                           object's properties.
+        unitconvs (Dict): A dictionary of all loaded unit conversion objects.
+        polyconv_file (Path): The path to the .csv file from which all PolyUnitConv
+                               objects are loaded.
+        pchipconv_file (Path): The path to the .csv file from which all PchipUnitConv
+                                objects are loaded.
+    Returns:
+        UnitConv: The unit conversion object as specified by uc_params.
+
+    Raises:
+        UnitsException: if the "uc_id" given in uc_params isn't in the unitconvs Dict.
+    """
+    error_msg = (
+        f"Unable to resolve {uc_params['uc_type']} unit conversion with ID "
+        f"{uc_params['uc_id']}, "
+    )
+    if uc_params["uc_type"] == "null":
+        uc = NullUnitConv(uc_params["eng_units"], uc_params["phys_units"])
+    else:
+        # Each element needs its own UnitConv object as it may have different limits.
+        try:
+            uc = copy.copy(unitconvs[int(uc_params["uc_id"])])
+        except KeyError:
+            if uc_params["uc_type"] == "poly" and not polyconv_file.exists():
+                raise UnitsException(error_msg + f"{polyconv_file} not found.")
+            elif uc_params["uc_type"] == "pchip" and not pchipconv_file.exists():
+                raise UnitsException(error_msg + f"{pchipconv_file} not found.")
+            else:
+                raise UnitsException(error_msg + "unrecognised UnitConv type.")
+        uc.phys_units = uc_params["phys_units"]
+        uc.eng_units = uc_params["eng_units"]
+        lower, upper = [
+            float(lim) if lim != "" else None
+            for lim in [uc_params["lower_lim"], uc_params["upper_lim"]]
+        ]
+        uc.set_conversion_limits(lower, upper)
+    return uc
+
+
 def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
     """Load the unit conversion objects from a file.
 
@@ -95,56 +141,38 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
     """
     unitconvs: Dict[int, UnitConv] = {}
     # Assemble datasets from the polynomial file
-    unitconvs.update(load_poly_unitconv(mode_dir / POLY_FILENAME))
+    polyconv_file = mode_dir / POLY_FILENAME
+    if polyconv_file.exists():
+        unitconvs.update(load_poly_unitconv(polyconv_file))
+    else:
+        logging.warning(f"{polyconv_file} not found, unable to load PolyUnitConvs.")
     # Assemble datasets from the pchip file
-    unitconvs.update(load_pchip_unitconv(mode_dir / PCHIP_FILENAME))
+    pchipconv_file = mode_dir / PCHIP_FILENAME
+    if pchipconv_file.exists():
+        unitconvs.update(load_pchip_unitconv(pchipconv_file))
+    else:
+        logging.warning(f"{pchipconv_file} not found, unable to load PchipUnitConvs.")
     # Add the unitconv objects to the elements
     with csv_loader(mode_dir / UNITCONV_FILENAME) as csv_reader:
         for item in csv_reader:
+            uc = resolve_unitconv(item, unitconvs, polyconv_file, pchipconv_file)
             # Special case for element 0: the lattice itself.
             if int(item["el_id"]) == 0:
-                if item["uc_type"] != "null":
-                    # Each element needs its own unitconv object as
-                    # it may for example have different limit.
-                    uc = copy.copy(unitconvs[int(item["uc_id"])])
-                    uc.phys_units = item["phys_units"]
-                    uc.eng_units = item["eng_units"]
-                    upper, lower = (
-                        float(lim) if lim != "" else None
-                        for lim in [item["upper_lim"], item["lower_lim"]]
-                    )
-                    uc.set_conversion_limits(lower, upper)
-                else:
-                    uc = NullUnitConv(item["eng_units"], item["phys_units"])
                 lattice.set_unitconv(item["field"], uc)
             else:
                 element = lattice[int(item["el_id"]) - 1]
                 # For certain magnet types, we need an additional rigidity
                 # conversion factor as well as the raw conversion.
-                if item["uc_type"] == "null":
-                    uc = NullUnitConv(item["eng_units"], item["phys_units"])
-                else:
-                    # Each element needs its own unitconv object as
-                    # it may for example have different limit.
-                    uc = copy.copy(unitconvs[int(item["uc_id"])])
-                    if any(
-                        element.is_in_family(f)
-                        for f in ("HSTR", "VSTR", "Quadrupole", "Sextupole", "Bend")
-                    ):
-                        energy = lattice.get_value("energy", units=pytac.PHYS)
-                        uc.set_post_eng_to_phys(utils.get_div_rigidity(energy))
-                        uc.set_pre_phys_to_eng(utils.get_mult_rigidity(energy))
-                    uc.phys_units = item["phys_units"]
-                    uc.eng_units = item["eng_units"]
-                    upper, lower = (
-                        float(lim) if lim != "" else None
-                        for lim in [item["upper_lim"], item["lower_lim"]]
-                    )
-                    uc.set_conversion_limits(lower, upper)
+                # TODO: This should probably be moved into the .csv files somewhere.
+                rigidity_families = {"hstr", "vstr", "quadrupole", "sextupole", "bend"}
+                if item["uc_type"] != "null" and element._families & rigidity_families:
+                    energy = lattice.get_value("energy", units=pytac.PHYS)
+                    uc.set_post_eng_to_phys(utils.get_div_rigidity(energy))
+                    uc.set_pre_phys_to_eng(utils.get_mult_rigidity(energy))
                 element.set_unitconv(item["field"], uc)
 
 
-def load(mode, control_system=None, directory=None, symmetry=None):
+def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLattice:
     """Load the elements of a lattice from a directory.
 
     Args:
@@ -173,9 +201,8 @@ def load(mode, control_system=None, directory=None, symmetry=None):
             control_system = cothread_cs.CothreadControlSystem()
     except ImportError:
         raise ControlSystemException(
-            "Please install cothread to load a "
-            "lattice using the default control "
-            "system (found in cothread_cs.py)."
+            "Please install cothread to load a lattice using the default control system"
+            " (found in cothread_cs.py)."
         )
     if directory is None:
         directory = Path(__file__).resolve().parent / "data"
@@ -191,31 +218,44 @@ def load(mode, control_system=None, directory=None, symmetry=None):
             lat.add_element(e)
     with csv_loader(mode_dir / EPICS_DEVICES_FILENAME) as csv_reader:
         for item in csv_reader:
-            name = item["name"]
             index = int(item["el_id"])
             get_pv = item["get_pv"] if item["get_pv"] else None
             set_pv = item["set_pv"] if item["set_pv"] else None
-            pve = True
-            d = EpicsDevice(name, control_system, pve, get_pv, set_pv)
             # Devices on index 0 are attached to the lattice not elements.
             target = lat if index == 0 else lat[index - 1]
-            target.add_device(item["field"], d, DEFAULT_UC)
+            # Create with a default UnitConv that returns the input unchanged.
+            target.add_device(  # type: ignore[attr-defined]
+                item["field"],
+                EpicsDevice(item["name"], control_system, rb_pv=get_pv, sp_pv=set_pv),
+                NullUnitConv(),
+            )
         # Add basic devices to the lattice.
         positions = []
-        for elem in lat:
+        for elem in lat:  # type: ignore[attr-defined]
             positions.append(elem.s)
-        lat.add_device("s_position", SimpleDevice(positions, readonly=True), True)
+        lat.add_device(
+            "s_position", SimpleDevice(positions, readonly=True), NullUnitConv()
+        )
     simple_devices_file = mode_dir / SIMPLE_DEVICES_FILENAME
     if simple_devices_file.exists():
         with csv_loader(simple_devices_file) as csv_reader:
             for item in csv_reader:
                 index = int(item["el_id"])
-                field = item["field"]
-                value = float(item["value"])
-                readonly = item["readonly"].lower() == "true"
+                try:
+                    readonly = ast.literal_eval(item["readonly"])
+                    assert isinstance(readonly, bool)
+                except (ValueError, AssertionError):
+                    raise ValueError(
+                        f"Unable to evaluate {item['readonly']} as a boolean."
+                    )
                 # Devices on index 0 are attached to the lattice not elements.
                 target = lat if index == 0 else lat[index - 1]
-                target.add_device(field, SimpleDevice(value, readonly=readonly), True)
+                # Create with a default UnitConv that returns the input unchanged.
+                target.add_device(  # type: ignore[attr-defined]
+                    item["field"],
+                    SimpleDevice(float(item["value"]), readonly=readonly),
+                    NullUnitConv(),
+                )
     with csv_loader(mode_dir / FAMILIES_FILENAME) as csv_reader:
         for item in csv_reader:
             lat[int(item["el_id"]) - 1].add_to_family(item["family"])

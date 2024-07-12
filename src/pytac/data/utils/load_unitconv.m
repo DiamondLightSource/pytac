@@ -1,9 +1,17 @@
 function load_unitconv(ringmode, renamedIndexes)
 dir = fileparts(mfilename('fullpath'));
 cd(dir);
-units_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'unitconv.csv');
-poly_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'uc_poly_data.csv');
-pchip_file = fullfile(dir, '..', 'pytac', 'data', ringmode, 'uc_pchip_data.csv');
+datadir = fullfile(dir, '..', ringmode);
+if ~exist(datadir, 'dir')
+    fprintf('Data directory %s does not exist. Please create it.\n', datadir);
+    fprintf('Script will exit.\n');
+    return;
+end
+
+% Open the CSV files that store the Pytac data.
+units_file = fullfile(datadir, 'unitconv.csv');
+poly_file = fullfile(datadir, 'uc_poly_data.csv');
+pchip_file = fullfile(datadir, 'uc_pchip_data.csv');
 
 fprintf('Loading unit conversions...\n');
 
