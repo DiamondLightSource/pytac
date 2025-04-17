@@ -1,5 +1,5 @@
 """Representation of a lattice object which contains all the elements of the
-    machine.
+machine.
 """
 
 import logging
@@ -91,6 +91,7 @@ class Lattice:
         Returns:
             indexed element
         """
+        # TODO: This seems to raise an unhandled out of bounds exception?
         return self._elements[n]
 
     def __len__(self) -> int:

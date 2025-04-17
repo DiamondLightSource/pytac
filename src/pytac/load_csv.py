@@ -132,7 +132,7 @@ def resolve_unitconv(
     return uc
 
 
-def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
+async def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
     """Load the unit conversion objects from a file.
 
     Args:
@@ -166,13 +166,15 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
                 # TODO: This should probably be moved into the .csv files somewhere.
                 rigidity_families = {"hstr", "vstr", "quadrupole", "sextupole", "bend"}
                 if item["uc_type"] != "null" and element._families & rigidity_families:
-                    energy = lattice.get_value("energy", units=pytac.PHYS)
+                    energy = await lattice.get_value("energy", units=pytac.PHYS)
                     uc.set_post_eng_to_phys(utils.get_div_rigidity(energy))
                     uc.set_pre_phys_to_eng(utils.get_mult_rigidity(energy))
                 element.set_unitconv(item["field"], uc)
 
 
-def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLattice:
+async def load(
+    mode, control_system=None, directory=None, symmetry=None
+) -> EpicsLattice:
     """Load the elements of a lattice from a directory.
 
     Args:
@@ -198,7 +200,7 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
             # installation of cothread
             from pytac import cothread_cs
 
-            control_system = cothread_cs.CothreadControlSystem()
+            control_system = cothread_cs.AIOCAControlSystem()
     except ImportError:
         raise ControlSystemException(
             "Please install cothread to load a lattice using the default control system"
@@ -261,5 +263,5 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
             lat[int(item["el_id"]) - 1].add_to_family(item["family"])
     unitconv_file = mode_dir / UNITCONV_FILENAME
     if unitconv_file.exists():
-        load_unitconv(mode_dir, lat)
+        await load_unitconv(mode_dir, lat)
     return lat
