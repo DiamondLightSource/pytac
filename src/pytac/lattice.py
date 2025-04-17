@@ -90,6 +90,7 @@ class Lattice:
         Returns:
             indexed element
         """
+        # TODO: This seems to raise an unhandled out of bounds exception?
         return self._elements[n]
 
     def __len__(self) -> int:

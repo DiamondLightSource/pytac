@@ -1,12 +1,13 @@
 import logging
 
-from cothread.catools import ca_nothing, caget, caput
-
+# from cothread.catools import ca_nothing, caget, caput
+from cothread.catools import ca_nothing
+from aioca import caget, caput, CANothing
 from pytac.cs import ControlSystem
 from pytac.exceptions import ControlSystemException
 
 
-class CothreadControlSystem(ControlSystem):
+class AIOCAControlSystem(ControlSystem):
     """A control system using cothread to communicate with EPICS.
 
     N.B. this is the default control system. It is used to communicate over
@@ -19,7 +20,7 @@ class CothreadControlSystem(ControlSystem):
         self._timeout = timeout
         self._wait = wait
 
-    def get_single(self, pv, throw=True):
+    async def get_single(self, pv, throw=True):
         """Get the value of a given PV.
 
         Args:
@@ -35,7 +36,7 @@ class CothreadControlSystem(ControlSystem):
             ControlSystemException: if it cannot connect to the specified PV.
         """
         try:
-            return caget(pv, timeout=self._timeout, throw=True)
+            return await caget(pv, timeout=self._timeout, throw=True)
         except ca_nothing:
             error_msg = f"Cannot connect to {pv}."
             if throw:
@@ -44,7 +45,7 @@ class CothreadControlSystem(ControlSystem):
                 logging.warning(error_msg)
                 return None
 
-    def get_multiple(self, pvs, throw=True):
+    async def get_multiple(self, pvs, throw=True):
         """Get the value for given PVs.
 
         Args:
@@ -59,7 +60,7 @@ class CothreadControlSystem(ControlSystem):
         Raises:
             ControlSystemException: if it cannot connect to one or more PVs.
         """
-        results = caget(pvs, timeout=self._timeout, throw=False)
+        results = await caget(pvs, timeout=self._timeout, throw=False)
         return_values = []
         failures = []
         for result in results:
@@ -75,7 +76,7 @@ class CothreadControlSystem(ControlSystem):
             raise ControlSystemException(f"{len(failures)} caget calls failed.")
         return return_values
 
-    def set_single(self, pv, value, throw=True):
+    async def set_single(self, pv, value, throw=True):
         """Set the value of a given PV.
 
         Args:
@@ -91,7 +92,7 @@ class CothreadControlSystem(ControlSystem):
             ControlSystemException: if it cannot connect to the specified PV.
         """
         try:
-            caput(pv, value, timeout=self._timeout, throw=True, wait=self._wait)
+            await caput(pv, value, timeout=self._timeout, throw=True, wait=self._wait)
             return True
         except ca_nothing:
             error_msg = f"Cannot connect to {pv}."
@@ -101,7 +102,7 @@ class CothreadControlSystem(ControlSystem):
                 logging.warning(error_msg)
                 return False
 
-    def set_multiple(self, pvs, values, throw=True):
+    async def set_multiple(self, pvs, values, throw=True):
         """Set the values for given PVs.
 
         Args:
@@ -122,7 +123,7 @@ class CothreadControlSystem(ControlSystem):
         """
         if len(pvs) != len(values):
             raise ValueError("Please enter the same number of values as PVs.")
-        status = caput(pvs, values, timeout=self._timeout, throw=False, wait=self._wait)
+        status = await caput(pvs, values, timeout=self._timeout, throw=False, wait=self._wait)
         return_values = []
         failures = []
         for stat in status:
