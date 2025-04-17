@@ -226,7 +226,7 @@ class Element:
         """
         return family.lower() in self._families
 
-    def get_value(
+    async def get_value(
         self,
         field,
         handle=pytac.RB,
@@ -257,7 +257,7 @@ class Element:
             FieldException: if the element does not have the specified field.
         """
         try:
-            return self._data_source_manager.get_value(
+            return await self._data_source_manager.get_value(
                 field, handle, units, data_source, throw
             )
         except DataSourceException as e:
@@ -265,7 +265,7 @@ class Element:
         except FieldException as e:
             raise FieldException(f"{self}: {e}") from e
 
-    def set_value(
+    async def set_value(
         self,
         field,
         value,
@@ -290,7 +290,7 @@ class Element:
             FieldException: if the element does not have the specified field.
         """
         try:
-            self._data_source_manager.set_value(field, value, units, data_source, throw)
+            await self._data_source_manager.set_value(field, value, units, data_source, throw)
         except DataSourceException as e:
             raise DataSourceException(f"{self}: {e}") from e
         except FieldException as e:
