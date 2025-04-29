@@ -168,7 +168,7 @@ class EpicsDevice(Device):
         """
         return bool(self._enabled)
 
-    def get_value(self, handle, throw=True):
+    async def get_value(self, handle, throw=True):
         """Read the value of a readback or setpoint PV.
 
         Args:
@@ -182,9 +182,9 @@ class EpicsDevice(Device):
         Raises:
             HandleException: if the requested PV doesn't exist.
         """
-        return self._cs.get_single(self.get_pv_name(handle), throw)
+        return await self._cs.get_single(self.get_pv_name(handle), throw)
 
-    def set_value(self, value, throw=True):
+    async def set_value(self, value, throw=True):
         """Set the device value.
 
         Args:
@@ -195,7 +195,7 @@ class EpicsDevice(Device):
         Raises:
             HandleException: if no setpoint PV exists.
         """
-        self._cs.set_single(self.get_pv_name(pytac.SP), value, throw)
+        return await self._cs.set_single(self.get_pv_name(pytac.SP), value, throw)
 
     def get_pv_name(self, handle):
         """Get the PV name for the specified handle.
@@ -244,11 +244,11 @@ class PvEnabler:
         self._enabled_value = str(int(float(enabled_value)))
         self._cs = cs
 
-    def __bool__(self):
+    async def __bool__(self):
         """Used to override the 'if object' clause.
 
         Returns:
             bool: True if the device should be considered enabled.
         """
-        pv_value = self._cs.get_single(self._pv)
+        pv_value = await self._cs.get_single(self._pv)
         return self._enabled_value == str(int(float(pv_value)))
