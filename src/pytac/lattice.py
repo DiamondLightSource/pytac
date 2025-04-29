@@ -603,7 +603,7 @@ class EpicsLattice(Lattice):
             pv_names.append(element.get_pv_name(field, handle))
         return pv_names
 
-    def get_element_values(
+    async def get_element_values(
         self,
         family,
         field,
@@ -637,7 +637,7 @@ class EpicsLattice(Lattice):
             units = self.get_default_units()
         if data_source == pytac.LIVE:
             pv_names = self.get_element_pv_names(family, field, handle)
-            values = self._cs.get_multiple(pv_names, throw)
+            values = await self._cs.get_multiple(pv_names, throw)
             if units == pytac.PHYS:
                 values = self.convert_family_values(
                     family, field, values, pytac.ENG, pytac.PHYS
@@ -650,7 +650,7 @@ class EpicsLattice(Lattice):
             values = numpy.array(values, dtype=dtype)
         return values
 
-    def set_element_values(
+    async def set_element_values(
         self,
         family,
         field,
@@ -691,7 +691,7 @@ class EpicsLattice(Lattice):
                     "must be equal to the number of elements in "
                     f"the family({len(pv_names)})."
                 )
-            self._cs.set_multiple(pv_names, values, throw)
+            await self._cs.set_multiple(pv_names, values, throw)
         else:
             super(EpicsLattice, self).set_element_values(
                 family, field, values, units, data_source, throw
