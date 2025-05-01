@@ -51,7 +51,7 @@ with EPICS, readback (``pytac.RB``) or setpoint (``pytac.SP``).
 Data may be set to or retrieved from different data sources, from the live
 machine (``pytac.LIVE``) or from a simulator (``pytac.SIM``). By default the
 'live' data source is implemented using
-`Cothread <https://github.com/dls-controls/cothread>`_ to communicate with
+`aioca <https://github.com/dls-controls/aioca>`_ to communicate with
 EPICS, as described above. The 'simulation' data source is left unimplemented,
 as Pytac does not include a simulator. However, ATIP, a module designed to
 integrate the `Accelerator Toolbox <https://github.com/atcollab/at>`_ simulator

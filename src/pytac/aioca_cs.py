@@ -1,14 +1,12 @@
 import logging
 
-# from cothread.catools import ca_nothing, caget, caput
-from cothread.catools import ca_nothing
 from aioca import caget, caput, CANothing
 from pytac.cs import ControlSystem
 from pytac.exceptions import ControlSystemException
 
 
 class AIOCAControlSystem(ControlSystem):
-    """A control system using cothread to communicate with EPICS.
+    """A control system using aioca to communicate with EPICS.
 
     N.B. this is the default control system. It is used to communicate over
     channel access with the hardware in the ring.
@@ -37,7 +35,7 @@ class AIOCAControlSystem(ControlSystem):
         """
         try:
             return await caget(pv, timeout=self._timeout, throw=True)
-        except ca_nothing:
+        except CANothing:
             error_msg = f"Cannot connect to {pv}."
             if throw:
                 raise ControlSystemException(error_msg)  # noqa: B904
@@ -64,7 +62,7 @@ class AIOCAControlSystem(ControlSystem):
         return_values = []
         failures = []
         for result in results:
-            if isinstance(result, ca_nothing):
+            if isinstance(result, CANothing):
                 logging.warning(f"Cannot connect to {result.name}.")
                 if throw:
                     failures.append(result)
@@ -94,7 +92,7 @@ class AIOCAControlSystem(ControlSystem):
         try:
             await caput(pv, value, timeout=self._timeout, throw=True, wait=self._wait)
             return True
-        except ca_nothing:
+        except CANothing:
             error_msg = f"Cannot connect to {pv}."
             if throw:
                 raise ControlSystemException(error_msg)  # noqa: B904
