@@ -191,20 +191,20 @@ async def load(
         Lattice: The lattice containing all elements.
 
     Raises:
-        ControlSystemException: if the default control system, cothread, is not
+        ControlSystemException: if the default control system, aioca, is not
                                  installed.
     """
     try:
         if control_system is None:
             # Don't import epics unless we need it to avoid unnecessary
-            # installation of cothread
-            from pytac import cothread_cs
+            # installation of aioca
+            from pytac import aioca_cs
 
-            control_system = cothread_cs.AIOCAControlSystem()
+            control_system = aioca_cs.AIOCAControlSystem()
     except ImportError:
         raise ControlSystemException(
-            "Please install cothread to load a lattice using the default control system"
-            " (found in cothread_cs.py)."
+            "Please install aioca to load a lattice using the default control system"
+            " (found in aioca_cs.py)."
         )
     if directory is None:
         directory = Path(__file__).resolve().parent / "data"
