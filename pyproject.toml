@@ -29,6 +29,7 @@ dev = [
     "pre-commit",
     "pydata-sphinx-theme>=0.12",
     "pytest",
+    "pytest-asyncio>=0.17",
     "pytest-cov",
     "sphinx-autobuild",
     "sphinx-copybutton",
@@ -81,6 +82,8 @@ addopts = """
 filterwarnings = "error"
 # Doctest python code in docs, python code in src docstrings, test functions in tests
 testpaths = "src tests"
+asyncio_mode = "auto"
+
 
 [tool.coverage.run]
 data_file = "/tmp/pytac.coverage"
@@ -101,7 +104,8 @@ skipsdist=True
 direct = True
 passenv = *
 allowlist_externals = 
-    pytest 
+    pytest
+    pytest-asyncio
     pre-commit
     mypy
     sphinx-build
