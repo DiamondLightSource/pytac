@@ -1,3 +1,4 @@
+import asyncio
 import sys
 import types
 from unittest import mock
@@ -20,33 +21,6 @@ from pytac.device import EpicsDevice, SimpleDevice
 from pytac.element import Element, EpicsElement
 from pytac.lattice import EpicsLattice, Lattice
 from pytac.units import PolyUnitConv
-
-
-def pytest_sessionstart():
-    """Create a dummy cothread module.
-
-    cothread is not trivial to import, so it is better to mock it before any
-    tests run. In particular, we need catools (the module that pytac imports
-    from cothread), including the functions that pytac explicitly imports
-    (caget and caput).
-    """
-
-    class ca_nothing(Exception):  # noqa: N801, N818
-        """A minimal mock of the cothread ca_nothing exception class."""
-
-        def __init__(self, name, errorcode=True):
-            self.ok = errorcode
-            self.name = name
-
-    cothread = types.ModuleType("cothread")
-    catools = types.ModuleType("catools")
-    catools.caget = mock.MagicMock()
-    catools.caput = mock.MagicMock()
-    catools.ca_nothing = ca_nothing
-    cothread.catools = catools
-
-    sys.modules["cothread"] = cothread
-    sys.modules["cothread.catools"] = catools
 
 
 # Create mock devices and attach them to the element
@@ -123,18 +97,18 @@ def simple_data_source_manager(
 
 
 @pytest.fixture(scope="session")
-def i04_ring():
-    return pytac.load_csv.load("I04", mock.MagicMock, symmetry=24)
+async def i04_ring():
+    return await pytac.load_csv.load("I04", mock.MagicMock, symmetry=24)
 
 
 @pytest.fixture(scope="session")
-def diad_ring():
-    return pytac.load_csv.load("DIAD", mock.MagicMock, symmetry=24)
+async def diad_ring():
+    return await pytac.load_csv.load("DIAD", mock.MagicMock, symmetry=24)
 
 
 @pytest.fixture
-def lattice():
-    lat = load_csv.load("dummy", mock.MagicMock(), CURRENT_DIR_PATH / "data", 2)
+async def lattice():
+    lat = await load_csv.load("dummy", mock.MagicMock(), CURRENT_DIR_PATH / "data", 2)
     return lat
 
 

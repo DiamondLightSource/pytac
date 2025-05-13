@@ -1,5 +1,7 @@
 """Module containing pytac data source classes."""
 
+import inspect
+
 import pytac
 from pytac.exceptions import DataSourceException, FieldException
 
@@ -341,12 +343,10 @@ class DeviceDataSource(DataSource):
         # TODO some devices dont need to be awaited as they are just retrieving stored data,
         # but other get data from PVs so do, make this better
         val = 0
-        if isinstance(device, pytac.device.SimpleDevice) or isinstance(
-            device, pytac.device.Device
-        ):
-            val = device.get_value(handle, throw)
-        else:
+        if inspect.iscoroutinefunction(device.get_value):
             val = await device.get_value(handle, throw)
+        else:
+            val = device.get_value(handle, throw)
         return val
 
     async def set_value(self, field, value, throw=True):

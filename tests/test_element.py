@@ -89,9 +89,9 @@ def test_get_unitconv_raises_field_exception_if_device_not_present(simple_elemen
         simple_element.get_unitconv("not-a-device")
 
 
-def test_get_value_uses_uc_if_necessary_for_cs_call(simple_element, double_uc):
+async def test_get_value_uses_uc_if_necessary_for_cs_call(simple_element, double_uc):
     simple_element._data_source_manager._uc["x"] = double_uc
-    assert simple_element.get_value(
+    assert await simple_element.get_value(
         "x", handle=pytac.SP, units=pytac.PHYS, data_source=pytac.LIVE
     ) == (DUMMY_VALUE_1 * 2)
 

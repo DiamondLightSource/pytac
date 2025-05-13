@@ -181,7 +181,7 @@ class Lattice:
         """
         self._data_source_manager.set_unitconv(field, uc)
 
-    def get_value(
+    async def get_value(
         self,
         field,
         handle=pytac.RB,
@@ -211,11 +211,11 @@ class Lattice:
             DataSourceException: if there is no data source on the given field.
             FieldException: if the lattice does not have the specified field.
         """
-        return self._data_source_manager.get_value(
+        return await self._data_source_manager.get_value(
             field, handle, units, data_source, throw
         )
 
-    def set_value(
+    async def set_value(
         self,
         field,
         value,
@@ -239,7 +239,9 @@ class Lattice:
             DataSourceException: if arguments are incorrect.
             FieldException: if the lattice does not have the specified field.
         """
-        self._data_source_manager.set_value(field, value, units, data_source, throw)
+        await self._data_source_manager.set_value(
+            field, value, units, data_source, throw
+        )
 
     def get_length(self):
         """Returns the length of the lattice, in meters.
@@ -360,7 +362,7 @@ class Lattice:
         devices = self.get_element_devices(family, field)
         return [device.name for device in devices]
 
-    def get_element_values(
+    async def get_element_values(
         self,
         family,
         field,
@@ -390,14 +392,14 @@ class Lattice:
         """
         elements = self.get_elements(family)
         values = [
-            element.get_value(field, handle, units, data_source, throw)
+            await element.get_value(field, handle, units, data_source, throw)
             for element in elements
         ]
         if dtype is not None:
             values = numpy.array(values, dtype=dtype)
         return values
 
-    def set_element_values(
+    async def set_element_values(
         self,
         family,
         field,
@@ -431,7 +433,7 @@ class Lattice:
                 f"equal to the number of elements in the family({len(elements)})."
             )
         for element, value in zip(elements, values, strict=False):
-            status = element.set_value(
+            status = await element.set_value(
                 field,
                 value,
                 units=units,
