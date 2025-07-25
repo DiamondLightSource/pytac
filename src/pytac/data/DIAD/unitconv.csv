@@ -4,7 +4,7 @@ el_id,field,uc_type,uc_id,phys_units,eng_units,lower_lim,upper_lim
 0,dispersion,null,0,m,m,,
 0,beam_current,null,0,A,A,,
 1492,f,null,0,Hz,Hz,,
-0,energy,poly,1,Gev,Mev,,
+0,energy,poly,1,eV,MeV,,
 0,emittance_x,poly,2,m,nm,,
 0,emittance_y,poly,3,m,pm,,
 5,b1,pchip,4,m^-2,A,0,200
