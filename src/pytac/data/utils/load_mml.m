@@ -28,7 +28,7 @@ function load_mml(ringmode)
     % Open the CSV files that store the Pytac data.
     elements_file = fullfile(datadir, 'elements.csv');
     f_elements = fopen(elements_file, 'wt', 'n', 'utf-8');
-    fprintf(f_elements, 'name,type,length\n');
+    fprintf(f_elements, 'type,length\n');
     epics_devices_file = fullfile(datadir, 'epics_devices.csv');
     f_epics_devices = fopen(epics_devices_file, 'w');
     fprintf(f_epics_devices, 'el_id,name,field,get_pv,set_pv\n');
@@ -265,7 +265,7 @@ function load_mml(ringmode)
             end
         end
 
-        fprintf(f_elements, '%s,%s,%f\n', '', type, at_elem.Length);
+        fprintf(f_elements, '%s,%f\n', type, at_elem.Length);
     end
 
 end
