@@ -42,8 +42,9 @@ function load_mml(ringmode)
     global THERING;
     ao = getao();
 
-    % Hard-coded beam energy value.
-    fprintf(f_simple_devices, '0,energy,3000,True\n');
+    % Get the beam energy value from the lattice.
+    energy = THERING{1}.Energy;
+    fprintf(f_simple_devices, '0,energy,%d,True\n', energy);
 
     % The individual BPM PVs are not stored in middlelayer.
     BPMS = get_bpm_pvs(ao);
