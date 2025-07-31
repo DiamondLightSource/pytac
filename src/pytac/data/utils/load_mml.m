@@ -51,8 +51,10 @@ function load_mml(ringmode)
 
     % Map from AT types to types in the accelerator object (ao).
     global TYPE_MAP;
-    keys = {'Quadrupole', 'Sextupole', 'VSTR', 'HSTR', 'Bend', 'VTRIM', 'HTRIM'};
-    values = {'QUAD_', 'SEXT_', 'VCM', 'HCM', 'BB', 'VTRIM', 'HTRIM'};
+    % Collective multiple and dipole arrays do not currently exist so use N/A
+    % Multipole is currently just an alias for Octupole
+    keys = {'Multipole', 'Quadrupole', 'Sextupole', 'VSTR', 'HSTR', 'Bend', 'VTRIM', 'HTRIM'};
+    values = {'N/A', 'QUAD_', 'SEXT_', 'VCM', 'HCM', 'N/A', 'VTRIM', 'HTRIM'};
     TYPE_MAP = containers.Map(keys, values);
 
     used_elements = containers.Map();
