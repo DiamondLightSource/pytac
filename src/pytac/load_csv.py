@@ -280,7 +280,10 @@ def available_ringmodes(directory=None) -> Set[str]:
                           is given the default data directory location is used.
 
     Returns:
-        set: A set of possible ringmodes.
+        set[str]: A set of possible ringmodes.
+
+    Raises:
+        OSError: if no ringmodes can be found in the specified directory.
     """
     if directory is None:
         directory = Path(__file__).resolve().parent / "data"
@@ -290,4 +293,6 @@ def available_ringmodes(directory=None) -> Set[str]:
             contents = os.listdir(directory_object.path)
             if ELEMENTS_FILENAME in contents and FAMILIES_FILENAME in contents:
                 modes.add(directory_object.name)
+    if not modes:
+        raise OSError(f"No ringmodes found in {os.path.realpath(directory)}")
     return modes
