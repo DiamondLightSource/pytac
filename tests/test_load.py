@@ -147,4 +147,8 @@ def test_available_ringmodes():
         "I04THz",
     }
     assert available_ringmodes() == ringmodes
-    assert available_ringmodes(Path(__file__).resolve().parent.parent) == set()
+    bad_path = Path(__file__).resolve().parent.parent
+    with pytest.raises(OSError):
+        available_ringmodes(bad_path)
+    good_path = bad_path / "src/pytac/data"
+    assert available_ringmodes(good_path) == ringmodes
