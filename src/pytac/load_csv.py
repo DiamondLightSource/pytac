@@ -16,8 +16,9 @@ import contextlib
 import copy
 import csv
 import logging
+import os
 from pathlib import Path
-from typing import Dict, Iterator
+from typing import Dict, Iterator, Set
 
 import pytac
 from pytac import data_source, element, utils
@@ -166,7 +167,7 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
                 # TODO: This should probably be moved into the .csv files somewhere.
                 rigidity_families = {"hstr", "vstr", "quadrupole", "sextupole", "bend"}
                 if item["uc_type"] != "null" and element._families & rigidity_families:
-                    energy = lattice.get_value("energy", units=pytac.PHYS)
+                    energy = lattice.get_value("energy", units=pytac.ENG)
                     uc.set_post_eng_to_phys(utils.get_div_rigidity(energy))
                     uc.set_pre_phys_to_eng(utils.get_mult_rigidity(energy))
                 element.set_unitconv(item["field"], uc)
@@ -263,3 +264,35 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
     if unitconv_file.exists():
         load_unitconv(mode_dir, lat)
     return lat
+
+
+def available_ringmodes(directory=None) -> Set[str]:
+    """Return the possible ringmodes based on the subdirectories and files in
+    the given directory.
+
+    .. Note:: It is not guaranteed that the modes returned will be able to be
+       successfully loaded due to errors, missing data, etc. I.e., any mode
+       that can be loaded will always be returned, but modes that can't be
+       loaded might also sometimes be returned.
+
+    Args:
+        directory (str): The data directory to check inside. If no directory
+                          is given the default data directory location is used.
+
+    Returns:
+        set[str]: A set of possible ringmodes.
+
+    Raises:
+        OSError: if no ringmodes can be found in the specified directory.
+    """
+    if directory is None:
+        directory = Path(__file__).resolve().parent / "data"
+    modes = set()
+    for directory_object in os.scandir(directory):
+        if directory_object.is_dir():
+            contents = os.listdir(directory_object.path)
+            if ELEMENTS_FILENAME in contents and FAMILIES_FILENAME in contents:
+                modes.add(directory_object.name)
+    if not modes:
+        raise OSError(f"No ringmodes found in {os.path.realpath(directory)}")
+    return modes

@@ -1,5 +1,5 @@
 """Representation of a lattice object which contains all the elements of the
-    machine.
+machine.
 """
 
 import logging

@@ -1,10 +1,11 @@
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 from testfixtures import LogCapture
 
 import pytac
-from pytac.load_csv import load, load_unitconv, resolve_unitconv
+from pytac.load_csv import available_ringmodes, load, load_unitconv, resolve_unitconv
 
 
 @pytest.fixture
@@ -130,3 +131,24 @@ def test_resolve_unitconv_raises_UnitsException_if_unrecognised_UnitConv_type(
     }
     with pytest.raises(pytac.exceptions.UnitsException):
         resolve_unitconv(uc_params, {}, polyconv_file, pchipconv_file)
+
+
+def test_available_ringmodes():
+    ringmodes = {
+        "SRI0913_MOGA",
+        "I04",
+        "VMX",
+        "DIAD",
+        "VMXSP",
+        "VMXTHz",
+        "DIADSP",
+        "DIADTHz",
+        "I04SP",
+        "I04THz",
+    }
+    assert available_ringmodes() == ringmodes
+    bad_path = Path(__file__).resolve().parent.parent
+    with pytest.raises(OSError):
+        available_ringmodes(bad_path)
+    good_path = bad_path / "src/pytac/data"
+    assert available_ringmodes(good_path) == ringmodes

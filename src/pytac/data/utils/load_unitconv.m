@@ -48,9 +48,9 @@ end
 % Unit conversions for lattice fields
 % the conversion limits are '' as these fields don't have a Setpoint field
 uc_id = uc_id + 1;
-fprintf(f_units, '%d,%s,poly,%d,%s,%s,%s,%s\n', 0, 'energy', uc_id, 'Gev', 'Mev', '', '');
+fprintf(f_units, '%d,%s,poly,%d,%s,%s,%s,%s\n', 0, 'energy', uc_id, 'eV', 'MeV', '', '');
 fprintf(f_poly, '%d,%d,%f\n', uc_id, 0, 0);
-fprintf(f_poly, '%d,%d,%g\n', uc_id, 1, 1e-6);
+fprintf(f_poly, '%d,%d,%g\n', uc_id, 1, 1e6);
 uc_id = uc_id + 1;
 fprintf(f_units, '%d,%s,poly,%d,%s,%s,%s,%s\n', 0, 'emittance_x', uc_id, 'm', 'nm', '', '');
 fprintf(f_poly, '%d,%d,%f\n', uc_id, 0, 0);
