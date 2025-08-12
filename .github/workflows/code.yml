@@ -200,4 +200,5 @@ jobs:
         if: ${{ env.HAS_PYPI_TOKEN }}
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
+          packages-dir: dist_dist_/
           password: ${{ secrets.PYPI_TOKEN }}
