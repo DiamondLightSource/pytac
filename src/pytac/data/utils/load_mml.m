@@ -77,12 +77,13 @@ function load_mml(ringmode)
 
     for old_index = 1:length(THERING)
         at_elem = THERING{old_index};
-        % If an HSTR is preceded by a sext or a VSTR is two elements after
-        % a sext, assume that they are in fact parts of the same element.
-        % Just add that family to the sext element.
-        % Don't increment the new_index count as we haven't added an
-        % element.
+        % If an HSTR is preceded by a sext/oct or a VSTR is two elements after
+        % a sext/oct, assume that they are in fact parts of the same element.
+        % Just add that family to the sext/oct element. Don't increment the
+        % new_index count as we haven't added an element.
         if (strcmp(at_elem.FamName, 'HSTR') && strcmp(THERING{old_index - 1}.Class, 'Sextupole')) || (strcmp(at_elem.FamName, 'VSTR') && strcmp(THERING{old_index - 2}.Class, 'Sextupole'))
+            fprintf(f_families, '%i,%s\n', new_index, at_elem.FamName);
+        elseif (strcmp(at_elem.FamName, 'HSTR') && strcmp(THERING{old_index - 1}.Class, 'Multipole')) || (strcmp(at_elem.FamName, 'VSTR') && strcmp(THERING{old_index - 2}.Class, 'Multipole'))
             fprintf(f_families, '%i,%s\n', new_index, at_elem.FamName);
         else
             new_index = new_index + 1;
@@ -196,10 +197,14 @@ function load_mml(ringmode)
             alt_pv1 = {};
             alt_pv2 = {};
 
+            %disp(sprintf('Getting PVs for: Type: %s Family: %s SetPV: %s GetPV: %s', type, family, set_pv, get_pv));
+
             if strcmp(type, 'Quadrupole')
                 field = 'b1';
             elseif strcmp(type, 'Sextupole')
                 field = 'b2';
+            elseif strcmp(type, 'Multipole')
+                field = 'b3';
             elseif strcmp(type, 'Bend')
                 field = 'b0';
             elseif strcmp(type, 'VTRIM')
@@ -226,6 +231,7 @@ function load_mml(ringmode)
                 pvs = {pvs};
             end
         elseif strcmp(type, 'BPM')
+            %disp(sprintf('Getting PVs for: Type: %s', type));
             index = used_elements(type);
             enable_pv = strcat(BPMS{index}, ':CF:ENABLED_S');
             en_pv = pv_struct('enabled', enable_pv, '');
@@ -241,6 +247,7 @@ function load_mml(ringmode)
             y_sofb_pv = pv_struct('y_sofb_disabled', sprintf(alt_template, 'V', 'SLOW'), '');
             pvs = {x_pv, y_pv, en_pv, x_fofb_pv, x_sofb_pv, y_fofb_pv, y_sofb_pv};
         elseif strcmp(type, 'RFCavity')
+            %disp(sprintf('Getting PVs for: Type: %s', type));
             gfpv = ao.('RF').Monitor.ChannelNames;
             sfpv = ao.('RF').Setpoint.ChannelNames;
             f_pvs = pv_struct('f', gfpv, sfpv);
