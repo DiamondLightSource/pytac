@@ -3,16 +3,16 @@ function load_mml(ringmode)
 % used by Pytac.
 % Middlelayer does not have a reliable API so this script is brittle
 % and frequently needs changing.
-% 
-%     fprintf('Loading data for ring mode %s\n', ringmode);
-% 
-%     loaded_ringmode = getfamilydata('OperationalMode');
-% 
-%     if ~strcmp(loaded_ringmode, ringmode)
-%         fprintf('MML ring mode %s loaded, not %s\n', loaded_ringmode, ringmode);
-%         fprintf('Script will exit.\n');
-%         return;
-%     end
+
+    fprintf('Loading data for ring mode %s\n', ringmode);
+
+    loaded_ringmode = getfamilydata('OperationalMode');
+
+    if ~strcmp(loaded_ringmode, ringmode)
+        fprintf('MML ring mode %s loaded, not %s\n', loaded_ringmode, ringmode);
+        fprintf('Script will exit.\n');
+        return;
+    end
 
     switch2sim;
 
