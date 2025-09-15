@@ -1,0 +1,1064 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index &#8212; pytac 0.6.3.dev16+gbe8af3878 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=ee5b1121"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=30646c52"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://DiamondLightSource.github.io/pytac/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'diamond2-conversion';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="icon" href="_static/dls-favicon.ico"/>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="diamond2-conversion" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/dls-logo.svg" class="logo__image only-light" alt=""/>
+    <img src="_static/dls-logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">pytac</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="user/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="developer/index.html">
+    Developer Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://github.com/DiamondLightSource/pytac/releases">
+    Release Notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DiamondLightSource/pytac" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/pytac" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-cube fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="user/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="developer/index.html">
+    Developer Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://github.com/DiamondLightSource/pytac/releases">
+    Release Notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DiamondLightSource/pytac" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/pytac" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-cube fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="user/tutorials/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user/tutorials/basic-tutorial.html">Basic Tutorial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">How-to Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="user/how-to/run-container.html">Run in a container</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Explanations</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="user/explanations/what-is-pytac.html">Python Toolkit for Accelerator Controls</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="user/explanations/docs-structure.html">About the documentation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="user/reference/api.html">API</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Index</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#X"><strong>X</strong></a>
+ | <a href="#Y"><strong>Y</strong></a>
+ 
+</div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.data_source.DataSourceManager.add_device">add_device() (pytac.data_source.DataSourceManager method)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.data_source.DeviceDataSource.add_device">(pytac.data_source.DeviceDataSource method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.element.Element.add_device">(pytac.element.Element method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.lattice.Lattice.add_device">(pytac.lattice.Lattice method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.lattice.Lattice.add_element">add_element() (pytac.lattice.Lattice method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.element.Element.add_to_family">add_to_family() (pytac.element.Element method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.load_csv.available_ringmodes">available_ringmodes() (in module pytac.load_csv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.element.Element.cell">cell (pytac.element.Element property)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.lattice.Lattice.cell_bounds">cell_bounds (pytac.lattice.Lattice property)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.lattice.Lattice.cell_length">cell_length (pytac.lattice.Lattice property)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.cs.ControlSystem">ControlSystem (class in pytac.cs)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.exceptions.ControlSystemException">ControlSystemException</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.units.UnitConv.convert">convert() (pytac.units.UnitConv method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.lattice.Lattice.convert_family_values">convert_family_values() (pytac.lattice.Lattice method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.load_csv.csv_loader">csv_loader() (in module pytac.load_csv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.data_source.DataSource">DataSource (class in pytac.data_source)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.exceptions.DataSourceException">DataSourceException</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.data_source.DataSourceManager">DataSourceManager (class in pytac.data_source)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.data_source.DataSourceManager.default_data_source">default_data_source (pytac.data_source.DataSourceManager attribute)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.data_source.DataSourceManager.default_units">default_units (pytac.data_source.DataSourceManager attribute)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.device.Device">Device (class in pytac.device)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.data_source.DeviceDataSource">DeviceDataSource (class in pytac.data_source)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.element.Element">Element (class in pytac.element)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.units.UnitConv.eng_to_phys">eng_to_phys() (pytac.units.UnitConv method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.units.NullUnitConv.eng_units">eng_units (pytac.units.NullUnitConv attribute)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.units.PchipUnitConv.eng_units">(pytac.units.PchipUnitConv attribute)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.units.PolyUnitConv.eng_units">(pytac.units.PolyUnitConv attribute)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.units.UnitConv.eng_units">(pytac.units.UnitConv attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.device.EpicsDevice">EpicsDevice (class in pytac.device)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.element.EpicsElement">EpicsElement (class in pytac.element)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.lattice.EpicsLattice">EpicsLattice (class in pytac.lattice)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.element.Element.families">families (pytac.element.Element property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.exceptions.FieldException">FieldException</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.lattice.Lattice.get_all_families">get_all_families() (pytac.lattice.Lattice method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.units.UnitConv.get_conversion_limits">get_conversion_limits() (pytac.units.UnitConv method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.data_source.DataSourceManager.get_data_source">get_data_source() (pytac.data_source.DataSourceManager method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.lattice.Lattice.get_default_data_source">get_default_data_source() (pytac.lattice.Lattice method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.lattice.Lattice.get_default_units">get_default_units() (pytac.lattice.Lattice method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.data_source.DataSourceManager.get_device">get_device() (pytac.data_source.DataSourceManager method)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.data_source.DeviceDataSource.get_device">(pytac.data_source.DeviceDataSource method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.element.Element.get_device">(pytac.element.Element method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.lattice.Lattice.get_device">(pytac.lattice.Lattice method)</a>
+</li>
+      </ul></li>
+      <li><a href="user/reference/api.html#pytac.utils.get_div_rigidity">get_div_rigidity() (in module pytac.utils)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.lattice.Lattice.get_element_device_names">get_element_device_names() (pytac.lattice.Lattice method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.lattice.Lattice.get_element_devices">get_element_devices() (pytac.lattice.Lattice method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.lattice.EpicsLattice.get_element_pv_names">get_element_pv_names() (pytac.lattice.EpicsLattice method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.lattice.EpicsLattice.get_element_values">get_element_values() (pytac.lattice.EpicsLattice method)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.lattice.Lattice.get_element_values">(pytac.lattice.Lattice method)</a>
+</li>
+      </ul></li>
+      <li><a href="user/reference/api.html#pytac.lattice.Lattice.get_elements">get_elements() (pytac.lattice.Lattice method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.lattice.Lattice.get_family_s">get_family_s() (pytac.lattice.Lattice method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.data_source.DataSource.get_fields">get_fields() (pytac.data_source.DataSource method)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.data_source.DataSourceManager.get_fields">(pytac.data_source.DataSourceManager method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.data_source.DeviceDataSource.get_fields">(pytac.data_source.DeviceDataSource method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.element.Element.get_fields">(pytac.element.Element method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.lattice.Lattice.get_fields">(pytac.lattice.Lattice method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.lattice.Lattice.get_length">get_length() (pytac.lattice.Lattice method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.utils.get_mult_rigidity">get_mult_rigidity() (in module pytac.utils)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.cs.ControlSystem.get_multiple">get_multiple() (pytac.cs.ControlSystem method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.device.EpicsDevice.get_pv_name">get_pv_name() (pytac.device.EpicsDevice method)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.element.EpicsElement.get_pv_name">(pytac.element.EpicsElement method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.lattice.EpicsLattice.get_pv_name">(pytac.lattice.EpicsLattice method)</a>
+</li>
+      </ul></li>
+      <li><a href="user/reference/api.html#pytac.utils.get_rigidity">get_rigidity() (in module pytac.utils)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.cs.ControlSystem.get_single">get_single() (pytac.cs.ControlSystem method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.data_source.DataSourceManager.get_unitconv">get_unitconv() (pytac.data_source.DataSourceManager method)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.element.Element.get_unitconv">(pytac.element.Element method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.lattice.Lattice.get_unitconv">(pytac.lattice.Lattice method)</a>
+</li>
+      </ul></li>
+      <li><a href="user/reference/api.html#pytac.data_source.DataSource.get_value">get_value() (pytac.data_source.DataSource method)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.data_source.DataSourceManager.get_value">(pytac.data_source.DataSourceManager method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.data_source.DeviceDataSource.get_value">(pytac.data_source.DeviceDataSource method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.device.Device.get_value">(pytac.device.Device method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.device.EpicsDevice.get_value">(pytac.device.EpicsDevice method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.device.SimpleDevice.get_value">(pytac.device.SimpleDevice method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.element.Element.get_value">(pytac.element.Element method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.lattice.Lattice.get_value">(pytac.lattice.Lattice method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.exceptions.HandleException">HandleException</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.element.Element.index">index (pytac.element.Element property)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.device.Device.is_enabled">is_enabled() (pytac.device.Device method)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.device.EpicsDevice.is_enabled">(pytac.device.EpicsDevice method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.device.SimpleDevice.is_enabled">(pytac.device.SimpleDevice method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.element.Element.is_in_family">is_in_family() (pytac.element.Element method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.lattice.Lattice">Lattice (class in pytac.lattice)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.element.Element.length">length (pytac.element.Element attribute)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.load_csv.load">load() (in module pytac.load_csv)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.load_csv.load_pchip_unitconv">load_pchip_unitconv() (in module pytac.load_csv)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.load_csv.load_poly_unitconv">load_poly_unitconv() (in module pytac.load_csv)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.load_csv.load_unitconv">load_unitconv() (in module pytac.load_csv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    module
+
+      <ul>
+        <li><a href="user/reference/api.html#module-pytac">pytac</a>
+</li>
+        <li><a href="user/reference/api.html#module-pytac.cs">pytac.cs</a>
+</li>
+        <li><a href="user/reference/api.html#module-pytac.data_source">pytac.data_source</a>
+</li>
+        <li><a href="user/reference/api.html#module-pytac.device">pytac.device</a>
+</li>
+        <li><a href="user/reference/api.html#module-pytac.element">pytac.element</a>
+</li>
+        <li><a href="user/reference/api.html#module-pytac.exceptions">pytac.exceptions</a>
+</li>
+        <li><a href="user/reference/api.html#module-pytac.lattice">pytac.lattice</a>
+</li>
+        <li><a href="user/reference/api.html#module-pytac.load_csv">pytac.load_csv</a>
+</li>
+        <li><a href="user/reference/api.html#module-pytac.units">pytac.units</a>
+</li>
+        <li><a href="user/reference/api.html#module-pytac.utils">pytac.utils</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.device.EpicsDevice.name">name (pytac.device.EpicsDevice attribute)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.element.Element.name">(pytac.element.Element attribute)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.lattice.EpicsLattice.name">(pytac.lattice.EpicsLattice attribute)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.lattice.Lattice.name">(pytac.lattice.Lattice attribute)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.units.PchipUnitConv.name">(pytac.units.PchipUnitConv attribute)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.units.PolyUnitConv.name">(pytac.units.PolyUnitConv attribute)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.units.UnitConv.name">(pytac.units.UnitConv attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.units.NullUnitConv">NullUnitConv (class in pytac.units)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.units.PolyUnitConv.p">p (pytac.units.PolyUnitConv attribute)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.units.PchipUnitConv">PchipUnitConv (class in pytac.units)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.units.UnitConv.phys_to_eng">phys_to_eng() (pytac.units.UnitConv method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.units.NullUnitConv.phys_units">phys_units (pytac.units.NullUnitConv attribute)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.units.PchipUnitConv.phys_units">(pytac.units.PchipUnitConv attribute)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.units.PolyUnitConv.phys_units">(pytac.units.PolyUnitConv attribute)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.units.UnitConv.phys_units">(pytac.units.UnitConv attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="user/reference/api.html#pytac.units.PolyUnitConv">PolyUnitConv (class in pytac.units)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.units.PchipUnitConv.pp">pp (pytac.units.PchipUnitConv attribute)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.device.PvEnabler">PvEnabler (class in pytac.device)</a>
+</li>
+      <li>
+    pytac
+
+      <ul>
+        <li><a href="user/reference/api.html#module-pytac">module</a>
+</li>
+      </ul></li>
+      <li><a href="user/reference/api.html#pytac.utils.pytac.__version__">pytac.__version__ (in module pytac.utils)</a>
+</li>
+      <li>
+    pytac.cs
+
+      <ul>
+        <li><a href="user/reference/api.html#module-pytac.cs">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    pytac.data_source
+
+      <ul>
+        <li><a href="user/reference/api.html#module-pytac.data_source">module</a>
+</li>
+      </ul></li>
+      <li>
+    pytac.device
+
+      <ul>
+        <li><a href="user/reference/api.html#module-pytac.device">module</a>
+</li>
+      </ul></li>
+      <li>
+    pytac.element
+
+      <ul>
+        <li><a href="user/reference/api.html#module-pytac.element">module</a>
+</li>
+      </ul></li>
+      <li>
+    pytac.exceptions
+
+      <ul>
+        <li><a href="user/reference/api.html#module-pytac.exceptions">module</a>
+</li>
+      </ul></li>
+      <li>
+    pytac.lattice
+
+      <ul>
+        <li><a href="user/reference/api.html#module-pytac.lattice">module</a>
+</li>
+      </ul></li>
+      <li>
+    pytac.load_csv
+
+      <ul>
+        <li><a href="user/reference/api.html#module-pytac.load_csv">module</a>
+</li>
+      </ul></li>
+      <li>
+    pytac.units
+
+      <ul>
+        <li><a href="user/reference/api.html#module-pytac.units">module</a>
+</li>
+      </ul></li>
+      <li>
+    pytac.utils
+
+      <ul>
+        <li><a href="user/reference/api.html#module-pytac.utils">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.device.EpicsDevice.rb_pv">rb_pv (pytac.device.EpicsDevice attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.load_csv.resolve_unitconv">resolve_unitconv() (in module pytac.load_csv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.element.Element.s">s (pytac.element.Element property)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.units.UnitConv.set_conversion_limits">set_conversion_limits() (pytac.units.UnitConv method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.data_source.DataSourceManager.set_data_source">set_data_source() (pytac.data_source.DataSourceManager method)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.element.Element.set_data_source">(pytac.element.Element method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.lattice.Lattice.set_data_source">(pytac.lattice.Lattice method)</a>
+</li>
+      </ul></li>
+      <li><a href="user/reference/api.html#pytac.element.Element.set_default_data_source">set_default_data_source() (pytac.element.Element method)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.lattice.Lattice.set_default_data_source">(pytac.lattice.Lattice method)</a>
+</li>
+      </ul></li>
+      <li><a href="user/reference/api.html#pytac.element.Element.set_default_units">set_default_units() (pytac.element.Element method)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.lattice.Lattice.set_default_units">(pytac.lattice.Lattice method)</a>
+</li>
+      </ul></li>
+      <li><a href="user/reference/api.html#pytac.lattice.EpicsLattice.set_element_values">set_element_values() (pytac.lattice.EpicsLattice method)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.lattice.Lattice.set_element_values">(pytac.lattice.Lattice method)</a>
+</li>
+      </ul></li>
+      <li><a href="user/reference/api.html#pytac.element.Element.set_lattice">set_lattice() (pytac.element.Element method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.cs.ControlSystem.set_multiple">set_multiple() (pytac.cs.ControlSystem method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.units.UnitConv.set_post_eng_to_phys">set_post_eng_to_phys() (pytac.units.UnitConv method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.units.UnitConv.set_pre_phys_to_eng">set_pre_phys_to_eng() (pytac.units.UnitConv method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.cs.ControlSystem.set_single">set_single() (pytac.cs.ControlSystem method)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.data_source.DataSourceManager.set_unitconv">set_unitconv() (pytac.data_source.DataSourceManager method)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.element.Element.set_unitconv">(pytac.element.Element method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.lattice.Lattice.set_unitconv">(pytac.lattice.Lattice method)</a>
+</li>
+      </ul></li>
+      <li><a href="user/reference/api.html#pytac.data_source.DataSource.set_value">set_value() (pytac.data_source.DataSource method)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.data_source.DataSourceManager.set_value">(pytac.data_source.DataSourceManager method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.data_source.DeviceDataSource.set_value">(pytac.data_source.DeviceDataSource method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.device.Device.set_value">(pytac.device.Device method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.device.EpicsDevice.set_value">(pytac.device.EpicsDevice method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.device.SimpleDevice.set_value">(pytac.device.SimpleDevice method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.element.Element.set_value">(pytac.element.Element method)</a>
+</li>
+        <li><a href="user/reference/api.html#pytac.lattice.Lattice.set_value">(pytac.lattice.Lattice method)</a>
+</li>
+      </ul></li>
+      <li><a href="user/reference/api.html#pytac.device.SimpleDevice">SimpleDevice (class in pytac.device)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.device.EpicsDevice.sp_pv">sp_pv (pytac.device.EpicsDevice attribute)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.lattice.EpicsLattice.symmetry">symmetry (pytac.lattice.EpicsLattice attribute)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.lattice.Lattice.symmetry">(pytac.lattice.Lattice attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.element.Element.type_">type_ (pytac.element.Element attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.units.unit_function">unit_function() (in module pytac.units)</a>
+</li>
+      <li><a href="user/reference/api.html#pytac.units.UnitConv">UnitConv (class in pytac.units)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.data_source.DataSource.units">units (pytac.data_source.DataSource attribute)</a>
+
+      <ul>
+        <li><a href="user/reference/api.html#pytac.data_source.DeviceDataSource.units">(pytac.data_source.DeviceDataSource attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="user/reference/api.html#pytac.exceptions.UnitsException">UnitsException</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="X">X</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.units.PchipUnitConv.x">x (pytac.units.PchipUnitConv attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Y">Y</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/reference/api.html#pytac.units.PchipUnitConv.y">y (pytac.units.PchipUnitConv attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

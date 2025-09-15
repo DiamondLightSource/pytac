@@ -20,6 +20,10 @@
     "url": "https://DiamondLightSource.github.io/pytac/0.6.0/"
   },
   {
+    "version": "diamond2-conversion",
+    "url": "https://DiamondLightSource.github.io/pytac/diamond2-conversion/"
+  },
+  {
     "version": "fix-docs",
     "url": "https://DiamondLightSource.github.io/pytac/fix-docs/"
   }
