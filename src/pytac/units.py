@@ -128,8 +128,7 @@ class UnitConv:
         """
         if self.lower_limit is not None and value < self.lower_limit:
             raise UnitsException(
-                f"{self}: Input less than lower "
-                f"conversion limit ({self.lower_limit})."
+                f"{self}: Input less than lower conversion limit ({self.lower_limit})."
             )
         if self.upper_limit is not None and value > self.upper_limit:
             raise UnitsException(

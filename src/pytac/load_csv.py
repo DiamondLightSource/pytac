@@ -165,7 +165,14 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
                 # For certain magnet types, we need an additional rigidity
                 # conversion factor as well as the raw conversion.
                 # TODO: This should probably be moved into the .csv files somewhere.
-                rigidity_families = {"hstr", "vstr", "quadrupole", "sextupole", "bend"}
+                rigidity_families = {
+                    "hstr",
+                    "vstr",
+                    "quadrupole",
+                    "sextupole",
+                    "multipole",
+                    "bend",
+                }
                 if item["uc_type"] != "null" and element._families & rigidity_families:
                     energy = lattice.get_value("energy", units=pytac.ENG)
                     uc.set_post_eng_to_phys(utils.get_div_rigidity(energy))
