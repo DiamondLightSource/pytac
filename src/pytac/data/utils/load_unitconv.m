@@ -74,6 +74,11 @@ for i = 1:length(sext_families)
     write_multipole_section(sext_families{i}, 'b2', renamedIndexes, 'm^-3', 'A');
 end
 
+oct_families = findmemberof('O1X');
+for i = 1:length(oct_families)
+    write_multipole_section(oct_families{i}, 'b3', renamedIndexes, 'm^-4', 'A');
+end
+
 bend_families = findmemberof('BEND');
 for i = 1:length(bend_families)
     if strcmp(bend_families{i}, 'BBVMXS') || strcmp(bend_families{i}, 'BBVMXL')
@@ -110,13 +115,26 @@ end
 
 % The skew quadrupoles are windings on the sextupoles, but there is no
 % separate element so this works correctly (see below).
+% TODO: Still true for D2? Any SQUADS on octupoles?
 write_multipole_section('SQUAD', 'a1', renamedIndexes, 'm^-2', 'A');
 
-% If corrector magnets are windings on a sextupole, their AT Index is that
-% of the sextupole whereas there is a separate element for those magnets.
+% If corrector magnets are windings on a sextupole or octupole, their AT Index is that
+% of the sextupole or octupole whereas there is a separate element for those magnets.
 % We have to use the index of the separate elements instead.
 sext_data = getfamilydata('SEXT_');
 sext_indices = sext_data.AT.ATIndex;
+o0x_data = getfamilydata('O0X');
+o1x_data = getfamilydata('O1X');
+
+if ~isempty(o0x_data)
+    oct_indices = o0x_data.AT.ATIndex;
+else
+    oct_indices = uint8.empty;
+end
+
+if ~isempty(o1x_data)
+    oct_indices = cat(1, oct_indices, o1x_data.AT.ATIndex);
+end
 
 hcor = getfamilydata('HCM');
 control_ranges = get_range('HCM');
@@ -124,6 +142,8 @@ for i = 1:length(hcor.AT.ATIndex)
     data = el_cal_data(hcor.Monitor.ChannelNames(i,:));
     hcor_index = hcor.AT.ATIndex(i);
     if any(hcor_index == sext_indices)
+        hcor_index = hcor_index + 1;
+    elseif any(hcor_index == oct_indices)
         hcor_index = hcor_index + 1;
     end
     id = write_linear_data(data.field(2) / data.current(2), 0);
@@ -136,6 +156,8 @@ for i = 1:length(vcor.AT.ATIndex)
     data = el_cal_data(vcor.Monitor.ChannelNames(i,:));
     vcor_index = vcor.AT.ATIndex(i);
     if any(vcor_index == sext_indices)
+        vcor_index = vcor_index + 1;
+    elseif any(vcor_index == oct_indices)
         vcor_index = vcor_index + 1;
     end
     id = write_linear_data(data.field(2) / data.current(2), 0);
