@@ -212,8 +212,7 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
     lat.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
     with csv_loader(mode_dir / ELEMENTS_FILENAME) as csv_reader:
         for item in csv_reader:
-            name = item["name"] if item["name"] != "" else None
-            e = element.EpicsElement(float(item["length"]), item["type"], name, lat)
+            e = element.EpicsElement(float(item["length"]), item["type"], None, lat)
             e.add_to_family(item["type"])
             e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)
