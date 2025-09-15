@@ -62,7 +62,7 @@ function load_mml(ringmode)
 
     % These fields are not associated with an element as they are attached to
     % the lattice, we therefore must insert them separately at index 0.
-    s = pv_struct('beam_current', 'SR-DI-DCCT-01:SIGNAL', '');
+    s = pv_struct('beam_current', ao.DCCT.Monitor.ChannelNames(), '');
     insertpvs(0, {s});
     s = pv_struct('emittance_x', 'SR-DI-EMIT-01:HEMIT', '');
     insertpvs(0, {s});
