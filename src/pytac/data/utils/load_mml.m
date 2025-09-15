@@ -54,7 +54,7 @@ function load_mml(ringmode)
     % Collective multiple and dipole arrays do not currently exist so use N/A
     % Multipole is currently just an alias for Octupole
     keys = {'Multipole', 'Quadrupole', 'Sextupole', 'VSTR', 'HSTR', 'Bend', 'VTRIM', 'HTRIM'};
-    values = {'N/A', 'QUAD_', 'SEXT_', 'VCM', 'HCM', 'N/A', 'VTRIM', 'HTRIM'};
+    values = {'N/A', 'QUAD_', 'SEXT_', 'VCM', 'HCM', 'BB', 'VTRIM', 'HTRIM'};
     TYPE_MAP = containers.Map(keys, values);
 
     used_elements = containers.Map();
@@ -90,6 +90,14 @@ function load_mml(ringmode)
         end
 
         type = gettype(at_elem);
+        if strcmp(type, 'Bend')
+            type = at_elem.FamName;
+        elseif strcmp(type, 'Sextupole')
+            type = at_elem.FamName;
+        elseif strcmp(type, 'Multipole')
+            type = at_elem.FamName;
+        end
+
         if used_elements.isKey(type)
             used_elements(type) = used_elements(type) + 1;
         else
@@ -101,7 +109,7 @@ function load_mml(ringmode)
         renamed_indexes(old_index) = new_index;
     end
 
-    % The following families  and do not have their
+    % The following families do not have their
     % own elements.  We insert their PVs separately.
     insertextrapvs('SQUAD', 'a1');
     insertextrapvs('BBVMXS', 'db0');
@@ -164,16 +172,25 @@ function load_mml(ringmode)
     function pvs = getpvs(ao, elem)
         type = gettype(elem);
         if any(ismember(type, TYPE_MAP.keys))
-
-            index = used_elements(type);
-            % MML is inconsistent about whether the family for the bends
-            % is BEND or BB.
-            if strcmp(type, 'Bend') && isfield(ao, 'Bend')
-                family = 'BEND';
+            % If we are a Bend/Sextupole/Multipole, we need to lookup our
+            % PV names from the ao. The data is stored by family name, e.g.
+            % for sextupoles S1X, S2A, S3A, S4A, S5X, S6X.
+            if strcmp(at_elem.FamName, 'BBVMXS') || strcmp(at_elem.FamName, 'BBVMXL')
+                index = used_elements(elem.FamName);
+                family = TYPE_MAP(type);
+            elseif strcmp(type, 'Bend')
+                index = used_elements(elem.FamName);
+                family = elem.FamName;
+            elseif strcmp(type, 'Sextupole')
+                index = used_elements(elem.FamName);
+                family = elem.FamName;
+            elseif strcmp(type, 'Multipole')
+                index = used_elements(elem.FamName);
+                family = elem.FamName;
             else
+                index = used_elements(type);
                 family = TYPE_MAP(type);
             end
-
             get_pv = char(ao.(family).Monitor.ChannelNames(index, :));
             set_pv = char(ao.(family).Setpoint.ChannelNames(index, :));
             alt_pv1 = {};
