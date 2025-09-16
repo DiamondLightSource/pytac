@@ -97,6 +97,8 @@ function load_mml(ringmode)
             type = at_elem.FamName;
         elseif strcmp(type, 'Multipole')
             type = at_elem.FamName;
+        elseif strcmp(type, 'Quadrupole')
+            type = at_elem.FamName;
         end
 
         if used_elements.isKey(type)
@@ -186,6 +188,9 @@ function load_mml(ringmode)
                 index = used_elements(elem.FamName);
                 family = elem.FamName;
             elseif strcmp(type, 'Multipole')
+                index = used_elements(elem.FamName);
+                family = elem.FamName;            
+            elseif strcmp(type, 'Quadrupole')
                 index = used_elements(elem.FamName);
                 family = elem.FamName;
             else
