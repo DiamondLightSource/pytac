@@ -22,12 +22,12 @@ def get_lattice(ring_mode):
 
 def test_load_lattice_using_default_dir():
     lat = pytac.load_csv.load("VMX", mock.MagicMock())
-    assert len(lat) == 2142
+    assert len(lat) == 2192
 
 
 @pytest.mark.parametrize(
     "lattice, name, n_elements, length",
-    [("vmx_ring", "VMX", 2142, 561.571), ("diad_ring", "DIAD", 2144, 561.571)],
+    [("vmx_ring", "VMX", 2192, 561.571), ("diad_ring", "DIAD", 2194, 561.571)],
 )
 def test_load_lattice(lattice, name, n_elements, length, request):
     lattice = request.getfixturevalue(lattice)
@@ -74,7 +74,7 @@ def test_load_bpms(lattice, n_bpms, request):
     assert bpms[-1].cell == 24
 
 
-@pytest.mark.parametrize("lattice, n_drifts", [("vmx_ring", 1308), ("diad_ring", 1311)])
+@pytest.mark.parametrize("lattice, n_drifts", [("vmx_ring", 1343), ("diad_ring", 1346)])
 def test_load_drift_elements(lattice, n_drifts, request):
     lattice = request.getfixturevalue(lattice)
     drifts = lattice.get_elements("DRIFT")
@@ -192,7 +192,7 @@ def test_quad_unitconv_known_failing_test():
     numpy.testing.assert_allclose(uc.phys_to_eng(-0.7), 70.8834284954)
 
 
-@pytest.mark.parametrize("quad_index,phys_value", [[747, -1.9457], [1135, -1.9864]])
+@pytest.mark.parametrize("quad_index,phys_value", [[753, -1.9457], [1156, -1.9864]])
 def test_quad_unitconv_with_different_limits(diad_ring, quad_index, phys_value):
     """Test elements with unit conversions that have different limits.
 

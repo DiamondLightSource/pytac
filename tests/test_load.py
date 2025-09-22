@@ -145,6 +145,7 @@ def test_available_ringmodes():
         "DIADTHz",
         "I04SP",
         "I04THz",
+        "48",
     }
     assert available_ringmodes() == ringmodes
     bad_path = Path(__file__).resolve().parent.parent
