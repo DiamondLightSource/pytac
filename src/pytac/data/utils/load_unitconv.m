@@ -74,9 +74,11 @@ for i = 1:length(sext_families)
     write_multipole_section(sext_families{i}, 'b2', renamedIndexes, 'm^-3', 'A');
 end
 
-oct_families = findmemberof('O1X');
+oct_families = [findmemberof('O0X'), findmemberof('O1X')];
 for i = 1:length(oct_families)
-    write_multipole_section(oct_families{i}, 'b3', renamedIndexes, 'm^-4', 'A');
+    if ~isempty(oct_families{i})
+        write_multipole_section(oct_families{i}, 'b3', renamedIndexes, 'm^-4', 'A');
+    end
 end
 
 bend_families = findmemberof('BEND');
@@ -119,8 +121,8 @@ end
 write_multipole_section('SQUAD', 'a1', renamedIndexes, 'm^-2', 'A');
 
 % If corrector magnets are windings on a sextupole or octupole, their AT Index is that
-% of the sextupole or octupole whereas there is a separate element for those magnets.
-% We have to use the index of the separate elements instead.
+% of the sextupole or octupole. If they are independent, there is a separate element for
+% the corrector magnets and we use the index of the separate element instead.
 sext_data = getfamilydata('SEXT_');
 sext_indices = sext_data.AT.ATIndex;
 o0x_data = getfamilydata('O0X');
