@@ -49,15 +49,17 @@ function load_mml(ringmode)
     % The individual BPM PVs are not stored in middlelayer.
     BPMS = get_bpm_pvs(ao);
 
-    % Map from AT types to types in the accelerator object (ao).
+    % Some AT families have different names in the accelerator object (ao),
+    % we remap these
     global TYPE_MAP;
-    % Collective multiple and dipole arrays do not currently exist so use N/A
-    % Multipole is currently just an alias for Octupole
-    keys = {'Multipole', 'Quadrupole', 'Sextupole', 'VSTR', 'HSTR', 'Bend', 'VTRIM', 'HTRIM'};
-    values = {'N/A', 'QUAD_', 'SEXT_', 'VCM', 'HCM', 'BB', 'VTRIM', 'HTRIM'};
+    keys = {'VSTR', 'HSTR'};
+    values = {'VCM', 'HCM'};
     TYPE_MAP = containers.Map(keys, values);
 
+    % We use this to track how many elements of each family have already
+    % been added so that we can correctly index that family in the ao
     used_elements = containers.Map();
+
     renamed_indexes = containers.Map('KeyType', 'int32', 'ValueType', 'int32');
 
     % These fields are not associated with an element as they are attached to
@@ -77,6 +79,11 @@ function load_mml(ringmode)
 
     for old_index = 1:length(THERING)
         at_elem = THERING{old_index};
+        if any(ismember(at_elem.FamName, TYPE_MAP.keys()))
+            lookup_key = TYPE_MAP(at_elem.FamName);
+        else
+            lookup_key = at_elem.FamName;
+        end
         % If an HSTR is preceded by a sext/oct or a VSTR is two elements after
         % a sext/oct, assume that they are in fact parts of the same element.
         % Just add that family to the sext/oct element. Don't increment the
@@ -90,23 +97,12 @@ function load_mml(ringmode)
             insertelement(new_index, old_index, at_elem);
         end
 
-        type = gettype(at_elem);
-        if strcmp(type, 'Bend')
-            type = at_elem.FamName;
-        elseif strcmp(type, 'Sextupole')
-            type = at_elem.FamName;
-        elseif strcmp(type, 'Multipole')
-            type = at_elem.FamName;
-        elseif strcmp(type, 'Quadrupole')
-            type = at_elem.FamName;
-        end
-
-        if used_elements.isKey(type)
-            used_elements(type) = used_elements(type) + 1;
+        if used_elements.isKey(lookup_key)
+            used_elements(lookup_key) = used_elements(lookup_key) + 1;
         else
-            used_elements(type) = 1;
+            used_elements(lookup_key) = 1;
         end
-        pvs = getpvs(ao, at_elem);
+        pvs = getpvs(ao, at_elem, lookup_key);
         insertpvs(new_index, pvs);
 
         renamed_indexes(old_index) = new_index;
@@ -172,33 +168,12 @@ function load_mml(ringmode)
     end
 
 
-    function pvs = getpvs(ao, elem)
+    function pvs = getpvs(ao, elem, lookup_key)
         type = gettype(elem);
-        if any(ismember(type, TYPE_MAP.keys))
-            % If we are a Bend/Sextupole/Multipole, we need to lookup our
-            % PV names from the ao. The data is stored by family name, e.g.
-            % for sextupoles S1X, S2A, S3A, S4A, S5X, S6X.
-            if strcmp(at_elem.FamName, 'BBVMXS') || strcmp(at_elem.FamName, 'BBVMXL')
-                index = used_elements(elem.FamName);
-                family = TYPE_MAP(type);
-            elseif strcmp(type, 'Bend')
-                index = used_elements(elem.FamName);
-                family = elem.FamName;
-            elseif strcmp(type, 'Sextupole')
-                index = used_elements(elem.FamName);
-                family = elem.FamName;
-            elseif strcmp(type, 'Multipole')
-                index = used_elements(elem.FamName);
-                family = elem.FamName;            
-            elseif strcmp(type, 'Quadrupole')
-                index = used_elements(elem.FamName);
-                family = elem.FamName;
-            else
-                index = used_elements(type);
-                family = TYPE_MAP(type);
-            end
-            get_pv = char(ao.(family).Monitor.ChannelNames(index, :));
-            set_pv = char(ao.(family).Setpoint.ChannelNames(index, :));
+        index = used_elements(lookup_key);
+        if any(ismember(type, {'Multipole', 'Quadrupole', 'Sextupole', 'VSTR', 'HSTR', 'Bend', 'VTRIM', 'HTRIM'}))
+            get_pv = char(ao.(lookup_key).Monitor.ChannelNames(index, :));
+            set_pv = char(ao.(lookup_key).Setpoint.ChannelNames(index, :));
             alt_pv1 = {};
             alt_pv2 = {};
 
@@ -237,7 +212,6 @@ function load_mml(ringmode)
             end
         elseif strcmp(type, 'BPM')
             %disp(sprintf('Getting PVs for: Type: %s', type));
-            index = used_elements(type);
             enable_pv = strcat(BPMS{index}, ':CF:ENABLED_S');
             en_pv = pv_struct('enabled', enable_pv, '');
             get_x_pv = strcat(BPMS{index}, ':SA:X');
