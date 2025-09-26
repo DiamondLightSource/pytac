@@ -36,17 +36,11 @@ fprintf(f_units, '%d,%s,null,%d,%s,%s,%s,%s\n', 0, 'beam_current', uc_id, 'A', '
 
 % Element null unit conversions
 % lower and upper conversion limits are '' as NullUnitConvs do not convert
-rfs = getfamilydata('RF');
-if length(rfs.ElementList) == 1
-    indexes = family2atindex('RF');
-    for index = 1:length(indexes)
-        fprintf(f_units, '%d,%s,null,%d,%s,%s,%s,%s\n', renamedIndexes(indexes(index)), 'f', 0, 'Hz', 'Hz', '', '');
-    end
-else
-    for i = 1:length(rfs.AT.ATIndex)
-        fprintf(f_units, '%d,%s,null,%d,%s,%s,%s,%s\n', renamedIndexes(rfs.AT.ATIndex(i)), 'f', 0, 'Hz', 'Hz', '', '');
-    end
+indexes = family2atindex('RF');
+for index = 1:length(indexes)
+    fprintf(f_units, '%d,%s,null,%d,%s,%s,%s,%s\n', renamedIndexes(indexes(index)), 'f', 0, 'Hz', 'Hz', '', '');
 end
+
 
 % Unit conversions for lattice fields
 % the conversion limits are '' as these fields don't have a Setpoint field
