@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pytac.load_csv &#8212; pytac 0.6.3.dev24+gff1750efc documentation</title>
+    <title>pytac.load_csv &#8212; pytac 0.6.3.dev26+g276a0babd documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=ae03ae34"></script>
+    <script src="../../_static/documentation_options.js?v=b930f895"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -666,7 +666,10 @@
     <span class="n">lat</span><span class="o">.</span><span class="n">set_data_source</span><span class="p">(</span><span class="n">data_source</span><span class="o">.</span><span class="n">DeviceDataSource</span><span class="p">(),</span> <span class="n">pytac</span><span class="o">.</span><span class="n">LIVE</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">csv_loader</span><span class="p">(</span><span class="n">mode_dir</span> <span class="o">/</span> <span class="n">ELEMENTS_FILENAME</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_reader</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">csv_reader</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">e</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">EpicsElement</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">]),</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span> <span class="n">name</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
             <span class="n">e</span><span class="o">.</span><span class="n">add_to_family</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span>
             <span class="n">e</span><span class="o">.</span><span class="n">set_data_source</span><span class="p">(</span><span class="n">data_source</span><span class="o">.</span><span class="n">DeviceDataSource</span><span class="p">(),</span> <span class="n">pytac</span><span class="o">.</span><span class="n">LIVE</span><span class="p">)</span>
