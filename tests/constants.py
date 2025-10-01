@@ -22,11 +22,11 @@ TESTING_MODE_RING = "I04".lower() + "_ring"
 
 # Update this with the ringmodes that pytac supports
 SUPPORTED_MODES = {
-        "I04",
-        "DIAD",
-        "DIADSP",
-        "DIADTHz",
-        "I04SP",
-        "I04THz",
-        "48",
-    }
+    "I04",
+    "DIAD",
+    "DIADSP",
+    "DIADTHz",
+    "I04SP",
+    "I04THz",
+    "48",
+}

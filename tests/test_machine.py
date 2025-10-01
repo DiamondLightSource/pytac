@@ -8,9 +8,9 @@ from unittest import mock
 
 import numpy
 import pytest
+from constants import TESTING_MODE, TESTING_MODE_RING
 
 import pytac
-from constants import TESTING_MODE, TESTING_MODE_RING
 
 EPS = 1e-8
 
@@ -28,7 +28,10 @@ def test_load_lattice_using_default_dir():
 
 @pytest.mark.parametrize(
     "lattice, name, n_elements, length",
-    [(TESTING_MODE_RING, TESTING_MODE, 2190, 561.571), ("diad_ring", "DIAD", 2194, 561.571)],
+    [
+        (TESTING_MODE_RING, TESTING_MODE, 2190, 561.571),
+        ("diad_ring", "DIAD", 2194, 561.571),
+    ],
 )
 def test_load_lattice(lattice, name, n_elements, length, request):
     lattice = request.getfixturevalue(lattice)
@@ -37,7 +40,9 @@ def test_load_lattice(lattice, name, n_elements, length, request):
     assert (lattice.get_length() - length) < EPS
 
 
-@pytest.mark.parametrize("lattice, n_bpms", [(TESTING_MODE_RING, 173), ("diad_ring", 173)])
+@pytest.mark.parametrize(
+    "lattice, n_bpms", [(TESTING_MODE_RING, 173), ("diad_ring", 173)]
+)
 def test_get_pv_names(lattice, n_bpms, request):
     lattice = request.getfixturevalue(lattice)
     bpm_x_pvs = lattice.get_element_pv_names("BPM", "x", handle="readback")
@@ -52,7 +57,9 @@ def test_get_pv_names(lattice, n_bpms, request):
         assert re.match("SR.*HBPM.*SLOW:DISABLED", pv)
 
 
-@pytest.mark.parametrize("lattice, n_bpms", [(TESTING_MODE_RING, 173), ("diad_ring", 173)])
+@pytest.mark.parametrize(
+    "lattice, n_bpms", [(TESTING_MODE_RING, 173), ("diad_ring", 173)]
+)
 def test_load_bpms(lattice, n_bpms, request):
     lattice = request.getfixturevalue(lattice)
     bpms = lattice.get_elements("BPM")
@@ -75,14 +82,18 @@ def test_load_bpms(lattice, n_bpms, request):
     assert bpms[-1].cell == 24
 
 
-@pytest.mark.parametrize("lattice, n_drifts", [(TESTING_MODE_RING, 1341), ("diad_ring", 1346)])
+@pytest.mark.parametrize(
+    "lattice, n_drifts", [(TESTING_MODE_RING, 1341), ("diad_ring", 1346)]
+)
 def test_load_drift_elements(lattice, n_drifts, request):
     lattice = request.getfixturevalue(lattice)
     drifts = lattice.get_elements("DRIFT")
     assert len(drifts) == n_drifts
 
 
-@pytest.mark.parametrize("lattice, n_quads", [(TESTING_MODE_RING, 248), ("diad_ring", 248)])
+@pytest.mark.parametrize(
+    "lattice, n_quads", [(TESTING_MODE_RING, 248), ("diad_ring", 248)]
+)
 def test_load_quadrupoles(lattice, n_quads, request):
     lattice = request.getfixturevalue(lattice)
     quads = lattice.get_elements("Quadrupole")
@@ -126,7 +137,9 @@ def test_load_correctors(lattice, n_correctors, request):
         )
 
 
-@pytest.mark.parametrize("lattice, n_squads", [(TESTING_MODE_RING, 98), ("diad_ring", 98)])
+@pytest.mark.parametrize(
+    "lattice, n_squads", [(TESTING_MODE_RING, 98), ("diad_ring", 98)]
+)
 def test_load_squads(lattice, n_squads, request):
     lattice = request.getfixturevalue(lattice)
     squads = lattice.get_elements("SQUAD")
