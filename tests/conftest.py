@@ -123,8 +123,8 @@ def simple_data_source_manager(
 
 
 @pytest.fixture(scope="session")
-def vmx_ring():
-    return pytac.load_csv.load("VMX", mock.MagicMock, symmetry=24)
+def i04_ring():
+    return pytac.load_csv.load("I04", mock.MagicMock, symmetry=24)
 
 
 @pytest.fixture(scope="session")
