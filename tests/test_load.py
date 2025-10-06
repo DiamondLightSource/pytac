@@ -2,6 +2,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from constants import SUPPORTED_MODES, TESTING_MODE
 from testfixtures import LogCapture
 
 import pytac
@@ -32,8 +33,8 @@ def test_default_control_system_import():
     - assert that the default control system is indeed cothread and that it
        is loaded onto the lattice correctly
     """
-    assert bool(load("VMX"))
-    assert isinstance(load("VMX")._cs, pytac.cothread_cs.CothreadControlSystem)
+    assert bool(load(TESTING_MODE))
+    assert isinstance(load(TESTING_MODE)._cs, pytac.cothread_cs.CothreadControlSystem)
 
 
 def test_import_fail_raises_ControlSystemException(mock_cs_raises_ImportError):
@@ -44,7 +45,7 @@ def test_import_fail_raises_ControlSystemException(mock_cs_raises_ImportError):
     """
     with patch("pytac.cothread_cs.CothreadControlSystem", mock_cs_raises_ImportError):
         with pytest.raises(pytac.exceptions.ControlSystemException):
-            load("VMX")
+            load(TESTING_MODE)
 
 
 def test_elements_loaded(lattice):
@@ -134,21 +135,9 @@ def test_resolve_unitconv_raises_UnitsException_if_unrecognised_UnitConv_type(
 
 
 def test_available_ringmodes():
-    ringmodes = {
-        "SRI0913_MOGA",
-        "I04",
-        "VMX",
-        "DIAD",
-        "VMXSP",
-        "VMXTHz",
-        "DIADSP",
-        "DIADTHz",
-        "I04SP",
-        "I04THz",
-    }
-    assert available_ringmodes() == ringmodes
+    assert available_ringmodes() == SUPPORTED_MODES
     bad_path = Path(__file__).resolve().parent.parent
     with pytest.raises(OSError):
         available_ringmodes(bad_path)
     good_path = bad_path / "src/pytac/data"
-    assert available_ringmodes(good_path) == ringmodes
+    assert available_ringmodes(good_path) == SUPPORTED_MODES

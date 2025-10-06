@@ -156,13 +156,13 @@ def test_element_representation():
     assert str(elem) == "<Element 'bpm1', length 0.1 m, families fam1>"
     lat = Lattice("")
     lat.add_element(elem)
-    assert str(elem) == ("<Element 'bpm1', index 1, length 0.1 m, families " "fam1>")
+    assert str(elem) == ("<Element 'bpm1', index 1, length 0.1 m, families fam1>")
     lat.symmetry = 2
     assert str(elem) == (
-        "<Element 'bpm1', index 1, length 0.1 m, cell 1, " "families fam1>"
+        "<Element 'bpm1', index 1, length 0.1 m, cell 1, families fam1>"
     )
     elem.name = None
-    assert str(elem) == ("<Element index 1, length 0.1 m, cell 1, families " "fam1>")
+    assert str(elem) == ("<Element index 1, length 0.1 m, cell 1, families fam1>")
 
 
 def test_set_lattice_reference():

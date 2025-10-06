@@ -28,7 +28,7 @@ function load_mml(ringmode)
     % Open the CSV files that store the Pytac data.
     elements_file = fullfile(datadir, 'elements.csv');
     f_elements = fopen(elements_file, 'wt', 'n', 'utf-8');
-    fprintf(f_elements, 'name,type,length\n');
+    fprintf(f_elements, 'type,length\n');
     epics_devices_file = fullfile(datadir, 'epics_devices.csv');
     f_epics_devices = fopen(epics_devices_file, 'w');
     fprintf(f_epics_devices, 'el_id,name,field,get_pv,set_pv\n');
@@ -42,24 +42,29 @@ function load_mml(ringmode)
     global THERING;
     ao = getao();
 
-    % Hard-coded beam energy value.
-    fprintf(f_simple_devices, '0,energy,3000,True\n');
+    % Get the beam energy value from the lattice.
+    energy_mev = THERING{1}.Energy * 1E-6; % convert from eV to MeV
+    fprintf(f_simple_devices, '0,energy,%d,True\n', energy_mev);
 
     % The individual BPM PVs are not stored in middlelayer.
     BPMS = get_bpm_pvs(ao);
 
-    % Map from AT types to types in the accelerator object (ao).
+    % Some AT families have different names in the accelerator object (ao),
+    % we remap these
     global TYPE_MAP;
-    keys = {'Quadrupole', 'Sextupole', 'VSTR', 'HSTR', 'Bend', 'VTRIM', 'HTRIM'};
-    values = {'QUAD_', 'SEXT_', 'VCM', 'HCM', 'BB', 'VTRIM', 'HTRIM'};
+    keys = {'VSTR', 'HSTR'};
+    values = {'VCM', 'HCM'};
     TYPE_MAP = containers.Map(keys, values);
 
+    % We use this to track how many elements of each family have already
+    % been added so that we can correctly index that family in the ao
     used_elements = containers.Map();
+
     renamed_indexes = containers.Map('KeyType', 'int32', 'ValueType', 'int32');
 
     % These fields are not associated with an element as they are attached to
     % the lattice, we therefore must insert them separately at index 0.
-    s = pv_struct('beam_current', 'SR-DI-DCCT-01:SIGNAL', '');
+    s = pv_struct('beam_current', ao.DCCT.Monitor.ChannelNames(), '');
     insertpvs(0, {s});
     s = pv_struct('emittance_x', 'SR-DI-EMIT-01:HEMIT', '');
     insertpvs(0, {s});
@@ -74,31 +79,36 @@ function load_mml(ringmode)
 
     for old_index = 1:length(THERING)
         at_elem = THERING{old_index};
-        % If an HSTR is preceded by a sext or a VSTR is two elements after
-        % a sext, assume that they are in fact parts of the same element.
-        % Just add that family to the sext element.
-        % Don't increment the new_index count as we haven't added an
-        % element.
+        if any(ismember(at_elem.FamName, TYPE_MAP.keys()))
+            lookup_key = TYPE_MAP(at_elem.FamName);
+        else
+            lookup_key = at_elem.FamName;
+        end
+        % If an HSTR is preceded by a sext/oct or a VSTR is two elements after
+        % a sext/oct, assume that they are in fact parts of the same element.
+        % Just add that family to the sext/oct element. Don't increment the
+        % new_index count as we haven't added an element.
         if (strcmp(at_elem.FamName, 'HSTR') && strcmp(THERING{old_index - 1}.Class, 'Sextupole')) || (strcmp(at_elem.FamName, 'VSTR') && strcmp(THERING{old_index - 2}.Class, 'Sextupole'))
+            fprintf(f_families, '%i,%s\n', new_index, at_elem.FamName);
+        elseif (strcmp(at_elem.FamName, 'HSTR') && strcmp(THERING{old_index - 1}.Class, 'Multipole')) || (strcmp(at_elem.FamName, 'VSTR') && strcmp(THERING{old_index - 2}.Class, 'Multipole'))
             fprintf(f_families, '%i,%s\n', new_index, at_elem.FamName);
         else
             new_index = new_index + 1;
             insertelement(new_index, old_index, at_elem);
         end
 
-        type = gettype(at_elem);
-        if used_elements.isKey(type)
-            used_elements(type) = used_elements(type) + 1;
+        if used_elements.isKey(lookup_key)
+            used_elements(lookup_key) = used_elements(lookup_key) + 1;
         else
-            used_elements(type) = 1;
+            used_elements(lookup_key) = 1;
         end
-        pvs = getpvs(ao, at_elem);
+        pvs = getpvs(ao, at_elem, lookup_key);
         insertpvs(new_index, pvs);
 
         renamed_indexes(old_index) = new_index;
     end
 
-    % The following families  and do not have their
+    % The following families do not have their
     % own elements.  We insert their PVs separately.
     insertextrapvs('SQUAD', 'a1');
     insertextrapvs('BBVMXS', 'db0');
@@ -158,28 +168,23 @@ function load_mml(ringmode)
     end
 
 
-    function pvs = getpvs(ao, elem)
+    function pvs = getpvs(ao, elem, lookup_key)
         type = gettype(elem);
-        if any(ismember(type, TYPE_MAP.keys))
-
-            index = used_elements(type);
-            % MML is inconsistent about whether the family for the bends
-            % is BEND or BB.
-            if strcmp(type, 'Bend') && isfield(ao, 'Bend')
-                family = 'BEND';
-            else
-                family = TYPE_MAP(type);
-            end
-
-            get_pv = char(ao.(family).Monitor.ChannelNames(index, :));
-            set_pv = char(ao.(family).Setpoint.ChannelNames(index, :));
+        index = used_elements(lookup_key);
+        if any(ismember(type, {'Multipole', 'Quadrupole', 'Sextupole', 'VSTR', 'HSTR', 'Bend', 'VTRIM', 'HTRIM'}))
+            get_pv = char(ao.(lookup_key).Monitor.ChannelNames(index, :));
+            set_pv = char(ao.(lookup_key).Setpoint.ChannelNames(index, :));
             alt_pv1 = {};
             alt_pv2 = {};
+
+            %disp(sprintf('Getting PVs for: Type: %s Family: %s SetPV: %s GetPV: %s', type, family, set_pv, get_pv));
 
             if strcmp(type, 'Quadrupole')
                 field = 'b1';
             elseif strcmp(type, 'Sextupole')
                 field = 'b2';
+            elseif strcmp(type, 'Multipole')
+                field = 'b3';
             elseif strcmp(type, 'Bend')
                 field = 'b0';
             elseif strcmp(type, 'VTRIM')
@@ -206,7 +211,7 @@ function load_mml(ringmode)
                 pvs = {pvs};
             end
         elseif strcmp(type, 'BPM')
-            index = used_elements(type);
+            %disp(sprintf('Getting PVs for: Type: %s', type));
             enable_pv = strcat(BPMS{index}, ':CF:ENABLED_S');
             en_pv = pv_struct('enabled', enable_pv, '');
             get_x_pv = strcat(BPMS{index}, ':SA:X');
@@ -221,6 +226,7 @@ function load_mml(ringmode)
             y_sofb_pv = pv_struct('y_sofb_disabled', sprintf(alt_template, 'V', 'SLOW'), '');
             pvs = {x_pv, y_pv, en_pv, x_fofb_pv, x_sofb_pv, y_fofb_pv, y_sofb_pv};
         elseif strcmp(type, 'RFCavity')
+            %disp(sprintf('Getting PVs for: Type: %s', type));
             gfpv = ao.('RF').Monitor.ChannelNames;
             sfpv = ao.('RF').Setpoint.ChannelNames;
             f_pvs = pv_struct('f', gfpv, sfpv);
@@ -265,7 +271,7 @@ function load_mml(ringmode)
             end
         end
 
-        fprintf(f_elements, '%s,%s,%f\n', '', type, at_elem.Length);
+        fprintf(f_elements, '%s,%f\n', type, at_elem.Length);
     end
 
 end

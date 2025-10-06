@@ -165,7 +165,14 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
                 # For certain magnet types, we need an additional rigidity
                 # conversion factor as well as the raw conversion.
                 # TODO: This should probably be moved into the .csv files somewhere.
-                rigidity_families = {"hstr", "vstr", "quadrupole", "sextupole", "bend"}
+                rigidity_families = {
+                    "hstr",
+                    "vstr",
+                    "quadrupole",
+                    "sextupole",
+                    "multipole",
+                    "bend",
+                }
                 if item["uc_type"] != "null" and element._families & rigidity_families:
                     energy = lattice.get_value("energy", units=pytac.ENG)
                     uc.set_post_eng_to_phys(utils.get_div_rigidity(energy))
@@ -212,7 +219,7 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
     lat.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
     with csv_loader(mode_dir / ELEMENTS_FILENAME) as csv_reader:
         for item in csv_reader:
-            name = item["name"] if item["name"] != "" else None
+            name = item.get("name") or None  # Default to None if empty string
             e = element.EpicsElement(float(item["length"]), item["type"], name, lat)
             e.add_to_family(item["type"])
             e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)

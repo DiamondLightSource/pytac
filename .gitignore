@@ -67,3 +67,5 @@ venv*
 # further build artifacts
 lockfiles/
 
+# matlab autosave
+*.asv

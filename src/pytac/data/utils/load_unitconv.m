@@ -36,14 +36,11 @@ fprintf(f_units, '%d,%s,null,%d,%s,%s,%s,%s\n', 0, 'beam_current', uc_id, 'A', '
 
 % Element null unit conversions
 % lower and upper conversion limits are '' as NullUnitConvs do not convert
-rfs = getfamilydata('RF');
-if length(rfs.ElementList) == 1
-    fprintf(f_units, '%d,%s,null,%d,%s,%s,%s,%s\n', renamedIndexes(family2atindex('RF')), 'f', 0, 'Hz', 'Hz', '', '');
-else
-    for i = 1:length(rfs.AT.ATIndex)
-        fprintf(f_units, '%d,%s,null,%d,%s,%s,%s,%s\n', renamedIndexes(rfs.AT.ATIndex(i)), 'f', 0, 'Hz', 'Hz', '', '');
-    end
+indexes = family2atindex('RF');
+for index = 1:length(indexes)
+    fprintf(f_units, '%d,%s,null,%d,%s,%s,%s,%s\n', renamedIndexes(indexes(index)), 'f', 0, 'Hz', 'Hz', '', '');
 end
+
 
 % Unit conversions for lattice fields
 % the conversion limits are '' as these fields don't have a Setpoint field
@@ -69,6 +66,13 @@ end
 sext_families = findmemberof('SEXT');
 for i = 1:length(sext_families)
     write_multipole_section(sext_families{i}, 'b2', renamedIndexes, 'm^-3', 'A');
+end
+
+oct_families = [findmemberof('O0X'), findmemberof('O1X')];
+for i = 1:length(oct_families)
+    if ~isempty(oct_families{i})
+        write_multipole_section(oct_families{i}, 'b3', renamedIndexes, 'm^-4', 'A');
+    end
 end
 
 bend_families = findmemberof('BEND');
@@ -107,13 +111,26 @@ end
 
 % The skew quadrupoles are windings on the sextupoles, but there is no
 % separate element so this works correctly (see below).
+% TODO: Still true for D2? Any SQUADS on octupoles?
 write_multipole_section('SQUAD', 'a1', renamedIndexes, 'm^-2', 'A');
 
-% If corrector magnets are windings on a sextupole, their AT Index is that
-% of the sextupole whereas there is a separate element for those magnets.
-% We have to use the index of the separate elements instead.
+% If corrector magnets are windings on a sextupole or octupole, their AT Index is that
+% of the sextupole or octupole. If they are independent, there is a separate element for
+% the corrector magnets and we use the index of the separate element instead.
 sext_data = getfamilydata('SEXT_');
 sext_indices = sext_data.AT.ATIndex;
+o0x_data = getfamilydata('O0X');
+o1x_data = getfamilydata('O1X');
+
+if ~isempty(o0x_data)
+    oct_indices = o0x_data.AT.ATIndex;
+else
+    oct_indices = uint8.empty;
+end
+
+if ~isempty(o1x_data)
+    oct_indices = cat(1, oct_indices, o1x_data.AT.ATIndex);
+end
 
 hcor = getfamilydata('HCM');
 control_ranges = get_range('HCM');
@@ -121,6 +138,8 @@ for i = 1:length(hcor.AT.ATIndex)
     data = el_cal_data(hcor.Monitor.ChannelNames(i,:));
     hcor_index = hcor.AT.ATIndex(i);
     if any(hcor_index == sext_indices)
+        hcor_index = hcor_index + 1;
+    elseif any(hcor_index == oct_indices)
         hcor_index = hcor_index + 1;
     end
     id = write_linear_data(data.field(2) / data.current(2), 0);
@@ -133,6 +152,8 @@ for i = 1:length(vcor.AT.ATIndex)
     data = el_cal_data(vcor.Monitor.ChannelNames(i,:));
     vcor_index = vcor.AT.ATIndex(i);
     if any(vcor_index == sext_indices)
+        vcor_index = vcor_index + 1;
+    elseif any(vcor_index == oct_indices)
         vcor_index = vcor_index + 1;
     end
     id = write_linear_data(data.field(2) / data.current(2), 0);

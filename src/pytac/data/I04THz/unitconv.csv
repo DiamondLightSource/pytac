@@ -833,8 +833,8 @@ el_id,field,uc_type,uc_id,phys_units,eng_units,lower_lim,upper_lim
 233,x_kick,poly,124,,A,-5,5
 320,x_kick,poly,125,,A,-5,5
 325,x_kick,poly,126,,A,-5,5
-332,x_kick,poly,127,,A,-5,5
-337,x_kick,poly,128,,A,-5,5
+332,x_kick,poly,127,,A,-4,4
+337,x_kick,poly,128,,A,-4,4
 412,x_kick,poly,129,,A,-5,5
 419,x_kick,poly,130,,A,-5,5
 493,x_kick,poly,131,,A,-5,5
@@ -891,8 +891,8 @@ el_id,field,uc_type,uc_id,phys_units,eng_units,lower_lim,upper_lim
 234,x_kick,poly,182,,A,-5,5
 321,x_kick,poly,183,,A,-5,5
 326,x_kick,poly,184,,A,-5,5
-333,x_kick,poly,185,,A,-5,5
-338,x_kick,poly,186,,A,-5,5
+333,x_kick,poly,185,,A,-4,4
+338,x_kick,poly,186,,A,-4,4
 413,x_kick,poly,187,,A,-5,5
 420,x_kick,poly,188,,A,-5,5
 494,x_kick,poly,189,,A,-5,5
