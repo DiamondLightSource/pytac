@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pytac.load_csv &#8212; pytac 0.6.2.dev1+g0244759da documentation</title>
+    <title>pytac.load_csv &#8212; pytac 0.6.3.dev29+g08c86add4 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=f708fcf2"></script>
+    <script src="../../_static/documentation_options.js?v=3fdb8ed6"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -609,7 +609,14 @@
                 <span class="c1"># For certain magnet types, we need an additional rigidity</span>
                 <span class="c1"># conversion factor as well as the raw conversion.</span>
                 <span class="c1"># TODO: This should probably be moved into the .csv files somewhere.</span>
-                <span class="n">rigidity_families</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;hstr&quot;</span><span class="p">,</span> <span class="s2">&quot;vstr&quot;</span><span class="p">,</span> <span class="s2">&quot;quadrupole&quot;</span><span class="p">,</span> <span class="s2">&quot;sextupole&quot;</span><span class="p">,</span> <span class="s2">&quot;bend&quot;</span><span class="p">}</span>
+                <span class="n">rigidity_families</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;hstr&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;vstr&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;quadrupole&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;sextupole&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;multipole&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;bend&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
                 <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;uc_type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;null&quot;</span> <span class="ow">and</span> <span class="n">element</span><span class="o">.</span><span class="n">_families</span> <span class="o">&amp;</span> <span class="n">rigidity_families</span><span class="p">:</span>
                     <span class="n">energy</span> <span class="o">=</span> <span class="n">lattice</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;energy&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="p">)</span>
                     <span class="n">uc</span><span class="o">.</span><span class="n">set_post_eng_to_phys</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">get_div_rigidity</span><span class="p">(</span><span class="n">energy</span><span class="p">))</span>
@@ -659,7 +666,7 @@
     <span class="n">lat</span><span class="o">.</span><span class="n">set_data_source</span><span class="p">(</span><span class="n">data_source</span><span class="o">.</span><span class="n">DeviceDataSource</span><span class="p">(),</span> <span class="n">pytac</span><span class="o">.</span><span class="n">LIVE</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">csv_loader</span><span class="p">(</span><span class="n">mode_dir</span> <span class="o">/</span> <span class="n">ELEMENTS_FILENAME</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_reader</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">csv_reader</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>  <span class="c1"># Default to None if empty string</span>
             <span class="n">e</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">EpicsElement</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">]),</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span> <span class="n">name</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
             <span class="n">e</span><span class="o">.</span><span class="n">add_to_family</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span>
             <span class="n">e</span><span class="o">.</span><span class="n">set_data_source</span><span class="p">(</span><span class="n">data_source</span><span class="o">.</span><span class="n">DeviceDataSource</span><span class="p">(),</span> <span class="n">pytac</span><span class="o">.</span><span class="n">LIVE</span><span class="p">)</span>
