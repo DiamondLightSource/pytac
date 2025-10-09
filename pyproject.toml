@@ -13,7 +13,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
 ]
 description = "Python Toolkit for Accelerator Controls"
-dependencies = ["numpy", "scipy", "setuptools>=60.0.0"]
+dependencies = ["numpy", "scipy", "setuptools>=60.0.0", "aioca"]
 dynamic = ["version"]
 license.file = "LICENSE"
 readme = "README.rst"
