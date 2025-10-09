@@ -240,7 +240,9 @@ class Lattice:
             DataSourceException: if arguments are incorrect.
             FieldException: if the lattice does not have the specified field.
         """
-        await self._data_source_manager.set_value(field, value, units, data_source, throw)
+        await self._data_source_manager.set_value(
+            field, value, units, data_source, throw
+        )
 
     def get_length(self):
         """Returns the length of the lattice, in meters.
@@ -643,7 +645,7 @@ class EpicsLattice(Lattice):
                     family, field, values, pytac.ENG, pytac.PHYS
                 )
         else:
-            values = super(EpicsLattice, self).get_element_values(
+            values = await super(EpicsLattice, self).get_element_values(
                 family, field, handle, units, data_source, throw
             )
         if dtype is not None:
@@ -693,6 +695,6 @@ class EpicsLattice(Lattice):
                 )
             await self._cs.set_multiple(pv_names, values, throw)
         else:
-            super(EpicsLattice, self).set_element_values(
+            await super(EpicsLattice, self).set_element_values(
                 family, field, values, units, data_source, throw
             )
