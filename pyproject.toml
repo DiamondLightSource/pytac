@@ -15,7 +15,7 @@ description = "Python Toolkit for Accelerator Controls (Pytac) is a Python libra
 dependencies = [
     "numpy",
     "scipy",
-    "cothread",
+    "aioca",
     "epicscorelibs",
 ] # Add project dependencies here, e.g. ["click", "numpy"]
 dynamic = ["version"]
