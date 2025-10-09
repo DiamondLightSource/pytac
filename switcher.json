@@ -4,28 +4,24 @@
     "url": "https://DiamondLightSource.github.io/pytac/main/"
   },
   {
-    "version": "0.7.0",
-    "url": "https://DiamondLightSource.github.io/pytac/0.7.0/"
-  },
-  {
-    "version": "0.6.2",
-    "url": "https://DiamondLightSource.github.io/pytac/0.6.2/"
-  },
-  {
-    "version": "0.6.1",
-    "url": "https://DiamondLightSource.github.io/pytac/0.6.1/"
+    "version": "0.6.0",
+    "url": "https://DiamondLightSource.github.io/pytac/0.6.0/"
   },
   {
     "version": "0.6.0.b1",
     "url": "https://DiamondLightSource.github.io/pytac/0.6.0.b1/"
   },
   {
-    "version": "0.6.0",
-    "url": "https://DiamondLightSource.github.io/pytac/0.6.0/"
+    "version": "0.6.1",
+    "url": "https://DiamondLightSource.github.io/pytac/0.6.1/"
   },
   {
-    "version": "diamond2-conversion",
-    "url": "https://DiamondLightSource.github.io/pytac/diamond2-conversion/"
+    "version": "0.6.2",
+    "url": "https://DiamondLightSource.github.io/pytac/0.6.2/"
+  },
+  {
+    "version": "0.7.0",
+    "url": "https://DiamondLightSource.github.io/pytac/0.7.0/"
   },
   {
     "version": "fix-docs",
