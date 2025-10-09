@@ -220,9 +220,6 @@ class EpicsDevice(Device):
 class PvEnabler:
     """A PvEnabler class to check whether a device is enabled.
 
-    The class will behave like True if the PV value equals enabled_value,
-    and False otherwise.
-
     .. Private Attributes:
            _pv (str): The PV name.
            _enabled_value (str): The value for PV for which the device should
@@ -244,11 +241,11 @@ class PvEnabler:
         self._enabled_value = str(int(float(enabled_value)))
         self._cs = cs
 
-    async def __bool__(self):
+    async def is_enabled(self):
         """Used to override the 'if object' clause.
 
         Returns:
             bool: True if the device should be considered enabled.
         """
         pv_value = await self._cs.get_single(self._pv)
-        return self._enabled_value == str(int(float(pv_value)))
+        return self._enabled_value == str(int(float(pv_value)))  # ???
