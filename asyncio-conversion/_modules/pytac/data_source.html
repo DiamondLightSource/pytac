@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pytac.data_source &#8212; pytac 1.0.1.dev7+g1d50128d1 documentation</title>
+    <title>pytac.data_source &#8212; pytac 1.0.1.dev9+gc99368cfc documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=1d749557"></script>
+    <script src="../../_static/documentation_options.js?v=94e3e455"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -465,7 +465,7 @@
 
 <div class="viewcode-block" id="DataSource.get_value">
 <a class="viewcode-back" href="../../user/reference/api.html#pytac.data_source.DataSource.get_value">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">throw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">throw</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a value for a field.</span>
 
 <span class="sd">        Args:</span>
@@ -823,8 +823,8 @@
 <span class="sd">            FieldException: if the device does not have the specified field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
-        <span class="c1"># TODO some devices dont need to be awaited as they are just retrieving stored data,</span>
-        <span class="c1"># but other get data from PVs so do, make this better</span>
+        <span class="c1"># TODO some devices dont need to be awaited as they are just retrieving stored</span>
+        <span class="c1"># data, but others get data from PVs so do, make this better</span>
         <span class="n">val</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">get_value</span><span class="p">):</span>
             <span class="n">val</span> <span class="o">=</span> <span class="k">await</span> <span class="n">device</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">throw</span><span class="p">)</span>
@@ -848,7 +848,13 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            FieldException: if the device does not have the specified field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">field</span><span class="p">)</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">throw</span><span class="p">)</span></div>
+        <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+        <span class="c1"># TODO some devices dont need to be awaited as they are just setting local</span>
+        <span class="c1"># data, but others set data to PVs, so do, make this better</span>
+        <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">set_value</span><span class="p">):</span>
+            <span class="k">await</span> <span class="n">device</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">throw</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">device</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">throw</span><span class="p">)</span></div>
 </div>
 
 </pre></div>
