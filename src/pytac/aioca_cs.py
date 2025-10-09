@@ -1,6 +1,7 @@
 import logging
 
-from aioca import caget, caput, CANothing
+from aioca import CANothing, caget, caput
+
 from pytac.cs import ControlSystem
 from pytac.exceptions import ControlSystemException
 
@@ -121,7 +122,9 @@ class AIOCAControlSystem(ControlSystem):
         """
         if len(pvs) != len(values):
             raise ValueError("Please enter the same number of values as PVs.")
-        status = await caput(pvs, values, timeout=self._timeout, throw=False, wait=self._wait)
+        status = await caput(
+            pvs, values, timeout=self._timeout, throw=False, wait=self._wait
+        )
         return_values = []
         failures = []
         for stat in status:

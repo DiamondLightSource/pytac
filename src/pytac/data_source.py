@@ -28,7 +28,7 @@ class DataSource:
         """
         raise NotImplementedError()
 
-    async def get_value(self, field, handle, throw):
+    def get_value(self, field, handle, throw):
         """Get a value for a field.
 
         Args:
