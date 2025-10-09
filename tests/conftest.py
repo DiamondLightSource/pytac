@@ -1,6 +1,3 @@
-import asyncio
-import sys
-import types
 from unittest import mock
 
 import pytest
@@ -28,7 +25,10 @@ from pytac.units import PolyUnitConv
 def x_device():
     x_device = mock.MagicMock()
     x_device.name = "x_device"
+    x_device.get_value = mock.AsyncMock()
     x_device.get_value.return_value = DUMMY_VALUE_1
+    x_device.set_value = mock.AsyncMock()
+
     return x_device
 
 
@@ -36,7 +36,10 @@ def x_device():
 def y_device():
     y_device = mock.MagicMock()
     y_device.name = "y_device"
+    y_device.get_value = mock.AsyncMock()
     y_device.get_pv_name.return_value = SP_PV
+    y_device.set_value = mock.AsyncMock()
+
     return y_device
 
 
@@ -45,7 +48,11 @@ def y_device():
 def mock_sim_data_source():
     mock_sim_data_source = mock.MagicMock()
     mock_sim_data_source.units = pytac.PHYS
+
+    mock_sim_data_source.get_value = mock.AsyncMock()
     mock_sim_data_source.get_value.return_value = DUMMY_VALUE_2
+    mock_sim_data_source.set_value = mock.AsyncMock()
+
     return mock_sim_data_source
 
 
@@ -108,8 +115,7 @@ async def diad_ring():
 
 @pytest.fixture
 async def lattice():
-    lat = await load_csv.load("dummy", mock.MagicMock(), CURRENT_DIR_PATH / "data", 2)
-    return lat
+    return await load_csv.load("dummy", mock.MagicMock(), CURRENT_DIR_PATH / "data", 2)
 
 
 def set_func(pvs, values, throw=None):
@@ -120,8 +126,11 @@ def set_func(pvs, values, throw=None):
 @pytest.fixture
 def mock_cs():
     cs = mock.MagicMock()
+    cs.get_single = mock.AsyncMock()
     cs.get_single.return_value = DUMMY_VALUE_1
+    cs.get_multiple = mock.AsyncMock()
     cs.get_multiple.return_value = DUMMY_ARRAY
+    cs.set_multiple = mock.AsyncMock()
     cs.set_multiple.side_effect = set_func
     return cs
 
