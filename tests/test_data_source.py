@@ -41,10 +41,10 @@ def test_set_value(simple_object, request):
 @pytest.mark.parametrize(
     "simple_object", ["simple_element", "simple_lattice", "simple_data_source_manager"]
 )
-def test_get_value_sim(simple_object, request):
+async def test_get_value_sim(simple_object, request):
     simple_object = request.getfixturevalue(simple_object)
     assert (
-        simple_object.get_value("x", pytac.RB, pytac.PHYS, pytac.SIM) == DUMMY_VALUE_2
+        await simple_object.get_value("x", pytac.RB, pytac.PHYS, pytac.SIM) == DUMMY_VALUE_2
     )
 
 

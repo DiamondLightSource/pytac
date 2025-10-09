@@ -5,10 +5,10 @@ In this tutorial we will go through some of the most common ways of using pytac.
 The aim is to give you an understanding of the interface and how to find out what
 is available.
 
-The import of the cothread channel access library and epicscorelibs will
+The import of the aioca channel access library and epicscorelibs will
 allow us to get some live values from the Diamond accelerators.
 
-    $ pip install cothread epicscorelibs
+    $ pip install aioca epicscorelibs
 
 These docs are able to be run and tested, but may return different values as
 accelerator conditions will have changed.

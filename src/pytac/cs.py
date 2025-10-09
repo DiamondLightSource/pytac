@@ -10,7 +10,7 @@ class ControlSystem(object):
     **Methods:**
     """
 
-    def get_single(self, pv, throw):
+    async def get_single(self, pv, throw):
         """Get the value of a given PV.
 
         Args:
@@ -27,7 +27,7 @@ class ControlSystem(object):
         """
         raise NotImplementedError()
 
-    def get_multiple(self, pvs, throw):
+    async def get_multiple(self, pvs, throw):
         """Get the value for given PVs.
 
         Args:
@@ -44,7 +44,7 @@ class ControlSystem(object):
         """
         raise NotImplementedError()
 
-    def set_single(self, pv, value, throw):
+    async def set_single(self, pv, value, throw):
         """Set the value of a given PV.
 
         Args:
@@ -58,7 +58,7 @@ class ControlSystem(object):
         """
         raise NotImplementedError()
 
-    def set_multiple(self, pvs, values, throw):
+    async def set_multiple(self, pvs, values, throw):
         """Set the values for given PVs.
 
         Args:
