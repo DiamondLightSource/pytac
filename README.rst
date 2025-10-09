@@ -17,7 +17,7 @@ Releases       https://github.com/DiamondLightSource/pytac/releases
 
     from pytac import __version__
 
-    print(f"Hello pytac {__version__}")
+    print(f"Hello pytac {__version__}.")
 
 .. |code_ci| image:: https://github.com/DiamondLightSource/pytac/actions/workflows/code.yml/badge.svg?branch=main
     :target: https://github.com/DiamondLightSource/pytac/actions/workflows/code.yml
