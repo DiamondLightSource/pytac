@@ -79,18 +79,18 @@ def test_get_and_set_unitconv():
     assert lat.get_unitconv("field1") == uc
 
 
-def test_get_value_raises_exceptions_correctly(simple_lattice):
+async def test_get_value_raises_exceptions_correctly(simple_lattice):
     with pytest.raises(pytac.exceptions.DataSourceException):
-        simple_lattice.get_value("x", data_source="not_a_data_source")
+        await simple_lattice.get_value("x", data_source="not_a_data_source")
     with pytest.raises(pytac.exceptions.FieldException):
-        simple_lattice.get_value("not_a_field")
+        await simple_lattice.get_value("not_a_field")
 
 
-def test_set_value_raises_exceptions_correctly(simple_lattice):
+async def test_set_value_raises_exceptions_correctly(simple_lattice):
     with pytest.raises(pytac.exceptions.DataSourceException):
-        simple_lattice.set_value("x", 0, data_source="not_a_data_source")
+        await simple_lattice.set_value("x", 0, data_source="not_a_data_source")
     with pytest.raises(pytac.exceptions.FieldException):
-        simple_lattice.set_value("not_a_field", 0)
+        await simple_lattice.set_value("not_a_field", 0)
 
 
 def test_get_element_devices_raises_value_error_for_mismatched_family(simple_lattice):
@@ -148,8 +148,8 @@ def test_get_all_families(simple_lattice):
     assert list(families) == ["family"]
 
 
-def test_get_element_values(simple_lattice):
-    simple_lattice.get_element_values("family", "x", pytac.RB)
+async def test_get_element_values(simple_lattice):
+    await simple_lattice.get_element_values("family", "x", pytac.RB)
     simple_lattice.get_element_devices("family", "x")[0].get_value.assert_called_with(
         pytac.RB, True
     )
@@ -164,25 +164,27 @@ def test_get_element_values(simple_lattice):
         (None, DUMMY_ARRAY),
     ),
 )
-def test_get_element_values_returns_numpy_array_if_requested(
+async def test_get_element_values_returns_numpy_array_if_requested(
     simple_lattice, dtype, expected
 ):
-    values = simple_lattice.get_element_values("family", "x", pytac.RB, dtype=dtype)
+    values = await simple_lattice.get_element_values(
+        "family", "x", pytac.RB, dtype=dtype
+    )
     numpy.testing.assert_equal(values, expected)
 
 
-def test_set_element_values(simple_lattice):
-    simple_lattice.set_element_values("family", "x", [1])
+async def test_set_element_values(simple_lattice):
+    await simple_lattice.set_element_values("family", "x", [1])
     simple_lattice.get_element_devices("family", "x")[0].set_value.assert_called_with(
         1, True
     )
 
 
-def test_set_element_values_raises_exceptions_correctly(simple_lattice):
+async def test_set_element_values_raises_exceptions_correctly(simple_lattice):
     with pytest.raises(IndexError):
-        simple_lattice.set_element_values("family", "x", [1, 2])
+        await simple_lattice.set_element_values("family", "x", [1, 2])
     with pytest.raises(IndexError):
-        simple_lattice.set_element_values("family", "x", [])
+        await simple_lattice.set_element_values("family", "x", [])
 
 
 def test_get_family_s(simple_lattice):
