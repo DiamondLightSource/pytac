@@ -290,7 +290,9 @@ class Element:
             FieldException: if the element does not have the specified field.
         """
         try:
-            await self._data_source_manager.set_value(field, value, units, data_source, throw)
+            await self._data_source_manager.set_value(
+                field, value, units, data_source, throw
+            )
         except DataSourceException as e:
             raise DataSourceException(f"{self}: {e}") from e
         except FieldException as e:

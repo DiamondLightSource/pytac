@@ -27,7 +27,7 @@ class Device:
         """
         raise NotImplementedError()
 
-    async def get_value(self, handle: str, throw: bool) -> float:
+    def get_value(self, handle: str, throw: bool) -> float:
         """Read the value from the device.
 
         Args:

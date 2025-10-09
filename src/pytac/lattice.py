@@ -644,7 +644,7 @@ class EpicsLattice(Lattice):
                     family, field, values, pytac.ENG, pytac.PHYS
                 )
         else:
-            values = super().get_element_values(
+            values = await super().get_element_values(
                 family, field, handle, units, data_source, throw
             )
         if dtype is not None:
@@ -694,4 +694,6 @@ class EpicsLattice(Lattice):
                 )
             await self._cs.set_multiple(pv_names, values, throw)
         else:
-            super().set_element_values(family, field, values, units, data_source, throw)
+            await super().set_element_values(
+                family, field, values, units, data_source, throw
+            )
