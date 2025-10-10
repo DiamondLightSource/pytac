@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 from subprocess import check_output
 
-import requests  # type: ignore
+import requests
 
 import pytac
 
@@ -30,10 +30,10 @@ else:
     version = release
 
 extensions = [
-    # This can parse google style docstrings
-    "sphinx.ext.napoleon",
     # Use this for generating API docs
     "sphinx.ext.autodoc",
+    # This can parse google style docstrings
+    "sphinx.ext.napoleon",
     # For linking to external sphinx documentation
     "sphinx.ext.intersphinx",
     # Add links to source code in API docs
@@ -48,7 +48,7 @@ extensions = [
 
 # If true, Sphinx will warn about all references where the target cannot
 # be found.
-nitpicky = False
+nitpicky = True
 
 # A list of (type, target) tuples (by default empty) that should be ignored when
 # generating warnings in "nitpicky mode". Note that type should include the
@@ -98,17 +98,16 @@ pygments_style = "sphinx"
 
 # This means you can link things like `str` and `asyncio` to the relevant
 # docs in the python documentation.
-intersphinx_mapping = dict(python=("https://docs.python.org/3/", None))
+intersphinx_mapping = {"python": ("https://docs.python.org/3/", None)}
 
 # A dictionary of graphviz graph attributes for inheritance diagrams.
-inheritance_graph_attrs = dict(rankdir="TB")
+inheritance_graph_attrs = {"rankdir": "TB"}
 
 # Common links that should be available on every page
 rst_epilog = """
 .. _Diamond Light Source: http://www.diamond.ac.uk
 .. _black: https://github.com/psf/black
-.. _flake8: https://flake8.pycqa.org/en/latest/
-.. _isort: https://github.com/PyCQA/isort
+.. _ruff: https://beta.ruff.rs/docs/
 .. _mypy: http://mypy-lang.org/
 .. _pre-commit: https://pre-commit.com/
 """
@@ -127,7 +126,7 @@ copybutton_prompt_is_regexp = True
 # a list of builtin themes.
 #
 html_theme = "pydata_sphinx_theme"
-github_repo = project
+github_repo = "pytac"
 github_user = "DiamondLightSource"
 switcher_json = f"https://{github_user}.github.io/{github_repo}/switcher.json"
 switcher_exists = requests.get(switcher_json).ok
@@ -149,40 +148,41 @@ if not switcher_exists:
 # Point 3 makes checking switcher difficult, because the updated skeleton
 # will fix the switcher at the end of the docs workflow, but never gets a chance
 # to complete as the docs build warns and fails.
-html_theme_options = dict(
-    logo=dict(
-        text=project,
-    ),
-    use_edit_page_button=True,
-    github_url=f"https://github.com/{github_user}/{github_repo}",
-    icon_links=[
-        dict(
-            name="PyPI",
-            url=f"https://pypi.org/project/{project}",
-            icon="fas fa-cube",
-        )
+html_theme_options = {
+    "logo": {
+        "text": project,
+    },
+    "use_edit_page_button": True,
+    "github_url": f"https://github.com/{github_user}/{github_repo}",
+    "icon_links": [
+        {
+            "name": "PyPI",
+            "url": f"https://pypi.org/project/{project}",
+            "icon": "fas fa-cube",
+        }
     ],
-    switcher=dict(
-        json_url=switcher_json,
-        version_match=version,
-    ),
-    check_switcher=False,
-    navbar_end=["theme-switcher", "icon-links", "version-switcher"],
-    external_links=[
-        dict(
-            name="Release Notes",
-            url=f"https://github.com/{github_user}/{github_repo}/releases",
-        )
+    "switcher": {
+        "json_url": switcher_json,
+        "version_match": version,
+    },
+    "check_switcher": False,
+    "navbar_end": ["theme-switcher", "icon-links", "version-switcher"],
+    "external_links": [
+        {
+            "name": "Release Notes",
+            "url": f"https://github.com/{github_user}/{github_repo}/releases",
+        }
     ],
-)
+    "navigation_with_keys": False,
+}
 
 # A dictionary of values to pass into the template engine’s context for all pages
-html_context = dict(
-    github_user=github_user,
-    github_repo=project,
-    github_version=version,
-    doc_path="docs",
-)
+html_context = {
+    "github_user": github_user,
+    "github_repo": project,
+    "github_version": version,
+    "doc_path": "docs",
+}
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
 html_show_sphinx = False

@@ -15,7 +15,7 @@ jobs:
         run: sleep 60
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # Need this to get version number from last tag
           fetch-depth: 0
@@ -29,6 +29,7 @@ jobs:
         with:
           requirements_file: requirements-dev-3.x.txt
           install_options: -e .[dev]
+          artifact_name: docs
 
       - name: Build docs
         run: tox -e docs

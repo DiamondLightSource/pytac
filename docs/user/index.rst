@@ -14,7 +14,6 @@ side-bar.
             :maxdepth: 1
 
             tutorials/installation
-            tutorials/basic-tutorial
 
         +++
 
@@ -38,7 +37,6 @@ side-bar.
             :caption: Explanations
             :maxdepth: 1
 
-            explanations/what-is-pytac
             explanations/docs-structure
 
         +++
