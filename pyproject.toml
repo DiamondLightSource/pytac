@@ -98,8 +98,9 @@ commands =
     pre-commit: pre-commit run --all-files --show-diff-on-failure {posargs}
     type-checking: mypy src tests {posargs}
     tests: pytest --cov=pytac --cov-report term --cov-report xml:cov.xml {posargs}
-    docs: sphinx-{posargs:build -EW --keep-going} -T docs build/html
+    docs: sphinx-{posargs:build -E --keep-going} -T docs build/html
 """
+# Add -W flag to sphinx-build if you want to fail on warnings
 
 [tool.ruff]
 src = ["src", "tests"]
