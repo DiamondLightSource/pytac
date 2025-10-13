@@ -61,7 +61,7 @@ def test_get_simple_device_value_with_handle():
     assert device.get_value(handle=pytac.RB) == 1.0
 
 
-def test_simple_device_raises_DataSourceException_if_readonly_and_set_value_called():
+def test_simple_device_raises_data_source_exception_if_readonly_and_set_value_called():
     device = SimpleDevice(10, readonly=True)
     with pytest.raises(DataSourceException):
         device.set_value(4)
@@ -79,7 +79,7 @@ def test_device_is_enabled_by_default(device_creation_function):
 @pytest.mark.parametrize(
     "device_creation_function", [create_epics_device, create_simple_device]
 )
-def test_device_is_disabled_if_False_enabler(device_creation_function):
+def test_device_is_disabled_if_false_enabler(device_creation_function):
     device = device_creation_function(enabled=False)
     assert not device.is_enabled()
 
@@ -93,7 +93,7 @@ def test_device_is_enabled_returns_bool_value(device_creation_function):
 
 
 # PvEnabler test.
-def test_PvEnabler(mock_cs):
+def test_pv_enabler(mock_cs):
     pve = PvEnabler("enable-pv", 40, mock_cs)
     assert pve
     mock_cs.get_single.return_value = 50

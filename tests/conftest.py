@@ -31,7 +31,7 @@ def pytest_sessionstart():
     (caget and caput).
     """
 
-    class ca_nothing(Exception):
+    class ca_nothing(Exception):  # noqa: N801, N818
         """A minimal mock of the cothread ca_nothing exception class."""
 
         def __init__(self, name, errorcode=True):

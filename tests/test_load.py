@@ -10,7 +10,7 @@ from pytac.load_csv import available_ringmodes, load, load_unitconv, resolve_uni
 
 
 @pytest.fixture
-def mock_cs_raises_ImportError():
+def mock_cs_raises_import_error():
     """We create a mock control system to replace CothreadControlSystem, so
         that we can check that when it raises an ImportError load_csv.load
         catches it and raises a ControlSystemException instead.
@@ -21,8 +21,9 @@ def mock_cs_raises_ImportError():
      ImportError when the code is compiled.
     """
 
-    def CothreadControlSystem():
-        raise ImportError
+    class CothreadControlSystem:
+        def __init__(self):
+            raise ImportError
 
     return CothreadControlSystem
 
@@ -37,13 +38,13 @@ def test_default_control_system_import():
     assert isinstance(load(TESTING_MODE)._cs, pytac.cothread_cs.CothreadControlSystem)
 
 
-def test_import_fail_raises_ControlSystemException(mock_cs_raises_ImportError):
+def test_import_fail_raises_control_system_exception(mock_cs_raises_import_error):
     """In this test we:
     - check that load corectly fails if cothread cannot be imported
     - check that when the import of the CothreadControlSystem fails the
        ImportError raised is replaced with a ControlSystemException
     """
-    with patch("pytac.cothread_cs.CothreadControlSystem", mock_cs_raises_ImportError):
+    with patch("pytac.cothread_cs.CothreadControlSystem", mock_cs_raises_import_error):
         with pytest.raises(pytac.exceptions.ControlSystemException):
             load(TESTING_MODE)
 
@@ -69,10 +70,16 @@ def test_devices_loaded(lattice):
 
 
 def test_families_loaded(lattice):
-    assert lattice.get_all_families() == set(
-        ["drift", "sext", "quad", "ds", "qf", "qs", "sd"]
-    )
-    assert lattice.get_elements("quad")[0].families == set(["quad", "qf", "qs"])
+    assert lattice.get_all_families() == {
+        "drift",
+        "sext",
+        "quad",
+        "ds",
+        "qf",
+        "qs",
+        "sd",
+    }
+    assert lattice.get_elements("quad")[0].families == {"quad", "qf", "qs"}
 
 
 def test_load_unitconv_warns_if_pchip_or_poly_data_file_not_found(
@@ -94,7 +101,7 @@ def test_load_unitconv_warns_if_pchip_or_poly_data_file_not_found(
     )
 
 
-def test_resolve_unitconv_raises_UnitsException_if_pchip_or_poly_data_file_not_found(
+def test_resolve_unitconv_raises_units_exception_if_pchip_or_poly_data_file_not_found(
     polyconv_file, pchipconv_file
 ):
     uc_params = {
@@ -119,7 +126,7 @@ def test_resolve_unitconv_raises_UnitsException_if_pchip_or_poly_data_file_not_f
         resolve_unitconv(uc_params, {}, polyconv_file, pchipconv_file)
 
 
-def test_resolve_unitconv_raises_UnitsException_if_unrecognised_UnitConv_type(
+def test_resolve_unitconv_raises_units_exception_if_unrecognised_unitconv_type(
     polyconv_file, pchipconv_file
 ):
     uc_params = {

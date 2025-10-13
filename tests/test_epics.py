@@ -93,12 +93,12 @@ def test_get_value_uses_cs_if_data_source_live(simple_epics_element, mock_cs):
     mock_cs.get_single.assert_called_with(RB_PV, True)
 
 
-def test_get_value_raises_HandleExceptions(simple_epics_element):
+def test_get_value_raises_handle_exceptions(simple_epics_element):
     with pytest.raises(pytac.exceptions.HandleException):
         simple_epics_element.get_value("y", "unknown_handle")
 
 
-def test_lattice_get_pv_name_raises_DataSourceException(simple_epics_lattice):
+def test_lattice_get_pv_name_raises_data_source_exception(simple_epics_lattice):
     basic_epics_lattice = simple_epics_lattice
     with pytest.raises(pytac.exceptions.DataSourceException):
         basic_epics_lattice.get_pv_name("basic", pytac.RB)
@@ -107,7 +107,7 @@ def test_lattice_get_pv_name_raises_DataSourceException(simple_epics_lattice):
         basic_epics_lattice.get_pv_name("x", pytac.RB)
 
 
-def test_set_element_values_length_mismatch_raises_IndexError(simple_epics_lattice):
+def test_set_element_values_length_mismatch_raises_index_error(simple_epics_lattice):
     with pytest.raises(IndexError):
         simple_epics_lattice.set_element_values("family", "x", [1, 2])
     with pytest.raises(IndexError):
@@ -125,6 +125,6 @@ def test_element_get_pv_name_raises_exceptions(simple_epics_element):
         basic_epics_element.get_pv_name("x", pytac.RB)
 
 
-def test_create_EpicsDevice_raises_DataSourceException_if_no_PVs_are_given():
+def test_create_epics_device_raises_data_source_exception_if_no_PVs_are_given():  # noqa: N802
     with pytest.raises(pytac.exceptions.DataSourceException):
         pytac.device.EpicsDevice("device_1", "a_control_system")
