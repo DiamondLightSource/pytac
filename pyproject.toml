@@ -16,7 +16,7 @@ dependencies = [
     "numpy",
     "scipy",
     "cothread",
-    "epicscorelibs", #needed to get ca libraries without an epics base install
+    "epicscorelibs",
 ] # Add project dependencies here, e.g. ["click", "numpy"]
 dynamic = ["version"]
 license.file = "LICENSE"
