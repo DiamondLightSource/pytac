@@ -1,7 +1,7 @@
 import pytest
-from constants import DUMMY_VALUE_2
 
 import pytac
+from constants import DUMMY_VALUE_2
 
 
 @pytest.mark.parametrize(

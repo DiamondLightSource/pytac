@@ -2,9 +2,9 @@ from unittest import mock
 
 import numpy
 import pytest
-from constants import DUMMY_ARRAY, RB_PV, SP_PV
 
 import pytac
+from constants import DUMMY_ARRAY, RB_PV, SP_PV
 
 
 def test_get_values_live(simple_epics_lattice, mock_cs):

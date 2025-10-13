@@ -1,9 +1,9 @@
 from unittest import mock
 
 import pytest
-from constants import DUMMY_VALUE_1, DUMMY_VALUE_2
 
 import pytac
+from constants import DUMMY_VALUE_1, DUMMY_VALUE_2
 from pytac.device import SimpleDevice
 from pytac.element import Element
 from pytac.lattice import Lattice

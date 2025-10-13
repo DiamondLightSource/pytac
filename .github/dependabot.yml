@@ -10,11 +10,19 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      github-artifacts:
+      actions:
         patterns:
-          - actions/*-artifact
+          - "*"
+    commit-message:
+      prefix: "chore"
 
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      dev-dependencies:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "chore"

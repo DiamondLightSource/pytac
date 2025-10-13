@@ -8,9 +8,9 @@ from unittest import mock
 
 import numpy
 import pytest
-from constants import TESTING_MODE, TESTING_MODE_RING
 
 import pytac
+from constants import TESTING_MODE, TESTING_MODE_RING
 
 EPS = 1e-8
 

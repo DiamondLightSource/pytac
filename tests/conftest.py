@@ -3,6 +3,8 @@ import types
 from unittest import mock
 
 import pytest
+
+import pytac
 from constants import (
     CURRENT_DIR_PATH,
     DUMMY_ARRAY,
@@ -12,8 +14,6 @@ from constants import (
     RB_PV,
     SP_PV,
 )
-
-import pytac
 from pytac import load_csv
 from pytac.data_source import DataSourceManager, DeviceDataSource
 from pytac.device import EpicsDevice, SimpleDevice

@@ -6,11 +6,11 @@ See pytest_sessionstart() in conftest.py for more.
 """
 
 import pytest
-from constants import RB_PV, SP_PV
 from cothread.catools import ca_nothing, caget, caput
 from testfixtures import LogCapture
 
 import pytac
+from constants import RB_PV, SP_PV
 from pytac.cothread_cs import CothreadControlSystem
 
 

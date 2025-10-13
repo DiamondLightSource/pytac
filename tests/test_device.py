@@ -1,9 +1,9 @@
 from unittest import mock
 
 import pytest
-from constants import PREFIX, RB_PV, SP_PV
 
 import pytac
+from constants import PREFIX, RB_PV, SP_PV
 from pytac.device import EpicsDevice, PvEnabler, SimpleDevice
 from pytac.exceptions import DataSourceException
 

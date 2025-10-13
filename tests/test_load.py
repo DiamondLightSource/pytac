@@ -2,10 +2,10 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-from constants import SUPPORTED_MODES, TESTING_MODE
 from testfixtures import LogCapture
 
 import pytac
+from constants import SUPPORTED_MODES, TESTING_MODE
 from pytac.load_csv import available_ringmodes, load, load_unitconv, resolve_unitconv
 
 

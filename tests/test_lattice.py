@@ -2,9 +2,9 @@ from unittest import mock
 
 import numpy
 import pytest
-from constants import DUMMY_ARRAY, LATTICE_NAME
 
 import pytac
+from constants import DUMMY_ARRAY, LATTICE_NAME
 from pytac.element import Element
 from pytac.lattice import Lattice
 

@@ -2,9 +2,9 @@ from unittest import mock
 
 import numpy
 import pytest
-from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, DUMMY_VALUE_3
 
 import pytac
+from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, DUMMY_VALUE_3
 from pytac.units import NullUnitConv, PchipUnitConv, PolyUnitConv, UnitConv
 
 
