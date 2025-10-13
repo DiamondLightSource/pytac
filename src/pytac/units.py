@@ -407,7 +407,7 @@ class PchipUnitConv(UnitConv):
         # Note that the x coefficients are checked by the PchipInterpolator
         # constructor.
         y_diff = numpy.diff(y)
-        if not ((numpy.all(y_diff > 0)) or (numpy.all((y_diff < 0)))):
+        if not ((numpy.all(y_diff > 0)) or (numpy.all(y_diff < 0))):
             raise ValueError(
                 "y coefficients must be monotonically increasing or decreasing."
             )

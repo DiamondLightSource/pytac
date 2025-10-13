@@ -15,6 +15,8 @@ description = "Python Toolkit for Accelerator Controls (Pytac) is a Python libra
 dependencies = [
     "numpy",
     "scipy",
+    "cothread",
+    "epicscorelibs", #needed to get ca libraries without an epics base install
 ] # Add project dependencies here, e.g. ["click", "numpy"]
 dynamic = ["version"]
 license.file = "LICENSE"
@@ -37,6 +39,7 @@ dev = [
     "sphinx-design",
     "tox-direct",
     "types-mock",
+    "testfixtures",
 ]
 
 [project.scripts]
@@ -64,7 +67,7 @@ addopts = """
 # https://iscinumpy.gitlab.io/post/bound-version-constraints/#watch-for-warnings
 filterwarnings = "error"
 # Doctest python code in docs, python code in src docstrings, test functions in tests
-testpaths = "docs src tests"
+testpaths = "src tests"
 
 [tool.coverage.run]
 patch = ["subprocess"]

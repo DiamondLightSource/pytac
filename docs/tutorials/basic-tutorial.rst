@@ -47,10 +47,10 @@ We can ask for the values of these fields. These commands will try to get the
 real values from the live machine (so won't work if you're not on a suitable
 Diamond network)::
 
-    >>> lattice.get_value("energy")
-    3000000000.0
+    >>> lattice.get_value("energy", units=pytac.PHYS)
+    np.float64(3000000000.0)
     >>> lattice.get_value("beam_current")
-    296.6981619696345
+    296.773194429911
 
 Families, elements and fields
 -----------------------------
@@ -59,7 +59,7 @@ The elements in the lattice are grouped by families, and this is the most common
 way to choose some to access. We can list the available families::
 
     >>> lattice.get_all_families()
-    ['ap', 'aperture', 'bb', 'bbvmxl', 'bbvmxs', 'bend', 'bpm', 'bpm10', 'bump', 'bumpss', 'd054ba', 'd054bal', 'd09_1', 'd09_10', 'd09_12', 'd09_13', 'd09_14', 'd09_2', 'd09_3', 'd09_5', 'd09_6', 'd09_7', 'd09_8', 'd09_9', 'd104ba0', 'd104ba0r', 'd104ba1', 'd104baa', 'd104bab', 'd104bac', 'd104bad', 'd104bar', 'd10_1', 'd10_2', 'd10_3', 'd10_4', 'd10_5', 'd10_6', 'd10_7', 'd10_8', 'd10_9', 'd13_1', 'd13_10', 'd13_12', 'd13_13', 'd13_14', 'd13_2', 'd13_3', 'd13_5', 'd13_6', 'd13_7', 'd13_8', 'd13_9', 'd154bal', 'd154bar', 'd1a', 'd1aa', 'd1ab', 'd1d2', 'd1m4ba', 'd1m4bal1', 'd1m4bal2', 'd1s4ba', 'd1x', 'd1y', 'd1yad1ya', 'd1yb', 'd20_1', 'd20_2', 'd2a', 'd2b', 'd2b4ba', 'd2xl', 'd2xr', 'd2ya', 'd2yb', 'd2yc', 'd3a', 'd3aa', 'd3ab', 'd3b', 'd3b4ba', 'd3b4bar', 'd4a', 'd4aa', 'd4ab', 'd4b', 'd4b4ba0', 'd4ba', 'd4bb', 'd5b', 'd6b', 'd6b4ba0', 'd6ba', 'd6bb', 'dbpm', 'dhs4ba', 'dhs4bal1', 'dhs4bal2', 'dhs4bar1', 'dhs4bar2', 'dhs4bar3', 'di05', 'dk4bas20', 'dk4bas21', 'dk4bas22', 'dk4bas23', 'dlb4bal', 'dlb4bar', 'dlbm4ba0', 'dlbm4ba1', 'dlbm4bal1', 'dlbm4bal2', 'drbm4ba2', 'drbm4bal1', 'drbm4bal2', 'drbm4bar1', 'drbm4bar2', 'drift', 'drift_drift_s2a', 'drift_s2a', 'dsext', 'hchica', 'hpmu', 'hstr', 'htrim', 'hu64', 'kd1', 'mpw12', 'mpw15', 'mpw45', 'pad', 'q1ab', 'q1ad', 'q1b', 'q1be', 'q1d', 'q2ab', 'q2ad', 'q2b', 'q2be', 'q2d', 'q3b', 'q3d', 'q3e', 'q4e', 'qm09', 'qm13', 'quadrupole', 'rf', 'rfcavity', 's1a', 's1b', 's1be', 's1c', 's1d', 's2a', 's2b', 's2be', 's2c', 's2d', 's3e', 's4e', 'sextupole', 'shim', 'source', 'spacer', 'squad', 'tempdrift', 'u21', 'u23a', 'u23b', 'u27', 'ux', 'vstr', 'vtrim', 'wiggler']
+    {'drift_drift_s2a', 'd2yc', 'd10_1', 'd09_6', 'hu64', 'd4b4ba0', 'd13_13', 'd104bar', 'd13_14', 'd104bad', 'd104baa', 'd3b', 'd13_1', 'd13_12', 'q3e', 'd2b4ba', 'dsext', 'd09_7', 'd4b', 'ux', 'q2ad', 'dlbm4ba0', 'dlbm4ba1', 'q2b', 'dk4bas21', 'd13_10', 'd13_6', 's1c', 'd09_1', 'd10_6', 'q3b', 'd054bal', 'd104ba1', 'q2d', 'mpw45', 'd2xl', 'd3b4ba', 'd6b4ba0', 'd2ya', 'hpmu', 'aperture', 'dlbm4bal1', 'vstr', 'd6b', 'u21', 'drbm4bar1', 'd3a', 'd1x', 'd09_10', 'source', 'q1ab', 'shim', 'd2xr', 'd3b4bar', 'd154bal', 'd104ba0r', 'htrim', 'd3aa', 'd5b', 's2be', 'bpm', 'drbm4bal2', 'dhs4bar3', 'd09_13', 'd13_5', 'd4a', 'd13_8', 'mpw15', 'q2ab', 'rf', 'd1a', 'd10_3', 's2d', 's2c', 'd1m4bal1', 'q1d', 'hstr', 'q1b', 'bb', 'spacer', 'bend', 'd104ba0', 'd09_8', 'd104bac', 'bbvmxs', 'd20_2', 'd10_9', 'd104bab', 'd054ba', 's1a', 'dk4bas22', 'd3ab', 's2b', 'd09_14', 'd09_3', 'd09_12', 'qm09', 'bbvmxl', 'bumpss', 'd154bar', 'd4ba', 'd10_8', 'd1d2', 'd4aa', 's4e', 'd1y', 'dlbm4bal2', 'dlb4bar', 'd13_3', 'd4bb', 'squad', 'kd1', 'q1be', 'd1yb', 'd13_2', 'mpw12', 'dhs4bar1', 's1d', 'u23b', 'q1ad', 'ap', 'd1aa', 'dbpm', 's1be', 'd1s4ba', 'wiggler', 'd13_7', 'di05', 'drbm4bal1', 'pad', 'rfcavity', 'd09_5', 'drift_s2a', 'drift', 'drbm4ba2', 'd4ab', 'qm13', 'dhs4bar2', 'd2yb', 'd1ab', 'dhs4bal2', 'd10_5', 'vtrim', 'd10_4', 'q3d', 'q2be', 'bump', 'd09_9', 'd2b', 'd1m4ba', 'u23a', 'd6bb', 'd20_1', 'hchica', 'dk4bas20', 'd09_2', 's3e', 'd6ba', 'd10_2', 'u27', 's2a', 'tempdrift', 'quadrupole', 's1b', 'sextupole', 'd10_7', 'dk4bas23', 'q4e', 'dlb4bal', 'drbm4bar2', 'dhs4ba', 'd1m4bal2', 'bpm10', 'd13_9', 'd1yad1ya', 'd2a', 'dhs4bal1'}
 
 Let's get all the beam position monitors (BPMs). We do this by using get_elements
 which takes an argument for family name - in this case we use the family name "BPM"::

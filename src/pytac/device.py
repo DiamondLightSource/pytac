@@ -6,8 +6,6 @@ DLS is a sextupole magnet that contains also horizontal and vertical corrector
 magnets and a skew quadrupole.
 """
 
-from typing import List, Union
-
 import pytac
 from pytac.exceptions import DataSourceException, HandleException
 
@@ -64,7 +62,7 @@ class SimpleDevice(Device):
 
     def __init__(
         self,
-        value: Union[float, List[float]],
+        value: float | list[float],
         enabled: bool = True,
         readonly: bool = True,
     ):
@@ -219,7 +217,7 @@ class EpicsDevice(Device):
             raise HandleException(f"Device {self.name} has no {handle} PV.")
 
 
-class PvEnabler(object):
+class PvEnabler:
     """A PvEnabler class to check whether a device is enabled.
 
     The class will behave like True if the PV value equals enabled_value,

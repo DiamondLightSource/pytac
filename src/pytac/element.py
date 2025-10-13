@@ -5,7 +5,7 @@ from pytac.data_source import DataSource, DataSourceManager
 from pytac.exceptions import DataSourceException, FieldException
 
 
-class Element(object):
+class Element:
     """Class representing one physical element in an accelerator lattice.
 
     An element has zero or more devices (e.g. quadrupole magnet) associated
@@ -53,7 +53,7 @@ class Element(object):
         if self._lattice is None:
             return None
         else:
-            return self._lattice._elements.index(self) + 1
+            return self._lattice._elements.index(self) + 1  # noqa: SLF001
 
     @property
     def s(self):
@@ -158,7 +158,7 @@ class Element(object):
         try:
             self._data_source_manager.add_device(field, device, uc)
         except DataSourceException as e:
-            raise DataSourceException(f"{self}: {e}.")
+            raise DataSourceException(f"{self}: {e}.") from e
 
     def get_device(self, field):
         """Get the device for the given field.
@@ -179,7 +179,7 @@ class Element(object):
         try:
             return self._data_source_manager.get_device(field)
         except DataSourceException as e:
-            raise DataSourceException(f"{self}: {e}.")
+            raise DataSourceException(f"{self}: {e}.") from e
 
     def get_unitconv(self, field):
         """Get the unit conversion option for the specified field.
@@ -196,7 +196,7 @@ class Element(object):
         try:
             return self._data_source_manager.get_unitconv(field)
         except FieldException as e:
-            raise FieldException(f"{self}: {e}")
+            raise FieldException(f"{self}: {e}") from e
 
     def set_unitconv(self, field, uc):
         """Set the unit conversion option for the specified field.
@@ -261,9 +261,9 @@ class Element(object):
                 field, handle, units, data_source, throw
             )
         except DataSourceException as e:
-            raise DataSourceException(f"{self}: {e}")
+            raise DataSourceException(f"{self}: {e}") from e
         except FieldException as e:
-            raise FieldException(f"{self}: {e}")
+            raise FieldException(f"{self}: {e}") from e
 
     def set_value(
         self,
@@ -292,9 +292,9 @@ class Element(object):
         try:
             self._data_source_manager.set_value(field, value, units, data_source, throw)
         except DataSourceException as e:
-            raise DataSourceException(f"{self}: {e}")
+            raise DataSourceException(f"{self}: {e}") from e
         except FieldException as e:
-            raise FieldException(f"{self}: {e}")
+            raise FieldException(f"{self}: {e}") from e
 
     def set_lattice(self, lattice):
         """Set the stored lattice reference for this element to the passed
@@ -335,11 +335,11 @@ class EpicsElement(Element):
                 .get_pv_name(handle)
             )
         except DataSourceException as e:
-            raise DataSourceException(f"{self}: {e}")
+            raise DataSourceException(f"{self}: {e}") from e
         except AttributeError:
             raise DataSourceException(
                 f"Cannot get PV for field {field} on element "
                 f"{self}, as the device does not have associated PVs."
-            )
+            ) from AttributeError
         except FieldException as e:
-            raise FieldException(f"{self}: {e}")
+            raise FieldException(f"{self}: {e}") from e
