@@ -3,20 +3,15 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-from constants import RB_PV, SP_PV
 from testfixtures import LogCapture
 
 import pytac
+from constants import RB_PV, SP_PV
 from pytac.aioca_cs import AIOCAControlSystem
 
 
-<<<<<<< Updated upstream
-class CANothing(Exception):
-    """A minimal mock of the cothread CANothing exception class."""
-=======
 class CANothing(Exception):  # noqa: N818
     """A minimal mock of the aioca CANothing exception class."""
->>>>>>> Stashed changes
 
     def __init__(self, name, errorcode=True):
         self.ok = errorcode
@@ -70,7 +65,7 @@ async def test_set_multiple_calls_caput_correctly(caput: MagicMock, cs):
 
 @patch("pytac.aioca_cs.caget")
 @patch("pytac.aioca_cs.CANothing", CANothing)
-async def test_get_multiple_raises_ControlSystemException(caget: MagicMock, cs):
+async def test_get_multiple_raises_control_system_exception(caget: MagicMock, cs):
     """Here we check that errors are thrown, suppressed and logged correctly."""
     caget.return_value = [12, CANothing("pv", False)]
     with pytest.raises(pytac.exceptions.ControlSystemException):
@@ -82,7 +77,7 @@ async def test_get_multiple_raises_ControlSystemException(caget: MagicMock, cs):
 
 @patch("pytac.aioca_cs.caput")
 @patch("pytac.aioca_cs.CANothing", CANothing)
-async def test_set_multiple_raises_ControlSystemException(caput: MagicMock, cs):
+async def test_set_multiple_raises_control_system_exception(caput: MagicMock, cs):
     """Here we check that errors are thrown, suppressed and logged correctly."""
     caput.return_value = [CANothing("pv1", True), CANothing("pv2", False)]
     with pytest.raises(pytac.exceptions.ControlSystemException):
@@ -97,7 +92,7 @@ async def test_set_multiple_raises_ControlSystemException(caput: MagicMock, cs):
 
 @patch("pytac.aioca_cs.caget")
 @patch("pytac.aioca_cs.CANothing", CANothing)
-async def test_get_single_raises_ControlSystemException(caget: MagicMock, cs):
+async def test_get_single_raises_control_system_exception(caget: MagicMock, cs):
     """Here we check that errors are thrown, suppressed and logged correctly."""
     caget.side_effect = CANothing("pv", False)
     with LogCapture() as log:
@@ -109,7 +104,7 @@ async def test_get_single_raises_ControlSystemException(caget: MagicMock, cs):
 
 @patch("pytac.aioca_cs.caput")
 @patch("pytac.aioca_cs.CANothing", CANothing)
-async def test_set_single_raises_ControlSystemException(caput: MagicMock, cs):
+async def test_set_single_raises_control_system_exception(caput: MagicMock, cs):
     """Here we check that errors are thrown, suppressed and logged correctly."""
     caput.side_effect = CANothing("pv", False)
     with LogCapture() as log:
@@ -119,7 +114,7 @@ async def test_set_single_raises_ControlSystemException(caput: MagicMock, cs):
     log.check(("root", "WARNING", "Cannot connect to prefix:sp."))
 
 
-async def test_set_multiple_raises_ValueError_on_input_length_mismatch(cs):
+async def test_set_multiple_raises_value_error_on_input_length_mismatch(cs):
     with pytest.raises(ValueError):
         await cs.set_multiple([SP_PV], [42, 6])
     with pytest.raises(ValueError):
