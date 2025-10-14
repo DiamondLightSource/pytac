@@ -1,0 +1,25 @@
+``pytac.data_source``
+=====================
+        
+        
+        
+
+.. automodule:: pytac.data_source
+    :members:
+
+    
+    
+    
+
+    
+    
+    .. rubric:: Members
+
+    .. autosummary::
+        :nosignatures:
+    
+        DataSource
+        DataSourceManager
+        DeviceDataSource
+    
+    

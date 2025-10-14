@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pytac.units &#8212; pytac 0.6.3.dev29+g08c86add4 documentation</title>
+    <title>pytac.units &#8212; pytac 1.0.1.dev8+g09363dc55 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=3fdb8ed6"></script>
+    <script src="../../_static/documentation_options.js?v=463c8fa3"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -54,7 +54,7 @@
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
         </script>
-    <link rel="icon" href="../../_static/dls-favicon.ico"/>
+    <link rel="icon" href="../../_static/dls-logo.svg"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -144,22 +144,29 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../user/index.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../tutorials.html">
+    Tutorials
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../developer/index.html">
-    Developer Guide
+  <a class="nav-link nav-internal" href="../../how-to.html">
+    How-to Guides
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-external" href="https://github.com/DiamondLightSource/pytac/releases">
-    Release Notes
+  <a class="nav-link nav-internal" href="../../explanations.html">
+    Explanations
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference.html">
+    Reference
   </a>
 </li>
 
@@ -283,22 +290,29 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../user/index.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../tutorials.html">
+    Tutorials
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../developer/index.html">
-    Developer Guide
+  <a class="nav-link nav-internal" href="../../how-to.html">
+    How-to Guides
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-external" href="https://github.com/DiamondLightSource/pytac/releases">
-    Release Notes
+  <a class="nav-link nav-internal" href="../../explanations.html">
+    Explanations
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference.html">
+    Reference
   </a>
 </li>
 
@@ -438,7 +452,7 @@
 
 
 <div class="viewcode-block" id="unit_function">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.unit_function">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.units.html#pytac.units.unit_function">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">unit_function</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Default value for the pre and post functions used in unit conversion.</span>
 
@@ -453,7 +467,7 @@
 
 
 <div class="viewcode-block" id="UnitConv">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.units.html#pytac.units.UnitConv">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">UnitConv</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to convert between physics and engineering units.</span>
 
@@ -518,7 +532,7 @@
         <span class="k">return</span> <span class="n">string_rep</span>
 
 <div class="viewcode-block" id="UnitConv.set_post_eng_to_phys">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_post_eng_to_phys">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.units.html#pytac.units.UnitConv.set_post_eng_to_phys">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_post_eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_eng_to_phys</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the function to be applied after the initial conversion.</span>
 
@@ -530,7 +544,7 @@
 
 
 <div class="viewcode-block" id="UnitConv.set_pre_phys_to_eng">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_pre_phys_to_eng">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.units.html#pytac.units.UnitConv.set_pre_phys_to_eng">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_pre_phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre_phys_to_eng</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the function to be applied before the initial conversion.</span>
 
@@ -551,7 +565,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: No eng-to-phys conversion provided&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="UnitConv.eng_to_phys">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.eng_to_phys">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.units.html#pytac.units.UnitConv.eng_to_phys">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">eng_to_phys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Function that does the unit conversion.</span>
 
@@ -603,7 +617,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: No phys-to-eng conversion provided&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="UnitConv.phys_to_eng">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.phys_to_eng">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.units.html#pytac.units.UnitConv.phys_to_eng">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">phys_to_eng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Function that does the unit conversion.</span>
 
@@ -644,7 +658,7 @@
 
 
 <div class="viewcode-block" id="UnitConv.convert">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.convert">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.units.html#pytac.units.UnitConv.convert">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert between two different unit types and check the validity of</span>
 <span class="sd">        the result.</span>
@@ -674,7 +688,7 @@
 
 
 <div class="viewcode-block" id="UnitConv.set_conversion_limits">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.set_conversion_limits">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.units.html#pytac.units.UnitConv.set_conversion_limits">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_conversion_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_limit</span><span class="p">,</span> <span class="n">upper_limit</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Conversion limits to be applied before or after a conversion take</span>
 <span class="sd">        place. Limits should be set in in engineering units.</span>
@@ -694,7 +708,7 @@
 
 
 <div class="viewcode-block" id="UnitConv.get_conversion_limits">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.UnitConv.get_conversion_limits">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.units.html#pytac.units.UnitConv.get_conversion_limits">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_conversion_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">pytac</span><span class="o">.</span><span class="n">ENG</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the current conversion limits in the specified unit type.</span>
 
@@ -719,7 +733,7 @@
 
 
 <div class="viewcode-block" id="PolyUnitConv">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.PolyUnitConv">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.units.html#pytac.units.PolyUnitConv">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PolyUnitConv</span><span class="p">(</span><span class="n">UnitConv</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Linear interpolation for converting between physics and engineering</span>
 <span class="sd">    units.</span>
@@ -801,7 +815,7 @@
 
 
 <div class="viewcode-block" id="PchipUnitConv">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.PchipUnitConv">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.units.html#pytac.units.PchipUnitConv">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PchipUnitConv</span><span class="p">(</span><span class="n">UnitConv</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Piecewise Cubic Hermite Interpolating Polynomial unit conversion.</span>
 
@@ -869,7 +883,7 @@
         <span class="c1"># Note that the x coefficients are checked by the PchipInterpolator</span>
         <span class="c1"># constructor.</span>
         <span class="n">y_diff</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">y_diff</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">((</span><span class="n">y_diff</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)))):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">y_diff</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">y_diff</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">))):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;y coefficients must be monotonically increasing or decreasing.&quot;</span>
             <span class="p">)</span>
@@ -909,7 +923,7 @@
 
 
 <div class="viewcode-block" id="NullUnitConv">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.units.NullUnitConv">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.units.html#pytac.units.NullUnitConv">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NullUnitConv</span><span class="p">(</span><span class="n">UnitConv</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns input value without performing any conversions.</span>
 

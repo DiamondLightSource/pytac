@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pytac.device &#8212; pytac 0.6.3.dev29+g08c86add4 documentation</title>
+    <title>pytac.device &#8212; pytac 1.0.1.dev8+g09363dc55 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=3fdb8ed6"></script>
+    <script src="../../_static/documentation_options.js?v=463c8fa3"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -54,7 +54,7 @@
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
         </script>
-    <link rel="icon" href="../../_static/dls-favicon.ico"/>
+    <link rel="icon" href="../../_static/dls-logo.svg"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -144,22 +144,29 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../user/index.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../tutorials.html">
+    Tutorials
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../developer/index.html">
-    Developer Guide
+  <a class="nav-link nav-internal" href="../../how-to.html">
+    How-to Guides
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-external" href="https://github.com/DiamondLightSource/pytac/releases">
-    Release Notes
+  <a class="nav-link nav-internal" href="../../explanations.html">
+    Explanations
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference.html">
+    Reference
   </a>
 </li>
 
@@ -283,22 +290,29 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../user/index.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../tutorials.html">
+    Tutorials
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../developer/index.html">
-    Developer Guide
+  <a class="nav-link nav-internal" href="../../how-to.html">
+    How-to Guides
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-external" href="https://github.com/DiamondLightSource/pytac/releases">
-    Release Notes
+  <a class="nav-link nav-internal" href="../../explanations.html">
+    Explanations
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference.html">
+    Reference
   </a>
 </li>
 
@@ -436,14 +450,12 @@
 <span class="sd">magnets and a skew quadrupole.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">pytac</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pytac.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataSourceException</span><span class="p">,</span> <span class="n">HandleException</span>
 
 
 <div class="viewcode-block" id="Device">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.device.Device">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.device.html#pytac.device.Device">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Device</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A representation of a property of an element associated with a field.</span>
 
@@ -454,7 +466,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Device.is_enabled">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.device.Device.is_enabled">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.device.html#pytac.device.Device.is_enabled">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the device is enabled.</span>
 
@@ -465,7 +477,7 @@
 
 
 <div class="viewcode-block" id="Device.get_value">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.device.Device.get_value">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.device.html#pytac.device.Device.get_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Read the value from the device.</span>
 
@@ -481,7 +493,7 @@
 
 
 <div class="viewcode-block" id="Device.set_value">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.device.Device.set_value">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.device.html#pytac.device.Device.set_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">throw</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the value on the device.</span>
 
@@ -496,7 +508,7 @@
 
 
 <div class="viewcode-block" id="SimpleDevice">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.device.SimpleDevice">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.device.html#pytac.device.SimpleDevice">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SimpleDevice</span><span class="p">(</span><span class="n">Device</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A basic implementation of the device class.</span>
 
@@ -508,7 +520,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">readonly</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
@@ -524,7 +536,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_readonly</span> <span class="o">=</span> <span class="n">readonly</span>
 
 <div class="viewcode-block" id="SimpleDevice.is_enabled">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.device.SimpleDevice.is_enabled">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.device.html#pytac.device.SimpleDevice.is_enabled">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the device is enabled.</span>
 
@@ -535,7 +547,7 @@
 
 
 <div class="viewcode-block" id="SimpleDevice.get_value">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.device.SimpleDevice.get_value">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.device.html#pytac.device.SimpleDevice.get_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">throw</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Read the value from the device.</span>
 
@@ -552,7 +564,7 @@
 
 
 <div class="viewcode-block" id="SimpleDevice.set_value">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.device.SimpleDevice.set_value">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.device.html#pytac.device.SimpleDevice.set_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">throw</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the value on the device.</span>
 
@@ -569,7 +581,7 @@
 
 
 <div class="viewcode-block" id="EpicsDevice">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.device.EpicsDevice">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.device.html#pytac.device.EpicsDevice">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">EpicsDevice</span><span class="p">(</span><span class="n">Device</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An EPICS-aware device.</span>
 
@@ -619,7 +631,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span> <span class="o">=</span> <span class="n">enabled</span>
 
 <div class="viewcode-block" id="EpicsDevice.is_enabled">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.device.EpicsDevice.is_enabled">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.device.html#pytac.device.EpicsDevice.is_enabled">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the device is enabled.</span>
 
@@ -630,7 +642,7 @@
 
 
 <div class="viewcode-block" id="EpicsDevice.get_value">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.device.EpicsDevice.get_value">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.device.html#pytac.device.EpicsDevice.get_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">throw</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Read the value of a readback or setpoint PV.</span>
 
@@ -649,7 +661,7 @@
 
 
 <div class="viewcode-block" id="EpicsDevice.set_value">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.device.EpicsDevice.set_value">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.device.html#pytac.device.EpicsDevice.set_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">throw</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the device value.</span>
 
@@ -665,7 +677,7 @@
 
 
 <div class="viewcode-block" id="EpicsDevice.get_pv_name">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.device.EpicsDevice.get_pv_name">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.device.html#pytac.device.EpicsDevice.get_pv_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_pv_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the PV name for the specified handle.</span>
 
@@ -689,8 +701,8 @@
 
 
 <div class="viewcode-block" id="PvEnabler">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.device.PvEnabler">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">PvEnabler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<a class="viewcode-back" href="../../_api/pytac.device.html#pytac.device.PvEnabler">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PvEnabler</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A PvEnabler class to check whether a device is enabled.</span>
 
 <span class="sd">    The class will behave like True if the PV value equals enabled_value,</span>

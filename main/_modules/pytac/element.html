@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pytac.element &#8212; pytac 0.6.3.dev29+g08c86add4 documentation</title>
+    <title>pytac.element &#8212; pytac 1.0.1.dev8+g09363dc55 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=3fdb8ed6"></script>
+    <script src="../../_static/documentation_options.js?v=463c8fa3"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -54,7 +54,7 @@
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
         </script>
-    <link rel="icon" href="../../_static/dls-favicon.ico"/>
+    <link rel="icon" href="../../_static/dls-logo.svg"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -144,22 +144,29 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../user/index.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../tutorials.html">
+    Tutorials
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../developer/index.html">
-    Developer Guide
+  <a class="nav-link nav-internal" href="../../how-to.html">
+    How-to Guides
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-external" href="https://github.com/DiamondLightSource/pytac/releases">
-    Release Notes
+  <a class="nav-link nav-internal" href="../../explanations.html">
+    Explanations
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference.html">
+    Reference
   </a>
 </li>
 
@@ -283,22 +290,29 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../user/index.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../tutorials.html">
+    Tutorials
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../developer/index.html">
-    Developer Guide
+  <a class="nav-link nav-internal" href="../../how-to.html">
+    How-to Guides
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-external" href="https://github.com/DiamondLightSource/pytac/releases">
-    Release Notes
+  <a class="nav-link nav-internal" href="../../explanations.html">
+    Explanations
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference.html">
+    Reference
   </a>
 </li>
 
@@ -436,8 +450,8 @@
 
 
 <div class="viewcode-block" id="Element">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.Element">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Element</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.Element">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Element</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class representing one physical element in an accelerator lattice.</span>
 
 <span class="sd">    An element has zero or more devices (e.g. quadrupole magnet) associated</span>
@@ -485,7 +499,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lattice</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lattice</span><span class="o">.</span><span class="n">_elements</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lattice</span><span class="o">.</span><span class="n">_elements</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># noqa: SLF001</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">s</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -534,7 +548,7 @@
     <span class="fm">__repr__</span> <span class="o">=</span> <span class="fm">__str__</span>
 
 <div class="viewcode-block" id="Element.set_default_data_source">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.Element.set_default_data_source">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.Element.set_default_data_source">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_default_data_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_source_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the default data source for this element.</span>
 
@@ -546,7 +560,7 @@
 
 
 <div class="viewcode-block" id="Element.set_default_units">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.Element.set_default_units">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.Element.set_default_units">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_default_units</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the default units type for this element.</span>
 
@@ -557,7 +571,7 @@
 
 
 <div class="viewcode-block" id="Element.set_data_source">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.Element.set_data_source">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.Element.set_data_source">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_data_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_source</span><span class="p">:</span> <span class="n">DataSource</span><span class="p">,</span> <span class="n">data_source_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a data source to the element.</span>
 
@@ -570,7 +584,7 @@
 
 
 <div class="viewcode-block" id="Element.get_fields">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.Element.get_fields">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.Element.get_fields">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the all fields defined on an element.</span>
 
@@ -584,7 +598,7 @@
 
 
 <div class="viewcode-block" id="Element.add_device">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.Element.add_device">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.Element.add_device">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">uc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add device and unit conversion objects to a given field.</span>
 
@@ -604,11 +618,11 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">uc</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">DataSourceException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">DataSourceException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="n">DataSourceException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
 
 
 <div class="viewcode-block" id="Element.get_device">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.Element.get_device">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.Element.get_device">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the device for the given field.</span>
 
@@ -628,11 +642,11 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">DataSourceException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">DataSourceException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="n">DataSourceException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
 
 
 <div class="viewcode-block" id="Element.get_unitconv">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.Element.get_unitconv">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.Element.get_unitconv">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_unitconv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the unit conversion option for the specified field.</span>
 
@@ -648,11 +662,11 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">get_unitconv</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">FieldException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">FieldException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="n">FieldException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
 
 
 <div class="viewcode-block" id="Element.set_unitconv">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.Element.set_unitconv">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.Element.set_unitconv">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_unitconv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">uc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the unit conversion option for the specified field.</span>
 
@@ -664,7 +678,7 @@
 
 
 <div class="viewcode-block" id="Element.add_to_family">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.Element.add_to_family">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.Element.add_to_family">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_to_family</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">family</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add the element to the specified family.</span>
 
@@ -675,7 +689,7 @@
 
 
 <div class="viewcode-block" id="Element.is_in_family">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.Element.is_in_family">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.Element.is_in_family">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_in_family</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">family</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return true if the element is in the specified family.</span>
 
@@ -689,7 +703,7 @@
 
 
 <div class="viewcode-block" id="Element.get_value">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.Element.get_value">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.Element.get_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">field</span><span class="p">,</span>
@@ -725,13 +739,13 @@
                 <span class="n">field</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">data_source</span><span class="p">,</span> <span class="n">throw</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">DataSourceException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">DataSourceException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">DataSourceException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
         <span class="k">except</span> <span class="n">FieldException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">FieldException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="n">FieldException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
 
 
 <div class="viewcode-block" id="Element.set_value">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.Element.set_value">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.Element.set_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_value</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">field</span><span class="p">,</span>
@@ -759,13 +773,13 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_source_manager</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">data_source</span><span class="p">,</span> <span class="n">throw</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">DataSourceException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">DataSourceException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">DataSourceException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
         <span class="k">except</span> <span class="n">FieldException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">FieldException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="n">FieldException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
 
 
 <div class="viewcode-block" id="Element.set_lattice">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.Element.set_lattice">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.Element.set_lattice">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_lattice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lattice</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the stored lattice reference for this element to the passed</span>
 <span class="sd">        lattice object.</span>
@@ -779,7 +793,7 @@
 
 
 <div class="viewcode-block" id="EpicsElement">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.EpicsElement">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.EpicsElement">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">EpicsElement</span><span class="p">(</span><span class="n">Element</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;EPICS-aware element.</span>
 
@@ -789,7 +803,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="EpicsElement.get_pv_name">
-<a class="viewcode-back" href="../../user/reference/api.html#pytac.element.EpicsElement.get_pv_name">[docs]</a>
+<a class="viewcode-back" href="../../_api/pytac.element.html#pytac.element.EpicsElement.get_pv_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_pv_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">handle</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get PV name for the specified field and handle.</span>
 
@@ -811,14 +825,14 @@
                 <span class="o">.</span><span class="n">get_pv_name</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">DataSourceException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">DataSourceException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">DataSourceException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">DataSourceException</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Cannot get PV for field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> on element &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">, as the device does not have associated PVs.&quot;</span>
-            <span class="p">)</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">AttributeError</span>
         <span class="k">except</span> <span class="n">FieldException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">FieldException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="n">FieldException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
 </div>
 
 </pre></div>
