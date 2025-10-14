@@ -1,9 +1,10 @@
-import sys
+"""Top level API.
 
-if sys.version_info < (3, 8):
-    from importlib_metadata import version  # noqa
-else:
-    from importlib.metadata import version  # noqa
+.. data:: __version__
+    :type: str
+"""
+
+from ._version import __version__
 
 # PV types.
 SP = "setpoint"
@@ -17,7 +18,7 @@ LIVE = "live"
 # Default argument flag.
 DEFAULT = "default"
 
-from . import (  # isort:skip
+from . import (  # noqa: E402
     data_source,
     device,
     element,
@@ -27,12 +28,6 @@ from . import (  # isort:skip
     units,
     utils,
 )
-
-"""Ignore isort (flake8 Error 402) as we cannot import these modules at the top of the
-file as the strings above must be set first or the imports will fail.
-"""
-__version__ = version("pytac")
-del version
 
 __all__ = [
     "__version__",

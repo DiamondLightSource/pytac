@@ -1,0 +1,19 @@
+# Changes here will be overwritten by Copier
+_commit: 4.3.0
+_src_path: https://github.com/DiamondLightSource/python-copier-template.git
+author_email: philip.smith@diamond.ac.uk
+author_name: Phil Smith
+component_lifecycle: production
+component_owner: group:default/high-level-apps
+component_type: library
+description: Python Toolkit for Accelerator Controls (Pytac) is a Python library for
+    working with elements of particle accelerators, developed at Diamond Light Source.
+distribution_name: pytac
+docker: false
+docs_type: sphinx
+git_platform: github.com
+github_org: DiamondLightSource
+package_name: pytac
+pypi: true
+repo_name: pytac
+type_checker: mypy

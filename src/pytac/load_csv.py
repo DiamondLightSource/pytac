@@ -17,8 +17,8 @@ import copy
 import csv
 import logging
 import os
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Dict, Iterator, Set
 
 import pytac
 from pytac import data_source, element, utils
@@ -43,7 +43,7 @@ def csv_loader(csv_file: Path) -> Iterator[csv.DictReader]:
         yield csv_reader
 
 
-def load_poly_unitconv(filepath: Path) -> Dict[int, PolyUnitConv]:
+def load_poly_unitconv(filepath: Path) -> dict[int, PolyUnitConv]:
     """Load polynomial unit conversions from a csv file.
 
     Args:
@@ -52,19 +52,19 @@ def load_poly_unitconv(filepath: Path) -> Dict[int, PolyUnitConv]:
     Returns:
         dict: A dictionary of the unit conversions.
     """
-    unitconvs: Dict[int, PolyUnitConv] = {}
+    unitconvs: dict[int, PolyUnitConv] = {}
     data = collections.defaultdict(list)
     with csv_loader(filepath) as csv_reader:
         for item in csv_reader:
             data[(int(item["uc_id"]))].append((int(item["coeff"]), float(item["val"])))
     # Create PolyUnitConv for each item and put in the dict
     for uc_id in data:
-        u = PolyUnitConv([x[1] for x in reversed(sorted(data[uc_id]))], name=uc_id)
+        u = PolyUnitConv([x[1] for x in sorted(data[uc_id], reverse=True)], name=uc_id)
         unitconvs[uc_id] = u
     return unitconvs
 
 
-def load_pchip_unitconv(filepath: Path) -> Dict[int, PchipUnitConv]:
+def load_pchip_unitconv(filepath: Path) -> dict[int, PchipUnitConv]:
     """Load pchip unit conversions from a csv file.
 
     Args:
@@ -73,7 +73,7 @@ def load_pchip_unitconv(filepath: Path) -> Dict[int, PchipUnitConv]:
     Returns:
         dict: A dictionary of the unit conversions.
     """
-    unitconvs: Dict[int, PchipUnitConv] = {}
+    unitconvs: dict[int, PchipUnitConv] = {}
     data = collections.defaultdict(list)
     with csv_loader(filepath) as csv_reader:
         for item in csv_reader:
@@ -88,7 +88,7 @@ def load_pchip_unitconv(filepath: Path) -> Dict[int, PchipUnitConv]:
 
 
 def resolve_unitconv(
-    uc_params: Dict, unitconvs: Dict, polyconv_file: Path, pchipconv_file: Path
+    uc_params: dict, unitconvs: dict, polyconv_file: Path, pchipconv_file: Path
 ) -> UnitConv:
     """Create a unit conversion object based on the dictionary of parameters passed.
 
@@ -118,11 +118,17 @@ def resolve_unitconv(
             uc = copy.copy(unitconvs[int(uc_params["uc_id"])])
         except KeyError:
             if uc_params["uc_type"] == "poly" and not polyconv_file.exists():
-                raise UnitsException(error_msg + f"{polyconv_file} not found.")
+                raise UnitsException(
+                    error_msg + f"{polyconv_file} not found."
+                ) from KeyError
             elif uc_params["uc_type"] == "pchip" and not pchipconv_file.exists():
-                raise UnitsException(error_msg + f"{pchipconv_file} not found.")
+                raise UnitsException(
+                    error_msg + f"{pchipconv_file} not found."
+                ) from KeyError
             else:
-                raise UnitsException(error_msg + "unrecognised UnitConv type.")
+                raise UnitsException(
+                    error_msg + "unrecognised UnitConv type."
+                ) from KeyError
         uc.phys_units = uc_params["phys_units"]
         uc.eng_units = uc_params["eng_units"]
         lower, upper = [
@@ -140,7 +146,7 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
         mode_dir: Path to directory containing CSV files.
         lattice: The lattice object that will be used.
     """
-    unitconvs: Dict[int, UnitConv] = {}
+    unitconvs: dict[int, UnitConv] = {}
     # Assemble datasets from the polynomial file
     polyconv_file = mode_dir / POLY_FILENAME
     if polyconv_file.exists():
@@ -173,7 +179,7 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
                     "multipole",
                     "bend",
                 }
-                if item["uc_type"] != "null" and element._families & rigidity_families:
+                if item["uc_type"] != "null" and element._families & rigidity_families:  # noqa: SLF001
                     energy = lattice.get_value("energy", units=pytac.ENG)
                     uc.set_post_eng_to_phys(utils.get_div_rigidity(energy))
                     uc.set_pre_phys_to_eng(utils.get_mult_rigidity(energy))
@@ -211,7 +217,7 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
         raise ControlSystemException(
             "Please install cothread to load a lattice using the default control system"
             " (found in cothread_cs.py)."
-        )
+        ) from ImportError
     if directory is None:
         directory = Path(__file__).resolve().parent / "data"
     mode_dir = directory / mode
@@ -252,10 +258,10 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
                 try:
                     readonly = ast.literal_eval(item["readonly"])
                     assert isinstance(readonly, bool)
-                except (ValueError, AssertionError):
+                except (ValueError, AssertionError) as e:
                     raise ValueError(
                         f"Unable to evaluate {item['readonly']} as a boolean."
-                    )
+                    ) from e
                 # Devices on index 0 are attached to the lattice not elements.
                 target = lat if index == 0 else lat[index - 1]
                 # Create with a default UnitConv that returns the input unchanged.
@@ -273,7 +279,7 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
     return lat
 
 
-def available_ringmodes(directory=None) -> Set[str]:
+def available_ringmodes(directory=None) -> set[str]:
     """Return the possible ringmodes based on the subdirectories and files in
     the given directory.
 

@@ -4,7 +4,7 @@ import pytac
 from pytac.exceptions import DataSourceException, FieldException
 
 
-class DataSource(object):
+class DataSource:
     """Abstract base class for element or lattice data sources.
 
     Typically an instance would represent hardware via a control system,
@@ -54,7 +54,7 @@ class DataSource(object):
         raise NotImplementedError()
 
 
-class DataSourceManager(object):
+class DataSourceManager:
     """Class that manages all the data sources and UnitConv objects associated
     with a lattice or element.
 
@@ -108,7 +108,7 @@ class DataSourceManager(object):
         except KeyError:
             raise DataSourceException(
                 f"No data source {data_source_type} on manager {self}."
-            )
+            ) from KeyError
 
     def get_fields(self):
         """Get all the fields defined on the manager.
@@ -178,7 +178,7 @@ class DataSourceManager(object):
         except KeyError:
             raise FieldException(
                 f"No unit conversion option for field {field} on manager {self}."
-            )
+            ) from KeyError
 
     def set_unitconv(self, field, uc):
         """set the unit conversion option for the specified field.
@@ -309,7 +309,9 @@ class DeviceDataSource(DataSource):
         try:
             return self._devices[field]
         except KeyError:
-            raise FieldException(f"No field {field} on data source {self}.")
+            raise FieldException(
+                f"No field {field} on data source {self}."
+            ) from KeyError
 
     def get_fields(self):
         """Get all the fields from the data_source.

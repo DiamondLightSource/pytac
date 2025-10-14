@@ -6,11 +6,11 @@ See pytest_sessionstart() in conftest.py for more.
 """
 
 import pytest
-from constants import RB_PV, SP_PV
 from cothread.catools import ca_nothing, caget, caput
 from testfixtures import LogCapture
 
 import pytac
+from constants import RB_PV, SP_PV
 from pytac.cothread_cs import CothreadControlSystem
 
 
@@ -55,7 +55,7 @@ def test_set_multiple_calls_caput_correctly(cs):
     )
 
 
-def test_get_multiple_raises_ControlSystemException(cs):
+def test_get_multiple_raises_control_system_exception(cs):
     """Here we check that errors are thrown, suppressed and logged correctly."""
     caget.return_value = [12, ca_nothing("pv", False)]
     with pytest.raises(pytac.exceptions.ControlSystemException):
@@ -65,7 +65,7 @@ def test_get_multiple_raises_ControlSystemException(cs):
     log.check(("root", "WARNING", "Cannot connect to pv."))
 
 
-def test_set_multiple_raises_ControlSystemException(cs):
+def test_set_multiple_raises_control_system_exception(cs):
     """Here we check that errors are thrown, suppressed and logged correctly."""
     caput.return_value = [ca_nothing("pv1", True), ca_nothing("pv2", False)]
     with pytest.raises(pytac.exceptions.ControlSystemException):
@@ -75,7 +75,7 @@ def test_set_multiple_raises_ControlSystemException(cs):
     log.check(("root", "WARNING", "Cannot connect to pv2."))
 
 
-def test_get_single_raises_ControlSystemException(cs):
+def test_get_single_raises_control_system_exception(cs):
     """Here we check that errors are thrown, suppressed and logged correctly."""
     caget.side_effect = ca_nothing("pv", False)
     with LogCapture() as log:
@@ -85,7 +85,7 @@ def test_get_single_raises_ControlSystemException(cs):
     log.check(("root", "WARNING", "Cannot connect to prefix:rb."))
 
 
-def test_set_single_raises_ControlSystemException(cs):
+def test_set_single_raises_control_system_exception(cs):
     """Here we check that errors are thrown, suppressed and logged correctly."""
     caput.side_effect = ca_nothing("pv", False)
     with LogCapture() as log:
@@ -95,7 +95,7 @@ def test_set_single_raises_ControlSystemException(cs):
     log.check(("root", "WARNING", "Cannot connect to prefix:sp."))
 
 
-def test_set_multiple_raises_ValueError_on_input_length_mismatch(cs):
+def test_set_multiple_raises_value_error_on_input_length_mismatch(cs):
     with pytest.raises(ValueError):
         cs.set_multiple([SP_PV], [42, 6])
     with pytest.raises(ValueError):

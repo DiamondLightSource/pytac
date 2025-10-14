@@ -1,9 +1,9 @@
 from unittest import mock
 
 import pytest
-from constants import DUMMY_VALUE_1, DUMMY_VALUE_2
 
 import pytac
+from constants import DUMMY_VALUE_1, DUMMY_VALUE_2
 from pytac.device import SimpleDevice
 from pytac.element import Element
 from pytac.lattice import Lattice
@@ -18,7 +18,7 @@ def test_create_element():
     assert e._lattice == lat
 
 
-def test_element_properties_are_None_without_lattice():
+def test_element_properties_are_none_without_lattice():
     e = Element(1.2, "SEXT")
     assert e.index is None
     assert e.s is None
@@ -53,7 +53,7 @@ def test_add_element_to_family_and_case_insensitive_retrieval():
     assert e.is_in_family("FAM")
 
 
-def test_device_methods_raise_DataSourceException_if_no_live_data_source(
+def test_device_methods_raise_data_source_exception_if_no_live_data_source(
     simple_element,
 ):
     basic_element = simple_element
@@ -66,7 +66,7 @@ def test_device_methods_raise_DataSourceException_if_no_live_data_source(
         basic_element.get_device("x")
 
 
-def test_get_device_raises_KeyError_if_device_not_present(simple_element):
+def test_get_device_raises_key_error_if_device_not_present(simple_element):
     with pytest.raises(pytac.exceptions.FieldException):
         simple_element.get_device("not-a-device")
 
@@ -76,7 +76,7 @@ def test_get_unitconv_returns_unitconv_object(simple_element, unit_uc, double_uc
     assert simple_element.get_unitconv("y") == double_uc
 
 
-def test_set_unit_conv(simple_element):
+def test_set_unitconv(simple_element):
     with pytest.raises(KeyError):
         simple_element._data_source_manager._uc["field1"]
     uc = mock.Mock()
@@ -84,7 +84,7 @@ def test_set_unit_conv(simple_element):
     assert simple_element._data_source_manager._uc["field1"] == uc
 
 
-def test_get_unitconv_raises_FieldException_if_device_not_present(simple_element):
+def test_get_unitconv_raises_field_exception_if_device_not_present(simple_element):
     with pytest.raises(pytac.exceptions.FieldException):
         simple_element.get_unitconv("not-a-device")
 
@@ -144,7 +144,7 @@ def test_identity_conversion(simple_element):
 
 
 def test_get_fields(simple_element):
-    assert set(simple_element.get_fields()[pytac.LIVE]) == set(["y", "x"])
+    assert set(simple_element.get_fields()[pytac.LIVE]) == {"y", "x"}
 
 
 def test_element_representation():

@@ -39,7 +39,7 @@ class CothreadControlSystem(ControlSystem):
         except ca_nothing:
             error_msg = f"Cannot connect to {pv}."
             if throw:
-                raise ControlSystemException(error_msg)
+                raise ControlSystemException(error_msg)  # noqa: B904
             else:
                 logging.warning(error_msg)
                 return None
@@ -96,7 +96,7 @@ class CothreadControlSystem(ControlSystem):
         except ca_nothing:
             error_msg = f"Cannot connect to {pv}."
             if throw:
-                raise ControlSystemException(error_msg)
+                raise ControlSystemException(error_msg)  # noqa: B904
             else:
                 logging.warning(error_msg)
                 return False

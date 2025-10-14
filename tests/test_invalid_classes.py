@@ -3,7 +3,7 @@ import pytest
 from pytac import cs, data_source, device
 
 
-def test_ControlSystem_throws_NotImplementedError():
+def test_control_system_throws_not_implemented_error():
     test_cs = cs.ControlSystem()
     with pytest.raises(NotImplementedError):
         test_cs.get_single("dummy", "throw")
@@ -15,7 +15,7 @@ def test_ControlSystem_throws_NotImplementedError():
         test_cs.set_multiple(["dummy_1", "dummy_2"], [1, 2], "throw")
 
 
-def test_DataSource_throws_NotImplementedError():
+def test_data_source_throws_not_implemented_error():
     test_ds = data_source.DataSource()
     with pytest.raises(NotImplementedError):
         test_ds.get_fields()
@@ -25,7 +25,7 @@ def test_DataSource_throws_NotImplementedError():
         test_ds.set_value("field", 0.0, "throw")
 
 
-def test_Device_throws_NotImplementedError():
+def test_device_throws_not_implemented_error():
     test_d = device.Device()
     with pytest.raises(NotImplementedError):
         test_d.is_enabled()

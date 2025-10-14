@@ -1,7 +1,7 @@
 """Class representing an abstract control system."""
 
 
-class ControlSystem(object):
+class ControlSystem:
     """Abstract base class representing a control system.
 
     A specialised implementation of this class would be used to communicate

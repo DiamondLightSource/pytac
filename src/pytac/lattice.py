@@ -3,7 +3,6 @@ machine.
 """
 
 import logging
-from typing import List, Optional
 
 import numpy
 
@@ -32,7 +31,7 @@ class Lattice:
                                                       with this lattice.
     """
 
-    def __init__(self, name: str, symmetry: Optional[int] = None) -> None:
+    def __init__(self, name: str, symmetry: int | None = None) -> None:
         """Args:
             name: The name of the lattice.
             symmetry: The symmetry of the lattice (the number of cells).
@@ -41,14 +40,14 @@ class Lattice:
         """
         self.name = name
         self.symmetry = symmetry
-        self._elements: List[Element] = []
+        self._elements: list[Element] = []
         self._data_source_manager = DataSourceManager()
 
     def __str__(self) -> str:
         return f"Lattice {self.name}"
 
     @property
-    def cell_length(self) -> Optional[float]:
+    def cell_length(self) -> float | None:
         """The average length of a cell in the lattice."""
         if (self.symmetry is None) or (self.get_length() == 0):
             return None
@@ -56,7 +55,7 @@ class Lattice:
             return self.get_length() / self.symmetry
 
     @property
-    def cell_bounds(self) -> Optional[List[int]]:
+    def cell_bounds(self) -> list[int] | None:
         """The indexes of elements in which a cell boundary occurs.
 
         Examples:
@@ -430,7 +429,7 @@ class Lattice:
                 f"Number of elements in given array({len(values)}) must be "
                 f"equal to the number of elements in the family({len(elements)})."
             )
-        for element, value in zip(elements, values):
+        for element, value in zip(elements, values, strict=False):
             status = element.set_value(
                 field,
                 value,
@@ -477,7 +476,7 @@ class Lattice:
             self._data_source_manager.default_data_source = data_source_type
             elems = self.get_elements()
             for elem in elems:
-                elem._data_source_manager.default_data_source = data_source_type
+                elem._data_source_manager.default_data_source = data_source_type  # noqa: SLF001
         else:
             raise DataSourceException(
                 f"{data_source_type} is not a data source. "
@@ -519,7 +518,7 @@ class Lattice:
                 f"be equal to the number of elements in the family({len(elements)})."
             )
         converted_values = []
-        for elem, value in zip(elements, values):
+        for elem, value in zip(elements, values, strict=False):
             uc = elem.get_unitconv(field)
             converted_values.append(uc.convert(value, origin, target))
         return converted_values
@@ -556,7 +555,7 @@ class EpicsLattice(Lattice):
 
         **Methods:**
         """
-        super(EpicsLattice, self).__init__(name, symmetry)
+        super().__init__(name, symmetry)
         self._cs = epics_cs
 
     def get_pv_name(self, field, handle):
@@ -579,7 +578,7 @@ class EpicsLattice(Lattice):
             raise DataSourceException(
                 f"Cannot get PV for field {field} on lattice "
                 f"{self}, as the device does not have associated PVs."
-            )
+            ) from AttributeError
 
     def get_element_pv_names(self, family, field, handle):
         """Get the PV names for the given field, and handle, on all elements
@@ -642,7 +641,7 @@ class EpicsLattice(Lattice):
                     family, field, values, pytac.ENG, pytac.PHYS
                 )
         else:
-            values = super(EpicsLattice, self).get_element_values(
+            values = super().get_element_values(
                 family, field, handle, units, data_source, throw
             )
         if dtype is not None:
@@ -692,6 +691,4 @@ class EpicsLattice(Lattice):
                 )
             self._cs.set_multiple(pv_names, values, throw)
         else:
-            super(EpicsLattice, self).set_element_values(
-                family, field, values, units, data_source, throw
-            )
+            super().set_element_values(family, field, values, units, data_source, throw)

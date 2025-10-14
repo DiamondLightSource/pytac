@@ -2,9 +2,9 @@ from unittest import mock
 
 import numpy
 import pytest
-from constants import DUMMY_ARRAY, LATTICE_NAME
 
 import pytac
+from constants import DUMMY_ARRAY, LATTICE_NAME
 from pytac.element import Element
 from pytac.lattice import Lattice
 
@@ -39,7 +39,7 @@ def test_lattice_without_symmetry():
 
 def test_lattice_cell_properties():
     lat = Lattice("", 2)
-    for i in range(5):
+    for _ in range(5):
         lat.add_element(Element(0.5, "DRIFT"))
     assert lat.cell_length == 1.25
     assert lat.cell_bounds == [1, 4, 5]
@@ -51,7 +51,7 @@ def test_get_element_devices(simple_lattice):
     assert devices[0].name == "x_device"
 
 
-def test_device_methods_raise_DataSourceException_if_no_live_data_source(
+def test_device_methods_raise_data_source_exception_if_no_live_data_source(
     simple_lattice,
 ):
     basic_lattice = simple_lattice
@@ -64,7 +64,7 @@ def test_device_methods_raise_DataSourceException_if_no_live_data_source(
         basic_lattice.get_device("x")
 
 
-def test_get_unitconv_raises_FieldException_if_no_uc_for_field(simple_lattice):
+def test_get_unitconv_raises_field_exception_if_no_uc_for_field(simple_lattice):
     with pytest.raises(pytac.exceptions.FieldException):
         simple_lattice.get_unitconv("not_a_field")
 
@@ -93,7 +93,7 @@ def test_set_value_raises_exceptions_correctly(simple_lattice):
         simple_lattice.set_value("not_a_field", 0)
 
 
-def test_get_element_devices_raises_ValueError_for_mismatched_family(simple_lattice):
+def test_get_element_devices_raises_value_error_for_mismatched_family(simple_lattice):
     with pytest.raises(ValueError):
         devices = simple_lattice.get_element_devices("not-a-family", "x")
     basic_element = simple_lattice.get_elements("family")[0]
@@ -104,7 +104,9 @@ def test_get_element_devices_raises_ValueError_for_mismatched_family(simple_latt
     assert devices == []
 
 
-def test_get_element_devices_raises_FieldException_if_field_not_matched(simple_lattice):
+def test_get_element_devices_raises_field_exception_if_field_not_matched(
+    simple_lattice,
+):
     with pytest.raises(pytac.exceptions.FieldException):
         simple_lattice.get_element_devices("family", "not-a-field")
 
@@ -176,7 +178,7 @@ def test_set_element_values(simple_lattice):
     )
 
 
-def test_set_element_values_raises_Exceptions_correctly(simple_lattice):
+def test_set_element_values_raises_exceptions_correctly(simple_lattice):
     with pytest.raises(IndexError):
         simple_lattice.set_element_values("family", "x", [1, 2])
     with pytest.raises(IndexError):
@@ -240,7 +242,7 @@ def test_convert_family_values(simple_lattice):
     assert post_values == [12]
 
 
-def test_convert_family_values_length_mismatch_raises_IndexError(simple_lattice):
+def test_convert_family_values_length_mismatch_raises_index_error(simple_lattice):
     with pytest.raises(IndexError):
         simple_lattice.convert_family_values(
             "family", "x", [1, 2], pytac.ENG, pytac.PHYS

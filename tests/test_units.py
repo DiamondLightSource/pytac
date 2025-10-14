@@ -2,9 +2,9 @@ from unittest import mock
 
 import numpy
 import pytest
-from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, DUMMY_VALUE_3
 
 import pytac
+from constants import DUMMY_VALUE_1, DUMMY_VALUE_2, DUMMY_VALUE_3
 from pytac.units import NullUnitConv, PchipUnitConv, PolyUnitConv, UnitConv
 
 
@@ -16,7 +16,7 @@ def f2(value):
     return value / 2
 
 
-def test_UnitConv_not_implemented():
+def test_unitconv_not_implemented():
     uc = UnitConv(0)
     with pytest.raises(NotImplementedError):
         uc.convert(10, pytac.PHYS, pytac.ENG)
@@ -64,7 +64,7 @@ def test_get_conversion_limits():
 @pytest.mark.parametrize(
     "origin, target", [(pytac.ENG, pytac.PHYS), (pytac.PHYS, pytac.ENG)]
 )
-def test_UnitConv_raises_UnitsException_for_values_outside_limits(origin, target):
+def test_unitconv_raises_units_exception_for_values_outside_limits(origin, target):
     uc = NullUnitConv()
     uc.set_conversion_limits(0, 10)
     with pytest.raises(pytac.exceptions.UnitsException):
@@ -73,7 +73,7 @@ def test_UnitConv_raises_UnitsException_for_values_outside_limits(origin, target
         uc.convert(11, origin, target)  # above upper limit
 
 
-def test_UnitConv_includes_name_in_exception():
+def test_unitconv_includes_name_in_exception():
     uc = UnitConv(name="test_unitconv")
     with pytest.raises(NotImplementedError, match="test_unitconv"):
         uc.convert(10, pytac.ENG, pytac.PHYS)
@@ -82,7 +82,7 @@ def test_UnitConv_includes_name_in_exception():
 @pytest.mark.parametrize(
     "origin, target", [(pytac.LIVE, pytac.ENG), (pytac.PHYS, pytac.SP), ("a", "b")]
 )
-def test_UnitConv_requires_correct_arguments(origin, target):
+def test_unitconv_requires_correct_arguments(origin, target):
     uc = UnitConv(name=12)
     assert uc.name == 12
     with pytest.raises(pytac.exceptions.UnitsException):
@@ -133,7 +133,7 @@ def test_quadratic_conversion():
         quadratic_conversion.convert(2.5, pytac.PHYS, pytac.ENG)
 
 
-def test_poly_unit_conv_removes_imaginary_roots():
+def test_poly_unitconv_removes_imaginary_roots():
     poly_uc = PolyUnitConv([1, -3, 4])
     with pytest.raises(pytac.exceptions.UnitsException):
         poly_uc.convert(1, pytac.PHYS, pytac.ENG)
@@ -161,19 +161,19 @@ def test_pp_conversion_to_machine_2_points():
     assert pchip_uc.phys_to_eng(1.5) == 1.5
 
 
-def test_PchipInterpolator_raises_ValueError_if_x_not_monotonically_increasing():
+def test_pchip_interpolator_raises_value_error_if_x_not_monotonically_increasing():
     with pytest.raises(ValueError):
         PchipUnitConv([1, 3, 2], [1, 2, 3])
     with pytest.raises(ValueError):
         PchipUnitConv([-1, -2, -3], [-1, -2, -3])
 
 
-def test_PchipInterpolator_raises_ValueError_if_y_not_monotonic():
+def test_pchip_interpolator_raises_value_error_if_y_not_monotonic():
     with pytest.raises(ValueError):
         PchipUnitConv([1, 2, 3], [1, 3, 2])
 
 
-def test_PchipUnitConv_with_solution_outside_bounds_raises_UnitsException():
+def test_pchip_unitconv_with_solution_outside_bounds_raises_units_exception():
     # This is a linear relationship, but the root is 0, outside of the
     # range of measurements.
     pchip_uc = PchipUnitConv((1, 2, 3), (1, 2, 3))
@@ -181,7 +181,7 @@ def test_PchipUnitConv_with_solution_outside_bounds_raises_UnitsException():
         pchip_uc.phys_to_eng(0)
 
 
-def test_PchipUnitConv_with_additional_function():
+def test_pchip_unitconv_with_additional_function():
     pchip_uc = PchipUnitConv([2, 4], [2, 4], f1, f2)
     assert pchip_uc.eng_to_phys(2) == 4.0
     assert pchip_uc.eng_to_phys(3) == 6.0
@@ -189,7 +189,7 @@ def test_PchipUnitConv_with_additional_function():
     assert pchip_uc.phys_to_eng(6.0) == 3
 
 
-def test_PolyUnitConv_with_additional_function():
+def test_poly_unitconv_with_additional_function():
     poly_uc = PolyUnitConv([2, 3], f1, f2)
     assert poly_uc.eng_to_phys(4) == 22.0
     assert poly_uc.eng_to_phys(5) == 26.0
@@ -199,7 +199,7 @@ def test_PolyUnitConv_with_additional_function():
     assert poly_uc.phys_to_eng(18.0) == 3
 
 
-def test_NullUnitConv():
+def test_null_unitconv():
     null_uc = NullUnitConv()
     assert null_uc.eng_to_phys(DUMMY_VALUE_1) == DUMMY_VALUE_1
     assert null_uc.eng_to_phys(DUMMY_VALUE_2) == DUMMY_VALUE_2
