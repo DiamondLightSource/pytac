@@ -11,42 +11,42 @@ from pytac.load_csv import available_ringmodes, load, load_unitconv, resolve_uni
 
 @pytest.fixture
 def mock_cs_raises_import_error():
-    """We create a mock control system to replace CothreadControlSystem, so
+    """We create a mock control system to replace AIOCAControlSystem, so
         that we can check that when it raises an ImportError load_csv.load
-        catches it and raises a ControlSystemException instead.
-    N.B. Our new CothreadControlSystem is nested inside a fixture so it can be
-     patched into pytac.cothread_cs to replace the existing
-     CothreadControlSystem class. The new CothreadControlSystem created here is
+        catches it and raises a AIOCASystemException instead.
+    N.B. Our new AIOCAControlSystem is nested inside a fixture so it can be
+     patched into pytac.aioca_cs to replace the existing
+     AIOCAControlSystem class. The new AIOCAControlSystem created here is
      a function not a class (like the original) to prevent it from raising the
      ImportError when the code is compiled.
     """
 
-    class CothreadControlSystem:
+    class AIOCAControlSystem:
         def __init__(self):
             raise ImportError
 
-    return CothreadControlSystem
+    return AIOCAControlSystem
 
 
-def test_default_control_system_import():
+async def test_default_control_system_import():
     """In this test we:
     - assert that the lattice is indeed loaded if no execeptions are raised
-    - assert that the default control system is indeed cothread and that it
+    - assert that the default control system is indeed aioca and that it
        is loaded onto the lattice correctly
     """
-    assert bool(load(TESTING_MODE))
-    assert isinstance(load(TESTING_MODE)._cs, pytac.cothread_cs.CothreadControlSystem)
+    assert bool(await load(TESTING_MODE))
+    assert isinstance((await load(TESTING_MODE))._cs, pytac.aioca_cs.AIOCAControlSystem)
 
 
-def test_import_fail_raises_control_system_exception(mock_cs_raises_import_error):
+async def test_import_fail_raises_control_system_exception(mock_cs_raises_import_error):
     """In this test we:
-    - check that load corectly fails if cothread cannot be imported
-    - check that when the import of the CothreadControlSystem fails the
+    - check that load corectly fails if aioca cannot be imported
+    - check that when the import of the AIOCAControlSystem fails the
        ImportError raised is replaced with a ControlSystemException
     """
-    with patch("pytac.cothread_cs.CothreadControlSystem", mock_cs_raises_import_error):
+    with patch("pytac.aioca_cs.AIOCAControlSystem", mock_cs_raises_import_error):
         with pytest.raises(pytac.exceptions.ControlSystemException):
-            load(TESTING_MODE)
+            await load("TESTING_MODE")
 
 
 def test_elements_loaded(lattice):
@@ -82,11 +82,11 @@ def test_families_loaded(lattice):
     assert lattice.get_elements("quad")[0].families == {"quad", "qf", "qs"}
 
 
-def test_load_unitconv_warns_if_pchip_or_poly_data_file_not_found(
+async def test_load_unitconv_warns_if_pchip_or_poly_data_file_not_found(
     lattice, mode_dir, polyconv_file, pchipconv_file
 ):
     with LogCapture() as log:
-        load_unitconv(mode_dir, lattice)
+        await load_unitconv(mode_dir, lattice)
     log.check(
         (
             "root",

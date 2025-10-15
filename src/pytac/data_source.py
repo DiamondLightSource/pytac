@@ -1,5 +1,7 @@
 """Module containing pytac data source classes."""
 
+import inspect
+
 import pytac
 from pytac.exceptions import DataSourceException, FieldException
 
@@ -189,7 +191,7 @@ class DataSourceManager:
         """
         self._uc[field] = uc
 
-    def get_value(
+    async def get_value(
         self,
         field: str,
         handle: str = pytac.RB,
@@ -225,12 +227,12 @@ class DataSourceManager:
         if data_source_type == pytac.DEFAULT:
             data_source_type = self.default_data_source
         data_source = self.get_data_source(data_source_type)
-        value = data_source.get_value(field, handle, throw)
+        value = await data_source.get_value(field, handle, throw)
         return self.get_unitconv(field).convert(
             value, origin=data_source.units, target=units
         )
 
-    def set_value(
+    async def set_value(
         self,
         field: str,
         value: float,
@@ -264,7 +266,7 @@ class DataSourceManager:
         value = self.get_unitconv(field).convert(
             value, origin=units, target=data_source.units
         )
-        data_source.set_value(field, value, throw)
+        await data_source.set_value(field, value, throw)
 
 
 class DeviceDataSource(DataSource):
@@ -321,7 +323,7 @@ class DeviceDataSource(DataSource):
         """
         return self._devices.keys()
 
-    def get_value(self, field, handle, throw=True):
+    async def get_value(self, field, handle, throw=True):
         """Get the value of a readback or setpoint PV for a field from the
         data_source.
 
@@ -337,9 +339,17 @@ class DeviceDataSource(DataSource):
         Raises:
             FieldException: if the device does not have the specified field.
         """
-        return self.get_device(field).get_value(handle, throw)
+        device = self.get_device(field)
+        # TODO some devices dont need to be awaited as they are just retrieving stored
+        # data, but others get data from PVs so do, make this better
+        val = 0
+        if inspect.iscoroutinefunction(device.get_value):
+            val = await device.get_value(handle, throw)
+        else:
+            val = device.get_value(handle, throw)
+        return val
 
-    def set_value(self, field, value, throw=True):
+    async def set_value(self, field, value, throw=True):
         """Set the value of a readback or setpoint PV for a field from the
         data_source.
 
@@ -352,4 +362,10 @@ class DeviceDataSource(DataSource):
         Raises:
             FieldException: if the device does not have the specified field.
         """
-        self.get_device(field).set_value(value, throw)
+        device = self.get_device(field)
+        # TODO some devices dont need to be awaited as they are just setting local
+        # data, but others set data to PVs, so do, make this better
+        if inspect.iscoroutinefunction(device.set_value):
+            await device.set_value(value, throw)
+        else:
+            device.set_value(value, throw)
