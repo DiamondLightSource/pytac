@@ -32,6 +32,10 @@
     "url": "https://DiamondLightSource.github.io/pytac/asyncio-conversion/"
   },
   {
+    "version": "diamond2-conversion",
+    "url": "https://DiamondLightSource.github.io/pytac/diamond2-conversion/"
+  },
+  {
     "version": "fix-docs",
     "url": "https://DiamondLightSource.github.io/pytac/fix-docs/"
   }
