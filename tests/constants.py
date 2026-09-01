@@ -29,4 +29,5 @@ SUPPORTED_MODES = {
     "I04SP",
     "I04THz",
     "48",
+    "49",
 }
