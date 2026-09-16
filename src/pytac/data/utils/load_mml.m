@@ -155,15 +155,8 @@ function load_mml(ringmode)
         nbpms = size(ao.BPMx.DeviceList, 1);
         bpms = cell(nbpms);
         for i = 1:nbpms
-            ncell = ao.BPMx.DeviceList(i,1);
-            index = ao.BPMx.DeviceList(i,2);
-            if mod(ncell, 1) ~= 0
-                % Indices of .5 correspond to SRnnS-DI-EBPM-nn.
-                ncell = fix(ncell);
-                bpms{i} = sprintf('SR%02dS-DI-EBPM-%02d', ncell, index);
-            else
-                bpms{i} = sprintf('SR%02dC-DI-EBPM-%02d', ncell, index);
-            end
+            num_chars = size(ao.BPMx.Monitor.ChannelNames,2);
+            bpms{i} = ao.BPMx.Monitor.ChannelNames(i,1:num_chars-5);
         end
     end
 
