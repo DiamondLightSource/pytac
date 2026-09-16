@@ -1,0 +1,29 @@
+``pytac.exceptions``
+====================
+        
+        
+        
+        
+        
+
+.. automodule:: pytac.exceptions
+    :members:
+
+    
+    
+    
+
+    
+    
+    .. rubric:: Members
+
+    .. autosummary::
+        :nosignatures:
+    
+        ControlSystemException
+        DataSourceException
+        FieldException
+        HandleException
+        UnitsException
+    
+    

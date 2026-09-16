@@ -1,0 +1,29 @@
+﻿``pytac``
+=========
+
+.. automodule:: pytac
+    :members:
+
+    
+    
+    .. rubric:: Submodules
+
+    .. autosummary::
+        :toctree:
+        :template: custom-module-template.rst
+        :recursive:
+    
+        data_source
+        device
+        element
+        exceptions
+        lattice
+        load_csv
+        units
+        utils
+    
+    
+
+    
+    
+    
