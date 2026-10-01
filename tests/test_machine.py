@@ -21,8 +21,8 @@ def get_lattice(ring_mode):
     return lattice
 
 
-def test_load_lattice_using_default_dir():
-    lat = pytac.load_csv.load(TESTING_MODE, mock.MagicMock())
+async def test_load_lattice_using_default_dir():
+    lat = await pytac.load_csv.load(TESTING_MODE, mock.MagicMock())
     assert len(lat) == 2190
 
 
