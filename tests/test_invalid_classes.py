@@ -30,6 +30,6 @@ async def test_device_throws_not_implemented_error():
     with pytest.raises(NotImplementedError):
         test_d.is_enabled()
     with pytest.raises(NotImplementedError):
-        test_d.set_value(0.0, "throw")
+        await test_d.set_value(0.0, "throw")
     with pytest.raises(NotImplementedError):
-        test_d.get_value("handle", "throw")
+        await test_d.get_value("handle", "throw")

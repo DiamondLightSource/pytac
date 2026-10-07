@@ -27,7 +27,7 @@ class Device:
         """
         raise NotImplementedError()
 
-    def get_value(self, handle: str, throw: bool) -> float:
+    async def get_value(self, handle: str, throw: bool) -> float:
         """Read the value from the device.
 
         Args:
@@ -40,7 +40,7 @@ class Device:
         """
         raise NotImplementedError()
 
-    def set_value(self, value: float, throw: bool) -> None:
+    async def set_value(self, value: float, throw: bool) -> None:
         """Set the value on the device.
 
         Args:
@@ -85,7 +85,7 @@ class SimpleDevice(Device):
         """
         return bool(self._enabled)
 
-    def get_value(self, handle=None, throw=None):
+    async def get_value(self, handle=None, throw=None):
         """Read the value from the device.
 
         Args:
@@ -99,7 +99,7 @@ class SimpleDevice(Device):
         """
         return self._value
 
-    def set_value(self, value, throw=None):
+    async def set_value(self, value, throw=None):
         """Set the value on the device.
 
         Args:

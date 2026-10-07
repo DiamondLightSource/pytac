@@ -47,26 +47,26 @@ async def test_get_epics_device_value_invalid_handle_raises_exception():
 
 
 # Simple device specific tests.
-def test_set_simple_device_value():
+async def test_set_simple_device_value():
     device = create_simple_device()
-    device.set_value(40)
+    await device.set_value(40)
     assert device.value == 40
 
 
-def test_get_simple_device_value_without_handle():
+async def test_get_simple_device_value_without_handle():
     device = create_simple_device()
-    assert device.get_value() == 1.0
+    assert await device.get_value() == 1.0
 
 
-def test_get_simple_device_value_with_handle():
+async def test_get_simple_device_value_with_handle():
     device = create_simple_device()
-    assert device.get_value(handle=pytac.RB) == 1.0
+    assert await device.get_value(handle=pytac.RB) == 1.0
 
 
-def test_simple_device_raises_data_source_exception_if_readonly_and_set_value_called():
+async def test_simple_device_raises_data_source_exception_if_readonly_and_set_value_called():  # noqa: E501
     device = SimpleDevice(10, readonly=True)
     with pytest.raises(DataSourceException):
-        device.set_value(4)
+        await device.set_value(4)
 
 
 # Generalised device tests.

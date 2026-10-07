@@ -1,7 +1,5 @@
 """Module containing pytac data source classes."""
 
-import inspect
-
 import pytac
 from pytac.exceptions import DataSourceException, FieldException
 
@@ -340,13 +338,7 @@ class DeviceDataSource(DataSource):
             FieldException: if the device does not have the specified field.
         """
         device = self.get_device(field)
-        # TODO some devices dont need to be awaited as they are just retrieving stored
-        # data, but others get data from PVs so do, make this better
-        val = 0
-        if inspect.iscoroutinefunction(device.get_value):
-            val = await device.get_value(handle, throw)
-        else:
-            val = device.get_value(handle, throw)
+        val = await device.get_value(handle, throw)
         return val
 
     async def set_value(self, field, value, throw=True):
@@ -363,9 +355,4 @@ class DeviceDataSource(DataSource):
             FieldException: if the device does not have the specified field.
         """
         device = self.get_device(field)
-        # TODO some devices dont need to be awaited as they are just setting local
-        # data, but others set data to PVs, so do, make this better
-        if inspect.iscoroutinefunction(device.set_value):
-            await device.set_value(value, throw)
-        else:
-            device.set_value(value, throw)
+        await device.set_value(value, throw)
