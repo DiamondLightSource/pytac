@@ -139,7 +139,7 @@ def resolve_unitconv(
     return uc
 
 
-def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
+async def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
     """Load the unit conversion objects from a file.
 
     Args:
@@ -180,13 +180,15 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
                     "bend",
                 }
                 if item["uc_type"] != "null" and element._families & rigidity_families:  # noqa: SLF001
-                    energy = lattice.get_value("energy", units=pytac.ENG)
+                    energy = await lattice.get_value("energy", units=pytac.ENG)
                     uc.set_post_eng_to_phys(utils.get_div_rigidity(energy))
                     uc.set_pre_phys_to_eng(utils.get_mult_rigidity(energy))
                 element.set_unitconv(item["field"], uc)
 
 
-def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLattice:
+async def load(
+    mode, control_system=None, directory=None, symmetry=None
+) -> EpicsLattice:
     """Load the elements of a lattice from a directory.
 
     Args:
@@ -203,20 +205,20 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
         Lattice: The lattice containing all elements.
 
     Raises:
-        ControlSystemException: if the default control system, cothread, is not
+        ControlSystemException: if the default control system, aioca, is not
                                  installed.
     """
     try:
         if control_system is None:
             # Don't import epics unless we need it to avoid unnecessary
-            # installation of cothread
-            from pytac import cothread_cs
+            # installation of aioca
+            from pytac import aioca_cs
 
-            control_system = cothread_cs.CothreadControlSystem()
+            control_system = aioca_cs.AIOCAControlSystem()
     except ImportError:
         raise ControlSystemException(
-            "Please install cothread to load a lattice using the default control system"
-            " (found in cothread_cs.py)."
+            "Please install aioca to load a lattice using the default control system"
+            " (found in aioca_cs.py)."
         ) from ImportError
     if directory is None:
         directory = Path(__file__).resolve().parent / "data"
@@ -275,7 +277,7 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
             lat[int(item["el_id"]) - 1].add_to_family(item["family"])
     unitconv_file = mode_dir / UNITCONV_FILENAME
     if unitconv_file.exists():
-        load_unitconv(mode_dir, lat)
+        await load_unitconv(mode_dir, lat)
     return lat
 
 

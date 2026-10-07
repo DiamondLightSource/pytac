@@ -15,7 +15,7 @@ description = "Python Toolkit for Accelerator Controls (Pytac) is a Python libra
 dependencies = [
     "numpy",
     "scipy",
-    "cothread",
+    "aioca",
     "epicscorelibs",
 ] # Add project dependencies here, e.g. ["click", "numpy"]
 dynamic = ["version"]
@@ -32,6 +32,7 @@ dev = [
     "pre-commit",
     "pydata-sphinx-theme>=0.12",
     "pytest",
+    "pytest-asyncio>=0.17",
     "pytest-cov",
     "ruff",
     "sphinx-autobuild",
@@ -68,6 +69,8 @@ addopts = """
 filterwarnings = "error"
 # Doctest python code in docs, python code in src docstrings, test functions in tests
 testpaths = "src tests"
+asyncio_mode = "auto"
+
 
 [tool.coverage.run]
 patch = ["subprocess"]
@@ -88,8 +91,9 @@ skipsdist=True
 # Don't create a virtualenv for the command, requires tox-direct plugin
 direct = True
 passenv = *
-allowlist_externals =
+allowlist_externals = 
     pytest
+    pytest-asyncio
     pre-commit
     mypy
     sphinx-build
