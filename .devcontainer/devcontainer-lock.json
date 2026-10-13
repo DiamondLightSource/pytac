@@ -1,0 +1,9 @@
+{
+  "features": {
+    "ghcr.io/diamondlightsource/devcontainer-features/bash-config:1": {
+      "version": "1.0.3",
+      "resolved": "ghcr.io/diamondlightsource/devcontainer-features/bash-config@sha256:5b32dfbc5d02a04b200eba276b5f21b6fce31658e8965f7c4b25c002b46dab4c",
+      "integrity": "sha256:5b32dfbc5d02a04b200eba276b5f21b6fce31658e8965f7c4b25c002b46dab4c"
+    }
+  }
+}

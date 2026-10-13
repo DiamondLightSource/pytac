@@ -139,7 +139,7 @@ def resolve_unitconv(
     return uc
 
 
-def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
+def load_unitconv(mode_dir: Path, lattice: Lattice, energy: float) -> None:
     """Load the unit conversion objects from a file.
 
     Args:
@@ -180,7 +180,6 @@ def load_unitconv(mode_dir: Path, lattice: Lattice) -> None:
                     "bend",
                 }
                 if item["uc_type"] != "null" and element._families & rigidity_families:  # noqa: SLF001
-                    energy = lattice.get_value("energy", units=pytac.ENG)
                     uc.set_post_eng_to_phys(utils.get_div_rigidity(energy))
                     uc.set_pre_phys_to_eng(utils.get_mult_rigidity(energy))
                 element.set_unitconv(item["field"], uc)
@@ -203,24 +202,26 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
         Lattice: The lattice containing all elements.
 
     Raises:
-        ControlSystemException: if the default control system, cothread, is not
+        ControlSystemException: if the default control system, aioca, is not
                                  installed.
     """
     try:
         if control_system is None:
             # Don't import epics unless we need it to avoid unnecessary
-            # installation of cothread
-            from pytac import cothread_cs
+            # installation of aioca
+            from pytac import aioca_cs
 
-            control_system = cothread_cs.CothreadControlSystem()
+            control_system = aioca_cs.AiocaControlSystem()
     except ImportError:
         raise ControlSystemException(
-            "Please install cothread to load a lattice using the default control system"
-            " (found in cothread_cs.py)."
+            "Please install aioca to load a lattice using the default control system"
+            " (found in aioca_cs.py)."
         ) from ImportError
+
     if directory is None:
         directory = Path(__file__).resolve().parent / "data"
     mode_dir = directory / mode
+
     lat = EpicsLattice(mode, control_system, symmetry=symmetry)
     lat.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
     with csv_loader(mode_dir / ELEMENTS_FILENAME) as csv_reader:
@@ -230,6 +231,7 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
             e.add_to_family(item["type"])
             e.set_data_source(data_source.DeviceDataSource(), pytac.LIVE)
             lat.add_element(e)
+
     with csv_loader(mode_dir / EPICS_DEVICES_FILENAME) as csv_reader:
         for item in csv_reader:
             index = int(item["el_id"])
@@ -250,6 +252,8 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
         lat.add_device(
             "s_position", SimpleDevice(positions, readonly=True), NullUnitConv()
         )
+
+    energy = 0.0  # MeV
     simple_devices_file = mode_dir / SIMPLE_DEVICES_FILENAME
     if simple_devices_file.exists():
         with csv_loader(simple_devices_file) as csv_reader:
@@ -270,12 +274,22 @@ def load(mode, control_system=None, directory=None, symmetry=None) -> EpicsLatti
                     SimpleDevice(float(item["value"]), readonly=readonly),
                     NullUnitConv(),
                 )
+
+                if item["field"] == "energy":
+                    energy = float(item["value"])
+
+    if energy == 0:
+        raise ValueError(
+            f"Failed to find a configured energy when loading ringmode: {mode}"
+        )
+
     with csv_loader(mode_dir / FAMILIES_FILENAME) as csv_reader:
         for item in csv_reader:
             lat[int(item["el_id"]) - 1].add_to_family(item["family"])
+
     unitconv_file = mode_dir / UNITCONV_FILENAME
     if unitconv_file.exists():
-        load_unitconv(mode_dir, lat)
+        load_unitconv(mode_dir, lat, energy)
     return lat
 
 

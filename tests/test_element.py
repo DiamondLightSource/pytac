@@ -89,16 +89,16 @@ def test_get_unitconv_raises_field_exception_if_device_not_present(simple_elemen
         simple_element.get_unitconv("not-a-device")
 
 
-def test_get_value_uses_uc_if_necessary_for_cs_call(simple_element, double_uc):
+async def test_get_value_uses_uc_if_necessary_for_cs_call(simple_element, double_uc):
     simple_element._data_source_manager._uc["x"] = double_uc
-    assert simple_element.get_value(
+    assert await simple_element.get_value(
         "x", handle=pytac.SP, units=pytac.PHYS, data_source=pytac.LIVE
     ) == (DUMMY_VALUE_1 * 2)
 
 
-def test_get_value_uses_uc_if_necessary_for_sim_call(simple_element, double_uc):
+async def test_get_value_uses_uc_if_necessary_for_sim_call(simple_element, double_uc):
     simple_element._data_source_manager._uc["x"] = double_uc
-    assert simple_element.get_value(
+    assert await simple_element.get_value(
         "x", handle=pytac.SP, units=pytac.ENG, data_source=pytac.SIM
     ) == (DUMMY_VALUE_2 / 2)
     simple_element._data_source_manager._data_sources[
@@ -106,39 +106,41 @@ def test_get_value_uses_uc_if_necessary_for_sim_call(simple_element, double_uc):
     ].get_value.assert_called_with("x", pytac.SP, True)
 
 
-def test_set_value_eng(simple_element):
-    simple_element.set_value("x", DUMMY_VALUE_2)
+async def test_set_value_eng(simple_element):
+    await simple_element.set_value("x", DUMMY_VALUE_2)
     # No conversion needed
     simple_element.get_device("x").set_value.assert_called_with(DUMMY_VALUE_2, True)
 
 
-def test_set_value_phys(simple_element, double_uc):
+async def test_set_value_phys(simple_element, double_uc):
     simple_element._data_source_manager._uc["x"] = double_uc
-    simple_element.set_value("x", DUMMY_VALUE_2, units=pytac.PHYS)
+    await simple_element.set_value("x", DUMMY_VALUE_2, units=pytac.PHYS)
     # Conversion fron physics to engineering units
     simple_element.get_device("x").set_value.assert_called_with(DUMMY_VALUE_2 / 2, True)
 
 
-def test_set_exceptions(simple_element, unit_uc):
+async def test_set_exceptions(simple_element, unit_uc):
     with pytest.raises(pytac.exceptions.FieldException):
-        simple_element.set_value("unknown_field", 40.0)
+        await simple_element.set_value("unknown_field", 40.0)
     with pytest.raises(pytac.exceptions.DataSourceException):
-        simple_element.set_value("y", 40.0, data_source="unknown_data_source")
+        await simple_element.set_value("y", 40.0, data_source="unknown_data_source")
     simple_element._data_source_manager._uc["uc_but_no_data_source"] = unit_uc
     with pytest.raises(pytac.exceptions.FieldException):
-        simple_element.set_value("uc_but_no_data_source", 40.0)
+        await simple_element.set_value("uc_but_no_data_source", 40.0)
 
 
-def test_get_exceptions(simple_element):
+async def test_get_exceptions(simple_element):
     with pytest.raises(pytac.exceptions.FieldException):
-        simple_element.get_value("unknown_field", "setpoint")
+        await simple_element.get_value("unknown_field", "setpoint")
     with pytest.raises(pytac.exceptions.DataSourceException):
-        simple_element.get_value("y", "setpoint", data_source="unknown_data_source")
+        await simple_element.get_value(
+            "y", "setpoint", data_source="unknown_data_source"
+        )
 
 
-def test_identity_conversion(simple_element):
-    value_physics = simple_element.get_value("x", "setpoint", pytac.PHYS)
-    value_machine = simple_element.get_value("x", "setpoint", pytac.ENG)
+async def test_identity_conversion(simple_element):
+    value_physics = await simple_element.get_value("x", "setpoint", pytac.PHYS)
+    value_machine = await simple_element.get_value("x", "setpoint", pytac.ENG)
     assert value_machine == DUMMY_VALUE_1
     assert value_physics == DUMMY_VALUE_1
 

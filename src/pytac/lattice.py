@@ -90,6 +90,7 @@ class Lattice:
         Returns:
             indexed element
         """
+        # TODO: We should probably raise a custom exception if len(_elements) is zero
         return self._elements[n]
 
     def __len__(self) -> int:
@@ -180,7 +181,7 @@ class Lattice:
         """
         self._data_source_manager.set_unitconv(field, uc)
 
-    def get_value(
+    async def get_value(
         self,
         field,
         handle=pytac.RB,
@@ -210,11 +211,11 @@ class Lattice:
             DataSourceException: if there is no data source on the given field.
             FieldException: if the lattice does not have the specified field.
         """
-        return self._data_source_manager.get_value(
+        return await self._data_source_manager.get_value(
             field, handle, units, data_source, throw
         )
 
-    def set_value(
+    async def set_value(
         self,
         field,
         value,
@@ -238,7 +239,9 @@ class Lattice:
             DataSourceException: if arguments are incorrect.
             FieldException: if the lattice does not have the specified field.
         """
-        self._data_source_manager.set_value(field, value, units, data_source, throw)
+        await self._data_source_manager.set_value(
+            field, value, units, data_source, throw
+        )
 
     def get_length(self):
         """Returns the length of the lattice, in meters.
@@ -359,7 +362,7 @@ class Lattice:
         devices = self.get_element_devices(family, field)
         return [device.name for device in devices]
 
-    def get_element_values(
+    async def get_element_values(
         self,
         family,
         field,
@@ -389,14 +392,14 @@ class Lattice:
         """
         elements = self.get_elements(family)
         values = [
-            element.get_value(field, handle, units, data_source, throw)
+            await element.get_value(field, handle, units, data_source, throw)
             for element in elements
         ]
         if dtype is not None:
             values = numpy.array(values, dtype=dtype)
         return values
 
-    def set_element_values(
+    async def set_element_values(
         self,
         family,
         field,
@@ -430,7 +433,7 @@ class Lattice:
                 f"equal to the number of elements in the family({len(elements)})."
             )
         for element, value in zip(elements, values, strict=False):
-            status = element.set_value(
+            status = await element.set_value(
                 field,
                 value,
                 units=units,
@@ -601,7 +604,7 @@ class EpicsLattice(Lattice):
             pv_names.append(element.get_pv_name(field, handle))
         return pv_names
 
-    def get_element_values(
+    async def get_element_values(
         self,
         family,
         field,
@@ -635,20 +638,20 @@ class EpicsLattice(Lattice):
             units = self.get_default_units()
         if data_source == pytac.LIVE:
             pv_names = self.get_element_pv_names(family, field, handle)
-            values = self._cs.get_multiple(pv_names, throw)
+            values = await self._cs.get_multiple(pv_names, throw)
             if units == pytac.PHYS:
                 values = self.convert_family_values(
                     family, field, values, pytac.ENG, pytac.PHYS
                 )
         else:
-            values = super().get_element_values(
+            values = await super().get_element_values(
                 family, field, handle, units, data_source, throw
             )
         if dtype is not None:
             values = numpy.array(values, dtype=dtype)
         return values
 
-    def set_element_values(
+    async def set_element_values(
         self,
         family,
         field,
@@ -689,6 +692,8 @@ class EpicsLattice(Lattice):
                     "must be equal to the number of elements in "
                     f"the family({len(pv_names)})."
                 )
-            self._cs.set_multiple(pv_names, values, throw)
+            await self._cs.set_multiple(pv_names, values, throw)
         else:
-            super().set_element_values(family, field, values, units, data_source, throw)
+            await super().set_element_values(
+                family, field, values, units, data_source, throw
+            )
