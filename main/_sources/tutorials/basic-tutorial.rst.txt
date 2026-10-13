@@ -5,16 +5,25 @@ In this tutorial we will go through some of the most common ways of using pytac.
 The aim is to give you an understanding of the interface and how to find out what
 is available.
 
-The import of the cothread channel access library and epicscorelibs will
+The import of the aioca channel access library and epicscorelibs will
 allow us to get some live values from the Diamond accelerators.
 
-    $ pip install cothread epicscorelibs
+    $ pip install aioca epicscorelibs
 
 These docs are able to be run and tested, but may return different values as
 accelerator conditions will have changed.
 
     $ pytest docs
 
+Running the tutorial
+-------------------
+
+Pytac is an asynchronous library which uses python asyncio, this means we must setup
+an asyncio loop and await certain asynchronous commands. To save us setting up the
+asyncio loop manually for this tutorial, we will be running the python interactive
+shell in asyncio mode with::
+
+    $ python -m asyncio
 
 Loading the lattice
 -------------------
@@ -47,10 +56,13 @@ We can ask for the values of these fields. These commands will try to get the
 real values from the live machine (so won't work if you're not on a suitable
 Diamond network)::
 
-    >>> lattice.get_value("energy", units=pytac.PHYS)
+    >>> await lattice.get_value("energy", units=pytac.PHYS)
     np.float64(3000000000.0)
-    >>> lattice.get_value("beam_current")
+    >>> await lattice.get_value("beam_current")
     296.773194429911
+
+Here we must await the get_value function as this function asynchronously gets data
+from PVs running on the live machine.
 
 Families, elements and fields
 -----------------------------
@@ -79,7 +91,7 @@ Each one has some fields::
 The fields represent a property of the BPM that can change. For example, x and y
 are the measured positions::
 
-    >>> one_bpm.get_value("x")
+    >>> await one_bpm.get_value("x")
     0.047219
 
 Devices
@@ -128,7 +140,7 @@ controller::
     >>> # Get a corrector magnet
     >>> corrector = lattice.get_elements("HSTR")[5]
     >>> # Request
-    >>> corrector.get_value("x_kick", units=pytac.ENG)
+    >>> await corrector.get_value("x_kick", units=pytac.ENG)
     -3.0552401542663574
 
 In order to get the unit itself, we have to ask for the ``unitconv`` object associated
@@ -180,7 +192,7 @@ To finish off for now, let's look at some more of the methods of the `lattice`
 while family of elements. E.g. the currents for the horizontal corrector magnets.
 There is also an analogous command ``lattice.set_element_values``::
 
-    >>> lattice.get_element_values("HSTR", "x_kick", "readback")
+    >>> await lattice.get_element_values("HSTR", "x_kick", "readback")
     [-0.24839822947978973,
     0.7639292478561401,
     -0.4572945237159729,
