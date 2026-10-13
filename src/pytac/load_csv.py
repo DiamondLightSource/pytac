@@ -214,7 +214,7 @@ async def load(
             # installation of aioca
             from pytac import aioca_cs
 
-            control_system = aioca_cs.AIOCAControlSystem()
+            control_system = aioca_cs.AiocaControlSystem()
     except ImportError:
         raise ControlSystemException(
             "Please install aioca to load a lattice using the default control system"

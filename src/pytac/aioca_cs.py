@@ -6,7 +6,7 @@ from pytac.cs import ControlSystem
 from pytac.exceptions import ControlSystemException
 
 
-class AIOCAControlSystem(ControlSystem):
+class AiocaControlSystem(ControlSystem):
     """A control system using aioca to communicate with EPICS.
 
     N.B. this is the default control system. It is used to communicate over

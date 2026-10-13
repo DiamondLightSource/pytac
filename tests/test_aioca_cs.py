@@ -1,4 +1,4 @@
-"""Tests for the AIOCAControlSystem class."""
+"""Tests for the AiocaControlSystem class."""
 
 from unittest.mock import MagicMock, patch
 
@@ -7,7 +7,7 @@ from testfixtures import LogCapture
 
 import pytac
 from constants import RB_PV, SP_PV
-from pytac.aioca_cs import AIOCAControlSystem
+from pytac.aioca_cs import AiocaControlSystem
 
 
 class CANothing(Exception):  # noqa: N818
@@ -20,7 +20,7 @@ class CANothing(Exception):  # noqa: N818
 
 @pytest.fixture
 def cs():
-    return AIOCAControlSystem(wait=True, timeout=2.0)
+    return AiocaControlSystem(wait=True, timeout=2.0)
 
 
 @patch("pytac.aioca_cs.caget")

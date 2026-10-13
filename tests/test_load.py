@@ -11,21 +11,21 @@ from pytac.load_csv import available_ringmodes, load, load_unitconv, resolve_uni
 
 @pytest.fixture
 def mock_cs_raises_import_error():
-    """We create a mock control system to replace AIOCAControlSystem, so
+    """We create a mock control system to replace AiocaControlSystem, so
         that we can check that when it raises an ImportError load_csv.load
-        catches it and raises a AIOCASystemException instead.
-    N.B. Our new AIOCAControlSystem is nested inside a fixture so it can be
+        catches it and raises a ControlSystemException instead.
+    N.B. Our new AiocaControlSystem is nested inside a fixture so it can be
      patched into pytac.aioca_cs to replace the existing
-     AIOCAControlSystem class. The new AIOCAControlSystem created here is
+     AiocaControlSystem class. The new AiocaControlSystem created here is
      a function not a class (like the original) to prevent it from raising the
      ImportError when the code is compiled.
     """
 
-    class AIOCAControlSystem:
+    class AiocaControlSystem:
         def __init__(self):
             raise ImportError
 
-    return AIOCAControlSystem
+    return AiocaControlSystem
 
 
 async def test_default_control_system_import():
@@ -35,16 +35,16 @@ async def test_default_control_system_import():
        is loaded onto the lattice correctly
     """
     assert bool(await load(TESTING_MODE))
-    assert isinstance((await load(TESTING_MODE))._cs, pytac.aioca_cs.AIOCAControlSystem)
+    assert isinstance((await load(TESTING_MODE))._cs, pytac.aioca_cs.AiocaControlSystem)
 
 
 async def test_import_fail_raises_control_system_exception(mock_cs_raises_import_error):
     """In this test we:
     - check that load corectly fails if aioca cannot be imported
-    - check that when the import of the AIOCAControlSystem fails the
+    - check that when the import of the AiocaControlSystem fails the
        ImportError raised is replaced with a ControlSystemException
     """
-    with patch("pytac.aioca_cs.AIOCAControlSystem", mock_cs_raises_import_error):
+    with patch("pytac.aioca_cs.AiocaControlSystem", mock_cs_raises_import_error):
         with pytest.raises(pytac.exceptions.ControlSystemException):
             await load("TESTING_MODE")
 
