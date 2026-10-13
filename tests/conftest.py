@@ -104,18 +104,18 @@ def simple_data_source_manager(
 
 
 @pytest.fixture(scope="session")
-async def i04_ring():
-    return await pytac.load_csv.load("I04", mock.MagicMock, symmetry=24)
+def i04_ring():
+    return pytac.load_csv.load("I04", mock.MagicMock, symmetry=24)
 
 
 @pytest.fixture(scope="session")
-async def diad_ring():
-    return await pytac.load_csv.load("DIAD", mock.MagicMock, symmetry=24)
+def diad_ring():
+    return pytac.load_csv.load("DIAD", mock.MagicMock, symmetry=24)
 
 
 @pytest.fixture
-async def lattice():
-    return await load_csv.load("dummy", mock.MagicMock(), CURRENT_DIR_PATH / "data", 2)
+def lattice():
+    return load_csv.load("dummy", mock.MagicMock(), CURRENT_DIR_PATH / "data", 2)
 
 
 def set_func(pvs, values, throw=None):

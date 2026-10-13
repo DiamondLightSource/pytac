@@ -28,17 +28,17 @@ def mock_cs_raises_import_error():
     return AiocaControlSystem
 
 
-async def test_default_control_system_import():
+def test_default_control_system_import():
     """In this test we:
     - assert that the lattice is indeed loaded if no execeptions are raised
     - assert that the default control system is indeed aioca and that it
        is loaded onto the lattice correctly
     """
-    assert bool(await load(TESTING_MODE))
-    assert isinstance((await load(TESTING_MODE))._cs, pytac.aioca_cs.AiocaControlSystem)
+    assert bool(load(TESTING_MODE))
+    assert isinstance((load(TESTING_MODE))._cs, pytac.aioca_cs.AiocaControlSystem)
 
 
-async def test_import_fail_raises_control_system_exception(mock_cs_raises_import_error):
+def test_import_fail_raises_control_system_exception(mock_cs_raises_import_error):
     """In this test we:
     - check that load corectly fails if aioca cannot be imported
     - check that when the import of the AiocaControlSystem fails the
@@ -46,7 +46,7 @@ async def test_import_fail_raises_control_system_exception(mock_cs_raises_import
     """
     with patch("pytac.aioca_cs.AiocaControlSystem", mock_cs_raises_import_error):
         with pytest.raises(pytac.exceptions.ControlSystemException):
-            await load("TESTING_MODE")
+            load("TESTING_MODE")
 
 
 def test_elements_loaded(lattice):
@@ -86,7 +86,7 @@ async def test_load_unitconv_warns_if_pchip_or_poly_data_file_not_found(
     lattice, mode_dir, polyconv_file, pchipconv_file
 ):
     with LogCapture() as log:
-        await load_unitconv(mode_dir, lattice)
+        load_unitconv(mode_dir, lattice, 3000)
     log.check(
         (
             "root",

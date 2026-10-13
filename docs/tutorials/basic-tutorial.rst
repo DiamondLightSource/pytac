@@ -42,10 +42,7 @@ At the time of writing the normal ring mode in use at Diamond is "I04",
 so let's load that::
 
     >>> import pytac
-    >>> lattice = await pytac.load_csv.load("I04")
-
-Here we must await the load function as this function asynchronously gets data
-from PVs running on the live machine.
+    >>> lattice = pytac.load_csv.load("I04")
 
 The lattice object itself has some fields with its own properties::
 
@@ -63,6 +60,9 @@ Diamond network)::
     np.float64(3000000000.0)
     >>> await lattice.get_value("beam_current")
     296.773194429911
+
+Here we must await the get_value function as this function asynchronously gets data
+from PVs running on the live machine.
 
 Families, elements and fields
 -----------------------------
